@@ -1,0 +1,46 @@
+{
+	"name": "[*]-root",
+	"type": "module",
+	"version": "0.0.0",
+	"packageManager": "pnpm@9.15.0",
+	"scripts": {
+		"build": "pnpm --filter \"./packages/*\" build",
+		"build:dev": "pnpm --filter \"./packages/*\" build:dev",
+		"build:test": "pnpm --filter \"./packages/*\" build:test",
+		"bump": "bumpp",
+		"inspect:eslint-config": "pnpx @eslint/config-inspector@latest",
+		"lint:attw": "pnpm --filter \"./packages/*\" lint:attw",
+		"lint:check-types": "pnpm --filter \"./packages/*\" lint:check-types",
+		"lint:eslint": "pnpm build && pnpm lint:eslint:dev",
+		"lint:eslint:dev": "eslint . --max-warnings 0 --report-unused-disable-directives",
+		"lint:eslint:interactive": "pnpm build && pnpm lint:eslint:interactive:dev",
+		"lint:eslint:interactive:dev": "pnpx eslint-interactive@latest . --fix --max-warnings 0 --report-unused-disable-directives",
+		"lint:format": "prettier --write .",
+		"lint:publint": "pnpm --filter \"./packages/*\" version-package:publint",
+		"lint:size": "pnpm --filter \"./packages/*\" lint:size",
+		"prepare": "husky",
+		"release": "pnpm --filter \"./packages/*\" release",
+		"test:release": "pnpm --filter \"./packages/*\" test:release",
+		"version-package": "changeset version"
+	},
+	"devDependencies": {
+		"@arethetypeswrong/cli": "^0.16.4",
+		"@changesets/cli": "^2.27.9",
+		"@commitlint/cli": "^19.5.0",
+		"@commitlint/config-conventional": "^19.5.0",
+		"@types/node": "^22.10.1",
+		"@zayne-labs/eslint-config": "0.4.2",
+		"eslint": "9.17.0",
+		"husky": "9.1.7",
+		"lint-staged": "15.3.0",
+		"pkg-pr-new": "0.0.39",
+		"prettier": "3.4.2",
+		"typescript": "^5.7.2"
+	},
+	"publishConfig": {
+		"access": "public",
+		"registry": "https://registry.npmjs.org/",
+		"provenance": true
+	}
+
+}

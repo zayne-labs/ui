@@ -1,0 +1,17 @@
+{
+	"typescript.tsdk": "node_modules\\typescript\\lib",
+
+	// For consistent formating across machines
+	"editor.defaultFormatter": "esbenp.prettier-vscode",
+	"editor.formatOnSave": true,
+	"editor.tabSize": 3,
+	"editor.indentSize": "tabSize",
+	"editor.detectIndentation": false,
+	"editor.insertSpaces": false,
+
+	// Optional
+	"editor.codeActionsOnSave": {
+		"source.addMissingImports": "never",
+		"source.organizeImports.biome": "explicit"
+	}
+}

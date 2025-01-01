@@ -1,0 +1,8 @@
+{
+	"recommendations": [
+		"dbaeumer.vscode-eslint", // ESLint
+		"esbenp.prettier-vscode", // Prettier - Code formatter
+		"kravets.vscode-publint", // PubLint
+		"usernamehw.errorlens" // Error Lens
+	]
+}

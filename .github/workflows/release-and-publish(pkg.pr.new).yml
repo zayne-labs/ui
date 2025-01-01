@@ -1,0 +1,39 @@
+name: Release and Publish - pkg.pr.new
+on:
+   pull_request:
+   push:
+      branches: main
+      tags: ["!**"]
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+   test-release:
+      runs-on: ubuntu-latest
+      timeout-minutes: 15
+      strategy:
+         matrix:
+            node-version: [20.x]
+
+      steps:
+         - name: Checkout repo
+           uses: actions/checkout@v4
+
+         - name: Setup pnpm
+           uses: pnpm/action-setup@v4
+           with:
+              version: 9.15.0
+
+         - name: Setup Node.js 20.x
+           uses: actions/setup-node@v4
+           with:
+              node-version: ${{ matrix.node-version }}
+              cache: pnpm
+
+         - name: Install dependencies and build
+           run: |
+              pnpm install --frozen-lockfile
+              pnpm build
+
+         - name: Deploy and test release via pkg.pr.new
+           run: pnpm test:release
