@@ -1,0 +1,6 @@
+{
+	"extends": "@zayne-labs/tsconfig/bundler/dom/library",
+
+	"include": ["tailwind.config.ts"],
+	"exclude": ["node_modules/**"]
+}

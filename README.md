@@ -1,50 +1,99 @@
-# Create Ts Library
+# @zayne-labs/ui
 
-This is an opinionated starter template for creating a library with TypeScript.
+A composable UI/UI-utilities components library. Currently focused on React implementation, with plans to support other frameworks like Vue, Svelte, and Solid in the future.
 
+## Features
 
-## Usage
+- 🚀 Framework agnostic design (React support available now, more coming soon!)
+- 🎨 Styled with Tailwind CSS
+- 🔧 Highly customizable
+- 📦 Tree-shakeable
+- 🌐 Multi-framework support (coming soon)
 
-To use this template, simply click the green `Use this template` button at the top right of this repo, or just fork and clone it if you prefer.
+## Installation
 
-## Tooling available
-- Eslint plugins for linting (customizable)
-- Prettier for formatting
-- [TSUP](https://github.com/egoist/tsup) for bundling
-- [@zayne-labs/tsconfig](https://github.com/zayne-labs/tsconfig) for relevant tsconfig presets
-- [Changesets](https://github.com/changesets/changesets) (Both cli and github action which must be installed on the repo) for versioning, publishing, release notes and changelogs
-- [publint](https://github.com/bluwy/publint) and [@arethetypeswrong/cli](https://github.com/arethetypeswrong/arethetypeswrong.github.io/blob/main/packages/cli/README.md) for validating package.json and checking for proper package types resolutions respectively.
-- [size-limit](https://github.com/ai/size-limit) for bundle size analysis and management
-- [lint-staged](https://github.com/lint-staged/lint-staged) for lint and types checks on staged files and [husky](https://github.com/typicode/husky) for running lint-staged before any commit and before push if you prefer
-- [pkg.pr.new](https://pkg-pr-new) for continuous testing of packages on every commit before publishing to npm.
-- Various github workflows for:
-  - Linting on ci
-  - Automatic publishing via changesets
-  - Formatting on ci via [autofix.ci](https://autofix.ci/)
-  - Labeling issues
-  - Issue assignment
-  - Continuous release testing via pkg.pr.new github action, etc.
+```bash
+# Using pnpm (recommended)
+pnpm add @zayne-labs/ui-react
 
-## Setup
+# Using npm
+npm install @zayne-labs/ui-react
 
-- Click the `Use this template` button.
-- Create a new repository with it.
-- Install the necessary github applications and bots on your repo namely:
-  - [aufofix app](https://github.com/marketplace/autofix-ci) for running automatic code fixes
-  - [changesets bot](https://github.com/apps/changeset-bot) for checking if there are any changesets contained in PRs
-  - [pkg.pr.new app](https://github.com/apps/pkg-pr-new) for continuous testing of packages
-- Create npm token [here](https://docs.npmjs.com/creating-and-viewing-access-tokens) (Skip if you already have it handy).
-- Add it as a [secret to your repository](https://docs.github.com/en/codespaces/managing-codespaces-for-your-organization/managing-development-environment-secrets-for-your-repository-or-organization#adding-secrets-for-a-repository) (or at the organization level if you have one), using the name `"NPM_TOKEN"`.
-- Install the dependencies using `pnpm install`.
-	- Edit the package.json file, and replace any of these: `[*]`, with the appropriate names relevant to your lib (Did this cuz comments aren't allowed in json files).
-- Lint your changes by running some of the `lint:*` scripts in the package.json.
-- Commit and push your changes.
+# Using yarn
+yarn add @zayne-labs/ui-react
+```
 
-## To publish a new version
- - Create a changeset via `pnpm changeset` command
- - Follow the prompts
- - Push to github
- - Wait for the changeset action to finish and if it's successful, you should see a pr created by the changeset bot
- - Merging it will lead to the version bump, release and publishing of the package
+## Quick Start
 
+```tsx
+import { Switch } from '@zayne-labs/ui-react'
 
+function App() {
+  const status = 'loading'
+
+  return (
+    <Switch condition={status}>
+      <Switch.Match when="loading">
+        <div>Loading your content...</div>
+      </Switch.Match>
+
+      <Switch.Match when="error">
+        <div>Oops! Something went wrong</div>
+      </Switch.Match>
+
+      <Switch.Default>
+        <div>Content loaded successfully!</div>
+      </Switch.Default>
+    </Switch>
+  )
+}
+```
+
+## Documentation
+
+Visit our documentation site for detailed usage instructions, examples, and API references. [Coming soon]
+
+## Development
+
+This project uses pnpm as the package manager. To get started with development:
+
+```bash
+# Install dependencies
+pnpm install
+
+# Build all packages
+pnpm build
+
+# Run development build
+pnpm build:dev
+
+# Run tests
+pnpm build:test
+
+# Lint code
+pnpm lint:eslint
+
+# Format code
+pnpm lint:format
+```
+
+## Project Structure
+
+```
+ui/
+├── packages/
+│   └── ui-react/        # React UI components (More frameworks coming soon!)
+├── dev/                 # Development utilities
+├── .changeset/         # Changesets for versioning
+└── package.json        # Root package.json
+```
+
+## Contributing
+
+We welcome contributions! Please see our contributing guidelines for details. [Coming soon]
+
+## License
+
+MIT © [Zayne Labs]
+
+---

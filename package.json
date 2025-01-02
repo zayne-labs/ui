@@ -1,5 +1,5 @@
 {
-	"name": "[*]-root",
+	"name": "@zayne-labs/ui-root",
 	"type": "module",
 	"version": "0.0.0",
 	"packageManager": "pnpm@9.15.0",
@@ -11,30 +11,34 @@
 		"inspect:eslint-config": "pnpx @eslint/config-inspector@latest",
 		"lint:attw": "pnpm --filter \"./packages/*\" lint:attw",
 		"lint:check-types": "pnpm --filter \"./packages/*\" lint:check-types",
-		"lint:eslint": "pnpm build && pnpm lint:eslint:dev",
-		"lint:eslint:dev": "eslint . --max-warnings 0 --report-unused-disable-directives",
-		"lint:eslint:interactive": "pnpm build && pnpm lint:eslint:interactive:dev",
-		"lint:eslint:interactive:dev": "pnpx eslint-interactive@latest . --fix --max-warnings 0 --report-unused-disable-directives",
+		"lint:eslint": "eslint . --max-warnings 0 --report-unused-disable-directives",
+		"lint:eslint:interactive": "pnpx eslint-interactive@latest . --fix --max-warnings 0 --report-unused-disable-directives",
 		"lint:format": "prettier --write .",
 		"lint:publint": "pnpm --filter \"./packages/*\" version-package:publint",
 		"lint:size": "pnpm --filter \"./packages/*\" lint:size",
 		"prepare": "husky",
 		"release": "pnpm --filter \"./packages/*\" release",
-		"test:release": "pnpm --filter \"./packages/*\" test:release",
+		"test:release": "pnpx pkg-pr-new publish './packages/*'",
 		"version-package": "changeset version"
 	},
 	"devDependencies": {
-		"@arethetypeswrong/cli": "^0.16.4",
+		"@arethetypeswrong/cli": "^0.17.2",
 		"@changesets/cli": "^2.27.9",
-		"@commitlint/cli": "^19.5.0",
-		"@commitlint/config-conventional": "^19.5.0",
+		"@eslint-react/eslint-plugin": "^1.23.0",
 		"@types/node": "^22.10.1",
-		"@zayne-labs/eslint-config": "0.4.2",
+		"@zayne-labs/eslint-config": "0.4.3",
+		"@zayne-labs/tsconfig": "0.2.1",
 		"eslint": "9.17.0",
+		"eslint-plugin-react-hooks": "^5.1.0",
+		"eslint-plugin-react-refresh": "^0.4.16",
+		"eslint-plugin-tailwindcss": "^3.17.5",
 		"husky": "9.1.7",
 		"lint-staged": "15.3.0",
-		"pkg-pr-new": "0.0.39",
 		"prettier": "3.4.2",
+		"prettier-plugin-classnames": "^0.7.5",
+		"prettier-plugin-merge": "^0.7.2",
+		"prettier-plugin-tailwindcss": "^0.6.9",
+		"tailwindcss": "^3.4.17",
 		"typescript": "^5.7.2"
 	},
 	"publishConfig": {
@@ -42,5 +46,4 @@
 		"registry": "https://registry.npmjs.org/",
 		"provenance": true
 	}
-
 }

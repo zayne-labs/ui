@@ -1,0 +1,114 @@
+{
+	"name": "@zayne-labs/ui-react",
+	"type": "module",
+	"version": "0.0.0",
+	"packageManager": "pnpm@9.15.0",
+	"description": "A composable UI/UI-utilities components library. ",
+	"author": "Ryan Zayne",
+	"license": "MIT",
+	"homepage": "https://github.com/zayne-labs/ui#readme",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/zayne-labs/ui.git"
+	},
+	"bugs": {
+		"url": "https://github.com/zayne-labs/ui/issues"
+	},
+	"keywords": [],
+	"sideEffects": false,
+	"exports": {
+		".": null,
+		"./form": "./dist/esm/ui/form/index.js",
+		"./carousel": "./dist/esm/ui/carousel/index.js",
+		"./drop-zone": "./dist/esm/ui/drop-zone/index.js",
+		"./drag-scroll": "./dist/esm/ui/drag-scroll/index.js",
+		"./for": "./dist/esm/common/For/index.js",
+		"./show": "./dist/esm/common/Show/index.js",
+		"./slot": "./dist/esm/common/Slot/index.js",
+		"./switch": "./dist/esm/common/Switch/index.js",
+		"./teleport": "./dist/esm/common/Teleport/index.js"
+	},
+	"main": "./dist/esm/index.js",
+	"module": "./dist/esm/index.js",
+	"types": "./dist/esm/index.d.ts",
+	"files": [
+		"dist"
+	],
+	"engines": {
+		"node": ">=18.x"
+	},
+	"scripts": {
+		"build": "tsup",
+		"build:dev": "cross-env NODE_ENV=development tsup",
+		"build:test": "concurrently --prefix-colors \"yellow.bold,#7da4f8.bold,magenta\" --names PUBLINT,TSUP 'pnpm:lint:publint' 'pnpm:build:dev'",
+		"lint:attw": "attw --pack . --ignore-rules=cjs-resolves-to-esm",
+		"lint:check-types": "tsc --pretty --incremental -p tsconfig.json",
+		"lint:publint": "publint --strict .",
+		"lint:size": "size-limit",
+		"release": "changeset publish",
+		"test:release": "pkg-pr-new publish"
+	},
+	"peerDependencies": {
+		"clsx": ">=2.1.1",
+		"react": ">=18.0.0",
+		"react-dom": ">=18.0.0",
+		"react-hook-form": ">=7.53.2",
+		"tailwind-merge": ">=2.5.5"
+	},
+	"peerDependenciesMeta": {
+		"clsx": {
+			"optional": true
+		},
+		"react": {
+			"optional": true
+		},
+		"react-dom": {
+			"optional": true
+		},
+		"tailwind-merge": {
+			"optional": true
+		}
+	},
+	"dependencies": {
+		"@zayne-labs/toolkit-core": "^0.8.22",
+		"@zayne-labs/toolkit-react": "^0.8.22",
+		"@zayne-labs/toolkit-type-helpers": "^0.8.22",
+		"zustand": "^5.0.2"
+	},
+	"devDependencies": {
+		"@arethetypeswrong/cli": "0.17.0",
+		"@size-limit/esbuild-why": "11.1.6",
+		"@size-limit/preset-small-lib": "11.1.6",
+		"@total-typescript/ts-reset": "0.6.1",
+		"@types/react": "^19.0.2",
+		"@types/react-dom": "^19.0.2",
+		"@zayne-labs/tsconfig": "0.2.1",
+		"clsx": "^2.1.1",
+		"concurrently": "^9.0.1",
+		"cross-env": "^7.0.3",
+		"publint": "^0.2.11",
+		"react": "^18.0.0",
+		"react-dom": "^18.0.0",
+		"react-hook-form": "^7.53.2",
+		"size-limit": "11.1.6",
+		"tailwind-merge": "^2.5.5",
+		"terser": "5.36.0",
+		"tsup": "8.3.5",
+		"typescript": "^5.7.2"
+	},
+	"publishConfig": {
+		"access": "public",
+		"registry": "https://registry.npmjs.org/",
+		"provenance": true
+	},
+	"size-limit": [
+		{
+			"path": "src/components/ui/**/index.ts",
+			"limit": "4 kB"
+		},
+		{
+			"path": "src/components/common/**/index.ts",
+			"limit": "500 b"
+		}
+	]
+}

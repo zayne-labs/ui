@@ -1,5 +1,5 @@
 export default {
-	"*.{js,ts,jsx,tsx}": () => "pnpm lint:eslint:dev",
+	"*.{js,ts,jsx,tsx}": () => "pnpm lint:eslint",
 	"*.{ts,tsx}": () => "pnpm lint:check-types",
 	/**
 	 * Add attw back when this issue is resolved

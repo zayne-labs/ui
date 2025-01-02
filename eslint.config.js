@@ -2,7 +2,13 @@ import { zayne } from "@zayne-labs/eslint-config";
 
 export default zayne({
 	ignores: ["dist/**"],
-	type: "lib-strict",
+	react: true,
+	tailwindcss: {
+		settings: {
+			config: "./tailwind.config.ts",
+		},
+	},
+	type: "lib",
 	typescript: {
 		tsconfigPath: ["**/tsconfig.json"],
 	},

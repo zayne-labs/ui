@@ -7,17 +7,21 @@
 		"build": "tsc && vite build",
 		"dev": "vite",
 		"dev:client": "pnpm dev",
-		"dev:server": "tsx --watch src/server.ts --clear-screen=false",
 		"preview": "vite preview"
 	},
 	"dependencies": {
-		"[*]": "workspace:*"
+		"@types/react": "19.0.2",
+		"@types/react-dom": "19.0.2",
+		"@zayne-labs/ui-react": "workspace:*",
+		"react": "19.0.0",
+		"react-dom": "19.0.0"
 	},
 	"devDependencies": {
-		"@types/node": "^22.10.1",
+		"@types/node": "^22.10.3",
+		"@vitejs/plugin-react-swc": "^3.7.2",
 		"@zayne-labs/tsconfig": "0.2.1",
-		"tsx": "^4.19.2",
-		"typescript": "^5.7.2",
+		"tsx": "^4.19.1",
+		"typescript": "5.7.2",
 		"vite": "^6.0.1"
 	}
 }
