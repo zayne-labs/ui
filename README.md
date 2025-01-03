@@ -1,6 +1,6 @@
 # @zayne-labs/ui
 
-A composable UI/UI-utilities components library. Currently focused on React implementation, with plans to support other frameworks like Vue, Svelte, and Solid in the future.
+A collection of multi-framework UI utilities and unstyled components. Currently focused on React implementation, with plans to support other frameworks like Vue, Svelte, and Solid in the future.
 
 ## Features
 
@@ -90,7 +90,7 @@ ui/
 
 ## Contributing
 
-We welcome contributions! Please see our contributing guidelines for details. [Coming soon]
+We welcome contributions! Please see our [contributing guidelines](https://github.com/zayne-labs/contribute.git) for details.
 
 ## License
 
