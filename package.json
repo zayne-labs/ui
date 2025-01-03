@@ -17,7 +17,7 @@
 		"lint:publint": "pnpm --filter \"./packages/*\" version-package:publint",
 		"lint:size": "pnpm --filter \"./packages/*\" lint:size",
 		"prepare": "husky",
-		"release": "pnpm --filter \"./packages/*\" release",
+		"release": "changeset publish",
 		"test:release": "pnpx pkg-pr-new publish './packages/*'",
 		"version-package": "changeset version"
 	},
