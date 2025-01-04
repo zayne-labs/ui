@@ -11,7 +11,7 @@ type ShowProps = {
 	when: boolean;
 };
 
-export function Show({ children, fallback, when }: ShowProps) {
+export function ShowRoot({ children, fallback, when }: ShowProps) {
 	const fallBackSlot = getSlotElement(children, ShowFallback, {
 		errorMessage: "Only one <Show.Fallback> or <Show.OtherWise> component is allowed",
 		throwOnMultipleSlotMatch: true,
@@ -43,7 +43,7 @@ export function ShowFallback({ children }: Pick<ShowProps, "children">) {
 }
 ShowFallback.slot = Symbol.for("fallback");
 
-export const Root = Show;
+export const Root = ShowRoot;
 
 export const Fallback = ShowFallback;
 

@@ -22,11 +22,11 @@
 		"./carousel": "./dist/esm/ui/carousel/index.js",
 		"./drop-zone": "./dist/esm/ui/drop-zone/index.js",
 		"./drag-scroll": "./dist/esm/ui/drag-scroll/index.js",
-		"./for": "./dist/esm/common/For/index.js",
-		"./show": "./dist/esm/common/Show/index.js",
-		"./slot": "./dist/esm/common/Slot/index.js",
-		"./switch": "./dist/esm/common/Switch/index.js",
-		"./teleport": "./dist/esm/common/Teleport/index.js"
+		"./for": "./dist/esm/common/for/index.js",
+		"./show": "./dist/esm/common/show/index.js",
+		"./slot": "./dist/esm/common/slot/index.js",
+		"./switch": "./dist/esm/common/switch/index.js",
+		"./teleport": "./dist/esm/common/teleport/index.js"
 	},
 	"main": "./dist/esm/index.js",
 	"module": "./dist/esm/index.js",
@@ -49,16 +49,12 @@
 		"test:release": "pkg-pr-new publish"
 	},
 	"peerDependencies": {
-		"clsx": ">=2.1.1",
 		"react": ">=18.0.0",
 		"react-dom": ">=18.0.0",
 		"react-hook-form": ">=7.53.2",
 		"tailwind-merge": ">=2.5.5"
 	},
 	"peerDependenciesMeta": {
-		"clsx": {
-			"optional": true
-		},
 		"react": {
 			"optional": true
 		},
@@ -83,7 +79,6 @@
 		"@types/react": "^19.0.2",
 		"@types/react-dom": "^19.0.2",
 		"@zayne-labs/tsconfig": "0.2.1",
-		"clsx": "^2.1.1",
 		"concurrently": "^9.0.1",
 		"cross-env": "^7.0.3",
 		"publint": "^0.2.11",

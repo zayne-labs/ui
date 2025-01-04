@@ -16,7 +16,7 @@ type SwitchMatchProps<TWhen = boolean> = {
 	when: TWhen;
 };
 
-export function Switch<TCondition = true>(props: SwitchProps<TCondition>) {
+export function SwitchRoot<TCondition = true>(props: SwitchProps<TCondition>) {
 	const { children, condition = true } = props;
 
 	const defaultCase = getSlotElement(children, Default, {
@@ -31,13 +31,17 @@ export function Switch<TCondition = true>(props: SwitchProps<TCondition>) {
 	return matchedCase ?? defaultCase;
 }
 
-export function Match<TWhen>({ children }: SwitchMatchProps<TWhen>) {
+export function SwitchMatch<TWhen>({ children }: SwitchMatchProps<TWhen>) {
 	return children;
 }
 
-export function Default({ children }: Pick<SwitchMatchProps, "children">) {
+export function SwitchDefault({ children }: Pick<SwitchMatchProps, "children">) {
 	return children;
 }
-Default.slot = Symbol.for("default-case");
+SwitchDefault.slot = Symbol.for("default-case");
 
-export const Root = Switch;
+export const Root = SwitchRoot;
+
+export const Match = SwitchMatch;
+
+export const Default = SwitchDefault;

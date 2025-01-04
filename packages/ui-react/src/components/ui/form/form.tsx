@@ -2,7 +2,7 @@
 
 import * as React from "react";
 
-import { getElementList } from "@/components/common/For";
+import { getElementList } from "@/components/common/for";
 import { EyeIconInvisible, EyeIconVisible } from "@/components/icons";
 import { cnMerge } from "@/lib/utils/cn";
 import { toArray } from "@zayne-labs/toolkit-core";

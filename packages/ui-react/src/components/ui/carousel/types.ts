@@ -1,4 +1,4 @@
-import type { EachProp, ForRenderProps } from "@/components/common/For";
+import type { EachProp, ForRenderProps } from "@/components/common/for";
 import type { Prettify } from "@zayne-labs/toolkit-type-helpers";
 import type { StoreApi } from "zustand";
 

@@ -5,7 +5,7 @@ A collection of multi-framework UI utilities and unstyled components. Currently 
 ## Features
 
 - 🚀 Framework agnostic design (React support available now, more coming soon!)
-- 🎨 Styled with Tailwind CSS
+- 🎨 Base styles (not UI styles, that's up to you) with Tailwind CSS
 - 🔧 Highly customizable
 - 📦 Tree-shakeable
 - 🌐 Multi-framework support (coming soon)
