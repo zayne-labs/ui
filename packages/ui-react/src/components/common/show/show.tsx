@@ -41,7 +41,9 @@ ShowContent.slot = Symbol.for("content");
 export function ShowFallback({ children }: Pick<ShowProps, "children">) {
 	return children;
 }
-ShowFallback.slot = Symbol.for("fallback");
+ShowFallback.slot = Symbol.for("show-fallback");
+
+export const Show = ShowRoot;
 
 export const Root = ShowRoot;
 

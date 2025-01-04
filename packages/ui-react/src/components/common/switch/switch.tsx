@@ -19,7 +19,7 @@ type SwitchMatchProps<TWhen = boolean> = {
 export function SwitchRoot<TCondition = true>(props: SwitchProps<TCondition>) {
 	const { children, condition = true } = props;
 
-	const defaultCase = getSlotElement(children, Default, {
+	const defaultCase = getSlotElement(children, SwitchDefault, {
 		errorMessage: "Only one <Switch.Default> component is allowed",
 		throwOnMultipleSlotMatch: true,
 	});
@@ -38,7 +38,9 @@ export function SwitchMatch<TWhen>({ children }: SwitchMatchProps<TWhen>) {
 export function SwitchDefault({ children }: Pick<SwitchMatchProps, "children">) {
 	return children;
 }
-SwitchDefault.slot = Symbol.for("default-case");
+SwitchDefault.slot = Symbol.for("switch-default");
+
+export const Switch = SwitchRoot;
 
 export const Root = SwitchRoot;
 
