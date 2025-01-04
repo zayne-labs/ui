@@ -22,7 +22,7 @@ const sharedOptions = {
 	format: ["esm"],
 	platform: "browser",
 	sourcemap: !isDevMode,
-	splitting: false,
+	splitting: true,
 	target: "esnext",
 	treeshake: true,
 	tsconfig: "tsconfig.json",
