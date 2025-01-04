@@ -32,17 +32,17 @@ export function Slot(props: SlotProps) {
 		// == The new element to render is the one passed as a child of `Slottable`
 		const newElement = (slottable.props as SlotProps).children;
 
+		if (Children.count(newElement) > 1) {
+			return Children.only(null);
+		}
+
 		const newElementChildren = childrenArray.map((child) => {
-			if (child !== slottable) {
-				return child;
+			if (child === slottable) {
+				// == Because the new element will be the one rendered, we are only interested in grabbing its children (`newElement.props.children`)
+				return isValidElement<SlotProps>(newElement) && newElement.props.children;
 			}
 
-			if (Children.count(newElement) > 1) {
-				return Children.only(null);
-			}
-
-			// == Because the new element will be the one rendered, we are only interested in grabbing its children (`newElement.props.children`)
-			return isValidElement<Pick<SlotProps, "children">>(newElement) && newElement.props.children;
+			return child;
 		});
 
 		return (
