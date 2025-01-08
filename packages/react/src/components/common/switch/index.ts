@@ -1,3 +1,3 @@
 export * from "./switch";
 
-export * from "./switch-parts";
+export * as Switch from "./switch-parts";
