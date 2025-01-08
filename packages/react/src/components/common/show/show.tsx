@@ -33,8 +33,6 @@ export function ShowRoot({ children, fallback, when }: ShowProps) {
 	return when ? (contentSlot ?? otherChildren) : (fallBackSlot ?? fallback);
 }
 
-export const Show = ShowRoot;
-
 export function ShowContent({ children }: Pick<ShowProps, "children">) {
 	return children;
 }

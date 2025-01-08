@@ -31,8 +31,6 @@ export function SwitchRoot<TCondition = true>(props: SwitchProps<TCondition>) {
 	return matchedCase ?? defaultCase;
 }
 
-export const Switch = SwitchRoot;
-
 export function SwitchMatch<TWhen>({ children }: SwitchMatchProps<TWhen>) {
 	return children;
 }
