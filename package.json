@@ -24,9 +24,9 @@
 	"devDependencies": {
 		"@arethetypeswrong/cli": "^0.17.2",
 		"@changesets/cli": "^2.27.9",
-		"@eslint-react/eslint-plugin": "^1.23.0",
-		"@types/node": "^22.10.1",
-		"@zayne-labs/eslint-config": "0.4.3",
+		"@eslint-react/eslint-plugin": "^1.23.2",
+		"@types/node": "^22.10.5",
+		"@zayne-labs/eslint-config": "0.5.0",
 		"@zayne-labs/tsconfig": "0.2.1",
 		"eslint": "9.17.0",
 		"eslint-plugin-react-hooks": "^5.1.0",
