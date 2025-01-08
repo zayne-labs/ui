@@ -45,7 +45,3 @@ export function ForList<TArrayItem, TElement extends React.ElementType = "ul">(
 		</ListContainer>
 	);
 }
-
-export const Base = ForBase;
-
-export const List = ForList;
