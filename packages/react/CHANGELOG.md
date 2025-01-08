@@ -1,5 +1,23 @@
 # @zayne-labs/ui-react
 
+## 0.1.0
+
+### Minor Changes
+
+- f02d029: feat(form):
+
+   - ✨ Add FormDescription component for form field descriptions
+   - 🏗️ Move context logic to dedicated form-context.ts file
+   - 🛠️ Add useFormFieldContext hook with better error handling
+   - ♻️ Improve error message types and render prop patterns
+
+   refactor(form): 🔄 Enhance form component architecture and API
+
+   style(form):
+
+   - 🎨 Rename compound component exports to use -parts suffix
+   - 🔤 Update provider names for better DX
+
 ## 0.0.5
 
 ### Patch Changes
