@@ -1,4 +1,4 @@
-import * as React from "react"
+import * as React from "react";
 
 import { useConstant } from "@zayne-labs/toolkit-react";
 import { createZustandContext } from "@zayne-labs/toolkit-react/zustand";
