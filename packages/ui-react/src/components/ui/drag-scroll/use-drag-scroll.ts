@@ -87,12 +87,6 @@ const useDragScroll = <TElement extends HTMLElement>(props: DragScrollProps<TEle
 
 		const cleanup = on("mousedown", dragContainerRef.current, handleMouseDown);
 
-		// == Run cleanup manually on unmount if the user is using a version of react that doesn't support cleanup
-		if (!node) {
-			cleanup();
-			return;
-		}
-
 		return cleanup;
 	});
 
