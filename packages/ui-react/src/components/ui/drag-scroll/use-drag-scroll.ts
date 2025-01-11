@@ -120,7 +120,7 @@ const useDragScroll = <TElement extends HTMLElement>(props: DragScrollProps<TEle
 		};
 	};
 
-	const getItemProps = <TItemElement extends HTMLElement = TElement>(
+	const getItemProps = <TItemElement extends HTMLElement>(
 		itemProps?: DragScrollProps<TItemElement>["extraItemProps"]
 	) => {
 		const mergedItemProps = mergeProps(extraItemProps, itemProps);
