@@ -18,16 +18,8 @@
 	"sideEffects": false,
 	"exports": {
 		".": null,
-		"./form": "./dist/esm/ui/form/index.js",
-		"./card": "./dist/esm/ui/card/index.js",
-		"./carousel": "./dist/esm/ui/carousel/index.js",
-		"./drop-zone": "./dist/esm/ui/drop-zone/index.js",
-		"./drag-scroll": "./dist/esm/ui/drag-scroll/index.js",
-		"./for": "./dist/esm/common/for/index.js",
-		"./show": "./dist/esm/common/show/index.js",
-		"./slot": "./dist/esm/common/slot/index.js",
-		"./switch": "./dist/esm/common/switch/index.js",
-		"./teleport": "./dist/esm/common/teleport/index.js"
+		"./*": "./dist/esm/ui/*/index.js",
+		"./common/*": "./dist/esm/common/*/index.js"
 	},
 	"main": "./dist/esm/index.js",
 	"module": "./dist/esm/index.js",

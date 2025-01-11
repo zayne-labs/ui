@@ -7,6 +7,7 @@ const sharedOptions = {
 	dts: true, // generate d.ts
 	entry: [
 		"src/components/index.ts",
+
 		"src/components/ui/card/index.ts",
 		"src/components/ui/carousel/index.ts",
 		"src/components/ui/drop-zone/index.ts",
