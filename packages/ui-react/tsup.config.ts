@@ -8,12 +8,14 @@ const sharedOptions = {
 	entry: [
 		"src/components/index.ts",
 
+		"src/components/ui/index.ts",
 		"src/components/ui/card/index.ts",
 		"src/components/ui/carousel/index.ts",
 		"src/components/ui/drop-zone/index.ts",
 		"src/components/ui/drag-scroll/index.ts",
 		"src/components/ui/form/index.ts",
 
+		"src/components/common/index.ts",
 		"src/components/common/for/index.ts",
 		"src/components/common/teleport/index.ts",
 		"src/components/common/show/index.ts",
