@@ -8,7 +8,7 @@ import { handleScrollSnap, resetCursor, updateCursor } from "./utils";
 type DragScrollProps<TElement extends HTMLElement> = {
 	classNames?: { base?: string; item?: string };
 	extraItemProps?: InferProps<HTMLElement>;
-	extraRootProps?: InferProps<TElement>;
+	extraRootProps?: Omit<InferProps<TElement>, "children">;
 	orientation?: "both" | "horizontal" | "vertical";
 	usage?: "allScreens" | "desktopOnly" | "mobileAndTabletOnly";
 };
@@ -120,7 +120,9 @@ const useDragScroll = <TElement extends HTMLElement>(props: DragScrollProps<TEle
 		};
 	};
 
-	const getItemProps = (itemProps?: DragScrollProps<TElement>["extraItemProps"]) => {
+	const getItemProps = <TItemElement extends HTMLElement = TElement>(
+		itemProps?: DragScrollProps<TItemElement>["extraItemProps"]
+	) => {
 		const mergedItemProps = mergeProps(extraItemProps, itemProps);
 
 		return {
