@@ -1,5 +1,13 @@
 # @zayne-labs/ui-react
 
+## 0.2.0
+
+### Minor Changes
+
+- 88b9957: feat(exports)!: ♻️ 🔧 simplify package exports using path patterns. slot and co are now under ./common/\* pattern
+
+   feat(components): ✨ export all components from root entry point
+
 ## 0.1.0
 
 ### Minor Changes
