@@ -1,4 +1,4 @@
-import type { EachProp, ForRenderProps } from "@/components/common/for";
+import type { DiscriminatedRenderProps } from "@zayne-labs/toolkit-react/utils";
 import type { Prettify } from "@zayne-labs/toolkit-type-helpers";
 import type { StoreApi } from "zustand";
 
@@ -80,7 +80,15 @@ export type CarouselIndicatorProps = {
 	currentIndex: number;
 };
 
-type BaseWrapperProps<TArrayItem> = Prettify<ForRenderProps<TArrayItem> & Partial<EachProp<TArrayItem>>>;
+type RenderPropFn<TArrayItem> = (
+	item: NoInfer<TArrayItem>,
+	index: number,
+	array: NoInfer<TArrayItem[]>
+) => React.ReactNode;
+
+type BaseWrapperProps<TArrayItem> = Prettify<
+	DiscriminatedRenderProps<RenderPropFn<TArrayItem>> & { each?: TArrayItem[] }
+>;
 
 export type CarouselWrapperProps<TArrayItem> = BaseWrapperProps<TArrayItem> & {
 	className?: string;

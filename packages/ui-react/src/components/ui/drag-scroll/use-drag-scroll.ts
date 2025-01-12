@@ -1,7 +1,7 @@
 import { cnMerge } from "@/lib/utils/cn";
 import { off, on } from "@zayne-labs/toolkit-core";
 import { useCallbackRef } from "@zayne-labs/toolkit-react";
-import { type InferProps, composeRefs, mergeProps } from "@zayne-labs/toolkit-react/utils";
+import { type InferProps, composeRefs, mergeTwoProps } from "@zayne-labs/toolkit-react/utils";
 import { type RefCallback, useRef } from "react";
 import { handleScrollSnap, resetCursor, updateCursor } from "./utils";
 
@@ -91,7 +91,7 @@ const useDragScroll = <TElement extends HTMLElement>(props: DragScrollProps<TEle
 	});
 
 	const getRootProps = (rootProps?: DragScrollProps<TElement>["extraRootProps"]) => {
-		const mergedRootProps = mergeProps(extraRootProps, rootProps);
+		const mergedRootProps = mergeTwoProps(extraRootProps, rootProps);
 
 		return {
 			...mergedRootProps,
@@ -117,7 +117,7 @@ const useDragScroll = <TElement extends HTMLElement>(props: DragScrollProps<TEle
 	const getItemProps = <TItemElement extends HTMLElement>(
 		itemProps?: DragScrollProps<TItemElement>["extraItemProps"]
 	) => {
-		const mergedItemProps = mergeProps(extraItemProps, itemProps);
+		const mergedItemProps = mergeTwoProps(extraItemProps, itemProps);
 
 		return {
 			...mergedItemProps,

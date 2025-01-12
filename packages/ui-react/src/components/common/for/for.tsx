@@ -1,29 +1,53 @@
 import * as React from "react";
 
 import type { DiscriminatedRenderProps, PolymorphicProps } from "@zayne-labs/toolkit-react/utils";
-import { isArray } from "@zayne-labs/toolkit-type-helpers";
+import { type Prettify, isArray, isNumber } from "@zayne-labs/toolkit-type-helpers";
 
 // prettier-ignore
 type RenderPropFn<TArrayItem> = (
-	item: TArrayItem,
+	item:  TArrayItem,
 	index: number,
 	array: TArrayItem[]
 ) => React.ReactNode;
 
-export type EachProp<TArrayItem> = { each: TArrayItem[] };
-
 export type ForRenderProps<TArrayItem> = DiscriminatedRenderProps<RenderPropFn<TArrayItem>>;
 
-type ForProps<TArrayItem> = EachProp<TArrayItem> & ForRenderProps<TArrayItem>;
+/* eslint-disable perfectionist/sort-intersection-types -- Prefer the object to come first before the render props */
+type ForProps<TArrayItem> = Prettify<
+	{
+		each: TArrayItem[];
+		fallback?: React.ReactNode;
+	} & ForRenderProps<TArrayItem>
+>;
+
+type ForPropsWithNumber<TNumber> = Prettify<
+	{
+		each: TNumber;
+		fallback?: React.ReactNode;
+	} & ForRenderProps<TNumber>
+>;
+
+/* eslint-enable perfectionist/sort-intersection-types -- Prefer the object to come first before the render props */
+
+export function ForBase<TArrayItem>(props: ForProps<TArrayItem>): React.ReactNode[];
+
+export function ForBase<TNumber>(props: ForPropsWithNumber<TNumber>): React.ReactNode[];
 
 export function ForBase<TArrayItem>(props: ForProps<TArrayItem>) {
-	const { children, each, render } = props;
+	const { children, each, fallback, render } = props;
 
-	if (!isArray(each)) {
-		return each;
+	// eslint-disable-next-line ts-eslint/no-unnecessary-condition -- Each can be undefined or null if user ignores TS
+	if (each == null || (isNumber(each) && each === 0) || (isArray(each) && each.length === 0)) {
+		return fallback;
 	}
 
-	const JSXElementList = each.map((...params: Parameters<RenderPropFn<TArrayItem>>) => {
+	const resolvedArray = isNumber(each) ? ([...Array(each).keys()] as TArrayItem[]) : each;
+
+	if (resolvedArray.length === 0) {
+		return fallback;
+	}
+
+	const JSXElementList = resolvedArray.map((...params: Parameters<RenderPropFn<TArrayItem>>) => {
 		if (typeof children === "function") {
 			return children(...params);
 		}

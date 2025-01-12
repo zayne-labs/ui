@@ -1,4 +1,4 @@
-import { Slot } from "@zayne-labs/ui-react/common";
+import { Slot } from "@zayne-labs/ui-react/common/slot";
 
 function AnotherApp() {
 	return <Slot />;

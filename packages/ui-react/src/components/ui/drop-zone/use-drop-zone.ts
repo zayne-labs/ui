@@ -3,7 +3,7 @@
 import { cnMerge } from "@/lib/utils/cn";
 import { type FileValidationOptions, handleFileValidation } from "@zayne-labs/toolkit-core";
 import { useCallbackRef, useToggle } from "@zayne-labs/toolkit-react";
-import { type InferProps, composeRefs, mergeProps } from "@zayne-labs/toolkit-react/utils";
+import { type InferProps, composeRefs, mergeTwoProps } from "@zayne-labs/toolkit-react/utils";
 import { isFunction, isObject } from "@zayne-labs/toolkit-type-helpers";
 import { useRef, useState } from "react";
 
@@ -137,7 +137,7 @@ export const useDropZone = (props: UseDropZoneProps) => {
 	 */
 
 	const getRootProps = (rootProps?: RootProps) => {
-		const mergedRootProps = mergeProps(extraRootProps, rootProps);
+		const mergedRootProps = mergeTwoProps(extraRootProps, rootProps);
 
 		return {
 			...mergedRootProps,
@@ -158,7 +158,7 @@ export const useDropZone = (props: UseDropZoneProps) => {
 	};
 
 	const getInputProps = (inputProps?: InputProps) => {
-		const mergedInputProps = mergeProps(extraInputProps, inputProps);
+		const mergedInputProps = mergeTwoProps(extraInputProps, inputProps);
 
 		return {
 			...mergedInputProps,
