@@ -137,7 +137,7 @@ export function CarouselControls(props: CarouselControlProps) {
 	);
 }
 
-export function CarouselItemWrapper<TArrayItem>(props: CarouselWrapperProps<TArrayItem>) {
+export function CarouselItemGroup<TArrayItem>(props: CarouselWrapperProps<TArrayItem>) {
 	const { children, className, each, render } = props;
 
 	const [ItemList] = getElementList("base");
@@ -190,7 +190,7 @@ export function CarouselCaption<TElement extends React.ElementType = "div">(
 	);
 }
 
-export function CarouselIndicatorWrapper<TArrayItem>(props: CarouselWrapperProps<TArrayItem>) {
+export function CarouselIndicatorGroup<TArrayItem>(props: CarouselWrapperProps<TArrayItem>) {
 	const { children, className, each, render } = props;
 
 	const images = useCarouselStoreContext((state) => each ?? (state.images as TArrayItem[]));
