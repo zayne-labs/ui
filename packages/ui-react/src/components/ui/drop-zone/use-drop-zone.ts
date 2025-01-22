@@ -132,10 +132,6 @@ export const useDropZone = (props: UseDropZoneProps) => {
 
 	const getChildren = () => (isFunction(children) ? children(getRenderProps()) : children);
 
-	/* TODO: take inspiration from ark's implementation to merge extraRootProps with the props you pass to getRootProps
-	 * @see https://github.com/chakra-ui/ark/blob/main/packages/react/src/components/steps/steps-separator.tsx
-	 */
-
 	const getRootProps = (rootProps?: RootProps) => {
 		const mergedRootProps = mergeTwoProps(extraRootProps, rootProps);
 
