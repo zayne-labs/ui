@@ -92,8 +92,9 @@ export const useDropZone = (props: UseDropZoneProps) => {
 				return;
 			}
 
-			const inbuiltValidatedFilesArray = !disableInbuiltValidation
-				? handleFileValidation({
+			const inbuiltValidatedFilesArray = disableInbuiltValidation
+				? []
+				: handleFileValidation({
 						existingFileArray: existingFiles,
 						newFileList: fileList,
 						onError: onUploadError,
@@ -101,8 +102,7 @@ export const useDropZone = (props: UseDropZoneProps) => {
 						validationSettings: isObject(validationSettings)
 							? { ...validationSettings, allowedFileTypes }
 							: {},
-					})
-				: [];
+					});
 
 			const validatorFnFileArray = validator
 				? validator({ existingFileArray: existingFiles, newFileList: fileList })
@@ -168,8 +168,8 @@ export const useDropZone = (props: UseDropZoneProps) => {
 			"data-part": "input",
 			"data-scope": "dropzone",
 			onChange: (event: React.ChangeEvent<HTMLInputElement>) => {
-				handleFileUpload(event);
 				mergedInputProps.onChange?.(event);
+				handleFileUpload(event);
 			},
 			ref: composeRefs([inputRef, mergedInputProps.ref]),
 			type: "file",
@@ -177,6 +177,7 @@ export const useDropZone = (props: UseDropZoneProps) => {
 	};
 
 	return {
+		acceptedFiles,
 		getChildren,
 		getInputProps,
 		getRenderProps,
