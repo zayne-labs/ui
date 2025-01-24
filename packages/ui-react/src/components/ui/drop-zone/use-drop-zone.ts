@@ -24,8 +24,6 @@ export type UseDropZoneProps = {
 
 	classNames?: { activeDrag?: string; base?: string; input?: string };
 
-	disableInbuiltValidation?: boolean;
-
 	existingFiles?: File[];
 
 	extraInputProps?: InputProps;
@@ -56,7 +54,6 @@ export const useDropZone = (props: UseDropZoneProps) => {
 		allowedFileTypes,
 		children,
 		classNames,
-		disableInbuiltValidation,
 		existingFiles,
 		extraInputProps,
 		extraRootProps,
@@ -92,23 +89,23 @@ export const useDropZone = (props: UseDropZoneProps) => {
 				return;
 			}
 
-			const inbuiltValidatedFilesArray = disableInbuiltValidation
-				? []
-				: handleFileValidation({
-						existingFileArray: existingFiles,
-						newFileList: fileList,
-						onError: onUploadError,
-						onSuccess: onUploadSuccess,
-						validationSettings: isObject(validationSettings)
-							? { ...validationSettings, allowedFileTypes }
-							: {},
-					});
+			const resolvedValidationSettings = isObject(validationSettings)
+				? { ...validationSettings, allowedFileTypes }
+				: {};
 
-			const validatorFnFileArray = validator
+			const inbuiltValidatedFilesArray = handleFileValidation({
+				existingFileArray: existingFiles,
+				newFileList: fileList,
+				onError: onUploadError,
+				onSuccess: onUploadSuccess,
+				validationSettings: resolvedValidationSettings,
+			});
+
+			const validatorFnResult = validator
 				? validator({ existingFileArray: existingFiles, newFileList: fileList })
 				: [];
 
-			const validFilesArray = [...inbuiltValidatedFilesArray, ...validatorFnFileArray];
+			const validFilesArray = [...inbuiltValidatedFilesArray, ...validatorFnResult];
 
 			if (validFilesArray.length === 0) return;
 
