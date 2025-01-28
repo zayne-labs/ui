@@ -29,19 +29,16 @@ type ForPropsWithNumber<TNumber> = Prettify<
 
 /* eslint-enable perfectionist/sort-intersection-types -- Prefer the object to come first before the render props */
 
-export function ForBase<TArrayItem>(props: ForProps<TArrayItem>): React.ReactNode[];
-
-export function ForBase<TNumber>(props: ForPropsWithNumber<TNumber>): React.ReactNode[];
-
-export function ForBase<TArrayItem>(props: ForProps<TArrayItem>) {
+export function ForBase<TArrayItem>(props: ForProps<TArrayItem> | ForPropsWithNumber<TArrayItem>) {
 	const { children, each, fallback, render } = props;
 
-	// eslint-disable-next-line ts-eslint/no-unnecessary-condition -- Each can be undefined or null if user ignores TS
 	if (each == null || (isNumber(each) && each === 0) || (isArray(each) && each.length === 0)) {
 		return fallback;
 	}
 
-	const resolvedArray = isNumber(each) ? ([...Array(each).keys()] as TArrayItem[]) : each;
+	const resolvedArray = isNumber(each)
+		? ([...Array(each).keys()] as TArrayItem[])
+		: (each as TArrayItem[]);
 
 	if (resolvedArray.length === 0) {
 		return fallback;
@@ -58,8 +55,12 @@ export function ForBase<TArrayItem>(props: ForProps<TArrayItem>) {
 	return JSXElementList;
 }
 
+type ForListProps<TArrayItem> = {
+	className?: string;
+} & (ForProps<TArrayItem> | ForPropsWithNumber<TArrayItem>);
+
 export function ForList<TArrayItem, TElement extends React.ElementType = "ul">(
-	props: PolymorphicProps<TElement, ForProps<TArrayItem> & { className?: string }>
+	props: PolymorphicProps<TElement, ForListProps<TArrayItem>>
 ) {
 	const { as: ListContainer = "ul", children, className, each, ref, render, ...restOfListProps } = props;
 
