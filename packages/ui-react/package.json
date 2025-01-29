@@ -59,30 +59,30 @@
 		}
 	},
 	"dependencies": {
-		"@zayne-labs/toolkit-core": "^0.8.32",
-		"@zayne-labs/toolkit-react": "^0.8.32",
-		"@zayne-labs/toolkit-type-helpers": "^0.8.32",
+		"@zayne-labs/toolkit-core": "^0.8.34",
+		"@zayne-labs/toolkit-react": "^0.8.34",
+		"@zayne-labs/toolkit-type-helpers": "^0.8.34",
 		"zustand": "^5.0.2"
 	},
 	"devDependencies": {
-		"@arethetypeswrong/cli": "0.17.2",
+		"@arethetypeswrong/cli": "0.17.3",
 		"@size-limit/esbuild-why": "11.1.6",
 		"@size-limit/preset-small-lib": "11.1.6",
 		"@total-typescript/ts-reset": "0.6.1",
-		"@types/react": "^19.0.3",
-		"@types/react-dom": "^19.0.2",
+		"@types/react": "^19.0.8",
+		"@types/react-dom": "^19.0.3",
 		"@zayne-labs/tsconfig": "0.2.1",
 		"concurrently": "^9.0.1",
 		"cross-env": "^7.0.3",
-		"publint": "^0.3.0",
+		"publint": "^0.3.2",
 		"react": "^19.0.0",
 		"react-dom": "^19.0.0",
 		"react-hook-form": "^7.53.2",
 		"size-limit": "11.1.6",
 		"tailwind-merge": "^2.5.5",
 		"terser": "5.37.0",
-		"tsup": "8.3.5",
-		"typescript": "^5.7.2"
+		"tsup": "8.3.6",
+		"typescript": "^5.7.3"
 	},
 	"publishConfig": {
 		"access": "public",

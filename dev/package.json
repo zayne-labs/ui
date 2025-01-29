@@ -10,18 +10,18 @@
 		"preview": "vite preview"
 	},
 	"dependencies": {
-		"@types/react": "19.0.3",
-		"@types/react-dom": "19.0.2",
+		"@types/react": "19.0.8",
+		"@types/react-dom": "19.0.3",
 		"@zayne-labs/ui-react": "workspace:*",
 		"react": "19.0.0",
 		"react-dom": "19.0.0"
 	},
 	"devDependencies": {
-		"@types/node": "^22.10.5",
+		"@types/node": "^22.12.0",
 		"@vitejs/plugin-react-swc": "^3.7.2",
 		"@zayne-labs/tsconfig": "0.2.1",
 		"tsx": "^4.19.1",
-		"typescript": "5.7.2",
-		"vite": "^6.0.9"
+		"typescript": "5.7.3",
+		"vite": "^6.0.11"
 	}
 }
