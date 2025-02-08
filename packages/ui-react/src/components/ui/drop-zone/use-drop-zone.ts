@@ -93,19 +93,14 @@ export const useDropZone = (props: UseDropZoneProps) => {
 				? { ...validationSettings, allowedFileTypes }
 				: {};
 
-			const inbuiltValidatedFilesArray = handleFileValidation({
+			const validFilesArray = handleFileValidation({
 				existingFileArray: existingFiles,
 				newFileList: fileList,
 				onError: onUploadError,
 				onSuccess: onUploadSuccess,
 				validationSettings: resolvedValidationSettings,
+				validator,
 			});
-
-			const validatorFnResult = validator
-				? validator({ existingFileArray: existingFiles, newFileList: fileList })
-				: [];
-
-			const validFilesArray = [...inbuiltValidatedFilesArray, ...validatorFnResult];
 
 			if (validFilesArray.length === 0) return;
 
