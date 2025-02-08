@@ -23,7 +23,7 @@ npm install @zayne-labs/ui-react
 yarn add @zayne-labs/ui-react
 ```
 
-## Quick Start
+## Example
 
 ```tsx
 import { Switch } from '@zayne-labs/ui-react/common'
