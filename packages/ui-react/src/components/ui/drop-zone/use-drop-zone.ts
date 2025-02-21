@@ -3,7 +3,12 @@
 import { cnMerge } from "@/lib/utils/cn";
 import { type FileValidationOptions, handleFileValidation } from "@zayne-labs/toolkit-core";
 import { useCallbackRef, useToggle } from "@zayne-labs/toolkit-react";
-import { type InferProps, composeRefs, mergeTwoProps } from "@zayne-labs/toolkit-react/utils";
+import {
+	type DiscriminatedRenderProps,
+	type InferProps,
+	composeRefs,
+	mergeTwoProps,
+} from "@zayne-labs/toolkit-react/utils";
 import { isFunction, isObject } from "@zayne-labs/toolkit-type-helpers";
 import { useRef, useState } from "react";
 
@@ -13,14 +18,18 @@ type RenderProps = {
 	isDragging: boolean;
 };
 
-export type RootProps = InferProps<"div"> & { classNames?: { activeDrag?: string; base?: string } };
+export type RootProps = InferProps<"div"> & {
+	classNames?: { activeDrag?: string; base?: string };
+};
 
 export type InputProps = InferProps<"input">;
 
-export type UseDropZoneProps = {
-	allowedFileTypes?: string[];
+type DropZoneRenderProps = DiscriminatedRenderProps<
+	React.ReactNode | ((props: RenderProps) => React.ReactNode)
+>;
 
-	children?: React.ReactNode | ((props: RenderProps) => React.ReactNode);
+export type UseDropZoneProps = DropZoneRenderProps & {
+	allowedFileTypes?: string[];
 
 	classNames?: { activeDrag?: string; base?: string; input?: string };
 
@@ -60,6 +69,7 @@ export const useDropZone = (props: UseDropZoneProps) => {
 		onUpload,
 		onUploadError,
 		onUploadSuccess,
+		render,
 		validationSettings,
 		validator,
 		// eslint-disable-next-line ts-eslint/no-unnecessary-condition -- Can be undefined
@@ -122,7 +132,10 @@ export const useDropZone = (props: UseDropZoneProps) => {
 
 	const getRenderProps = () => ({ acceptedFiles, inputRef, isDragging }) satisfies RenderProps;
 
-	const getChildren = () => (isFunction(children) ? children(getRenderProps()) : children);
+	const computedChildren = children ?? render;
+
+	const getChildren = () =>
+		isFunction(computedChildren) ? computedChildren(getRenderProps()) : computedChildren;
 
 	const getRootProps = (rootProps?: RootProps) => {
 		const mergedRootProps = mergeTwoProps(extraRootProps, rootProps);
@@ -170,6 +183,7 @@ export const useDropZone = (props: UseDropZoneProps) => {
 
 	return {
 		acceptedFiles,
+		computedChildren,
 		getChildren,
 		getInputProps,
 		getRenderProps,
