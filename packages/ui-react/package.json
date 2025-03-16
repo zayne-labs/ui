@@ -45,7 +45,8 @@
 		"react": ">=18.0.0",
 		"react-dom": ">=18.0.0",
 		"react-hook-form": ">=7.53.2",
-		"tailwind-merge": ">=2.5.5"
+		"tailwind-merge": ">=2.5.5",
+		"zustand": ">=5.0.3"
 	},
 	"peerDependenciesMeta": {
 		"react": {
@@ -61,8 +62,7 @@
 	"dependencies": {
 		"@zayne-labs/toolkit-core": "^0.8.47",
 		"@zayne-labs/toolkit-react": "^0.8.47",
-		"@zayne-labs/toolkit-type-helpers": "^0.8.47",
-		"zustand": "^5.0.3"
+		"@zayne-labs/toolkit-type-helpers": "^0.8.47"
 	},
 	"devDependencies": {
 		"@arethetypeswrong/cli": "0.17.4",
@@ -82,7 +82,8 @@
 		"tailwind-merge": "^3.0.2",
 		"terser": "5.39.0",
 		"tsup": "8.4.0",
-		"typescript": "^5.8.2"
+		"typescript": "^5.8.2",
+		"zustand": "^5.0.3"
 	},
 	"publishConfig": {
 		"access": "public",
@@ -92,7 +93,7 @@
 	"size-limit": [
 		{
 			"path": "src/components/ui/**/index.ts",
-			"limit": "4 kB"
+			"limit": "4.5 kB"
 		},
 		{
 			"path": "src/components/common/**/index.ts",

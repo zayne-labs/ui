@@ -2,6 +2,7 @@
 
 import * as React from "react";
 
+import { Slot } from "@/components/common";
 import { getElementList } from "@/components/common/for";
 import { EyeIconInvisible, EyeIconVisible } from "@/components/icons";
 import { cnMerge } from "@/lib/utils/cn";
@@ -587,6 +588,25 @@ export function FormErrorMessage<TControl, TFieldValues extends FieldValues = Fi
 				</p>
 			)}
 		/>
+	);
+}
+
+type FormSubmitButtonProps = InferProps<"button"> & {
+	asChild?: boolean;
+	unstyled?: boolean;
+};
+
+export function FormSubmitButton<TElement extends React.ElementType = "button">(
+	props: PolymorphicProps<TElement, FormSubmitButtonProps>
+) {
+	const { as: Element = "button", asChild, children, type = "submit", ...restOfProps } = props;
+
+	const Component = asChild ? Slot : Element;
+
+	return (
+		<Component type={type} {...restOfProps}>
+			{children}
+		</Component>
 	);
 }
 

@@ -126,9 +126,6 @@ importers:
       '@zayne-labs/toolkit-type-helpers':
         specifier: ^0.8.47
         version: 0.8.47
-      zustand:
-        specifier: ^5.0.3
-        version: 5.0.3(@types/react@19.0.10)(react@19.0.0)
     devDependencies:
       '@arethetypeswrong/cli':
         specifier: 0.17.4
@@ -184,6 +181,9 @@ importers:
       typescript:
         specifier: ^5.8.2
         version: 5.8.2
+      zustand:
+        specifier: ^5.0.3
+        version: 5.0.3(@types/react@19.0.10)(react@19.0.0)
 
 packages:
 
