@@ -364,33 +364,26 @@ export function FormTextArea(
 	);
 }
 
-type FormControllerRenderFn<TFieldValues extends FieldValues> = (props: {
+type FormControllerRenderFn = (props: {
 	field: Omit<ControllerRenderProps, "value"> & {
-		value: FieldPathValue<TFieldValues, FieldPath<TFieldValues>>;
+		value: never;
 	};
 	fieldState: ControllerFieldState;
-	formState: UseFormStateReturn<TFieldValues>;
+	formState: UseFormStateReturn<never>;
 }) => React.ReactElement;
 
-type FormControllerProps<TControl, TFieldValues extends FieldValues> = (TControl extends Control<
-	infer TValues
->
-	? {
-			render: FormControllerRenderFn<TValues>;
-		}
-	: {
-			control?: Control<TFieldValues>;
-			render: FormControllerRenderFn<TFieldValues>;
-		})
-	& Omit<ControllerProps<FieldValues, FieldPath<FieldValues>>, "control" | "name" | "render">;
+type FormControllerProps = Omit<
+	ControllerProps<FieldValues, FieldPath<FieldValues>>,
+	"control" | "name" | "render"
+> & {
+	render: FormControllerRenderFn;
+};
 
 export const FormControllerPrimitive: typeof Controller = (props) => {
 	return <Controller {...props} />;
 };
 
-export function FormController<TControl, TFieldValues extends FieldValues = never>(
-	props: FormControllerProps<TControl, TFieldValues>
-) {
+export function FormController(props: FormControllerProps) {
 	const { control } = useFormRootContext();
 	const { name } = useStrictFormItemContext();
 	const { render, ...restOfProps } = props;
@@ -416,29 +409,31 @@ type ErrorMessageRenderProps = {
 
 type ErrorMessageRenderState = { errorMessage: string; errorMessageArray: string[]; index: number };
 
-type FormErrorMessagePrimitiveProps<TFieldValues extends FieldValues> = {
-	className?: string;
-	classNames?: {
-		container?: string;
-		errorMessage?: string;
-		errorMessageAnimation?: string;
-	};
-	control: Control<TFieldValues>; // == Here for type inference of errorField prop
-	render: (context: {
-		props: ErrorMessageRenderProps;
-		state: ErrorMessageRenderState;
-	}) => React.ReactNode;
-	withAnimationOnInvalid?: boolean;
-} & (
-	| {
-			errorField: FieldPath<TFieldValues>;
-			type?: "regular";
-	  }
-	| {
-			errorField: string;
-			type: "root";
-	  }
-);
+type ErrorMessageRenderFn = (context: {
+	props: ErrorMessageRenderProps;
+	state: ErrorMessageRenderState;
+}) => React.ReactNode;
+
+type FormErrorMessagePrimitiveProps<TFieldValues extends FieldValues> =
+	DiscriminatedRenderProps<ErrorMessageRenderFn> & {
+		className?: string;
+		classNames?: {
+			container?: string;
+			errorMessage?: string;
+			errorMessageAnimation?: string;
+		};
+		control: Control<TFieldValues>; // == Here for type inference of errorField prop
+		withAnimationOnInvalid?: boolean;
+	} & (
+			| {
+					errorField: FieldPath<TFieldValues>;
+					type?: "regular";
+			  }
+			| {
+					errorField: string;
+					type: "root";
+			  }
+		);
 
 type FormErrorMessagePrimitiveType = {
 	<TFieldValues extends FieldValues>(
@@ -452,6 +447,7 @@ type FormErrorMessagePrimitiveType = {
 
 export const FormErrorMessagePrimitive: FormErrorMessagePrimitiveType = (props) => {
 	const {
+		children,
 		className,
 		classNames,
 		control,
@@ -529,13 +525,15 @@ export const FormErrorMessagePrimitive: FormErrorMessagePrimitiveType = (props) 
 			index,
 		}) satisfies ErrorMessageRenderState;
 
+	const renderFn = typeof children === "function" ? children : render;
+
 	return (
 		<ErrorMessageList
 			ref={wrapperRef}
 			each={errorMessageArray}
 			className={cnMerge("flex flex-col", classNames?.container)}
 			render={(errorMessage, index) => {
-				return render({
+				return renderFn({
 					props: getRenderProps({ index }),
 					state: getRenderState({ errorMessage, index }),
 				});

@@ -60,8 +60,11 @@
    } */
 
 	button {
-		cursor: pointer;
 		outline: transparent;
+	}
+
+	button:not(:disabled) {
+		cursor: pointer;
 	}
 
 	body {

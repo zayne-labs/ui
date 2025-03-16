@@ -39,6 +39,17 @@ function AnotherApp() {
 					className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent
 						focus:ring-2 focus:ring-blue-500 focus:outline-none"
 				/>
+
+				<Form.Controller
+					render={({ field }) => {
+						return (
+							<>
+								<p>passwordValue: {field.value}</p>
+								<p>fieldname: {field.name}</p>
+							</>
+						);
+					}}
+				/>
 			</Form.Item>
 
 			<Form.FieldSubscribe
@@ -58,7 +69,6 @@ function AnotherApp() {
 				control={methods.control}
 				name={["password"]}
 				render={(state) => {
-					console.info("state-isDirty", state.isDirty);
 					return (
 						<button
 							disabled={!state.isValid}
