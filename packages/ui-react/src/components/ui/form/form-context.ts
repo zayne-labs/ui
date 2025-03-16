@@ -1,29 +1,38 @@
 import { ContextError, createCustomContext } from "@zayne-labs/toolkit-react";
-import { useFormContext } from "react-hook-form";
+import type { DiscriminatedRenderProps } from "@zayne-labs/toolkit-react/utils";
+import { type UseFormReturn, useFormContext } from "react-hook-form";
+import type { FieldValues } from "./form";
 
-export const useFormFieldContext = () => {
-	const formContext = useFormContext() as ReturnType<typeof useFormContext> | null;
+export type FormRootContextValue<TFieldValues extends FieldValues = FieldValues> =
+	UseFormReturn<TFieldValues>;
+
+export const useFormRootContext = () => {
+	const formContext = useFormContext() as FormRootContextValue | null;
 
 	if (!formContext) {
 		throw new ContextError(
-			`useFormFieldContext returned "null". Did you forget to wrap the necessary components within FormRoot?`
+			`useFormRootContext returned "null". Did you forget to wrap the necessary components within FormRoot?`
 		);
 	}
 
 	return formContext;
 };
 
-export type ContextValue = {
+export type ItemContextValue = {
 	name: string;
 	uniqueId: string;
 };
 
-export const [StrictFormItemProvider, useStrictFormItemContext] = createCustomContext<ContextValue>({
+export type FormItemContextProps = DiscriminatedRenderProps<
+	(contextValue: ItemContextValue) => React.ReactNode
+>;
+
+export const [StrictFormItemProvider, useStrictFormItemContext] = createCustomContext<ItemContextValue>({
 	hookName: "useFormItemContext",
 	providerName: "FormItem",
 });
 
-export const [LaxFormItemProvider, useLaxFormItemContext] = createCustomContext<ContextValue, false>({
+export const [LaxFormItemProvider, useLaxFormItemContext] = createCustomContext<ItemContextValue, false>({
 	hookName: "useLaxFormItemContext",
 	providerName: "FormItem",
 	strict: false,

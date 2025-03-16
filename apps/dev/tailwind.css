@@ -1,0 +1,70 @@
+@import "tailwindcss";
+@source './node_modules/@zayne-labs/ui-react/dist/esm/**/*.js';
+
+@theme {
+	--color-shadcn-accent: hsl(210, 40%, 96.1%);
+	--color-shadcn-accent-foreground: hsl(222.2, 47.4%, 11.2%);
+	--color-shadcn-background: hsl(0, 0%, 100%);
+	--color-shadcn-border: hsl(214.3, 31.8%, 91.4%);
+	--color-shadcn-foreground: hsl(222.2, 47.4%, 11.2%);
+	--color-shadcn-input: hsl(214.3, 31.8%, 91.4%);
+	--color-shadcn-muted: hsl(210, 40%, 96.1%);
+	--color-shadcn-muted-foreground: hsl(215.4, 16.3%, 46.9%);
+	--color-shadcn-popover: hsl(0, 0%, 100%);
+	--color-shadcn-popover-foreground: hsl(222.2, 47.4%, 11.2%);
+	--color-shadcn-primary: hsl(222.2, 47.4%, 11.2%);
+	--color-shadcn-primary-foreground: hsl(210, 40%, 98%);
+	--color-shadcn-ring: hsl(215, 20.2%, 65.1%);
+	--color-shadcn-secondary: hsl(210, 40%, 96.1%);
+	--color-shadcn-secondary-foreground: hsl(222.2, 47.4%, 11.2%);
+}
+
+/* -------------1-----*/
+/* General CSS Reset */
+/*-------------------*/
+@layer base {
+	* {
+		margin: 0;
+		padding: 0;
+		box-sizing: border-box;
+	}
+
+	html {
+		scroll-behavior: smooth;
+		-webkit-tap-highlight-color: transparent;
+		font-synthesis: none;
+		text-rendering: optimizeLegibility;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+	}
+
+	html {
+		height: 100%;
+	}
+
+	body {
+		display: flex;
+		flex-direction: column;
+		min-height: 100%;
+	}
+
+	input:focus-visible {
+		outline: 2px solid transparent;
+		outline-offset: 2px;
+	}
+
+	/* img {
+      width: 100%;
+      max-inline-size: 100%;
+      max-width: unset;
+   } */
+
+	button {
+		cursor: pointer;
+		outline: transparent;
+	}
+
+	body {
+		line-height: 1.5;
+	}
+}

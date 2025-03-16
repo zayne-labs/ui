@@ -1,6 +1,6 @@
-export { Controller as ControllerPrimitive } from "react-hook-form";
 export {
 	FormController as Controller,
+	FormControllerPrimitive as ControllerPrimitive,
 	FormDescription as Description,
 	FormErrorMessage as ErrorMessage,
 	FormErrorMessagePrimitive as ErrorMessagePrimitive,
@@ -13,6 +13,8 @@ export {
 	FormItemContext as ItemContext,
 	FormLabel as Label,
 	FormRoot as Root,
+	FormStateSubscribe as StateSubscribe,
+	FormFieldSubscribe as FieldSubscribe,
 	FormTextArea as TextArea,
 	FormTextAreaPrimitive as TextAreaPrimitive,
 } from "./form";
