@@ -1,5 +1,16 @@
 # @zayne-labs/ui-react
 
+## 0.3.0
+
+### Minor Changes
+
+- 82512d3: feat(ui-react): add FormSubmitButton component
+
+   - Added a `FormSubmitButton` component to the `ui-react` package.
+   - This component provides a styled submit button for forms, with support for `asChild` and `unstyled` props.
+   - Updated `form-parts.ts` to export the new component.
+   - Added `zustand` as a dependency and devDependency to `ui-react` package.
+
 ## 0.2.3
 
 ### Patch Changes
