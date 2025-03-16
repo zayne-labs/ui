@@ -148,7 +148,7 @@ export function CarouselItemGroup<TArrayItem>(props: CarouselWrapperProps<TArray
 		<ul
 			data-id="Carousel Image Wrapper"
 			className={cnMerge(
-				`flex w-full shrink-0 snap-center [transform:translate3d(var(--translate-distance),0,0)]
+				`flex w-full shrink-0 [transform:translate3d(var(--translate-distance),0,0)] snap-center
 				[transition:transform_800ms_ease]`,
 				className
 			)}

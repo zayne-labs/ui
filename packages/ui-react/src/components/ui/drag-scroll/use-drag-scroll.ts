@@ -96,8 +96,7 @@ const useDragScroll = <TElement extends HTMLElement>(props: DragScrollProps<TEle
 		return {
 			...mergedRootProps,
 			className: cnMerge(
-				`flex w-full cursor-grab snap-x snap-mandatory overflow-y-clip overflow-x-scroll
-				[-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden`,
+				`flex w-full cursor-grab snap-x snap-mandatory overflow-x-scroll overflow-y-clip [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden`,
 				orientation === "horizontal" && "flex-row",
 				orientation === "vertical" && "flex-col",
 				usage === "mobileAndTabletOnly" && "md:cursor-default md:flex-col",
