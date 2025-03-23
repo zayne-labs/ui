@@ -3,3 +3,4 @@ node_modules
 .eslintcache
 *.tsbuildinfo
 eslint-typegen.d.ts
+.qodo

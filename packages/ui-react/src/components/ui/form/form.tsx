@@ -35,12 +35,12 @@ import {
 	useWatch,
 } from "react-hook-form";
 import {
-	type FormItemContextProps,
-	LaxFormItemProvider,
-	StrictFormItemProvider,
+	type FormFieldContextProps,
+	LaxFormFieldProvider,
+	StrictFormFieldProvider,
 	useFormRootContext,
-	useLaxFormItemContext,
-	useStrictFormItemContext,
+	useLaxFormFieldContext,
+	useStrictFormFieldContext,
 } from "./form-context";
 
 export type FieldValues = Record<string, unknown>;
@@ -67,7 +67,7 @@ export function FormRoot<TValues extends FieldValues>(props: FormRootProps<TValu
 	);
 }
 
-type FormItemProps<TControl, TFieldValues extends FieldValues> = (TControl extends Control<infer TValues>
+type FormFieldProps<TControl, TFieldValues extends FieldValues> = (TControl extends Control<infer TValues>
 	? {
 			control?: never;
 			name: FieldPath<TValues>;
@@ -81,8 +81,8 @@ type FormItemProps<TControl, TFieldValues extends FieldValues> = (TControl exten
 	withWrapper?: boolean;
 };
 
-export function FormItem<TControl, TFieldValues extends FieldValues = FieldValues>(
-	props: FormItemProps<TControl, TFieldValues>
+export function FormField<TControl, TFieldValues extends FieldValues = FieldValues>(
+	props: FormFieldProps<TControl, TFieldValues>
 ) {
 	const { children, className, name, withWrapper = true } = props;
 
@@ -97,22 +97,22 @@ export function FormItem<TControl, TFieldValues extends FieldValues = FieldValue
 
 	const wrapperElementProps = withWrapper && {
 		className: cnMerge("flex flex-col", className),
-		"data-part": "item",
+		"data-part": "field",
 		"data-scope": "form",
 	};
 
 	return (
-		<StrictFormItemProvider value={value}>
-			<LaxFormItemProvider value={value}>
+		<StrictFormFieldProvider value={value}>
+			<LaxFormFieldProvider value={value}>
 				<WrapperElement {...wrapperElementProps}>{children}</WrapperElement>
-			</LaxFormItemProvider>
-		</StrictFormItemProvider>
+			</LaxFormFieldProvider>
+		</StrictFormFieldProvider>
 	);
 }
 
-export function FormItemContext(props: FormItemContextProps) {
+export function FormFieldContext(props: FormFieldContextProps) {
 	const { children, render } = props;
-	const contextValues = useStrictFormItemContext();
+	const contextValues = useStrictFormFieldContext();
 
 	if (typeof children === "function") {
 		return children(contextValues);
@@ -122,7 +122,7 @@ export function FormItemContext(props: FormItemContextProps) {
 }
 
 export function FormLabel(props: InferProps<"label">) {
-	const { uniqueId } = useStrictFormItemContext();
+	const { uniqueId } = useStrictFormFieldContext();
 	const { children, className, ...restOfProps } = props;
 
 	return (
@@ -209,7 +209,7 @@ const inputTypesWithoutFullWith = new Set<React.HTMLInputTypeAttribute>(["checkb
 export function FormInputPrimitive<TFieldValues extends FieldValues>(
 	props: FormInputPrimitiveProps<TFieldValues>
 ) {
-	const contextValues = useLaxFormItemContext();
+	const contextValues = useLaxFormFieldContext();
 
 	const {
 		className,
@@ -284,7 +284,7 @@ export function FormInput(
 ) {
 	const { rules, ...restOfProps } = props;
 
-	const { name } = useStrictFormItemContext();
+	const { name } = useStrictFormFieldContext();
 	const { control, register } = useFormRootContext();
 
 	const formState = useFormState({ control, name });
@@ -309,7 +309,7 @@ type FormTextAreaPrimitiveProps<TFieldValues extends FieldValues = FieldValues> 
 export function FormTextAreaPrimitive<TFieldValues extends FieldValues>(
 	props: FormTextAreaPrimitiveProps<TFieldValues>
 ) {
-	const contextValues = useLaxFormItemContext();
+	const contextValues = useLaxFormFieldContext();
 
 	const {
 		className,
@@ -351,7 +351,7 @@ export function FormTextArea(
 ) {
 	const { rules, ...restOfProps } = props;
 
-	const { name } = useStrictFormItemContext();
+	const { name } = useStrictFormFieldContext();
 	const { control, register } = useFormRootContext();
 	const formState = useFormState({ control, name });
 
@@ -365,7 +365,7 @@ export function FormTextArea(
 	);
 }
 
-type FormControllerRenderFn = (props: {
+type FormFieldControllerRenderFn = (props: {
 	field: Omit<ControllerRenderProps, "value"> & {
 		value: never;
 	};
@@ -373,20 +373,20 @@ type FormControllerRenderFn = (props: {
 	formState: UseFormStateReturn<never>;
 }) => React.ReactElement;
 
-type FormControllerProps = Omit<
+type FormFieldControllerProps = Omit<
 	ControllerProps<FieldValues, FieldPath<FieldValues>>,
 	"control" | "name" | "render"
 > & {
-	render: FormControllerRenderFn;
+	render: FormFieldControllerRenderFn;
 };
 
 export const FormControllerPrimitive: typeof Controller = (props) => {
 	return <Controller {...props} />;
 };
 
-export function FormController(props: FormControllerProps) {
+export function FormFieldController(props: FormFieldControllerProps) {
 	const { control } = useFormRootContext();
-	const { name } = useStrictFormItemContext();
+	const { name } = useStrictFormFieldContext();
 	const { render, ...restOfProps } = props;
 
 	return (
@@ -567,7 +567,7 @@ type FormErrorMessageProps<TControl, TFieldValues extends FieldValues> =
 export function FormErrorMessage<TControl, TFieldValues extends FieldValues = FieldValues>(
 	props: FormErrorMessageProps<TControl, TFieldValues>
 ) {
-	const contextValues = useLaxFormItemContext();
+	const contextValues = useLaxFormFieldContext();
 
 	const { className, errorField = contextValues?.name, type = "regular" } = props;
 
@@ -610,12 +610,15 @@ export function FormSubmitButton<TElement extends React.ElementType = "button">(
 	);
 }
 
-type FieldSubscribeRenderFn<TFieldValues extends FieldValues, TFieldPathOrPaths> = (props: {
-	value: TFieldPathOrPaths extends Array<FieldPath<TFieldValues>>
+type GetFieldValue<TFieldPathOrPaths, TFieldValues extends FieldValues> =
+	TFieldPathOrPaths extends Array<FieldPath<TFieldValues>>
 		? FieldPathValues<TFieldValues, TFieldPathOrPaths>
 		: TFieldPathOrPaths extends FieldPath<TFieldValues>
 			? FieldPathValue<TFieldValues, TFieldPathOrPaths>
 			: unknown;
+
+type FieldSubscribeRenderFn<TFieldValues extends FieldValues, TFieldPathOrPaths> = (props: {
+	value: GetFieldValue<TFieldPathOrPaths, TFieldValues>;
 }) => React.ReactNode;
 
 type FormFieldSubscribeProps<
@@ -630,7 +633,7 @@ export function FormFieldSubscribe<
 	TFieldValues extends FieldValues,
 	const TFieldPathOrPaths extends Array<FieldPath<TFieldValues>> | FieldPath<TFieldValues>,
 >(props: FormFieldSubscribeProps<TFieldValues, TFieldPathOrPaths>) {
-	const contextValues = useLaxFormItemContext();
+	const contextValues = useLaxFormFieldContext();
 
 	const { children, name = contextValues?.name, render } = props;
 
@@ -661,7 +664,7 @@ type FormStateSubscribeProps<TFieldValues extends FieldValues> = DiscriminatedRe
 export function FormStateSubscribe<TFieldValues extends FieldValues = FieldValues>(
 	props: FormStateSubscribeProps<TFieldValues>
 ) {
-	const contextValues = useLaxFormItemContext();
+	const contextValues = useLaxFormFieldContext();
 
 	const { children, control, name = contextValues?.name, render } = props;
 

@@ -18,22 +18,27 @@ export const useFormRootContext = () => {
 	return formContext;
 };
 
-export type ItemContextValue = {
+export type FieldContextValue = {
 	name: string;
 	uniqueId: string;
 };
 
-export type FormItemContextProps = DiscriminatedRenderProps<
-	(contextValue: ItemContextValue) => React.ReactNode
+export type FormFieldContextProps = DiscriminatedRenderProps<
+	(contextValue: FieldContextValue) => React.ReactNode
 >;
 
-export const [StrictFormItemProvider, useStrictFormItemContext] = createCustomContext<ItemContextValue>({
-	hookName: "useFormItemContext",
-	providerName: "FormItem",
-});
+export const [StrictFormFieldProvider, useStrictFormFieldContext] = createCustomContext<FieldContextValue>(
+	{
+		hookName: "useFormFieldContext",
+		providerName: "FormField",
+	}
+);
 
-export const [LaxFormItemProvider, useLaxFormItemContext] = createCustomContext<ItemContextValue, false>({
-	hookName: "useLaxFormItemContext",
-	providerName: "FormItem",
+export const [LaxFormFieldProvider, useLaxFormFieldContext] = createCustomContext<
+	FieldContextValue,
+	false
+>({
+	hookName: "useLaxFormFieldContext",
+	providerName: "FormField",
 	strict: false,
 });

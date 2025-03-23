@@ -1,5 +1,5 @@
 export {
-	FormController as Controller,
+	FormFieldController as FieldController,
 	FormControllerPrimitive as ControllerPrimitive,
 	FormDescription as Description,
 	FormErrorMessage as ErrorMessage,
@@ -9,8 +9,8 @@ export {
 	FormInputLeftItem as InputLeftItem,
 	FormInputPrimitive as InputPrimitive,
 	FormInputRightItem as InputRightItem,
-	FormItem as Item,
-	FormItemContext as ItemContext,
+	FormField as Field,
+	FormFieldContext as FieldContext,
 	FormLabel as Label,
 	FormRoot as Root,
 	FormSubmitButton as SubmitButton,
