@@ -1,4 +1,4 @@
-import { configWithTailwind } from "@zayne-labs/eslint-config/prettier";
+import { configWithTailwind } from "@zayne-labs/prettier-config";
 
 const config = {
 	...configWithTailwind,

@@ -1,6 +1,6 @@
 export {
 	FormFieldController as FieldController,
-	FormControllerPrimitive as ControllerPrimitive,
+	FormControlledField as ControlledField,
 	FormDescription as Description,
 	FormErrorMessage as ErrorMessage,
 	FormErrorMessagePrimitive as ErrorMessagePrimitive,
@@ -16,6 +16,5 @@ export {
 	FormSubmitButton as SubmitButton,
 	FormStateSubscribe as StateSubscribe,
 	FormFieldSubscribe as FieldSubscribe,
-	FormTextArea as TextArea,
 	FormTextAreaPrimitive as TextAreaPrimitive,
 } from "./form";
