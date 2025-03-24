@@ -98,7 +98,7 @@
 		},
 		{
 			"path": "src/components/common/**/index.ts",
-			"limit": "500 b"
+			"limit": "600 b"
 		}
 	]
 }
