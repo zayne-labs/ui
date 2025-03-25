@@ -1,5 +1,14 @@
 # @zayne-labs/ui-react
 
+## 0.4.0
+
+### Minor Changes
+
+- c3306fa: chore(deps,form)!: 🔧 cleanup form context types and update dependencies
+
+   feat(form)!: 🏗️ simplify form context type definitions and remove unused imports and change naming for more consistent use
+   chore(config): 🔧 update prettier and package configurations
+
 ## 0.3.0
 
 ### Minor Changes
