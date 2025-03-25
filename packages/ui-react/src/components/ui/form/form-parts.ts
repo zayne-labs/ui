@@ -13,7 +13,7 @@ export {
 	FormFieldContext as FieldContext,
 	FormLabel as Label,
 	FormRoot as Root,
-	FormSubmitButton as SubmitButton,
+	FormSubmit as Submit,
 	FormStateSubscribe as StateSubscribe,
 	FormFieldSubscribe as FieldSubscribe,
 	FormTextAreaPrimitive as TextAreaPrimitive,

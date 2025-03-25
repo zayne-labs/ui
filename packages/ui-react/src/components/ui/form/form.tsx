@@ -125,19 +125,15 @@ export function FormControlledField<TFieldValues extends FieldValues>(
 
 	const uniqueId = useId();
 
-	const formDescriptionId = `${name}-(${uniqueId})-form-item-description` as const;
-	const formItemId = `${name}-(${uniqueId})-form-item` as const;
-	const formMessageId = `${name}-(${uniqueId})-form-item-message` as const;
-
 	const fieldContextValue = useMemo(
 		() =>
 			({
-				formDescriptionId,
-				formItemId,
-				formMessageId,
+				formDescriptionId: `${name}-(${uniqueId})-form-item-description`,
+				formItemId: `${name}-(${uniqueId})-form-item`,
+				formMessageId: `${name}-(${uniqueId})-form-item-message`,
 				name,
 			}) satisfies FieldContextValue,
-		[formDescriptionId, formItemId, formMessageId, name]
+		[name, uniqueId]
 	);
 
 	return (
@@ -621,10 +617,10 @@ export function FormErrorMessage<TControl, TFieldValues extends FieldValues = Fi
 	);
 }
 
-type FormSubmitButtonProps = InferProps<"button"> & { asChild?: boolean };
+type FormSubmitProps = InferProps<"button"> & { asChild?: boolean };
 
-export function FormSubmitButton<TElement extends React.ElementType = "button">(
-	props: PolymorphicProps<TElement, FormSubmitButtonProps>
+export function FormSubmit<TElement extends React.ElementType = "button">(
+	props: PolymorphicProps<TElement, FormSubmitProps>
 ) {
 	const { as: Element = "button", asChild, children, type = "submit", ...restOfProps } = props;
 

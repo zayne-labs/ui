@@ -24,15 +24,15 @@ function AnotherApp() {
 			onSubmit={(event) => void onSubmit(event)}
 			className="mx-auto mt-8 w-full max-w-md space-y-6 rounded-lg bg-white p-6 shadow-md"
 		>
-			<Form.Item control={methods.control} name="username" className="space-y-2">
+			<Form.Field control={methods.control} name="username" className="space-y-2">
 				<Form.Label className="text-sm font-medium text-gray-700">Username</Form.Label>
 				<Form.Input
 					className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent
 						focus:ring-2 focus:ring-blue-500 focus:outline-none"
 				/>
-			</Form.Item>
+			</Form.Field>
 
-			<Form.Item control={methods.control} name="password" className="space-y-2">
+			<Form.Field control={methods.control} name="password" className="space-y-2">
 				<Form.Label className="text-sm font-medium text-gray-700">Password</Form.Label>
 				<Form.Input
 					type="password"
@@ -40,7 +40,7 @@ function AnotherApp() {
 						focus:ring-2 focus:ring-blue-500 focus:outline-none"
 				/>
 
-				<Form.Controller
+				<Form.FieldController
 					render={({ field }) => {
 						return (
 							<>
@@ -50,7 +50,7 @@ function AnotherApp() {
 						);
 					}}
 				/>
-			</Form.Item>
+			</Form.Field>
 
 			<Form.FieldSubscribe
 				control={methods.control}
@@ -70,15 +70,14 @@ function AnotherApp() {
 				name={["password"]}
 				render={(state) => {
 					return (
-						<button
+						<Form.Submit
 							disabled={!state.isValid}
-							type="submit"
 							className="w-full rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white
 								hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
 								focus:outline-none disabled:opacity-50"
 						>
 							Submit
-						</button>
+						</Form.Submit>
 					);
 				}}
 			/>

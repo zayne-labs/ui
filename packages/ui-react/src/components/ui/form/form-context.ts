@@ -49,6 +49,7 @@ export const useLaxGetFieldState = (name: string | undefined) => {
 export const [StrictFormFieldProvider, useStrictFormFieldContext] = createCustomContext<FieldContextValue>(
 	{
 		hookName: "useFormFieldContext",
+		name: "StrictFormFieldContext",
 		providerName: "FormField",
 	}
 );
@@ -58,6 +59,7 @@ export const [LaxFormFieldProvider, useLaxFormFieldContext] = createCustomContex
 	false
 >({
 	hookName: "useLaxFormFieldContext",
+	name: "LaxFormFieldContext",
 	providerName: "FormField",
 	strict: false,
 });
