@@ -1,5 +1,11 @@
 # @zayne-labs/ui-react
 
+## 0.4.1
+
+### Patch Changes
+
+- 3b8918d: feat: export useFormRootContext
+
 ## 0.4.0
 
 ### Minor Changes
