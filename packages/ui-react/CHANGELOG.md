@@ -1,5 +1,16 @@
 # @zayne-labs/ui-react
 
+## 0.4.2
+
+### Patch Changes
+
+- d8c6dc8: ♻️ refactor(form): Simplify field state management and improve type safety
+
+   🔥 refactor(form-context): Remove redundant useLaxGetFieldState hook
+   🎨 refactor(form): Move field state handling to FormInput component
+   ✨ feat(form): Add fieldState prop to form primitives for better control
+   🏷️ feat(form): Improve TypeScript types for form state management
+
 ## 0.4.1
 
 ### Patch Changes
