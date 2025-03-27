@@ -39,8 +39,8 @@ import {
 	StrictFormFieldProvider,
 	useFormRootContext,
 	useLaxFormFieldContext,
-	useLaxGetFieldState,
 	useStrictFormFieldContext,
+	useStrictGetFieldState,
 } from "./form-context";
 
 export type FieldValues = Record<string, unknown>;
@@ -264,6 +264,7 @@ type FormInputPrimitiveProps<TFieldValues extends FieldValues = FieldValues> = O
 > & {
 	classNames?: { error?: string; eyeIcon?: string; input?: string; inputGroup?: string };
 	control?: Control<TFieldValues>;
+	fieldState?: Partial<ControllerFieldState>;
 	name?: FieldPath<TFieldValues>;
 	withEyeIcon?: boolean;
 };
@@ -272,6 +273,7 @@ type FormTextAreaPrimitiveProps<TFieldValues extends FieldValues = FieldValues> 
 	React.ComponentPropsWithRef<"textarea"> & {
 		control?: Control<TFieldValues>;
 		errorClassName?: string;
+		fieldState?: Partial<ControllerFieldState>;
 		name?: FieldPath<TFieldValues>;
 		type: "textarea";
 	};
@@ -286,14 +288,13 @@ export function FormInputPrimitive<TFieldValues extends FieldValues>(
 	const {
 		className,
 		classNames,
+		fieldState,
 		id = fieldContextValues?.formItemId,
 		name = fieldContextValues?.name,
 		type = "text",
 		withEyeIcon = true,
 		...restOfProps
 	} = props;
-
-	const fieldState = useLaxGetFieldState(name);
 
 	const fieldError = fieldState?.error;
 
@@ -359,12 +360,11 @@ export function FormTextAreaPrimitive<TFieldValues extends FieldValues>(
 	const {
 		className,
 		errorClassName,
+		fieldState,
 		id = fieldContextValues?.formItemId,
 		name = fieldContextValues?.name,
 		...restOfProps
 	} = props;
-
-	const fieldState = useLaxGetFieldState(name);
 
 	const fieldError = fieldState?.error;
 
@@ -402,12 +402,15 @@ export function FormInput(props: FormInputProps & { rules?: RegisterOptions }) {
 	const { name } = useStrictFormFieldContext();
 	const { register } = useFormRootContext();
 
+	const fieldState = useStrictGetFieldState();
+
 	const SelectedInput = type === "textarea" ? FormTextAreaPrimitive : FormInputPrimitive;
 
 	return (
 		<SelectedInput
 			type={type as never}
 			name={name}
+			fieldState={fieldState}
 			{...(Boolean(name) && register(name, rules))}
 			{...(restOfProps as NonNullable<unknown>)}
 		/>

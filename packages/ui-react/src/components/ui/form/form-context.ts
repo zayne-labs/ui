@@ -36,16 +36,6 @@ export const useStrictGetFieldState = () => {
 	return fieldState;
 };
 
-export const useLaxGetFieldState = (name: string | undefined) => {
-	const { formState, getFieldState } = useFormRootContext();
-
-	if (!name) return;
-
-	const fieldState = getFieldState(name, formState);
-
-	return fieldState;
-};
-
 export const [StrictFormFieldProvider, useStrictFormFieldContext] = createCustomContext<FieldContextValue>(
 	{
 		hookName: "useFormFieldContext",
