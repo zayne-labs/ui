@@ -4,3 +4,4 @@ node_modules
 *.tsbuildinfo
 eslint-typegen.d.ts
 .qodo
+.turbo
