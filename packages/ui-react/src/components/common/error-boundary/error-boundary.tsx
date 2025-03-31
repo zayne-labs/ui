@@ -47,17 +47,12 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
 		const { hasError } = this.state;
 		const { resetKeys } = this.props;
 
-		// There's an edge case where if the thing that triggered the error happens to *also* be in the resetKeys array,
-		// we'd end up resetting the error boundary immediately.
+		// There's an edge case where if the thing that triggered the error happens to *also* be in the resetKeys array, we'd end up resetting the error boundary immediately.
 		// This would likely trigger a second error to be thrown.
 		// So we make sure that we don't check the resetKeys on the first call of cDU after the error is set.
 
 		if (hasError && prevState.error !== null && hasArrayChanged(prevProps.resetKeys, resetKeys)) {
-			this.props.onReset?.({
-				next: resetKeys,
-				prev: prevProps.resetKeys,
-				reason: "keys",
-			});
+			this.props.onReset?.({ next: resetKeys, prev: prevProps.resetKeys, reason: "keys" });
 
 			this.setState(initialState);
 		}
@@ -99,14 +94,11 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
 		);
 	}
 
-	#resetErrorBoundary = (...args: unknown[]) => {
+	#resetErrorBoundary = (...parameters: unknown[]) => {
 		const { error } = this.state;
 
 		if (error !== null) {
-			this.props.onReset?.({
-				args,
-				reason: "imperative-api",
-			});
+			this.props.onReset?.({ parameters, reason: "imperative-api" });
 
 			this.setState(initialState);
 		}

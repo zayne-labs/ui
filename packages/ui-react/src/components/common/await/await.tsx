@@ -1,9 +1,7 @@
-"use client";
-
 import * as React from "react";
 
 import type { DiscriminatedRenderProps } from "@zayne-labs/toolkit-react/utils";
-import { Suspense, use } from "react";
+import { Fragment as ReactFragment, Suspense, use } from "react";
 import { ErrorBoundary, type ErrorBoundaryProps } from "../error-boundary";
 
 type RenderPropFn<Tvalue> = (result: Tvalue) => React.ReactNode;
@@ -20,26 +18,19 @@ type AwaitProps<Tvalue> = AwaitInnerProps<Tvalue> & {
 export function Await<Tvalue>(props: AwaitProps<Tvalue>) {
 	const { errorFallback, fallback, ...restOfProps } = props;
 
-	const awaitedInnerElement = <AwaitInner {...restOfProps} />;
+	const WithErrorBoundary = errorFallback ? ErrorBoundary : ReactFragment;
+	const WithSuspense = fallback ? Suspense : ReactFragment;
 
-	switch (true) {
-		// eslint-disable-next-line ts-eslint/prefer-nullish-coalescing -- || makes more sense here
-		case (errorFallback && fallback) || errorFallback: {
-			return (
-				<ErrorBoundary fallback={errorFallback}>
-					<Suspense fallback={fallback}>{awaitedInnerElement}</Suspense>;
-				</ErrorBoundary>
-			);
-		}
+	const errorBoundaryProps = { fallback: errorFallback };
+	const suspenseProps = { fallback };
 
-		case fallback: {
-			return <Suspense fallback={fallback}>{awaitedInnerElement}</Suspense>;
-		}
-
-		default: {
-			return awaitedInnerElement;
-		}
-	}
+	return (
+		<WithErrorBoundary {...errorBoundaryProps}>
+			<WithSuspense {...suspenseProps}>
+				<AwaitInner {...restOfProps} />
+			</WithSuspense>
+		</WithErrorBoundary>
+	);
 }
 
 function AwaitInner<TValue>(props: AwaitInnerProps<TValue>) {

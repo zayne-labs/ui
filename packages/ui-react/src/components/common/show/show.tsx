@@ -2,7 +2,7 @@
 
 import * as React from "react";
 
-import { getOtherChildren, getSlotElement } from "@zayne-labs/toolkit-react/utils";
+import { getRegularChildren, getSingleSlot } from "@zayne-labs/toolkit-react/utils";
 import { AssertionError, isFunction } from "@zayne-labs/toolkit-type-helpers";
 
 type ShowProps<TWhen> = {
@@ -13,7 +13,7 @@ type ShowProps<TWhen> = {
 
 export function ShowRoot<TWhen>({ children, fallback, when }: ShowProps<TWhen>) {
 	if ((when == null || when === false) && !isFunction(children)) {
-		const fallBackSlot = getSlotElement(children, ShowFallback, {
+		const fallBackSlot = getSingleSlot(children, ShowFallback, {
 			errorMessage: "Only one <Show.Fallback> or <Show.OtherWise> component is allowed",
 			throwOnMultipleSlotMatch: true,
 		});
@@ -33,22 +33,22 @@ export function ShowRoot<TWhen>({ children, fallback, when }: ShowProps<TWhen>) 
 
 	const resolvedChildren = isFunction(children) ? children(when) : children;
 
-	const contentSlot = getSlotElement(resolvedChildren, ShowContent, {
+	const contentSlot = getSingleSlot(resolvedChildren, ShowContent, {
 		errorMessage: "Only one <Show.Content> component is allowed",
 		throwOnMultipleSlotMatch: true,
 	});
 
-	const otherChildren = getOtherChildren(resolvedChildren, [ShowFallback, ShowContent]);
+	const regularChildren = getRegularChildren(resolvedChildren, [ShowFallback, ShowContent]);
 
-	return contentSlot ?? otherChildren;
+	return contentSlot ?? regularChildren;
 }
 
 export function ShowContent({ children }: { children: React.ReactNode }) {
 	return children;
 }
-ShowContent.slot = Symbol.for("content");
+ShowContent.slotSymbol = Symbol("content");
 
 export function ShowFallback({ children }: { children: React.ReactNode }) {
 	return children;
 }
-ShowFallback.slot = Symbol.for("show-fallback");
+ShowFallback.slotSymbol = Symbol("show-fallback");

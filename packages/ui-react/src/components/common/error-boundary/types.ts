@@ -9,8 +9,8 @@ export type ErrorBoundaryProps = {
 	onError?: (error: Error, info: React.ErrorInfo & { ownerStack?: string }) => void;
 	onReset?: (
 		details:
-			| { args: unknown[]; reason: "imperative-api" }
 			| { next: unknown[] | undefined; prev: unknown[] | undefined; reason: "keys" }
+			| { parameters: unknown[]; reason: "imperative-api" }
 	) => void;
 	resetKeys?: unknown[];
 };

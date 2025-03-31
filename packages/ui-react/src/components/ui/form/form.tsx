@@ -12,8 +12,7 @@ import {
 	type DiscriminatedRenderProps,
 	type InferProps,
 	type PolymorphicProps,
-	getOtherChildren,
-	getSlotElement,
+	getMultipleSlots,
 } from "@zayne-labs/toolkit-react/utils";
 import { Fragment as ReactFragment, useEffect, useId, useMemo, useRef } from "react";
 import {
@@ -196,12 +195,12 @@ export function FormLabel(props: InferProps<"label">) {
 	);
 }
 
-export function FormInputGroup(props: React.ComponentPropsWithRef<"div">) {
+export function FormInputGroup(props: InferProps<"div">) {
 	const { children, className, ...restOfProps } = props;
-	const LeftItemSlot = getSlotElement(children, FormInputLeftItem);
-	const RightItemSlot = getSlotElement(children, FormInputRightItem);
-
-	const otherChildren = getOtherChildren(children, [FormInputLeftItem, FormInputRightItem]);
+	const {
+		regularChildren,
+		slots: [leftItemSlot, rightItemSlot],
+	} = getMultipleSlots(children, [FormInputLeftItem, FormInputRightItem]);
 
 	return (
 		<div
@@ -210,9 +209,9 @@ export function FormInputGroup(props: React.ComponentPropsWithRef<"div">) {
 			className={cnMerge("flex items-center justify-between gap-2", className)}
 			{...restOfProps}
 		>
-			{LeftItemSlot}
-			{otherChildren}
-			{RightItemSlot}
+			{leftItemSlot}
+			{regularChildren}
+			{rightItemSlot}
 		</div>
 	);
 }
@@ -238,7 +237,7 @@ export function FormInputLeftItem<TElement extends React.ElementType = "span">(
 		</Element>
 	);
 }
-FormInputLeftItem.slot = Symbol.for("leftItem");
+FormInputLeftItem.slotSymbol = Symbol("leftItem");
 
 export function FormInputRightItem<TElement extends React.ElementType = "span">(
 	props: PolymorphicProps<TElement, FormSideItemProps>
@@ -256,7 +255,7 @@ export function FormInputRightItem<TElement extends React.ElementType = "span">(
 		</Element>
 	);
 }
-FormInputRightItem.slot = Symbol.for("rightItem");
+FormInputRightItem.slotSymbol = Symbol("rightItem");
 
 type FormInputPrimitiveProps<TFieldValues extends FieldValues = FieldValues> = Omit<
 	React.ComponentPropsWithRef<"input">,
