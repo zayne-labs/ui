@@ -1,5 +1,13 @@
 # @zayne-labs/ui-react
 
+## 0.5.1
+
+### Patch Changes
+
+- d1c63f5: feat(deps): ⬆️ upgrade @zayne-labs/toolkit packages to v0.9.2
+  refactor(components): ♻️ optimize Await and Show components
+  chore(deps): 🔧 update vite to v6.2.4 and remove terser dependency
+
 ## 0.5.0
 
 ### Minor Changes
