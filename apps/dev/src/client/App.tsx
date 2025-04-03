@@ -11,6 +11,7 @@ const zodSchema = z.object({
 function AnotherApp() {
 	const methods = useForm({
 		defaultValues: { password: "", username: "" },
+		mode: "onChange",
 		resolver: zodResolver(zodSchema),
 	});
 

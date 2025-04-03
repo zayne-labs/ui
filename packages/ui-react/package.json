@@ -71,17 +71,17 @@
 		"@size-limit/esbuild-why": "11.2.0",
 		"@size-limit/preset-small-lib": "11.2.0",
 		"@total-typescript/ts-reset": "0.6.1",
-		"@types/react": "^19.0.12",
-		"@types/react-dom": "^19.0.4",
+		"@types/react": "^19.1.0",
+		"@types/react-dom": "^19.1.1",
 		"@zayne-labs/tsconfig": "0.7.9",
 		"concurrently": "^9.1.2",
 		"cross-env": "^7.0.3",
-		"publint": "^0.3.9",
+		"publint": "^0.3.10",
 		"react": "^19.1.0",
 		"react-dom": "^19.1.0",
 		"react-hook-form": "^7.55.0",
 		"size-limit": "11.2.0",
-		"tailwind-merge": "^3.0.2",
+		"tailwind-merge": "^3.1.0",
 		"tsup": "8.4.0",
 		"typescript": "^5.8.2",
 		"zustand": "^5.0.3"
@@ -94,7 +94,7 @@
 	"size-limit": [
 		{
 			"path": "src/components/ui/**/index.ts",
-			"limit": "4.5 kB"
+			"limit": "5 kB"
 		},
 		{
 			"path": "src/components/common/**/index.ts",

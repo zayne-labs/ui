@@ -33,16 +33,19 @@ import {
 } from "react-hook-form";
 import {
 	type FieldContextValue,
+	type FieldState,
 	type FormFieldContextProps,
 	LaxFormFieldProvider,
 	StrictFormFieldProvider,
 	useFormRootContext,
 	useLaxFormFieldContext,
+	useLaxFormFieldState,
 	useStrictFormFieldContext,
-	useStrictGetFieldState,
 } from "./form-context";
 
 export type FieldValues = Record<string, unknown>;
+
+const dataAttr = (condition: unknown) => (condition ? "" : undefined) as unknown as boolean;
 
 type FormRootProps<TFieldValues extends FieldValues> = React.ComponentPropsWithoutRef<"form"> & {
 	children: React.ReactNode;
@@ -87,6 +90,8 @@ export function FormField<TControl, TFieldValues extends FieldValues = FieldValu
 ) {
 	const { children, className, name, withWrapper = true } = props;
 
+	const { isDisabled, isInvalid } = useLaxFormFieldState({ name });
+
 	const uniqueId = useId();
 
 	const fieldContextValue = useMemo(
@@ -106,8 +111,11 @@ export function FormField<TControl, TFieldValues extends FieldValues = FieldValu
 		className: cnMerge("flex flex-col", className),
 		"data-part": "field",
 		"data-scope": "form",
+		/* eslint-disable perfectionist/sort-objects -- order of attributes does not matter */
+		"data-disabled": dataAttr(isDisabled),
+		"data-invalid": dataAttr(isInvalid),
+		/* eslint-enable perfectionist/sort-objects -- order of attributes does not matter */
 	};
-
 	return (
 		<StrictFormFieldProvider value={fieldContextValue}>
 			<LaxFormFieldProvider value={fieldContextValue}>
@@ -179,13 +187,17 @@ export function FormFieldContext(props: FormFieldContextProps) {
 }
 
 export function FormLabel(props: InferProps<"label">) {
-	const { formItemId } = useStrictFormFieldContext();
+	const { formItemId, name } = useStrictFormFieldContext();
 	const { children, className, ...restOfProps } = props;
+
+	const { isDisabled, isInvalid } = useLaxFormFieldState({ name });
 
 	return (
 		<label
 			data-scope="form"
 			data-part="label"
+			data-disabled={dataAttr(isDisabled)}
+			data-invalid={dataAttr(isInvalid)}
 			htmlFor={formItemId}
 			className={className}
 			{...restOfProps}
@@ -197,6 +209,9 @@ export function FormLabel(props: InferProps<"label">) {
 
 export function FormInputGroup(props: InferProps<"div">) {
 	const { children, className, ...restOfProps } = props;
+
+	const { isDisabled, isInvalid } = useLaxFormFieldState();
+
 	const {
 		regularChildren,
 		slots: [leftItemSlot, rightItemSlot],
@@ -206,6 +221,8 @@ export function FormInputGroup(props: InferProps<"div">) {
 		<div
 			data-scope="form"
 			data-part="input-group"
+			data-invalid={dataAttr(isInvalid)}
+			data-disabled={dataAttr(isDisabled)}
 			className={cnMerge("flex items-center justify-between gap-2", className)}
 			{...restOfProps}
 		>
@@ -263,7 +280,7 @@ type FormInputPrimitiveProps<TFieldValues extends FieldValues = FieldValues> = O
 > & {
 	classNames?: { error?: string; eyeIcon?: string; input?: string; inputGroup?: string };
 	control?: Control<TFieldValues>;
-	fieldState?: Partial<ControllerFieldState>;
+	fieldState?: FieldState;
 	name?: FieldPath<TFieldValues>;
 	withEyeIcon?: boolean;
 };
@@ -272,7 +289,7 @@ type FormTextAreaPrimitiveProps<TFieldValues extends FieldValues = FieldValues> 
 	React.ComponentPropsWithRef<"textarea"> & {
 		control?: Control<TFieldValues>;
 		errorClassName?: string;
-		fieldState?: Partial<ControllerFieldState>;
+		fieldState?: FieldState;
 		name?: FieldPath<TFieldValues>;
 		type: "textarea";
 	};
@@ -280,22 +297,26 @@ type FormTextAreaPrimitiveProps<TFieldValues extends FieldValues = FieldValues> 
 const inputTypesWithoutFullWith = new Set<React.HTMLInputTypeAttribute>(["checkbox", "radio"]);
 
 export function FormInputPrimitive<TFieldValues extends FieldValues>(
-	props: FormInputPrimitiveProps<TFieldValues>
+	props: FormInputPrimitiveProps<TFieldValues> & { rules?: RegisterOptions }
 ) {
 	const fieldContextValues = useLaxFormFieldContext();
 
 	const {
 		className,
 		classNames,
+		control,
 		fieldState,
 		id = fieldContextValues?.formItemId,
 		name = fieldContextValues?.name,
+		rules,
 		type = "text",
 		withEyeIcon = true,
 		...restOfProps
 	} = props;
 
-	const fieldError = fieldState?.error;
+	const fieldStateFromLaxFormField = useLaxFormFieldState({ control, name });
+
+	const { isDisabled, isInvalid } = fieldState ?? fieldStateFromLaxFormField;
 
 	const [isPasswordVisible, toggleVisibility] = useToggle(false);
 
@@ -304,8 +325,12 @@ export function FormInputPrimitive<TFieldValues extends FieldValues>(
 	const WrapperElement = shouldHaveEyeIcon ? FormInputGroup : ReactFragment;
 
 	const wrapperElementProps = shouldHaveEyeIcon && {
-		className: cnMerge("w-full", classNames?.inputGroup, fieldError && classNames?.error),
+		className: cnMerge("w-full", classNames?.inputGroup, isInvalid && classNames?.error),
+		"data-disabled": dataAttr(isDisabled),
+		"data-invalid": dataAttr(isInvalid),
 	};
+
+	const { register } = useFormRootContext({ strict: false }) ?? {};
 
 	return (
 		<WrapperElement {...wrapperElementProps}>
@@ -313,11 +338,13 @@ export function FormInputPrimitive<TFieldValues extends FieldValues>(
 				data-scope="form"
 				data-part="input"
 				aria-describedby={
-					!fieldError
+					!isInvalid
 						? fieldContextValues?.formDescriptionId
 						: `${fieldContextValues?.formDescriptionId} ${fieldContextValues?.formMessageId}`
 				}
-				aria-invalid={Boolean(fieldError)}
+				aria-invalid={dataAttr(isInvalid)}
+				data-invalid={dataAttr(isInvalid)}
+				data-disabled={dataAttr(isDisabled)}
 				id={id}
 				name={name}
 				type={type === "password" && isPasswordVisible ? "text" : type}
@@ -328,8 +355,9 @@ export function FormInputPrimitive<TFieldValues extends FieldValues>(
 					disabled:cursor-not-allowed disabled:opacity-50`,
 					className,
 					classNames?.input,
-					type !== "password" && fieldError && classNames?.error
+					type !== "password" && isInvalid && classNames?.error
 				)}
+				{...(Boolean(name) && register?.(name, rules))}
 				{...restOfProps}
 			/>
 
@@ -352,39 +380,48 @@ export function FormInputPrimitive<TFieldValues extends FieldValues>(
 }
 
 export function FormTextAreaPrimitive<TFieldValues extends FieldValues>(
-	props: FormTextAreaPrimitiveProps<TFieldValues>
+	props: FormTextAreaPrimitiveProps<TFieldValues> & { rules?: RegisterOptions }
 ) {
 	const fieldContextValues = useLaxFormFieldContext();
 
 	const {
 		className,
+		control,
 		errorClassName,
 		fieldState,
 		id = fieldContextValues?.formItemId,
 		name = fieldContextValues?.name,
+		rules,
 		...restOfProps
 	} = props;
 
-	const fieldError = fieldState?.error;
+	const fieldStateFromLaxFormField = useLaxFormFieldState({ control, name });
+
+	const { isDisabled, isInvalid } = fieldState ?? fieldStateFromLaxFormField;
+
+	const { register } = useFormRootContext({ strict: false }) ?? {};
 
 	return (
 		<textarea
 			data-scope="form"
 			data-part="textarea"
 			aria-describedby={
-				!fieldError
+				!isInvalid
 					? fieldContextValues?.formDescriptionId
 					: `${fieldContextValues?.formDescriptionId} ${fieldContextValues?.formMessageId}`
 			}
-			aria-invalid={Boolean(fieldError)}
+			aria-invalid={dataAttr(isInvalid)}
+			data-disabled={dataAttr(isDisabled)}
+			data-invalid={dataAttr(isInvalid)}
 			id={id}
 			name={name}
 			className={cnMerge(
 				`w-full bg-transparent text-sm placeholder:text-shadcn-muted-foreground
 				focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50`,
 				className,
-				fieldError && errorClassName
+				isInvalid && errorClassName
 			)}
+			{...(Boolean(name) && register?.(name, rules))}
 			{...restOfProps}
 		/>
 	);
@@ -401,15 +438,12 @@ export function FormInput(props: FormInputProps & { rules?: RegisterOptions }) {
 	const { name } = useStrictFormFieldContext();
 	const { register } = useFormRootContext();
 
-	const fieldState = useStrictGetFieldState();
-
 	const SelectedInput = type === "textarea" ? FormTextAreaPrimitive : FormInputPrimitive;
 
 	return (
 		<SelectedInput
 			type={type as never}
 			name={name}
-			fieldState={fieldState}
 			{...(Boolean(name) && register(name, rules))}
 			{...(restOfProps as NonNullable<unknown>)}
 		/>
@@ -448,7 +482,7 @@ type FormErrorMessagePrimitiveProps<TFieldValues extends FieldValues> =
 			errorMessage?: string;
 			errorMessageAnimation?: string;
 		};
-		control: Control<TFieldValues>; // == Here for type inference of errorField prop
+		control?: Control<TFieldValues>; // == Here for type inference of errorField prop
 		withAnimationOnInvalid?: boolean;
 	} & (
 			| {
@@ -472,18 +506,21 @@ type FormErrorMessagePrimitiveType = {
 };
 
 export const FormErrorMessagePrimitive: FormErrorMessagePrimitiveType = (props) => {
+	const fieldContextValues = useLaxFormFieldContext();
+	const rootContextValues = useFormRootContext({ strict: false });
+
 	const {
 		children,
 		className,
 		classNames,
-		control,
-		errorField,
+		control = rootContextValues?.control,
+		errorField = fieldContextValues?.name,
 		render,
 		type = "regular",
 		withAnimationOnInvalid = true,
 	} = props;
 
-	const formState = useFormState({ control });
+	const { errors } = useLaxFormFieldState({ control, name: errorField });
 
 	const { formMessageId } = useLaxFormFieldContext() ?? {};
 
@@ -506,10 +543,10 @@ export const FormErrorMessagePrimitive: FormErrorMessagePrimitiveType = (props) 
 	useEffect(() => {
 		const errorMessageElements = wrapperRef.current?.children;
 
-		if (!errorMessageElements) return;
+		if (!errorMessageElements || !errors) return;
 
 		// == Scroll to first error message
-		if (Object.keys(formState.errors).indexOf(errorField as string) === 0) {
+		if (Object.keys(errors).indexOf(errorField as string) === 0) {
 			errorMessageElements[0]?.scrollIntoView({
 				behavior: "smooth",
 				block: "center",
@@ -517,12 +554,12 @@ export const FormErrorMessagePrimitive: FormErrorMessagePrimitiveType = (props) 
 
 			window.scrollBy({ behavior: "smooth", top: -100 });
 		}
-	}, [errorField, formState.errors]);
+	}, [errorField, errors]);
 
 	const message = (
 		type === "root"
-			? formState.errors.root?.[errorField as string]?.message
-			: formState.errors[errorField]?.message
+			? errors?.root?.[errorField as string]?.message
+			: errors?.[errorField as string]?.message
 	) as string | string[];
 
 	if (!message) {
