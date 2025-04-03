@@ -1,5 +1,13 @@
 # @zayne-labs/ui-react
 
+## 0.5.2
+
+### Patch Changes
+
+- 9ec5018: feat(deps): 🔧 upgrade @hookform/resolvers and other dependencies
+
+   feat(form): ✨ enhance form component and context implementation
+
 ## 0.5.1
 
 ### Patch Changes
