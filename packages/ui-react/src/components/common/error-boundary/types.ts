@@ -5,7 +5,7 @@ export type FallbackProps = {
 
 export type ErrorBoundaryProps = {
 	children: React.ReactNode;
-	fallback: React.ReactNode | ((props: FallbackProps) => React.ReactNode);
+	fallback?: React.ReactNode | ((props: FallbackProps) => React.ReactNode);
 	onError?: (error: Error, info: React.ErrorInfo & { ownerStack?: string }) => void;
 	onReset?: (
 		details:

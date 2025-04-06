@@ -5,10 +5,32 @@ A collection of multi-framework UI utilities and unstyled components. Currently 
 ## Features
 
 - 🚀 Framework agnostic design (React support available now, more coming soon!)
-- 🎨 Base styles (not UI styles, that's up to you) with Tailwind CSS
-- 🔧 Highly customizable
-- 📦 Tree-shakeable
+- 🎨 Zero-styling approach - full control over your UI design
+- 🔧 Highly customizable hooks and components
+- 📦 Tree-shakeable modules
 - 🌐 Multi-framework support (coming soon)
+
+## Components
+
+### UI Components
+
+@zayne-labs/ui provides a set of headless UI components and hooks:
+
+- **Form** - Flexible form handling with field subscriptions and validation, convenience wrapper around react-hook-form
+- **DropZone** - File upload zone with drag-and-drop support
+- **Card** - Composable card layouts
+- **DragScroll** - Add drag-to-scroll behavior to any container
+
+### Utility Components
+
+@zayne-labs/ui provides several utility components to handle common UI patterns:
+
+- **Switch** - Conditional rendering with pattern matching
+- **Show** - Simplified conditional rendering
+- **For** - Iterative rendering with built-in empty states
+- **ErrorBoundary** - Graceful error handling
+- **Await** - Handle async states elegantly
+- **Teleport** - Teleport content to a different part of the DOM via react portals
 
 ## Installation
 
@@ -23,13 +45,13 @@ npm install @zayne-labs/ui-react
 yarn add @zayne-labs/ui-react
 ```
 
-## Example
+## Quick Start
 
 ```tsx
 import { Switch } from '@zayne-labs/ui-react/common'
 
 function App() {
-  const status = 'loading'
+  const status = "loading"
 
   return (
     <Switch condition={status}>
@@ -79,7 +101,7 @@ pnpm lint:format
 
 ## Project Structure
 
-```
+```tree
 ui/
 ├── packages/
 │   └── ui-react/        # React UI components (More frameworks coming soon!)

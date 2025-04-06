@@ -2,27 +2,32 @@ import * as React from "react";
 
 import type { DiscriminatedRenderProps } from "@zayne-labs/toolkit-react/utils";
 import { Fragment as ReactFragment, Suspense, use } from "react";
-import { ErrorBoundary, type ErrorBoundaryProps } from "../error-boundary";
+import { ErrorBoundary } from "../error-boundary";
+import type { SuspenseWithBoundaryProps } from "../suspense-with-boundary";
 
 type RenderPropFn<Tvalue> = (result: Tvalue) => React.ReactNode;
 
-export type AwaitInnerProps<Tvalue> = DiscriminatedRenderProps<RenderPropFn<Tvalue>> & {
-	promise: Promise<Tvalue>;
-};
-
-type AwaitProps<Tvalue> = AwaitInnerProps<Tvalue> & {
-	errorFallback?: ErrorBoundaryProps["fallback"];
-	fallback?: React.ReactNode;
-};
+type AwaitProps<Tvalue> = AwaitInnerProps<Tvalue>
+	& Pick<SuspenseWithBoundaryProps, "errorFallback" | "fallback"> & {
+		wrapperVariant?: "none" | "only-boundary" | "only-suspense" | "suspense-and-boundary";
+	};
 
 export function Await<Tvalue>(props: AwaitProps<Tvalue>) {
-	const { errorFallback, fallback, ...restOfProps } = props;
+	const { errorFallback, fallback, wrapperVariant = "suspense-and-boundary", ...restOfProps } = props;
 
-	const WithErrorBoundary = errorFallback ? ErrorBoundary : ReactFragment;
-	const WithSuspense = fallback ? Suspense : ReactFragment;
+	const WithErrorBoundary =
+		wrapperVariant === "only-boundary" || wrapperVariant === "suspense-and-boundary"
+			? ErrorBoundary
+			: ReactFragment;
 
-	const errorBoundaryProps = { fallback: errorFallback };
-	const suspenseProps = { fallback };
+	const WithSuspense =
+		wrapperVariant === "only-suspense" || wrapperVariant === "suspense-and-boundary"
+			? Suspense
+			: ReactFragment;
+
+	const errorBoundaryProps = Boolean(errorFallback) && { fallback: errorFallback };
+
+	const suspenseProps = Boolean(fallback) && { fallback };
 
 	return (
 		<WithErrorBoundary {...errorBoundaryProps}>
@@ -32,6 +37,10 @@ export function Await<Tvalue>(props: AwaitProps<Tvalue>) {
 		</WithErrorBoundary>
 	);
 }
+
+export type AwaitInnerProps<Tvalue> = DiscriminatedRenderProps<RenderPropFn<Tvalue>> & {
+	promise: Promise<Tvalue>;
+};
 
 function AwaitInner<TValue>(props: AwaitInnerProps<TValue>) {
 	const { children, promise, render } = props;
