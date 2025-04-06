@@ -679,22 +679,22 @@ type GetFieldValue<TFieldPathOrPaths, TFieldValues extends FieldValues> =
 			? FieldPathValue<TFieldValues, TFieldPathOrPaths>
 			: unknown;
 
-type FieldSubscribeRenderFn<TFieldValues extends FieldValues, TFieldPathOrPaths> = (props: {
+type FormSubscribeToFieldValueRenderFn<TFieldValues extends FieldValues, TFieldPathOrPaths> = (props: {
 	value: GetFieldValue<TFieldPathOrPaths, TFieldValues>;
 }) => React.ReactNode;
 
-type FormFieldSubscribeProps<
+type FormSubscribeToFieldValueProps<
 	TFieldValues extends FieldValues,
 	TFieldPathOrPaths,
-> = DiscriminatedRenderProps<FieldSubscribeRenderFn<TFieldValues, TFieldPathOrPaths>> & {
+> = DiscriminatedRenderProps<FormSubscribeToFieldValueRenderFn<TFieldValues, TFieldPathOrPaths>> & {
 	control: Control<TFieldValues>;
 	name?: TFieldPathOrPaths;
 };
 
-export function FormFieldSubscribe<
+export function FormSubscribeToFieldValue<
 	TFieldValues extends FieldValues,
 	const TFieldPathOrPaths extends Array<FieldPath<TFieldValues>> | FieldPath<TFieldValues>,
->(props: FormFieldSubscribeProps<TFieldValues, TFieldPathOrPaths>) {
+>(props: FormSubscribeToFieldValueProps<TFieldValues, TFieldPathOrPaths>) {
 	const fieldContextValues = useLaxFormFieldContext();
 
 	const { children, name = fieldContextValues?.name, render } = props;
@@ -712,19 +712,19 @@ export function FormFieldSubscribe<
 	return render(fieldProps as never);
 }
 
-type FormStateSubscribeRenderFn<TFieldValues extends FieldValues> = (
+type FormSubscribeToFormStateRenderFn<TFieldValues extends FieldValues> = (
 	props: UseFormStateReturn<TFieldValues>
 ) => React.ReactNode;
 
-type FormStateSubscribeProps<TFieldValues extends FieldValues> = DiscriminatedRenderProps<
-	FormStateSubscribeRenderFn<TFieldValues>
+type FormSubscribeToFormStateProps<TFieldValues extends FieldValues> = DiscriminatedRenderProps<
+	FormSubscribeToFormStateRenderFn<TFieldValues>
 > & {
 	control?: Control<TFieldValues>;
 	name?: Array<FieldPath<TFieldValues>> | FieldPath<TFieldValues>;
 };
 
-export function FormStateSubscribe<TFieldValues extends FieldValues = FieldValues>(
-	props: FormStateSubscribeProps<TFieldValues>
+export function FormSubscribeToFormState<TFieldValues extends FieldValues = FieldValues>(
+	props: FormSubscribeToFormStateProps<TFieldValues>
 ) {
 	const fieldContextValues = useLaxFormFieldContext();
 

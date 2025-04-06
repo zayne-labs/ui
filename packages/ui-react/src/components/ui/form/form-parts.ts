@@ -14,7 +14,7 @@ export {
 	FormLabel as Label,
 	FormRoot as Root,
 	FormSubmit as Submit,
-	FormStateSubscribe as StateSubscribe,
-	FormFieldSubscribe as FieldSubscribe,
+	FormSubscribeToFormState as SubscribeToFormState,
+	FormSubscribeToFieldValue as SubscribeToFieldValue,
 	FormTextAreaPrimitive as TextAreaPrimitive,
 } from "./form";

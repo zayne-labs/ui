@@ -9,17 +9,21 @@ import {
 	composeRefs,
 	mergeTwoProps,
 } from "@zayne-labs/toolkit-react/utils";
-import { isFunction, isObject } from "@zayne-labs/toolkit-type-helpers";
+import { isFunction } from "@zayne-labs/toolkit-type-helpers";
 import { useRef, useState } from "react";
 
 type RenderProps = {
 	acceptedFiles: File[];
 	inputRef: React.RefObject<HTMLInputElement | null>;
 	isDragging: boolean;
+	openFilePicker: () => void;
 };
 
 export type RootProps = InferProps<"div"> & {
-	classNames?: { activeDrag?: string; base?: string };
+	classNames?: {
+		activeDrag?: string;
+		base?: string;
+	};
 };
 
 export type InputProps = InferProps<"input">;
@@ -29,30 +33,64 @@ type DropZoneRenderProps = DiscriminatedRenderProps<
 >;
 
 export type UseDropZoneProps = DropZoneRenderProps & {
+	/**
+	 * Allowed file types to be uploaded.
+	 */
 	allowedFileTypes?: string[];
 
 	classNames?: { activeDrag?: string; base?: string; input?: string };
+	/**
+	 * Whether to disallow duplicate files
+	 * @default true
+	 */
+	disallowDuplicates?: boolean;
 
+	/**
+	 * Existing files to be uploaded
+	 */
 	existingFiles?: File[];
 
+	/**
+	 * Extra props to pass to the input element
+	 */
 	extraInputProps?: InputProps;
 
+	/**
+	 * Extra props to pass to the root element
+	 */
 	extraRootProps?: RootProps;
 
+	/**
+	 * Maximum number of files that can be uploaded.
+	 */
+	fileLimit?: number;
+
+	/**
+	 * Maximum file size in MB
+	 */
+	maxFileSize?: number;
+
+	/**
+	 * Callback function to handle file upload
+	 */
 	onUpload?: (details: {
 		acceptedFiles: File[];
 		event: React.ChangeEvent<HTMLInputElement> | React.DragEvent<HTMLDivElement>;
 	}) => void;
 
+	/**
+	 * Callback function to handle file upload errors
+	 */
 	onUploadError?: FileValidationOptions["onError"];
 
+	/**
+	 * Callback function to handle file upload success
+	 */
 	onUploadSuccess?: FileValidationOptions["onSuccess"];
 
-	validationSettings?: {
-		disallowDuplicates?: boolean;
-		fileLimit?: number;
-		maxFileSize?: number;
-	};
+	/**
+	 * Custom validator function to handle file validation
+	 */
 	validator?: (context: { existingFileArray: File[] | undefined; newFileList: FileList }) => File[];
 };
 
@@ -63,14 +101,16 @@ export const useDropZone = (props: UseDropZoneProps) => {
 		allowedFileTypes,
 		children,
 		classNames,
+		disallowDuplicates = true,
 		existingFiles,
 		extraInputProps,
 		extraRootProps,
+		fileLimit,
+		maxFileSize,
 		onUpload,
 		onUploadError,
 		onUploadSuccess,
 		render,
-		validationSettings,
 		validator,
 		// eslint-disable-next-line ts-eslint/no-unnecessary-condition -- Can be undefined
 	} = props ?? {};
@@ -99,16 +139,17 @@ export const useDropZone = (props: UseDropZoneProps) => {
 				return;
 			}
 
-			const resolvedValidationSettings = isObject(validationSettings)
-				? { ...validationSettings, allowedFileTypes }
-				: {};
-
 			const validFilesArray = handleFileValidation({
 				existingFileArray: existingFiles,
 				newFileList: fileList,
 				onError: onUploadError,
 				onSuccess: onUploadSuccess,
-				validationSettings: resolvedValidationSettings,
+				validationSettings: {
+					allowedFileTypes,
+					disallowDuplicates,
+					fileLimit,
+					maxFileSize,
+				},
 				validator,
 			});
 
@@ -130,7 +171,13 @@ export const useDropZone = (props: UseDropZoneProps) => {
 		toggleIsDragging(false);
 	};
 
-	const getRenderProps = () => ({ acceptedFiles, inputRef, isDragging }) satisfies RenderProps;
+	const getRenderProps = () =>
+		({
+			acceptedFiles,
+			inputRef,
+			isDragging,
+			openFilePicker: () => inputRef.current?.click(),
+		}) satisfies RenderProps;
 
 	const computedChildren = children ?? render;
 

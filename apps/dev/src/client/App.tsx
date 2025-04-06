@@ -53,7 +53,7 @@ function AnotherApp() {
 				/>
 			</Form.Field>
 
-			<Form.FieldSubscribe
+			<Form.SubscribeToFieldValue
 				control={methods.control}
 				name={["password", "username"]}
 				render={(field) => {
@@ -66,7 +66,7 @@ function AnotherApp() {
 				}}
 			/>
 
-			<Form.StateSubscribe
+			<Form.SubscribeToFormState
 				control={methods.control}
 				name={["password"]}
 				render={(state) => {
