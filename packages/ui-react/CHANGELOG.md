@@ -1,5 +1,13 @@
 # @zayne-labs/ui-react
 
+## 0.6.1
+
+### Patch Changes
+
+- c9d0b63: feat(await): ✨ refactor Await component with new wrapper system
+  refactor(await): ♻️ move SuspenseWithBoundary to common components
+  chore(build): 🔧 update tsup config for new components
+
 ## 0.6.0
 
 ### Minor Changes
