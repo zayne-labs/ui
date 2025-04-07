@@ -1,5 +1,13 @@
 # @zayne-labs/ui-react
 
+## 0.6.2
+
+### Patch Changes
+
+- 494093d: feat(ui-react): ✨ Add FormTextArea and FormSelect components, and update FormInput
+
+   This commit introduces the `FormTextArea` and `FormSelect` components, providing specialized form elements for text areas and select inputs. The `FormInput` component has also been updated to handle these new types using the `InputTypeMap`, improving code organization and maintainability.
+
 ## 0.6.1
 
 ### Patch Changes
