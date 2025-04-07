@@ -14,6 +14,7 @@ import {
 	type PolymorphicProps,
 	getMultipleSlots,
 } from "@zayne-labs/toolkit-react/utils";
+import { defineEnum } from "@zayne-labs/toolkit-type-helpers";
 import { Fragment as ReactFragment, useEffect, useId, useMemo, useRef } from "react";
 import {
 	type Control,
@@ -287,11 +288,18 @@ type FormInputPrimitiveProps<TFieldValues extends FieldValues = FieldValues> = O
 
 type FormTextAreaPrimitiveProps<TFieldValues extends FieldValues = FieldValues> =
 	React.ComponentPropsWithRef<"textarea"> & {
+		classNames?: { base?: string; error?: string };
 		control?: Control<TFieldValues>;
-		errorClassName?: string;
 		fieldState?: FieldState;
 		name?: FieldPath<TFieldValues>;
-		type: "textarea";
+	};
+
+type FormSelectPrimitiveProps<TFieldValues extends FieldValues = FieldValues> =
+	React.ComponentPropsWithRef<"select"> & {
+		classNames?: { base?: string; error?: string };
+		control?: Control<TFieldValues>;
+		fieldState?: FieldState;
+		name?: FieldPath<TFieldValues>;
 	};
 
 const inputTypesWithoutFullWith = new Set<React.HTMLInputTypeAttribute>(["checkbox", "radio"]);
@@ -351,7 +359,7 @@ export function FormInputPrimitive<TFieldValues extends FieldValues>(
 				className={cnMerge(
 					!inputTypesWithoutFullWith.has(type) && "flex w-full",
 					`bg-transparent text-sm file:border-0 file:bg-transparent
-					placeholder:text-shadcn-muted-foreground focus-visible:outline-none
+					placeholder:text-shadcn-muted-foreground focus-visible:outline-hidden
 					disabled:cursor-not-allowed disabled:opacity-50`,
 					className,
 					classNames?.input,
@@ -386,8 +394,8 @@ export function FormTextAreaPrimitive<TFieldValues extends FieldValues>(
 
 	const {
 		className,
+		classNames,
 		control,
-		errorClassName,
 		fieldState,
 		id = fieldContextValues?.formItemId,
 		name = fieldContextValues?.name,
@@ -417,9 +425,58 @@ export function FormTextAreaPrimitive<TFieldValues extends FieldValues>(
 			name={name}
 			className={cnMerge(
 				`w-full bg-transparent text-sm placeholder:text-shadcn-muted-foreground
-				focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50`,
+				focus-visible:outline-hidden disabled:cursor-not-allowed disabled:opacity-50`,
 				className,
-				isInvalid && errorClassName
+				classNames?.base,
+				isInvalid && classNames?.error
+			)}
+			{...(Boolean(name) && register?.(name, rules))}
+			{...restOfProps}
+		/>
+	);
+}
+export function FormSelectPrimitive<TFieldValues extends FieldValues>(
+	props: FormSelectPrimitiveProps<TFieldValues> & { rules?: RegisterOptions }
+) {
+	const fieldContextValues = useLaxFormFieldContext();
+
+	const {
+		className,
+		classNames,
+		control,
+		fieldState,
+		id = fieldContextValues?.formItemId,
+		name = fieldContextValues?.name,
+		rules,
+		...restOfProps
+	} = props;
+
+	const fieldStateFromLaxFormField = useLaxFormFieldState({ control, name });
+
+	const { isDisabled, isInvalid } = fieldState ?? fieldStateFromLaxFormField;
+
+	const { register } = useFormRootContext({ strict: false }) ?? {};
+
+	return (
+		<select
+			data-scope="form"
+			data-part="select"
+			aria-describedby={
+				!isInvalid
+					? fieldContextValues?.formDescriptionId
+					: `${fieldContextValues?.formDescriptionId} ${fieldContextValues?.formMessageId}`
+			}
+			aria-invalid={dataAttr(isInvalid)}
+			data-disabled={dataAttr(isDisabled)}
+			data-invalid={dataAttr(isInvalid)}
+			id={id}
+			name={name}
+			className={cnMerge(
+				`w-full bg-transparent text-sm placeholder:text-shadcn-muted-foreground
+				focus-visible:outline-hidden disabled:cursor-not-allowed disabled:opacity-50`,
+				className,
+				classNames?.base,
+				isInvalid && classNames?.error
 			)}
 			{...(Boolean(name) && register?.(name, rules))}
 			{...restOfProps}
@@ -428,17 +485,39 @@ export function FormTextAreaPrimitive<TFieldValues extends FieldValues>(
 }
 
 type PrimitivePropsToOmit = "control" | "formState" | "name" | "ref";
-type FormInputProps =
-	| Omit<FormInputPrimitiveProps, PrimitivePropsToOmit>
-	| Omit<FormTextAreaPrimitiveProps & { type: "textarea" }, PrimitivePropsToOmit>;
 
-export function FormInput(props: FormInputProps & { rules?: RegisterOptions }) {
+export type FormInputProps = Omit<FormInputPrimitiveProps, PrimitivePropsToOmit> & {
+	rules?: RegisterOptions;
+};
+
+export type FormTextAreaProps = Omit<FormTextAreaPrimitiveProps, PrimitivePropsToOmit> & {
+	rules?: RegisterOptions;
+};
+
+export type FormSelectProps = Omit<FormSelectPrimitiveProps, PrimitivePropsToOmit> & {
+	rules?: RegisterOptions;
+};
+
+type CombinedFormInputProps =
+	| (FormSelectProps & { type: "select" })
+	| (FormTextAreaProps & { type: "textarea" })
+	| FormInputProps;
+
+const InputTypeMap = defineEnum({
+	select: FormSelectPrimitive,
+	textarea: FormTextAreaPrimitive,
+});
+
+export function FormInput(props: CombinedFormInputProps & { rules?: RegisterOptions }) {
 	const { rules, type, ...restOfProps } = props;
 
 	const { name } = useStrictFormFieldContext();
 	const { register } = useFormRootContext();
 
-	const SelectedInput = type === "textarea" ? FormTextAreaPrimitive : FormInputPrimitive;
+	const SelectedInput =
+		type === "textarea" || type === "select"
+			? InputTypeMap[type as keyof typeof InputTypeMap]
+			: FormInputPrimitive;
 
 	return (
 		<SelectedInput
@@ -448,6 +527,14 @@ export function FormInput(props: FormInputProps & { rules?: RegisterOptions }) {
 			{...(restOfProps as NonNullable<unknown>)}
 		/>
 	);
+}
+
+export function FormTextArea(props: FormTextAreaProps) {
+	return <FormInput type="textarea" {...props} />;
+}
+
+export function FormSelect(props: FormSelectProps) {
+	return <FormInput type="select" {...props} />;
 }
 
 export function FormDescription(props: InferProps<"p">) {
