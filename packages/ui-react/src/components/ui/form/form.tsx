@@ -14,7 +14,7 @@ import {
 	type PolymorphicProps,
 	getMultipleSlots,
 } from "@zayne-labs/toolkit-react/utils";
-import { defineEnum } from "@zayne-labs/toolkit-type-helpers";
+import { type AnyString, defineEnum } from "@zayne-labs/toolkit-type-helpers";
 import { Fragment as ReactFragment, useEffect, useId, useMemo, useRef } from "react";
 import {
 	type Control,
@@ -459,6 +459,7 @@ export function FormSelectPrimitive<TFieldValues extends FieldValues>(
 
 	return (
 		<select
+			defaultValue=""
 			data-scope="form"
 			data-part="select"
 			aria-describedby={
@@ -516,7 +517,7 @@ export function FormInput(props: CombinedFormInputProps & { rules?: RegisterOpti
 
 	const SelectedInput =
 		type === "textarea" || type === "select"
-			? InputTypeMap[type as keyof typeof InputTypeMap]
+			? InputTypeMap[type as Exclude<typeof type, AnyString>]
 			: FormInputPrimitive;
 
 	return (
@@ -682,8 +683,8 @@ export const FormErrorMessagePrimitive: FormErrorMessagePrimitiveType = (props) 
 
 	return (
 		<ErrorMessageList
-			ref={wrapperRef}
 			each={errorMessageArray}
+			ref={wrapperRef}
 			className={cnMerge("flex flex-col", classNames?.container)}
 			render={(errorMessage, index) => {
 				return renderFn({
