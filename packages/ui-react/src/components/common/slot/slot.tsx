@@ -69,11 +69,12 @@ function SlotClone(props: SlotCloneProps) {
 		return Children.count(children) > 1 ? Children.only(null) : null;
 	}
 
-	const childRef = children.props.ref ?? (children as unknown as UnknownProps).ref;
+	const childRef = (children.props.ref
+		?? (children as unknown as UnknownProps).ref) as React.Ref<HTMLElement>;
 
 	const clonedProps = {
 		...mergeProps(restOfSlotProps, children.props),
-		ref: forwardedRef ? composeRefs([forwardedRef, childRef as React.Ref<unknown>]) : childRef,
+		ref: forwardedRef ? composeRefs([forwardedRef, childRef]) : childRef,
 	};
 
 	return cloneElement(children, clonedProps);
