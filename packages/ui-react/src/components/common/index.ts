@@ -1,6 +1,5 @@
 export * from "./await";
 export * from "./error-boundary";
-export * from "./focus-scope";
 export * from "./for";
 export * from "./show";
 export * from "./slot";

@@ -14,7 +14,6 @@ const sharedOptions = {
 
 		"src/components/common/await/index.ts",
 		"src/components/common/error-boundary/index.ts",
-		"src/components/common/focus-scope/index.ts",
 		"src/components/common/for/index.ts",
 		"src/components/common/show/index.ts",
 		"src/components/common/slot/index.ts",
