@@ -54,7 +54,7 @@ function AwaitInner<TValue>(props: AwaitInnerProps<TValue>) {
 
 	const Component = asChild ? Slot : ReactFragment;
 
-	const componentProps = asChild && { promise };
+	const componentProps = asChild && { promise, result };
 
 	let resolvedChildren: React.ReactNode;
 
