@@ -77,10 +77,8 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
 					childToRender = fallback;
 					break;
 				}
-
 				default: {
-					console.error("error-boundary requires a fallback prop");
-					throw error;
+					console.warn("No fallback provided to error boundary");
 				}
 			}
 		}
