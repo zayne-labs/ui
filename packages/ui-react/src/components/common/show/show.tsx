@@ -12,8 +12,10 @@ type ShowProps<TWhen> = {
 };
 
 export function ShowRoot<TWhen>({ children, fallback, when }: ShowProps<TWhen>) {
-	if ((when == null || when === false) && !isFunction(children)) {
-		const fallBackSlot = getSingleSlot(children, ShowFallback, {
+	const resolvedChildren = isFunction(children) ? children(when as TWhen) : children;
+
+	if (when == null || when === false) {
+		const fallBackSlot = getSingleSlot(resolvedChildren, ShowFallback, {
 			errorMessage: "Only one <Show.Fallback> or <Show.OtherWise> component is allowed",
 			throwOnMultipleSlotMatch: true,
 		});
@@ -26,12 +28,6 @@ export function ShowRoot<TWhen>({ children, fallback, when }: ShowProps<TWhen>) 
 
 		return fallBackSlot ?? fallback;
 	}
-
-	if (when == null || when === false) {
-		return fallback;
-	}
-
-	const resolvedChildren = isFunction(children) ? children(when) : children;
 
 	const contentSlot = getSingleSlot(resolvedChildren, ShowContent, {
 		errorMessage: "Only one <Show.Content> component is allowed",
