@@ -81,8 +81,8 @@ importers:
         specifier: ^7.55.0
         version: 7.55.0(react@19.1.0)
       zod:
-        specifier: ^3.24.2
-        version: 3.24.2
+        specifier: ^3.24.3
+        version: 3.24.3
     devDependencies:
       '@tailwindcss/vite':
         specifier: ^4.1.4
@@ -118,14 +118,14 @@ importers:
   packages/ui-react:
     dependencies:
       '@zayne-labs/toolkit-core':
-        specifier: ^0.9.5
-        version: 0.9.5
+        specifier: ^0.9.8
+        version: 0.9.8
       '@zayne-labs/toolkit-react':
-        specifier: ^0.9.5
-        version: 0.9.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(zustand@5.0.3(@types/react@19.1.2)(react@19.1.0))
+        specifier: ^0.9.8
+        version: 0.9.8(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(zustand@5.0.3(@types/react@19.1.2)(react@19.1.0))
       '@zayne-labs/toolkit-type-helpers':
-        specifier: ^0.9.5
-        version: 0.9.5
+        specifier: ^0.9.8
+        version: 0.9.8
     devDependencies:
       '@arethetypeswrong/cli':
         specifier: 0.17.4
@@ -1271,12 +1271,12 @@ packages:
     resolution: {integrity: sha512-DQJcuq+VrDH6PrAEBYSj0WogKLo7x7+rj/tg9O6zqrIEqcZ6llaXiIFDDrDfEHKcuEdxWM+aSP7bsYxX8G2PQw==}
     engines: {node: '>=18.x'}
 
-  '@zayne-labs/toolkit-core@0.9.5':
-    resolution: {integrity: sha512-Ch61K7i16rLdPRu6KpLGAprxHsvK/HboQtD5XSMNrc6FVG0KkvvjNhSbSMRMN7pIHRVw5v04ICwV1eaQPvX7DQ==}
+  '@zayne-labs/toolkit-core@0.9.8':
+    resolution: {integrity: sha512-9mYDxKabwVth1dHfqVZYTQI6DcdWYIRR1Vr/VArAx8nFjqj6IS+nbCaueytYqXEplwcr78Dv5WR1oYPSPhSidw==}
     engines: {node: '>=18.x'}
 
-  '@zayne-labs/toolkit-react@0.9.5':
-    resolution: {integrity: sha512-7m4doS9kbf4gcespQJhUyoxTT/Ks6v/OZ+OEm0LsWm65hmMweGRzHa1zxtbDAkKOBKy0jvHeZL9EFEUN0ydSVQ==}
+  '@zayne-labs/toolkit-react@0.9.8':
+    resolution: {integrity: sha512-oBaj8GZLbhJEyF6KnSoxaDNkLh7E5Vlpb1+a1/y6toTr/dFiCevsCum0XtGm97KV9sldotKELWTvWjFeLZgvmA==}
     engines: {node: '>=18.x'}
     peerDependencies:
       react: '>=18.0.0'
@@ -1294,8 +1294,8 @@ packages:
     resolution: {integrity: sha512-p458AloUVObXC6D9lU08SWViVTfcS2L8NCrcam+nWjQE5WRzAIWyd9Ll3xnwa7w0gXHDSRJ2glyV613BKQTNZw==}
     engines: {node: '>=18.x'}
 
-  '@zayne-labs/toolkit-type-helpers@0.9.5':
-    resolution: {integrity: sha512-taymHkrGq8kuABYnd6ez1pnvdcJajLwRV9Wmry1SraTRTxrqrcW66UNVyiceW3nn8uvNngzOjLqAFWOplW0BqA==}
+  '@zayne-labs/toolkit-type-helpers@0.9.8':
+    resolution: {integrity: sha512-W/5N5OKwM+JfmaVQg0V+Vv/PWLliEINpVjjk/Pa7WsOvp9ORR8/gRAP88YFlx/5LyuUEXdRY/zmLN7gAJ6kXUg==}
     engines: {node: '>=18.x'}
 
   '@zayne-labs/tsconfig@0.8.1':
@@ -3259,8 +3259,8 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
 
-  zod@3.24.2:
-    resolution: {integrity: sha512-lY7CDW43ECgW9u1TcT3IoXHflywfVqDYze4waEz812jR/bZ8FHDsl7pFQoSZTz5N+2NqRXs8GBwnAwo3ZNxqhQ==}
+  zod@3.24.3:
+    resolution: {integrity: sha512-HhY1oqzWCQWuUqvBFnsyrtZRhyPeR7SUGv+C4+MsisMuVfSPx8HpwWqH8tRahSlt6M3PiFAcoeFhZAqIXTxoSg==}
 
   zustand@5.0.3:
     resolution: {integrity: sha512-14fwWQtU3pH4dE0dOpdMiWjddcH+QzKIgk1cl8epwSE7yag43k/AD/m4L6+K7DytAOr9gGBe3/EXj9g7cdostg==}
@@ -4354,14 +4354,14 @@ snapshots:
     dependencies:
       '@zayne-labs/toolkit-type-helpers': 0.9.4
 
-  '@zayne-labs/toolkit-core@0.9.5':
+  '@zayne-labs/toolkit-core@0.9.8':
     dependencies:
-      '@zayne-labs/toolkit-type-helpers': 0.9.5
+      '@zayne-labs/toolkit-type-helpers': 0.9.8
 
-  '@zayne-labs/toolkit-react@0.9.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(zustand@5.0.3(@types/react@19.1.2)(react@19.1.0))':
+  '@zayne-labs/toolkit-react@0.9.8(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(zustand@5.0.3(@types/react@19.1.2)(react@19.1.0))':
     dependencies:
-      '@zayne-labs/toolkit-core': 0.9.5
-      '@zayne-labs/toolkit-type-helpers': 0.9.5
+      '@zayne-labs/toolkit-core': 0.9.8
+      '@zayne-labs/toolkit-type-helpers': 0.9.8
     optionalDependencies:
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
@@ -4369,7 +4369,7 @@ snapshots:
 
   '@zayne-labs/toolkit-type-helpers@0.9.4': {}
 
-  '@zayne-labs/toolkit-type-helpers@0.9.5': {}
+  '@zayne-labs/toolkit-type-helpers@0.9.8': {}
 
   '@zayne-labs/tsconfig@0.8.1': {}
 
@@ -6311,7 +6311,7 @@ snapshots:
 
   yocto-queue@0.1.0: {}
 
-  zod@3.24.2: {}
+  zod@3.24.3: {}
 
   zustand@5.0.3(@types/react@19.1.2)(react@19.1.0):
     optionalDependencies:

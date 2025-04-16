@@ -12,6 +12,8 @@ import {
 	type DiscriminatedRenderProps,
 	type InferProps,
 	type PolymorphicProps,
+	composeEventHandlers,
+	composeRefs,
 	getMultipleSlots,
 } from "@zayne-labs/toolkit-react/utils";
 import { type AnyString, defineEnum } from "@zayne-labs/toolkit-type-helpers";
@@ -485,7 +487,7 @@ export function FormSelectPrimitive<TFieldValues extends FieldValues>(
 	);
 }
 
-type PrimitivePropsToOmit = "control" | "formState" | "name" | "ref";
+type PrimitivePropsToOmit = "control" | "formState" | "name";
 
 export type FormInputProps = Omit<FormInputPrimitiveProps, PrimitivePropsToOmit> & {
 	rules?: RegisterOptions;
@@ -510,7 +512,7 @@ const InputTypeMap = defineEnum({
 });
 
 export function FormInput(props: CombinedFormInputProps & { rules?: RegisterOptions }) {
-	const { rules, type, ...restOfProps } = props;
+	const { onBlur, onChange, ref, rules, type, ...restOfProps } = props;
 
 	const { name } = useStrictFormFieldContext();
 	const { register } = useFormRootContext();
@@ -520,22 +522,27 @@ export function FormInput(props: CombinedFormInputProps & { rules?: RegisterOpti
 			? InputTypeMap[type as Exclude<typeof type, AnyString>]
 			: FormInputPrimitive;
 
+	const registerProps = name ? register(name, rules) : null;
+
 	return (
 		<SelectedInput
 			type={type as never}
 			name={name}
-			{...(Boolean(name) && register(name, rules))}
+			{...registerProps}
 			{...(restOfProps as NonNullable<unknown>)}
+			ref={composeRefs([registerProps?.ref, ref as never])}
+			onChange={composeEventHandlers([registerProps?.onChange, onChange as never])}
+			onBlur={composeEventHandlers([registerProps?.onBlur, onBlur as never])}
 		/>
 	);
 }
 
 export function FormTextArea(props: FormTextAreaProps) {
-	return <FormInput type="textarea" {...props} />;
+	return <FormInput {...props} type="textarea" />;
 }
 
 export function FormSelect(props: FormSelectProps) {
-	return <FormInput type="select" {...props} />;
+	return <FormInput {...props} type="select" />;
 }
 
 export function FormDescription(props: InferProps<"p">) {
