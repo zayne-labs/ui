@@ -1,5 +1,13 @@
 # @zayne-labs/ui-react
 
+## 0.7.5
+
+### Patch Changes
+
+- edb150f: refactor(form): 🔄 Reorder props spread in FormTextArea and FormSelect components
+  feat(form): ✨ Add composeEventHandlers and composeRefs from toolkit-type-helpers
+  chore(deps): ⬆️ Update dependencies and upgrade @zayne-labs packages to v0.9.8
+
 ## 0.7.4
 
 ### Patch Changes
