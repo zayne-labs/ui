@@ -1,5 +1,11 @@
 # @zayne-labs/ui-react
 
+## 0.7.4
+
+### Patch Changes
+
+- faabcb6: fix(show): make work properly
+
 ## 0.7.0
 
 ### Minor Changes
