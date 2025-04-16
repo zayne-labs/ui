@@ -1,5 +1,12 @@
 # dev
 
+## 0.0.24
+
+### Patch Changes
+
+- Updated dependencies [edb150f]
+   - @zayne-labs/ui-react@0.7.5
+
 ## 0.0.23
 
 ### Patch Changes
