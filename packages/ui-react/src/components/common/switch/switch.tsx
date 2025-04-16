@@ -13,7 +13,7 @@ type SwitchProps<TCondition> = {
 };
 
 type SwitchMatchProps<TWhen = unknown> = {
-	children: React.ReactNode | ((whenValue: TWhen) => React.ReactNode);
+	children: React.ReactNode | ((value: TWhen) => React.ReactNode);
 	when: false | TWhen | null | undefined;
 };
 
@@ -36,8 +36,10 @@ export function SwitchRoot<TCondition = true>(props: SwitchProps<TCondition>) {
 	return matchedCase ?? defaultCase;
 }
 
-export function SwitchMatch<TWhen>({ children, when }: SwitchMatchProps<TWhen>) {
-	if (when == null || when === false) {
+export function SwitchMatch<TWhen>(props: SwitchMatchProps<TWhen>) {
+	const { children, when } = props;
+
+	if (!when) {
 		return null;
 	}
 

@@ -16,6 +16,7 @@ type AwaitProps<TValue> = AwaitInnerProps<TValue>
 		wrapperVariant?: "none" | "only-boundary" | "only-suspense" | "suspense-and-boundary";
 	};
 
+// TODO - Add Support for Slot components
 export function Await<TValue>(props: AwaitProps<TValue>) {
 	const { errorFallback, fallback, wrapperVariant = "suspense-and-boundary", ...restOfProps } = props;
 
@@ -54,7 +55,7 @@ function AwaitInner<TValue>(props: AwaitInnerProps<TValue>) {
 
 	const Component = asChild ? Slot : ReactFragment;
 
-	const componentProps = asChild && { promise, result };
+	const slotProps = asChild && { promise, result };
 
 	let resolvedChildren: React.ReactNode;
 
@@ -73,5 +74,5 @@ function AwaitInner<TValue>(props: AwaitInnerProps<TValue>) {
 		}
 	}
 
-	return <Component {...componentProps}>{resolvedChildren}</Component>;
+	return <Component {...slotProps}>{resolvedChildren}</Component>;
 }
