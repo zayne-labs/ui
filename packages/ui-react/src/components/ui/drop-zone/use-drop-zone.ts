@@ -9,7 +9,7 @@ import {
 	composeRefs,
 	mergeTwoProps,
 } from "@zayne-labs/toolkit-react/utils";
-import { isFunction } from "@zayne-labs/toolkit-type-helpers";
+import { type UnknownObject, isFunction } from "@zayne-labs/toolkit-type-helpers";
 import { useRef, useState } from "react";
 
 type RenderProps = {
@@ -28,73 +28,76 @@ export type RootProps = InferProps<"div"> & {
 
 export type InputProps = InferProps<"input">;
 
-type DropZoneRenderProps = DiscriminatedRenderProps<
-	React.ReactNode | ((props: RenderProps) => React.ReactNode)
+type DropZoneRenderProps<TExtraRenderProps extends UnknownObject> = DiscriminatedRenderProps<
+	React.ReactNode | ((props: RenderProps & TExtraRenderProps) => React.ReactNode)
 >;
 
-export type UseDropZoneProps = DropZoneRenderProps & {
-	/**
-	 * Allowed file types to be uploaded.
-	 */
-	allowedFileTypes?: string[];
+export type UseDropZoneProps<TExtraRenderProps extends UnknownObject = UnknownObject> =
+	DropZoneRenderProps<TExtraRenderProps> & {
+		/**
+		 * Allowed file types to be uploaded.
+		 */
+		allowedFileTypes?: string[];
 
-	classNames?: { activeDrag?: string; base?: string; input?: string };
-	/**
-	 * Whether to disallow duplicate files
-	 * @default true
-	 */
-	disallowDuplicates?: boolean;
+		classNames?: { activeDrag?: string; base?: string; input?: string };
+		/**
+		 * Whether to disallow duplicate files
+		 * @default true
+		 */
+		disallowDuplicates?: boolean;
 
-	/**
-	 * Existing files to be uploaded
-	 */
-	existingFiles?: File[];
+		/**
+		 * Existing files to be uploaded
+		 */
+		existingFiles?: File[];
 
-	/**
-	 * Extra props to pass to the input element
-	 */
-	extraInputProps?: InputProps;
+		/**
+		 * Extra props to pass to the input element
+		 */
+		extraInputProps?: InputProps;
 
-	/**
-	 * Extra props to pass to the root element
-	 */
-	extraRootProps?: RootProps;
+		/**
+		 * Extra props to pass to the root element
+		 */
+		extraRootProps?: RootProps;
 
-	/**
-	 * Maximum number of files that can be uploaded.
-	 */
-	fileLimit?: number;
+		/**
+		 * Maximum number of files that can be uploaded.
+		 */
+		maxFileCount?: number;
 
-	/**
-	 * Maximum file size in MB
-	 */
-	maxFileSize?: number;
+		/**
+		 * Maximum file size in MB
+		 */
+		maxFileSize?: number;
 
-	/**
-	 * Callback function to handle file upload
-	 */
-	onUpload?: (details: {
-		acceptedFiles: File[];
-		event: React.ChangeEvent<HTMLInputElement> | React.DragEvent<HTMLDivElement>;
-	}) => void;
+		/**
+		 * Callback function to handle file upload
+		 */
+		onUpload?: (details: {
+			acceptedFiles: File[];
+			event: React.ChangeEvent<HTMLInputElement> | React.DragEvent<HTMLDivElement>;
+		}) => void;
 
-	/**
-	 * Callback function to handle file upload errors
-	 */
-	onUploadError?: FileValidationOptions["onError"];
+		/**
+		 * Callback function to handle file upload errors
+		 */
+		onUploadError?: FileValidationOptions["onError"];
 
-	/**
-	 * Callback function to handle file upload success
-	 */
-	onUploadSuccess?: FileValidationOptions["onSuccess"];
+		/**
+		 * Callback function to handle file upload success
+		 */
+		onUploadSuccess?: FileValidationOptions["onSuccess"];
 
-	/**
-	 * Custom validator function to handle file validation
-	 */
-	validator?: (context: { existingFileArray: File[] | undefined; newFileList: FileList }) => File[];
-};
+		/**
+		 * Custom validator function to handle file validation
+		 */
+		validator?: (context: { existingFileArray: File[] | undefined; newFileList: FileList }) => File[];
+	};
 
-export const useDropZone = (props: UseDropZoneProps) => {
+export const useDropZone = <TExtraRenderProps extends UnknownObject>(
+	props: UseDropZoneProps<TExtraRenderProps>
+) => {
 	const inputRef = useRef<HTMLInputElement>(null);
 
 	const {
@@ -105,7 +108,7 @@ export const useDropZone = (props: UseDropZoneProps) => {
 		existingFiles,
 		extraInputProps,
 		extraRootProps,
-		fileLimit,
+		maxFileCount,
 		maxFileSize,
 		onUpload,
 		onUploadError,
@@ -147,7 +150,7 @@ export const useDropZone = (props: UseDropZoneProps) => {
 				validationSettings: {
 					allowedFileTypes,
 					disallowDuplicates,
-					fileLimit,
+					maxFileCount,
 					maxFileSize,
 				},
 				validator,
@@ -171,18 +174,19 @@ export const useDropZone = (props: UseDropZoneProps) => {
 		toggleIsDragging(false);
 	};
 
-	const getRenderProps = () =>
+	const getRenderProps = (extraRenderProps?: UnknownObject) =>
 		({
 			acceptedFiles,
 			inputRef,
 			isDragging,
 			openFilePicker: () => inputRef.current?.click(),
-		}) satisfies RenderProps;
+			...extraRenderProps,
+		}) satisfies RenderProps as RenderProps & TExtraRenderProps;
 
 	const computedChildren = children ?? render;
 
-	const getChildren = () =>
-		isFunction(computedChildren) ? computedChildren(getRenderProps()) : computedChildren;
+	const getChildren = (extraRenderProps?: UnknownObject) =>
+		isFunction(computedChildren) ? computedChildren(getRenderProps(extraRenderProps)) : computedChildren;
 
 	const getRootProps = (rootProps?: RootProps) => {
 		const mergedRootProps = mergeTwoProps(extraRootProps, rootProps);
@@ -242,3 +246,5 @@ export const useDropZone = (props: UseDropZoneProps) => {
 		isDragging,
 	};
 };
+
+export type UseDropZoneResult = ReturnType<typeof useDropZone>;

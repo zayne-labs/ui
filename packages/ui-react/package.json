@@ -59,9 +59,9 @@
 		}
 	},
 	"dependencies": {
-		"@zayne-labs/toolkit-core": "^0.9.8",
-		"@zayne-labs/toolkit-react": "^0.9.8",
-		"@zayne-labs/toolkit-type-helpers": "^0.9.8"
+		"@zayne-labs/toolkit-core": "^0.9.9",
+		"@zayne-labs/toolkit-react": "^0.9.9",
+		"@zayne-labs/toolkit-type-helpers": "^0.9.9"
 	},
 	"devDependencies": {
 		"@arethetypeswrong/cli": "0.17.4",
@@ -76,7 +76,7 @@
 		"publint": "^0.3.12",
 		"react": "^19.1.0",
 		"react-dom": "^19.1.0",
-		"react-hook-form": "^7.55.0",
+		"react-hook-form": "^7.56.0",
 		"size-limit": "11.2.0",
 		"tailwind-merge": "^3.2.0",
 		"tsup": "8.4.0",
