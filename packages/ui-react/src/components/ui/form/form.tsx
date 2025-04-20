@@ -2,9 +2,8 @@
 
 import * as React from "react";
 
-import { Slot } from "@/components/common";
 import { getElementList } from "@/components/common/for";
-import { EyeIconInvisible, EyeIconVisible } from "@/components/icons";
+import { Slot } from "@/components/common/slot";
 import { cnMerge } from "@/lib/utils/cn";
 import { toArray } from "@zayne-labs/toolkit-core";
 import { useToggle } from "@zayne-labs/toolkit-react";
@@ -45,6 +44,7 @@ import {
 	useLaxFormFieldState,
 	useStrictFormFieldContext,
 } from "./form-context";
+import { EyeIconInvisible, EyeIconVisible } from "./icons";
 
 export type FieldValues = Record<string, unknown>;
 
@@ -578,7 +578,8 @@ type FormErrorMessagePrimitiveProps<TFieldValues extends FieldValues> =
 			errorMessageAnimation?: string;
 		};
 		control?: Control<TFieldValues>; // == Here for type inference of errorField prop
-		withAnimationOnInvalid?: boolean;
+		disableErrorAnimation?: boolean;
+		disableScrollToErrorField?: boolean;
 	} & (
 			| {
 					errorField: FieldPath<TFieldValues>;
@@ -609,10 +610,11 @@ export const FormErrorMessagePrimitive: FormErrorMessagePrimitiveType = (props) 
 		className,
 		classNames,
 		control = rootContextValues?.control,
+		disableErrorAnimation = false,
+		disableScrollToErrorField = false,
 		errorField = fieldContextValues?.name,
 		render,
 		type = "regular",
-		withAnimationOnInvalid = true,
 	} = props;
 
 	const { errors } = useLaxFormFieldState({ control, name: errorField });
@@ -624,18 +626,18 @@ export const FormErrorMessagePrimitive: FormErrorMessagePrimitiveType = (props) 
 	const errorAnimationClass = classNames?.errorMessageAnimation ?? "animate-shake";
 
 	useEffect(() => {
-		if (!withAnimationOnInvalid) return;
+		if (disableErrorAnimation) return;
 
-		const errorMessageElements = wrapperRef.current?.children;
-
-		if (!errorMessageElements) return;
+		const errorMessageElements = wrapperRef.current?.children ?? [];
 
 		for (const element of errorMessageElements) {
 			element.classList.add(errorAnimationClass);
 		}
-	}, [errorAnimationClass, withAnimationOnInvalid]);
+	}, [errorAnimationClass, disableErrorAnimation]);
 
 	useEffect(() => {
+		if (disableScrollToErrorField) return;
+
 		const errorMessageElements = wrapperRef.current?.children;
 
 		if (!errorMessageElements || !errors) return;
@@ -649,7 +651,7 @@ export const FormErrorMessagePrimitive: FormErrorMessagePrimitiveType = (props) 
 
 			window.scrollBy({ behavior: "smooth", top: -100 });
 		}
-	}, [errorField, errors]);
+	}, [disableScrollToErrorField, errorField, errors]);
 
 	const message = (
 		type === "root"
@@ -665,7 +667,7 @@ export const FormErrorMessagePrimitive: FormErrorMessagePrimitiveType = (props) 
 
 	const [ErrorMessageList] = getElementList();
 
-	const onAnimationEnd: React.AnimationEventHandler<HTMLElement> | undefined = withAnimationOnInvalid
+	const onAnimationEnd: React.AnimationEventHandler<HTMLElement> | undefined = disableErrorAnimation
 		? (event) => event.currentTarget.classList.remove(errorAnimationClass)
 		: undefined;
 

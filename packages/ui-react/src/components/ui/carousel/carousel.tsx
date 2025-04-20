@@ -3,10 +3,10 @@
 import * as React from "react";
 
 import { getElementList } from "@/components/common/for";
-import { ChevronLeftIcon } from "@/components/icons";
 import { cnMerge } from "@/lib/utils/cn";
 import type { MyCustomCss, PolymorphicProps } from "@zayne-labs/toolkit-react/utils";
 import { useCarouselStoreContext } from "./carousel-store-context";
+import { ChevronLeftIcon } from "./icons";
 import type {
 	CarouselButtonsProps,
 	CarouselContentProps,
