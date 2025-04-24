@@ -36,7 +36,7 @@ export function CarouselContent<TElement extends React.ElementType = "article">(
 		shouldPauseOnHover,
 	});
 
-	// FIXME - Prevent touch swipe on mobile using a cover element or allow swipe but it must update the state appriopriately
+	// FIXME - Prevent touch swipe on mobile using a cover element or allow swipe but it must update the state appropriately
 	return (
 		<HtmlElement
 			data-id="Carousel"
@@ -200,7 +200,7 @@ export function CarouselIndicatorGroup<TArrayItem>(props: CarouselWrapperProps<T
 		<ul
 			data-id="Carousel Indicators"
 			className={cnMerge(
-				"absolute bottom-[25px] z-10 flex w-full items-center justify-center gap-[15px]",
+				"absolute bottom-[25px] z-[2] flex w-full items-center justify-center gap-[15px]",
 				className
 			)}
 		>
@@ -224,12 +224,11 @@ export function CarouselIndicator(props: CarouselIndicatorProps) {
 	return (
 		<li className={cnMerge("inline-flex", classNames?.base)}>
 			<button
-				data-active={currentIndex === currentSlide}
 				type="button"
 				onClick={() => goToSlide(currentIndex)}
 				className={cnMerge(
 					"size-[6px] rounded-[50%]",
-					classNames?.button,
+					classNames?.base,
 					currentIndex === currentSlide && ["w-[35px] rounded-[5px]", classNames?.isActive]
 				)}
 			/>
