@@ -4,8 +4,8 @@ export {
 	CarouselControls as Controls,
 	CarouselButton as Button,
 	CarouselItem as Item,
-	CarouselItemGroup as ItemWrapper,
+	CarouselItemGroup as ItemGroup,
 	CarouselCaption as Caption,
 	CarouselIndicator as Indicator,
-	CarouselIndicatorGroup as IndicatorWrapper,
+	CarouselIndicatorGroup as IndicatorGroup,
 } from "./carousel";
