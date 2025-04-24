@@ -5,6 +5,7 @@ import * as React from "react";
 import { getElementList } from "@/components/common/for";
 import { Slot } from "@/components/common/slot";
 import { cnMerge } from "@/lib/utils/cn";
+import { dataAttr } from "@/lib/utils/common";
 import { toArray } from "@zayne-labs/toolkit-core";
 import { useToggle } from "@zayne-labs/toolkit-react";
 import {
@@ -48,8 +49,6 @@ import { EyeIconInvisible, EyeIconVisible } from "./icons";
 
 export type FieldValues = Record<string, unknown>;
 
-const dataAttr = (condition: unknown) => (condition ? "" : undefined) as unknown as boolean;
-
 type FormRootProps<TFieldValues extends FieldValues> = React.ComponentPropsWithoutRef<"form"> & {
 	children: React.ReactNode;
 	methods: UseFormReturn<TFieldValues>;
@@ -65,6 +64,7 @@ export function FormRoot<TValues extends FieldValues>(props: FormRootProps<TValu
 				{...restOfProps}
 				data-scope="form"
 				data-part="root"
+				data-slot="form-root"
 			>
 				{children}
 			</form>
@@ -114,6 +114,7 @@ export function FormField<TControl, TFieldValues extends FieldValues = FieldValu
 		className: cnMerge("flex flex-col", className),
 		"data-part": "field",
 		"data-scope": "form",
+		"data-slot": "form-field",
 		/* eslint-disable perfectionist/sort-objects -- order of attributes does not matter */
 		"data-disabled": dataAttr(isDisabled),
 		"data-invalid": dataAttr(isInvalid),
@@ -199,6 +200,7 @@ export function FormLabel(props: InferProps<"label">) {
 		<label
 			data-scope="form"
 			data-part="label"
+			data-slot="form-label"
 			data-disabled={dataAttr(isDisabled)}
 			data-invalid={dataAttr(isInvalid)}
 			htmlFor={formItemId}
@@ -224,6 +226,7 @@ export function FormInputGroup(props: InferProps<"div">) {
 		<div
 			data-scope="form"
 			data-part="input-group"
+			data-slot="form-input-group"
 			data-invalid={dataAttr(isInvalid)}
 			data-disabled={dataAttr(isDisabled)}
 			className={cnMerge("flex items-center justify-between gap-2", className)}
@@ -250,6 +253,7 @@ export function FormInputLeftItem<TElement extends React.ElementType = "span">(
 		<Element
 			data-scope="form"
 			data-part="left-item"
+			data-slot="form-left-item"
 			className={cnMerge("inline-flex items-center justify-center", className)}
 			{...restOfProps}
 		>
@@ -257,7 +261,7 @@ export function FormInputLeftItem<TElement extends React.ElementType = "span">(
 		</Element>
 	);
 }
-FormInputLeftItem.slotSymbol = Symbol("leftItem");
+FormInputLeftItem.slotSymbol = Symbol("input-left-item");
 
 export function FormInputRightItem<TElement extends React.ElementType = "span">(
 	props: PolymorphicProps<TElement, FormSideItemProps>
@@ -268,6 +272,7 @@ export function FormInputRightItem<TElement extends React.ElementType = "span">(
 		<Element
 			data-scope="form"
 			data-part="right-item"
+			data-slot="form-right-item"
 			className={cnMerge("inline-flex items-center justify-center", className)}
 			{...restOfProps}
 		>
@@ -275,7 +280,7 @@ export function FormInputRightItem<TElement extends React.ElementType = "span">(
 		</Element>
 	);
 }
-FormInputRightItem.slotSymbol = Symbol("rightItem");
+FormInputRightItem.slotSymbol = Symbol("input-right-item");
 
 type FormInputPrimitiveProps<TFieldValues extends FieldValues = FieldValues> = Omit<
 	React.ComponentPropsWithRef<"input">,
@@ -336,8 +341,6 @@ export function FormInputPrimitive<TFieldValues extends FieldValues>(
 
 	const wrapperElementProps = shouldHaveEyeIcon && {
 		className: cnMerge("w-full", classNames?.inputGroup, isInvalid && classNames?.error),
-		"data-disabled": dataAttr(isDisabled),
-		"data-invalid": dataAttr(isInvalid),
 	};
 
 	const { register } = useFormRootContext({ strict: false }) ?? {};
@@ -347,6 +350,7 @@ export function FormInputPrimitive<TFieldValues extends FieldValues>(
 			<input
 				data-scope="form"
 				data-part="input"
+				data-slot="form-input"
 				aria-describedby={
 					!isInvalid
 						? fieldContextValues?.formDescriptionId
@@ -360,9 +364,8 @@ export function FormInputPrimitive<TFieldValues extends FieldValues>(
 				type={type === "password" && isPasswordVisible ? "text" : type}
 				className={cnMerge(
 					!inputTypesWithoutFullWith.has(type) && "flex w-full",
-					`bg-transparent text-sm file:border-0 file:bg-transparent
-					placeholder:text-shadcn-muted-foreground focus-visible:outline-hidden
-					disabled:cursor-not-allowed disabled:opacity-50`,
+					`placeholder:text-shadcn-muted-foreground focus-visible:outline-hidden bg-transparent
+					text-sm file:border-0 file:bg-transparent disabled:cursor-not-allowed disabled:opacity-50`,
 					className,
 					classNames?.input,
 					type !== "password" && isInvalid && classNames?.error
@@ -415,6 +418,7 @@ export function FormTextAreaPrimitive<TFieldValues extends FieldValues>(
 		<textarea
 			data-scope="form"
 			data-part="textarea"
+			data-slot="form-textarea"
 			aria-describedby={
 				!isInvalid
 					? fieldContextValues?.formDescriptionId
@@ -426,8 +430,8 @@ export function FormTextAreaPrimitive<TFieldValues extends FieldValues>(
 			id={id}
 			name={name}
 			className={cnMerge(
-				`w-full bg-transparent text-sm placeholder:text-shadcn-muted-foreground
-				focus-visible:outline-hidden disabled:cursor-not-allowed disabled:opacity-50`,
+				`placeholder:text-shadcn-muted-foreground focus-visible:outline-hidden w-full bg-transparent
+				text-sm disabled:cursor-not-allowed disabled:opacity-50`,
 				className,
 				classNames?.base,
 				isInvalid && classNames?.error
@@ -464,6 +468,7 @@ export function FormSelectPrimitive<TFieldValues extends FieldValues>(
 			defaultValue=""
 			data-scope="form"
 			data-part="select"
+			data-slot="form-select"
 			aria-describedby={
 				!isInvalid
 					? fieldContextValues?.formDescriptionId
@@ -475,8 +480,8 @@ export function FormSelectPrimitive<TFieldValues extends FieldValues>(
 			id={id}
 			name={name}
 			className={cnMerge(
-				`w-full bg-transparent text-sm placeholder:text-shadcn-muted-foreground
-				focus-visible:outline-hidden disabled:cursor-not-allowed disabled:opacity-50`,
+				`placeholder:text-shadcn-muted-foreground focus-visible:outline-hidden w-full bg-transparent
+				text-sm disabled:cursor-not-allowed disabled:opacity-50`,
 				className,
 				classNames?.base,
 				isInvalid && classNames?.error
@@ -556,8 +561,9 @@ export function FormDescription(props: InferProps<"p">) {
 type ErrorMessageRenderProps = {
 	className: string;
 	"data-index": number;
-	"data-part": string;
-	"data-scope": string;
+	"data-part": "error-message";
+	"data-scope": "form";
+	"data-slot": "form-error-message";
 	id: string | undefined;
 	onAnimationEnd?: React.ReactEventHandler<HTMLElement>;
 };
@@ -677,6 +683,7 @@ export const FormErrorMessagePrimitive: FormErrorMessagePrimitiveType = (props) 
 			"data-index": index,
 			"data-part": "error-message",
 			"data-scope": "form",
+			"data-slot": "form-error-message",
 			id: formMessageId,
 			onAnimationEnd,
 		}) satisfies ErrorMessageRenderProps;
@@ -742,8 +749,8 @@ export function FormErrorMessage<TControl, TFieldValues extends FieldValues = Fi
 			type={type as "root"}
 			render={({ props: renderProps, state: { errorMessage } }) => (
 				<p
-					{...renderProps}
 					key={errorMessage}
+					{...renderProps}
 					className={cnMerge("text-[13px]", "data-[index=0]:mt-1", renderProps.className, className)}
 				>
 					{errorMessage}

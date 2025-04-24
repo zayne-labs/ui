@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@source './node_modules/@zayne-labs/ui-react/dist/esm/**/*.js';
+@import "@zayne-labs/ui-react/css/preset.css";
 
 @theme {
 	--color-shadcn-accent: hsl(210, 40%, 96.1%);

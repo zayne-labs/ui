@@ -27,7 +27,7 @@ export function SwitchRoot<TCondition = true>(props: SwitchProps<TCondition>) {
 		throwOnMultipleSlotMatch: true,
 	});
 
-	const childrenCasesArray = getRegularChildren(children, SwitchDefault);
+	const childrenCasesArray = getRegularChildren(children, SwitchDefault) as ValidSwitchComponentType[];
 
 	const matchedCase = childrenCasesArray.find((child) =>
 		condition === defaultConditionSymbol ? child.props.when : child.props.when === condition
@@ -43,7 +43,9 @@ export function SwitchMatch<TWhen>(props: SwitchMatchProps<TWhen>) {
 		return null;
 	}
 
-	return isFunction(children) ? children(when) : children;
+	const resolvedChildren = isFunction(children) ? children(when) : children;
+
+	return resolvedChildren;
 }
 
 export function SwitchDefault({ children }: { children: React.ReactNode }) {

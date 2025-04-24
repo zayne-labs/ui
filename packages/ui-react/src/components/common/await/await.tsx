@@ -3,6 +3,7 @@
 import * as React from "react";
 
 import type { DiscriminatedRenderProps } from "@zayne-labs/toolkit-react/utils";
+import { isFunction } from "@zayne-labs/toolkit-type-helpers";
 import { Fragment as ReactFragment, Suspense, use } from "react";
 import { ErrorBoundary } from "../error-boundary";
 import { Slot } from "../slot";
@@ -12,7 +13,6 @@ type RenderPropFn<TValue> = (result: TValue) => React.ReactNode;
 
 type AwaitProps<TValue> = AwaitInnerProps<TValue>
 	& Pick<SuspenseWithBoundaryProps, "errorFallback" | "fallback"> & {
-		asChild?: boolean;
 		wrapperVariant?: "none" | "only-boundary" | "only-suspense" | "suspense-and-boundary";
 	};
 
@@ -57,22 +57,9 @@ function AwaitInner<TValue>(props: AwaitInnerProps<TValue>) {
 
 	const slotProps = asChild && { promise, result };
 
-	let resolvedChildren: React.ReactNode;
+	const selectedChildren = children ?? render;
 
-	switch (true) {
-		case typeof children === "function": {
-			resolvedChildren = children(result);
-			break;
-		}
-		case typeof render === "function": {
-			resolvedChildren = render(result);
-			break;
-		}
-		default: {
-			resolvedChildren = children ?? render;
-			break;
-		}
-	}
+	const resolvedChildren = isFunction(selectedChildren) ? selectedChildren(result) : selectedChildren;
 
 	return <Component {...slotProps}>{resolvedChildren}</Component>;
 }

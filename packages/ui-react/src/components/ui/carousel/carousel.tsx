@@ -66,7 +66,7 @@ export function CarouselButton(props: CarouselButtonsProps) {
 		<button
 			type="button"
 			className={cnMerge(
-				"z-30 flex h-full w-[15%] items-center",
+				"z-30 flex h-full w-fit items-center",
 				variant === "prev" ? "justify-start" : "justify-end",
 				classNames?.base
 			)}
@@ -148,7 +148,7 @@ export function CarouselItemGroup<TArrayItem>(props: CarouselWrapperProps<TArray
 		<ul
 			data-id="Carousel Image Wrapper"
 			className={cnMerge(
-				`flex w-full shrink-0 [transform:translate3d(var(--translate-distance),0,0)] snap-center
+				`flex w-full shrink-0 snap-center [transform:translate3d(var(--translate-distance),0,0)]
 				[transition:transform_800ms_ease]`,
 				className
 			)}
@@ -200,7 +200,7 @@ export function CarouselIndicatorGroup<TArrayItem>(props: CarouselWrapperProps<T
 		<ul
 			data-id="Carousel Indicators"
 			className={cnMerge(
-				"absolute bottom-10 z-[2] flex w-full items-center justify-center gap-6",
+				"absolute bottom-[25px] z-10 flex w-full items-center justify-center gap-[15px]",
 				className
 			)}
 		>
@@ -230,7 +230,7 @@ export function CarouselIndicator(props: CarouselIndicatorProps) {
 				className={cnMerge(
 					"size-[6px] rounded-[50%]",
 					classNames?.button,
-					currentIndex === currentSlide && ["w-14 rounded-lg", classNames?.activeBtn]
+					currentIndex === currentSlide && ["w-[35px] rounded-[5px]", classNames?.activeBtn]
 				)}
 			/>
 		</li>

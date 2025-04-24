@@ -19,9 +19,11 @@
 	"exports": {
 		".": null,
 		"./*": "./dist/esm/ui/*/index.js",
-		"./common/*": "./dist/esm/common/*/index.js"
+		"./common/*": "./dist/esm/common/*/index.js",
+		"./css/*": "./css/*"
 	},
 	"files": [
+		"css",
 		"dist"
 	],
 	"engines": {
@@ -30,6 +32,7 @@
 	"scripts": {
 		"build": "tsup",
 		"build:dev": "cross-env NODE_ENV=development tsup",
+		"build:tailwind": "pnpx tailwindcss -i ./tailwind.css -o ./dist/css/main.css --watch",
 		"build:test": "concurrently --prefix-colors \"yellow.bold,#7da4f8.bold,magenta\" --names PUBLINT,TSUP 'pnpm:lint:publint' 'pnpm:build:dev'",
 		"dev": "pnpm build:dev --watch",
 		"lint:attw": "attw --pack . --profile esm-only --format table-flipped --ignore-rules=cjs-resolves-to-esm --ignore-rules=named-exports",
@@ -44,8 +47,8 @@
 		"react": ">=18.0.0",
 		"react-dom": ">=18.0.0",
 		"react-hook-form": ">=7.53.2",
-		"tailwind-merge": ">=2.5.5",
-		"zustand": ">=5.0.3"
+		"tailwindcss": ">=4.0.0",
+		"zustand": ">=5.0.0"
 	},
 	"peerDependenciesMeta": {
 		"react": {
@@ -54,34 +57,41 @@
 		"react-dom": {
 			"optional": true
 		},
-		"tailwind-merge": {
+		"react-hook-form": {
+			"optional": true
+		},
+		"tailwindcss": {
+			"optional": true
+		},
+		"zustand": {
 			"optional": true
 		}
 	},
 	"dependencies": {
-		"@zayne-labs/toolkit-core": "^0.9.9",
-		"@zayne-labs/toolkit-react": "^0.9.9",
-		"@zayne-labs/toolkit-type-helpers": "^0.9.9"
+		"@zayne-labs/toolkit-core": "0.9.22",
+		"@zayne-labs/toolkit-react": "0.9.22",
+		"@zayne-labs/toolkit-type-helpers": "0.9.22",
+		"tailwind-merge": "3.2.0"
 	},
 	"devDependencies": {
 		"@arethetypeswrong/cli": "0.17.4",
 		"@size-limit/esbuild-why": "11.2.0",
 		"@size-limit/preset-small-lib": "11.2.0",
 		"@total-typescript/ts-reset": "0.6.1",
-		"@types/react": "^19.1.2",
-		"@types/react-dom": "^19.1.2",
+		"@types/react": "19.1.2",
+		"@types/react-dom": "19.1.2",
 		"@zayne-labs/tsconfig": "0.8.1",
-		"concurrently": "^9.1.2",
-		"cross-env": "^7.0.3",
-		"publint": "^0.3.12",
-		"react": "^19.1.0",
-		"react-dom": "^19.1.0",
-		"react-hook-form": "^7.56.0",
+		"concurrently": "9.1.2",
+		"cross-env": "7.0.3",
+		"publint": "0.3.12",
+		"react": "19.1.0",
+		"react-dom": "19.1.0",
+		"react-hook-form": "7.56.0",
 		"size-limit": "11.2.0",
-		"tailwind-merge": "^3.2.0",
+		"tailwindcss": "^4.1.4",
 		"tsup": "8.4.0",
-		"typescript": "^5.8.3",
-		"zustand": "^5.0.3"
+		"typescript": "5.8.3",
+		"zustand": "5.0.3"
 	},
 	"publishConfig": {
 		"access": "public",
@@ -91,7 +101,7 @@
 	"size-limit": [
 		{
 			"path": "src/components/ui/**/index.ts",
-			"limit": "5 kB"
+			"limit": "12 kB"
 		},
 		{
 			"path": "src/components/common/**/index.ts",
