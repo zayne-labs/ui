@@ -73,9 +73,9 @@ export type CarouselControlProps = {
 
 export type CarouselIndicatorProps = {
 	classNames?: {
-		activeBtn?: string;
 		base?: string;
 		button?: string;
+		isActive?: string;
 	};
 	currentIndex: number;
 };

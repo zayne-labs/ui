@@ -230,7 +230,7 @@ export function CarouselIndicator(props: CarouselIndicatorProps) {
 				className={cnMerge(
 					"size-[6px] rounded-[50%]",
 					classNames?.button,
-					currentIndex === currentSlide && ["w-[35px] rounded-[5px]", classNames?.activeBtn]
+					currentIndex === currentSlide && ["w-[35px] rounded-[5px]", classNames?.isActive]
 				)}
 			/>
 		</li>
