@@ -1,5 +1,11 @@
 # @zayne-labs/ui-react
 
+## 0.8.5
+
+### Patch Changes
+
+- af29bcb: refactor(drop-zone): 🔄 optimize utils and update toolkit dependencies
+
 ## 0.8.0
 
 ### Minor Changes
