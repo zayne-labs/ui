@@ -1,12 +1,11 @@
 import { cnMerge } from "@/lib/utils/cn";
 import { dataAttr } from "@/lib/utils/common";
-import { toArray } from "@zayne-labs/toolkit-core";
 import {
 	type FileMeta,
 	type FileValidationErrorContext,
 	type FileValidationOptions,
-	createImagePreview,
 	handleFileValidation,
+	toArray,
 } from "@zayne-labs/toolkit-core";
 import { useCallbackRef } from "@zayne-labs/toolkit-react";
 import {
@@ -15,9 +14,9 @@ import {
 	composeRefs,
 	mergeTwoProps,
 } from "@zayne-labs/toolkit-react/utils";
-import { type Prettify, isFunction } from "@zayne-labs/toolkit-type-helpers";
+import { type Prettify, isFunction, isString } from "@zayne-labs/toolkit-type-helpers";
 import { useCallback, useRef, useState } from "react";
-import { clearObjectURL, generateUniqueId } from "./utils";
+import { clearObjectURL, createObjectURL, generateUniqueId } from "./utils";
 
 export type RootProps = InferProps<HTMLElement> & {
 	classNames?: {
@@ -29,37 +28,60 @@ export type RootProps = InferProps<HTMLElement> & {
 export type InputProps = InferProps<"input">;
 
 export type FileWithPreview = {
+	/**
+	 *  File object or file metadata
+	 */
 	file: File | FileMeta;
+	/**
+	 *  Unique ID for the file
+	 */
 	id: string;
-	preview?: string;
+	/**
+	 *  Preview URL for the file
+	 *  - Will be undefined if `disallowPreviewForNonImageFiles` is set to `true` and the file is not an image
+	 *  - Can also be undefined if `URL.createObjectURL` fails
+	 */
+	preview: string | undefined;
 };
 
-export type FileUploadState = {
+export type DropZoneState = {
+	/**
+	 *  List of validation errors
+	 */
 	errors: FileValidationErrorContext[];
+	/**
+	 *  List of files with their preview URLs and unique IDs
+	 */
 	filesWithPreview: FileWithPreview[];
+	/**
+	 *  Whether or not a file is currently being dragged over the drop zone
+	 */
 	isDragging: boolean;
 };
 
 type ChangeOrDragEvent = React.ChangeEvent<HTMLInputElement> | React.DragEvent<HTMLElement>;
 
-type UseDropZoneResult = {
+type DropZoneActions = {
 	addFiles: (fileList: File[] | FileList | null, event?: ChangeOrDragEvent) => void;
 	clearErrors: () => void;
 	clearFiles: () => void;
-	dropZoneState: FileUploadState;
-	getInputProps: (inputProps?: InputProps) => InputProps;
-	getResolvedChildren: () => React.ReactNode;
-	getRootProps: (rootProps?: RootProps) => RootProps;
 	handleDragEnter: (event: React.DragEvent<HTMLElement>) => void;
 	handleDragLeave: (event: React.DragEvent<HTMLElement>) => void;
 	handleDragOver: (event: React.DragEvent<HTMLElement>) => void;
-	handleFileUpload: (event: React.ChangeEvent<HTMLInputElement> | React.DragEvent<HTMLElement>) => void;
-	inputRef: React.RefObject<HTMLInputElement | null>;
+	handleFileUpload: (event: ChangeOrDragEvent) => void;
 	openFilePicker: () => void;
-	removeFile: (id: string) => void;
+	removeFile: (fileToRemoveOrId: string | FileWithPreview) => void;
 };
 
-type RenderProps = Omit<UseDropZoneResult, "getResolvedChildren">;
+type RenderProps = {
+	dropZoneActions: DropZoneActions;
+	dropZoneState: DropZoneState;
+	getInputProps: (inputProps?: InputProps) => InputProps;
+	getRootProps: (rootProps?: RootProps) => RootProps;
+	inputRef: React.RefObject<HTMLInputElement | null>;
+};
+
+type UseDropZoneResult = RenderProps & { getResolvedChildren: () => React.ReactNode };
 
 type DropZoneRenderProps = DiscriminatedRenderProps<
 	React.ReactNode | ((props: RenderProps) => React.ReactNode)
@@ -81,6 +103,12 @@ export type UseDropZoneProps = DropZoneRenderProps & {
 	 * @default true
 	 */
 	disallowDuplicates?: boolean;
+
+	/**
+	 * Whether to disallow preview for non-image files
+	 * @default true
+	 */
+	disallowPreviewForNonImageFiles?: boolean;
 
 	/**
 	 * Extra props to pass to the input element
@@ -149,6 +177,7 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 		children,
 		classNames,
 		disallowDuplicates = true,
+		disallowPreviewForNonImageFiles = true,
 		extraInputProps,
 		extraRootProps,
 		initialFiles,
@@ -168,7 +197,7 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 
 	const initialFileArray = toArray(initialFiles).filter(Boolean);
 
-	const [dropZoneState, setDropZoneState] = useState<FileUploadState>({
+	const [dropZoneState, setDropZoneState] = useState<DropZoneState>({
 		errors: [],
 		filesWithPreview: initialFileArray.map((fileMeta) => ({
 			file: fileMeta,
@@ -182,7 +211,7 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 		setDropZoneState((prevState) => ({ ...prevState, isDragging: value }));
 	};
 
-	const addFiles: UseDropZoneResult["addFiles"] = useCallbackRef((fileList, event) => {
+	const addFiles: DropZoneActions["addFiles"] = useCallbackRef((fileList, event) => {
 		if (!fileList || fileList.length === 0) {
 			console.warn("No file selected!");
 			return;
@@ -214,7 +243,7 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 		const filesWithPreview: FileWithPreview[] = validFiles.map((file) => ({
 			file,
 			id: generateUniqueId(file),
-			preview: createImagePreview({ file }),
+			preview: createObjectURL(file, disallowPreviewForNonImageFiles),
 		}));
 
 		// == Only call onUpload callback if event is provided, which indicates that new files were uploaded from an event handler
@@ -230,7 +259,7 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 			filesWithPreview: multiple
 				? [...dropZoneState.filesWithPreview, ...filesWithPreview]
 				: filesWithPreview,
-		} satisfies FileUploadState;
+		} satisfies DropZoneState;
 
 		onFilesChange?.({ filesWithPreview: newFileUploadState.filesWithPreview });
 
@@ -240,15 +269,17 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 		inputRef.current && (inputRef.current.value = "");
 	});
 
-	const clearFiles: UseDropZoneResult["clearFiles"] = useCallbackRef(() => {
+	const clearFiles: DropZoneActions["clearFiles"] = useCallbackRef(() => {
 		// == Clean up object URLs if any
-		dropZoneState.filesWithPreview.forEach((fileObject) => clearObjectURL(fileObject));
+		dropZoneState.filesWithPreview.forEach((fileWithPreview) =>
+			clearObjectURL(fileWithPreview, disallowPreviewForNonImageFiles)
+		);
 
 		const newFileUploadState = {
 			...dropZoneState,
 			errors: [],
 			filesWithPreview: [],
-		} satisfies FileUploadState;
+		} satisfies DropZoneState;
 
 		onFilesChange?.({ filesWithPreview: newFileUploadState.filesWithPreview });
 
@@ -258,12 +289,18 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 		inputRef.current && (inputRef.current.value = "");
 	});
 
-	const removeFile: UseDropZoneResult["removeFile"] = useCallbackRef((id) => {
-		const fileToRemove = dropZoneState.filesWithPreview.find((fileObject) => fileObject.id === id);
+	const removeFile: DropZoneActions["removeFile"] = useCallbackRef((fileToRemoveOrId) => {
+		const actualFileToRemove = isString(fileToRemoveOrId)
+			? dropZoneState.filesWithPreview.find((file) => file.id === fileToRemoveOrId)
+			: fileToRemoveOrId;
 
-		clearObjectURL(fileToRemove);
+		if (!actualFileToRemove) return;
 
-		const newFilesWithPreview = dropZoneState.filesWithPreview.filter((file) => file.id !== id);
+		clearObjectURL(actualFileToRemove, disallowPreviewForNonImageFiles);
+
+		const newFilesWithPreview = dropZoneState.filesWithPreview.filter(
+			(file) => file.id !== actualFileToRemove.id
+		);
 
 		onFilesChange?.({ filesWithPreview: newFilesWithPreview });
 
@@ -274,11 +311,11 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 		});
 	});
 
-	const clearErrors: UseDropZoneResult["clearErrors"] = useCallbackRef(() => {
+	const clearErrors: DropZoneActions["clearErrors"] = useCallbackRef(() => {
 		setDropZoneState((prevState) => ({ ...prevState, errors: [] }));
 	});
 
-	const handleFileUpload: UseDropZoneResult["handleFileUpload"] = useCallbackRef((event) => {
+	const handleFileUpload: DropZoneActions["handleFileUpload"] = useCallbackRef((event) => {
 		if (event.defaultPrevented) return;
 
 		if (inputRef.current?.disabled) return;
@@ -305,25 +342,25 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 		addFiles(fileList, event);
 	});
 
-	const handleDragEnter: UseDropZoneResult["handleDragEnter"] = useCallbackRef((event) => {
+	const handleDragEnter: DropZoneActions["handleDragEnter"] = useCallbackRef((event) => {
 		event.preventDefault();
 		event.stopPropagation();
 		toggleIsDragging(true);
 	});
 
-	const handleDragOver: UseDropZoneResult["handleDragOver"] = useCallbackRef((event) => {
+	const handleDragOver: DropZoneActions["handleDragOver"] = useCallbackRef((event) => {
 		event.preventDefault();
 		event.stopPropagation();
 		toggleIsDragging(true);
 	});
 
-	const handleDragLeave: UseDropZoneResult["handleDragLeave"] = useCallbackRef((event) => {
+	const handleDragLeave: DropZoneActions["handleDragLeave"] = useCallbackRef((event) => {
 		event.preventDefault();
 		event.stopPropagation();
 		toggleIsDragging(false);
 	});
 
-	const openFilePicker: UseDropZoneResult["openFilePicker"] = useCallbackRef(() => {
+	const openFilePicker: DropZoneActions["openFilePicker"] = useCallbackRef(() => {
 		inputRef.current?.click();
 	});
 
@@ -403,19 +440,21 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 	);
 
 	const renderProps = {
-		addFiles,
-		clearErrors,
-		clearFiles,
+		dropZoneActions: {
+			addFiles,
+			clearErrors,
+			clearFiles,
+			handleDragEnter,
+			handleDragLeave,
+			handleDragOver,
+			handleFileUpload,
+			openFilePicker,
+			removeFile,
+		},
 		dropZoneState,
 		getInputProps,
 		getRootProps,
-		handleDragEnter,
-		handleDragLeave,
-		handleDragOver,
-		handleFileUpload,
 		inputRef,
-		openFilePicker,
-		removeFile,
 	} satisfies RenderProps;
 
 	const selectedChildren = children ?? render;

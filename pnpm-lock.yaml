@@ -121,14 +121,14 @@ importers:
   packages/ui-react:
     dependencies:
       '@zayne-labs/toolkit-core':
-        specifier: 0.9.22
-        version: 0.9.22
+        specifier: 0.9.24
+        version: 0.9.24
       '@zayne-labs/toolkit-react':
-        specifier: 0.9.22
-        version: 0.9.22(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(zustand@5.0.3(@types/react@19.1.2)(react@19.1.0))
+        specifier: 0.9.24
+        version: 0.9.24(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(zustand@5.0.3(@types/react@19.1.2)(react@19.1.0))
       '@zayne-labs/toolkit-type-helpers':
-        specifier: 0.9.22
-        version: 0.9.22
+        specifier: 0.9.24
+        version: 0.9.24
       tailwind-merge:
         specifier: 3.2.0
         version: 3.2.0
@@ -1308,12 +1308,12 @@ packages:
     resolution: {integrity: sha512-LJ8lK9Lr/xHEvlsKEE5y8kYGrWUhKTAZjItT7UPWLWRdZIVIlocL67m9YnZ31WmUnHfLyED7OyeCOl9v2gC3/g==}
     engines: {node: '>=18.x'}
 
-  '@zayne-labs/toolkit-core@0.9.22':
-    resolution: {integrity: sha512-/MRd1YRVjWv+Z3gB7gRP2GsuMhrBIna7ZmovZDUflwZ2BtDwl8VK+kY4AJDNQkseAj3EgRx9OWLI9AOFgzdEow==}
+  '@zayne-labs/toolkit-core@0.9.24':
+    resolution: {integrity: sha512-WEvP65u1eSfHvQtXFuF1zyZBPkm+9CX4FE1UTc9XUPdp2EURH/Gs/5F+R4KTJf3HSsOQnFUfj3O8ychX6yRbUA==}
     engines: {node: '>=18.x'}
 
-  '@zayne-labs/toolkit-react@0.9.22':
-    resolution: {integrity: sha512-yRvEqiB+pExeTzmPJwJnZ00Dg+VjgYBdMc3Y5k7lYgLx5so80+M4VAaWqZtHetgOdFCAZ78iAdk9zuXsDyw8ng==}
+  '@zayne-labs/toolkit-react@0.9.24':
+    resolution: {integrity: sha512-yGA7etbUK/JEoTUzy4tFBavZ+2v2r2wHkvn9sVOEO2zL7h4Y9SB5bceo+E2KzeI5ac5zQW9H51VyTJkD7Z+fvw==}
     engines: {node: '>=18.x'}
     peerDependencies:
       react: '>=18.0.0'
@@ -1331,8 +1331,8 @@ packages:
     resolution: {integrity: sha512-zbH/ekdcmHgeDMlu4SR6565rEJ+Q5qEGJill7EkpYtsshgS9HMvfVmqJfIUSJJI5uQiBAUyFdAMnOUSaonKUAA==}
     engines: {node: '>=18.x'}
 
-  '@zayne-labs/toolkit-type-helpers@0.9.22':
-    resolution: {integrity: sha512-enQnB5mcZcPqeggZl6Cw8Rw6uRcuOgA+OesFGp4j25A+WCJsydgmQAa1ZFUMAIPNeW3j/mdIFaHzQyGRANaWSA==}
+  '@zayne-labs/toolkit-type-helpers@0.9.24':
+    resolution: {integrity: sha512-QeHAuB/FwS22o+yw4m4BZrBX+0iUzF06fbo2Sg8M0qVKBRKTAEAnNDNesl1ecWlcB/qH698Aby0MO/APFY7HnA==}
     engines: {node: '>=18.x'}
 
   '@zayne-labs/tsconfig@0.8.1':
@@ -4401,7 +4401,7 @@ snapshots:
       '@eslint/compat': 1.2.8(eslint@9.25.1(jiti@2.4.2))
       '@eslint/js': 9.24.0
       '@stylistic/eslint-plugin': 4.2.0(eslint@9.25.1(jiti@2.4.2))(typescript@5.8.3)
-      '@zayne-labs/toolkit-type-helpers': 0.9.22
+      '@zayne-labs/toolkit-type-helpers': 0.9.24
       ansis: 3.17.0
       cac: 6.7.14
       eslint: 9.25.1(jiti@2.4.2)
@@ -4438,20 +4438,20 @@ snapshots:
 
   '@zayne-labs/prettier-config@0.8.1':
     dependencies:
-      '@zayne-labs/toolkit-type-helpers': 0.9.22
+      '@zayne-labs/toolkit-type-helpers': 0.9.24
 
   '@zayne-labs/toolkit-core@0.9.14':
     dependencies:
       '@zayne-labs/toolkit-type-helpers': 0.9.14
 
-  '@zayne-labs/toolkit-core@0.9.22':
+  '@zayne-labs/toolkit-core@0.9.24':
     dependencies:
-      '@zayne-labs/toolkit-type-helpers': 0.9.22
+      '@zayne-labs/toolkit-type-helpers': 0.9.24
 
-  '@zayne-labs/toolkit-react@0.9.22(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(zustand@5.0.3(@types/react@19.1.2)(react@19.1.0))':
+  '@zayne-labs/toolkit-react@0.9.24(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(zustand@5.0.3(@types/react@19.1.2)(react@19.1.0))':
     dependencies:
-      '@zayne-labs/toolkit-core': 0.9.22
-      '@zayne-labs/toolkit-type-helpers': 0.9.22
+      '@zayne-labs/toolkit-core': 0.9.24
+      '@zayne-labs/toolkit-type-helpers': 0.9.24
     optionalDependencies:
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
@@ -4459,7 +4459,7 @@ snapshots:
 
   '@zayne-labs/toolkit-type-helpers@0.9.14': {}
 
-  '@zayne-labs/toolkit-type-helpers@0.9.22': {}
+  '@zayne-labs/toolkit-type-helpers@0.9.24': {}
 
   '@zayne-labs/tsconfig@0.8.1': {}
 
