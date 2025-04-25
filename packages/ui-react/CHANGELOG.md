@@ -1,5 +1,11 @@
 # @zayne-labs/ui-react
 
+## 0.8.7
+
+### Patch Changes
+
+- 1805647: feat: introduce onRenderPropsChange callback to allow for sideeffects on props change when the hook is not used directly
+
 ## 0.8.5
 
 ### Patch Changes
