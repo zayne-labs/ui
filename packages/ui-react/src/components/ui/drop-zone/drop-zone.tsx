@@ -9,16 +9,16 @@ import {
 } from "@zayne-labs/toolkit-react/utils";
 import { isArray } from "@zayne-labs/toolkit-type-helpers";
 import { Fragment as ReactFragment, isValidElement } from "react";
-import { type UseDropZoneProps, useDropZone } from "./use-drop-zone";
+import { type DropZoneProps, useDropZone } from "./use-drop-zone";
 
-type DropZoneProps = UseDropZoneProps & {
+type DropZoneWrapperProps = DropZoneProps & {
 	/**
 	 * Controls whether to include internal elements (root and input) or not.
 	 */
 	withInternalElements?: boolean;
 };
 
-export function DropZoneRoot(props: DropZoneProps) {
+export function DropZoneRoot(props: DropZoneWrapperProps) {
 	const { withInternalElements = true, ...restOfProps } = props;
 
 	const api = useDropZone(restOfProps);

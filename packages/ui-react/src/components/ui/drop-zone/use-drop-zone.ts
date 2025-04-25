@@ -81,13 +81,13 @@ export type RenderProps = {
 	inputRef: React.RefObject<HTMLInputElement | null>;
 };
 
-export type UseDropZoneResult = RenderProps & { getResolvedChildren: () => React.ReactNode };
+export type DropZoneResult = RenderProps & { getResolvedChildren: () => React.ReactNode };
 
 type DropZoneRenderProps = DiscriminatedRenderProps<
 	React.ReactNode | ((props: RenderProps) => React.ReactNode)
 >;
 
-export type UseDropZoneProps = DropZoneRenderProps & {
+export type DropZoneProps = DropZoneRenderProps & {
 	/**
 	 * Allowed file types to be uploaded.
 	 */
@@ -171,7 +171,7 @@ export type UseDropZoneProps = DropZoneRenderProps & {
 	validator?: FileValidationOptions["validator"];
 };
 
-export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
+export const useDropZone = (props?: DropZoneProps): DropZoneResult => {
 	const {
 		allowedFileTypes,
 		children,
@@ -364,7 +364,7 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 		inputRef.current?.click();
 	});
 
-	const getRootProps: UseDropZoneResult["getRootProps"] = useCallback(
+	const getRootProps: DropZoneResult["getRootProps"] = useCallback(
 		(rootProps) => {
 			const mergedRootProps = mergeTwoProps(extraRootProps, rootProps);
 
@@ -403,7 +403,7 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 		]
 	);
 
-	const getInputProps: UseDropZoneResult["getInputProps"] = useCallback(
+	const getInputProps: DropZoneResult["getInputProps"] = useCallback(
 		(inputProps) => {
 			const mergedInputProps = mergeTwoProps(extraInputProps, inputProps);
 
