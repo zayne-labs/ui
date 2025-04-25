@@ -15,7 +15,7 @@ import {
 	mergeTwoProps,
 } from "@zayne-labs/toolkit-react/utils";
 import { type Prettify, isFunction, isString } from "@zayne-labs/toolkit-type-helpers";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { clearObjectURL, createObjectURL, generateUniqueId } from "./utils";
 
 export type RootProps = InferProps<HTMLElement> & {
@@ -146,6 +146,11 @@ export type DropZoneProps = DropZoneRenderProps & {
 	onFilesChange?: (context: { filesWithPreview: FileWithPreview[] }) => void;
 
 	/**
+	 * Callback function to be called when the render props change
+	 */
+	onRenderPropsChange?: (props: RenderProps) => void;
+
+	/**
 	 * Callback function to be called when new files are uploaded
 	 */
 	onUpload?: (context: { event: ChangeOrDragEvent; filesWithPreview: FileWithPreview[] }) => void;
@@ -185,6 +190,7 @@ export const useDropZone = (props?: DropZoneProps): DropZoneResult => {
 		maxFileSize,
 		multiple,
 		onFilesChange,
+		onRenderPropsChange,
 		onUpload,
 		onUploadError,
 		onUploadErrors,
@@ -439,23 +445,45 @@ export const useDropZone = (props?: DropZoneProps): DropZoneResult => {
 		]
 	);
 
-	const renderProps = {
-		dropZoneActions: {
-			addFiles,
-			clearErrors,
-			clearFiles,
-			handleDragEnter,
-			handleDragLeave,
-			handleDragOver,
-			handleFileUpload,
-			openFilePicker,
-			removeFile,
-		},
+	const savedOnRenderPropsChange = useCallbackRef(onRenderPropsChange);
+
+	const renderProps = useMemo(() => {
+		const propsForRenderFn = {
+			dropZoneActions: {
+				addFiles,
+				clearErrors,
+				clearFiles,
+				handleDragEnter,
+				handleDragLeave,
+				handleDragOver,
+				handleFileUpload,
+				openFilePicker,
+				removeFile,
+			},
+			dropZoneState,
+			getInputProps,
+			getRootProps,
+			inputRef,
+		} satisfies RenderProps;
+
+		savedOnRenderPropsChange(propsForRenderFn);
+
+		return propsForRenderFn;
+	}, [
+		savedOnRenderPropsChange,
+		addFiles,
+		clearErrors,
+		clearFiles,
 		dropZoneState,
 		getInputProps,
 		getRootProps,
-		inputRef,
-	} satisfies RenderProps;
+		handleDragEnter,
+		handleDragLeave,
+		handleDragOver,
+		handleFileUpload,
+		openFilePicker,
+		removeFile,
+	]);
 
 	const selectedChildren = children ?? render;
 
