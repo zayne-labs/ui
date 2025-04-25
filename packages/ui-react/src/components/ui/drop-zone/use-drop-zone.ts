@@ -61,7 +61,7 @@ export type DropZoneState = {
 
 type ChangeOrDragEvent = React.ChangeEvent<HTMLInputElement> | React.DragEvent<HTMLElement>;
 
-type DropZoneActions = {
+export type DropZoneActions = {
 	addFiles: (fileList: File[] | FileList | null, event?: ChangeOrDragEvent) => void;
 	clearErrors: () => void;
 	clearFiles: () => void;
@@ -73,7 +73,7 @@ type DropZoneActions = {
 	removeFile: (fileToRemoveOrId: string | FileWithPreview) => void;
 };
 
-type RenderProps = {
+export type RenderProps = {
 	dropZoneActions: DropZoneActions;
 	dropZoneState: DropZoneState;
 	getInputProps: (inputProps?: InputProps) => InputProps;
@@ -81,7 +81,7 @@ type RenderProps = {
 	inputRef: React.RefObject<HTMLInputElement | null>;
 };
 
-type UseDropZoneResult = RenderProps & { getResolvedChildren: () => React.ReactNode };
+export type UseDropZoneResult = RenderProps & { getResolvedChildren: () => React.ReactNode };
 
 type DropZoneRenderProps = DiscriminatedRenderProps<
 	React.ReactNode | ((props: RenderProps) => React.ReactNode)
