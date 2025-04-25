@@ -4,7 +4,7 @@ import * as React from "react";
 
 import { getElementList } from "@/components/common/for";
 import { cnMerge } from "@/lib/utils/cn";
-import type { MyCustomCss, PolymorphicProps } from "@zayne-labs/toolkit-react/utils";
+import type { CssWithCustomProperties, PolymorphicProps } from "@zayne-labs/toolkit-react/utils";
 import { useCarouselStoreContext } from "./carousel-store-context";
 import { ChevronLeftIcon } from "./icons";
 import type {
@@ -155,7 +155,7 @@ export function CarouselItemGroup<TArrayItem>(props: CarouselWrapperProps<TArray
 			style={
 				{
 					"--translate-distance": `-${currentSlide * 100}%`,
-				} satisfies MyCustomCss as MyCustomCss
+				} satisfies CssWithCustomProperties as CssWithCustomProperties
 			}
 		>
 			{typeof render === "function" ? (

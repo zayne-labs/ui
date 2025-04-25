@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 const zodSchema = z.object({
-	files: z.instanceof(File),
+	files: z.instanceof(File).nullable(),
 	password: z.string().min(8, "Password must be at least 8 characters"),
 	username: z.string().min(6, "Username must be at least 6 characters"),
 });

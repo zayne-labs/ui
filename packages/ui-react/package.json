@@ -1,7 +1,7 @@
 {
 	"name": "@zayne-labs/ui-react",
 	"type": "module",
-	"version": "0.8.8",
+	"version": "0.8.10",
 	"packageManager": "pnpm@9.15.4",
 	"description": "A composable UI/UI-utilities components library. ",
 	"author": "Ryan Zayne",
@@ -68,9 +68,9 @@
 		}
 	},
 	"dependencies": {
-		"@zayne-labs/toolkit-core": "0.9.24",
-		"@zayne-labs/toolkit-react": "0.9.24",
-		"@zayne-labs/toolkit-type-helpers": "0.9.24",
+		"@zayne-labs/toolkit-core": "0.9.27",
+		"@zayne-labs/toolkit-react": "0.9.27",
+		"@zayne-labs/toolkit-type-helpers": "0.9.27",
 		"tailwind-merge": "3.2.0"
 	},
 	"devDependencies": {

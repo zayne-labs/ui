@@ -12,8 +12,8 @@
 	"dependencies": {
 		"@hookform/resolvers": "^5.0.1",
 		"@iconify/react": "^5.2.1",
-		"@zayne-labs/toolkit-core": "0.9.14",
-		"@zayne-labs/ui-react": "workspace:*",
+		"@zayne-labs/toolkit-core": "0.9.27",
+		"@zayne-labs/ui-react": "*",
 		"react": "19.1.0",
 		"react-dom": "19.1.0",
 		"react-hook-form": "^7.56.0",

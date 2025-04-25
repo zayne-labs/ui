@@ -1,4 +1,4 @@
-import { checkIsDeviceMobileOrTablet } from "@zayne-labs/toolkit-core";
+import { checkIsDeviceMobile } from "@zayne-labs/toolkit-core";
 
 /* eslint-disable no-param-reassign -- Mutation is needed here since it's an element */
 export const updateCursor = <TElement extends HTMLElement>(element: TElement) => {
@@ -25,9 +25,9 @@ export const resetCursor = <TElement extends HTMLElement>(element: TElement) => 
 /* eslint-enable no-param-reassign  -- Mutation is needed here since it's an element */
 
 export const handleScrollSnap = (dragContainer: HTMLElement) => {
-	const isMobileOrTablet = checkIsDeviceMobileOrTablet();
+	const isMobile = checkIsDeviceMobile();
 
-	if (!isMobileOrTablet) {
+	if (!isMobile) {
 		onScrollSnap("remove", dragContainer);
 	} else {
 		onScrollSnap("reset", dragContainer);
