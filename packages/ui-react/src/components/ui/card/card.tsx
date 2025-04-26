@@ -32,7 +32,7 @@ export function CardDescription<TElement extends React.ElementType = "p">(
 	const { as: Element = "p", className, ...restOfProps } = props;
 
 	return (
-		<Element className={cnMerge("text-sm text-shadcn-muted-foreground", className)} {...restOfProps} />
+		<Element className={cnMerge("text-shadcn-muted-foreground text-sm", className)} {...restOfProps} />
 	);
 }
 

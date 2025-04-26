@@ -1,24 +1,6 @@
 @import "tailwindcss";
 @import "@zayne-labs/ui-react/css/preset.css";
 
-@theme {
-	--color-shadcn-accent: hsl(210, 40%, 96.1%);
-	--color-shadcn-accent-foreground: hsl(222.2, 47.4%, 11.2%);
-	--color-shadcn-background: hsl(0, 0%, 100%);
-	--color-shadcn-border: hsl(214.3, 31.8%, 91.4%);
-	--color-shadcn-foreground: hsl(222.2, 47.4%, 11.2%);
-	--color-shadcn-input: hsl(214.3, 31.8%, 91.4%);
-	--color-shadcn-muted: hsl(210, 40%, 96.1%);
-	--color-shadcn-muted-foreground: hsl(215.4, 16.3%, 46.9%);
-	--color-shadcn-popover: hsl(0, 0%, 100%);
-	--color-shadcn-popover-foreground: hsl(222.2, 47.4%, 11.2%);
-	--color-shadcn-primary: hsl(222.2, 47.4%, 11.2%);
-	--color-shadcn-primary-foreground: hsl(210, 40%, 98%);
-	--color-shadcn-ring: hsl(215, 20.2%, 65.1%);
-	--color-shadcn-secondary: hsl(210, 40%, 96.1%);
-	--color-shadcn-secondary-foreground: hsl(222.2, 47.4%, 11.2%);
-}
-
 /* -------------1-----*/
 /* General CSS Reset */
 /*-------------------*/

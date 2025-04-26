@@ -364,8 +364,8 @@ export function FormInputPrimitive<TFieldValues extends FieldValues>(
 				type={type === "password" && isPasswordVisible ? "text" : type}
 				className={cnMerge(
 					!inputTypesWithoutFullWith.has(type) && "flex w-full",
-					`placeholder:text-shadcn-muted-foreground focus-visible:outline-hidden bg-transparent
-					text-sm file:border-0 file:bg-transparent disabled:cursor-not-allowed disabled:opacity-50`,
+					`focus-visible:outline-hidden bg-transparent text-sm file:border-0 file:bg-transparent
+					placeholder:text-gray-400 disabled:cursor-not-allowed disabled:opacity-50`,
 					className,
 					classNames?.input,
 					type !== "password" && isInvalid && classNames?.error

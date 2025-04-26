@@ -47,16 +47,11 @@
 		"react": ">=18.0.0",
 		"react-dom": ">=18.0.0",
 		"react-hook-form": ">=7.53.2",
+		"tailwind-merge": ">=2.5.0",
 		"tailwindcss": ">=4.0.0",
 		"zustand": ">=5.0.0"
 	},
 	"peerDependenciesMeta": {
-		"react": {
-			"optional": true
-		},
-		"react-dom": {
-			"optional": true
-		},
 		"react-hook-form": {
 			"optional": true
 		},
@@ -70,8 +65,7 @@
 	"dependencies": {
 		"@zayne-labs/toolkit-core": "0.9.27",
 		"@zayne-labs/toolkit-react": "0.9.27",
-		"@zayne-labs/toolkit-type-helpers": "0.9.27",
-		"tailwind-merge": "3.2.0"
+		"@zayne-labs/toolkit-type-helpers": "0.9.27"
 	},
 	"devDependencies": {
 		"@arethetypeswrong/cli": "0.17.4",
@@ -88,6 +82,7 @@
 		"react-dom": "19.1.0",
 		"react-hook-form": "7.56.0",
 		"size-limit": "11.2.0",
+		"tailwind-merge": "3.2.0",
 		"tailwindcss": "^4.1.4",
 		"tsup": "8.4.0",
 		"typescript": "5.8.3",

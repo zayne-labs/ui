@@ -1,6 +1,6 @@
+import type { StoreApi } from "@zayne-labs/toolkit-core";
 import type { DiscriminatedRenderProps } from "@zayne-labs/toolkit-react/utils";
 import type { Prettify } from "@zayne-labs/toolkit-type-helpers";
-import type { StoreApi } from "zustand";
 
 // Carousel store types
 export type ImagesType = Array<Record<string, string>> | string[];
