@@ -12,8 +12,8 @@ import {
 	type DiscriminatedRenderProps,
 	type InferProps,
 	type PolymorphicProps,
-	composeEventHandlers,
 	composeRefs,
+	composeTwoEventHandlers,
 	getMultipleSlots,
 } from "@zayne-labs/toolkit-react/utils";
 import { type AnyString, defineEnum } from "@zayne-labs/toolkit-type-helpers";
@@ -364,8 +364,8 @@ export function FormInputPrimitive<TFieldValues extends FieldValues>(
 				type={type === "password" && isPasswordVisible ? "text" : type}
 				className={cnMerge(
 					!inputTypesWithoutFullWith.has(type) && "flex w-full",
-					`focus-visible:outline-hidden bg-transparent text-sm file:border-0 file:bg-transparent
-					placeholder:text-gray-400 disabled:cursor-not-allowed disabled:opacity-50`,
+					`focus-visible:outline-hidden placeholder:text-shadcn-muted-foreground bg-transparent
+					text-sm file:border-0 file:bg-transparent disabled:cursor-not-allowed disabled:opacity-50`,
 					className,
 					classNames?.input,
 					type !== "password" && isInvalid && classNames?.error
@@ -535,9 +535,9 @@ export function FormInput(props: CombinedFormInputProps & { rules?: RegisterOpti
 			name={name}
 			{...registerProps}
 			{...(restOfProps as NonNullable<unknown>)}
-			ref={composeRefs([registerProps?.ref, ref as never])}
-			onChange={composeEventHandlers([registerProps?.onChange, onChange as never])}
-			onBlur={composeEventHandlers([registerProps?.onBlur, onBlur as never])}
+			ref={composeRefs(registerProps?.ref, ref)}
+			onChange={composeTwoEventHandlers(registerProps?.onChange, onChange)}
+			onBlur={composeTwoEventHandlers(registerProps?.onBlur, onBlur)}
 		/>
 	);
 }

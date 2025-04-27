@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { type InferProps, composeRefs, mergeProps } from "@zayne-labs/toolkit-react/utils";
 import { isArray } from "@zayne-labs/toolkit-type-helpers";
-import { Children, cloneElement, isValidElement } from "react";
+import { Children, Fragment as ReactFragment, cloneElement, isValidElement } from "react";
 
 type SlotProps = InferProps<HTMLElement>;
 
@@ -72,9 +72,11 @@ function SlotClone(props: SlotCloneProps) {
 	const childRef = (children.props.ref
 		?? (children as unknown as UnknownProps).ref) as React.Ref<HTMLElement>;
 
+	const mergedRef = forwardedRef ? composeRefs(forwardedRef, childRef) : childRef;
+
 	const clonedProps = {
 		...mergeProps(restOfSlotProps, children.props),
-		ref: forwardedRef ? composeRefs([forwardedRef, childRef]) : childRef,
+		...(children.type !== ReactFragment && { ref: mergedRef }),
 	};
 
 	return cloneElement(children, clonedProps);

@@ -12,6 +12,7 @@ import {
 	type DiscriminatedRenderProps,
 	type InferProps,
 	composeRefs,
+	composeTwoEventHandlers,
 	mergeTwoProps,
 } from "@zayne-labs/toolkit-react/utils";
 import { type Prettify, isFunction, isString } from "@zayne-labs/toolkit-type-helpers";
@@ -322,8 +323,6 @@ export const useDropZone = (props?: DropZoneProps): DropZoneResult => {
 	});
 
 	const handleFileUpload: DropZoneActions["handleFileUpload"] = useCallbackRef((event) => {
-		if (event.defaultPrevented) return;
-
 		if (inputRef.current?.disabled) return;
 
 		if (event.type === "drop") {
@@ -391,10 +390,10 @@ export const useDropZone = (props?: DropZoneProps): DropZoneResult => {
 				// eslint-disable-next-line perfectionist/sort-objects -- I need data-scope to be first
 				"data-part": "root",
 				"data-slot": "dropzone-root",
-				onDragEnter: handleDragEnter,
-				onDragLeave: handleDragLeave,
-				onDragOver: handleDragOver,
-				onDrop: handleFileUpload,
+				onDragEnter: composeTwoEventHandlers(handleDragEnter, mergedRootProps.onDragEnter),
+				onDragLeave: composeTwoEventHandlers(handleDragLeave, mergedRootProps.onDragLeave),
+				onDragOver: composeTwoEventHandlers(handleDragOver, mergedRootProps.onDragOver),
+				onDrop: composeTwoEventHandlers(handleFileUpload, mergedRootProps.onDrop),
 			};
 		},
 		[
@@ -427,11 +426,8 @@ export const useDropZone = (props?: DropZoneProps): DropZoneResult => {
 				"data-part": "input",
 				"data-slot": "dropzone-input",
 				multiple: multiple ?? mergedInputProps.multiple,
-				onChange: (event: React.ChangeEvent<HTMLInputElement>) => {
-					mergedInputProps.onChange?.(event);
-					handleFileUpload(event);
-				},
-				ref: composeRefs([inputRef, mergedInputProps.ref]),
+				onChange: composeTwoEventHandlers(handleFileUpload, mergedInputProps.onChange),
+				ref: composeRefs(inputRef, mergedInputProps.ref),
 				type: "file",
 			};
 		},

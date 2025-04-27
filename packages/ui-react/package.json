@@ -18,6 +18,7 @@
 	"sideEffects": false,
 	"exports": {
 		".": null,
+		"./style.css": "./dist/style.css",
 		"./*": "./dist/esm/ui/*/index.js",
 		"./common/*": "./dist/esm/common/*/index.js",
 		"./css/*": "./css/*"
@@ -30,9 +31,9 @@
 		"node": ">=18.x"
 	},
 	"scripts": {
-		"build": "tsup",
+		"build": "concurrently 'tsup' 'pnpm:build:tailwind'",
 		"build:dev": "cross-env NODE_ENV=development tsup",
-		"build:tailwind": "pnpx tailwindcss -i ./tailwind.css -o ./dist/css/main.css --watch",
+		"build:tailwind": "tailwindcss -i css/style.css -o ./dist/style.css",
 		"build:test": "concurrently --prefix-colors \"yellow.bold,#7da4f8.bold,magenta\" --names PUBLINT,TSUP 'pnpm:lint:publint' 'pnpm:build:dev'",
 		"dev": "pnpm build:dev --watch",
 		"lint:attw": "attw --pack . --profile esm-only --format table-flipped --ignore-rules=cjs-resolves-to-esm --ignore-rules=named-exports",
@@ -63,14 +64,15 @@
 		}
 	},
 	"dependencies": {
-		"@zayne-labs/toolkit-core": "0.9.27",
-		"@zayne-labs/toolkit-react": "0.9.27",
-		"@zayne-labs/toolkit-type-helpers": "0.9.27"
+		"@zayne-labs/toolkit-core": "0.9.29",
+		"@zayne-labs/toolkit-react": "0.9.29",
+		"@zayne-labs/toolkit-type-helpers": "0.9.29"
 	},
 	"devDependencies": {
 		"@arethetypeswrong/cli": "0.17.4",
 		"@size-limit/esbuild-why": "11.2.0",
 		"@size-limit/preset-small-lib": "11.2.0",
+		"@tailwindcss/cli": "^4.1.4",
 		"@total-typescript/ts-reset": "0.6.1",
 		"@types/react": "19.1.2",
 		"@types/react-dom": "19.1.2",
@@ -78,9 +80,10 @@
 		"concurrently": "9.1.2",
 		"cross-env": "7.0.3",
 		"publint": "0.3.12",
+		"publish": "^0.6.0",
 		"react": "19.1.0",
 		"react-dom": "19.1.0",
-		"react-hook-form": "7.56.0",
+		"react-hook-form": "7.56.1",
 		"size-limit": "11.2.0",
 		"tailwind-merge": "3.2.0",
 		"tailwindcss": "^4.1.4",

@@ -1,8 +1,9 @@
+"use client";
+
 import * as React from "react";
 
-import { useEffectOnce, useMountEffect } from "@zayne-labs/toolkit-react";
 import { type AnyString, isString } from "@zayne-labs/toolkit-type-helpers";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
 type ValidHtmlTags = keyof HTMLElementTagNameMap;
@@ -10,7 +11,7 @@ type ValidHtmlTags = keyof HTMLElementTagNameMap;
 type PortalProps = {
 	children: React.ReactNode;
 	insertPosition?: InsertPosition;
-	to?: AnyString | HTMLElement | ValidHtmlTags | null;
+	to: AnyString | HTMLElement | ValidHtmlTags | null;
 };
 
 function Teleport(props: PortalProps) {
@@ -18,8 +19,23 @@ function Teleport(props: PortalProps) {
 
 	const [reactPortal, setReactPortal] = useState<React.ReactPortal | null>(null);
 
-	useEffectOnce(() => {
-		if (!to || !insertPosition) return;
+	/* eslint-disable react-hooks-extra/no-direct-set-state-in-use-effect -- Allow */
+
+	useEffect(() => {
+		if (!to) return;
+
+		if (insertPosition) return;
+
+		const destination = isString(to) ? document.querySelector<HTMLElement>(to) : to;
+
+		destination && setReactPortal(createPortal(children, destination));
+		// eslint-disable-next-line react-hooks/exhaustive-deps -- children should not be part of the dependency array
+	}, [to, insertPosition]);
+
+	useEffect(() => {
+		if (!to) return;
+
+		if (!insertPosition) return;
 
 		const destination = isString(to) ? document.querySelector<HTMLElement>(to) : to;
 
@@ -33,15 +49,10 @@ function Teleport(props: PortalProps) {
 		return () => {
 			tempWrapper.remove();
 		};
-	});
+		// eslint-disable-next-line react-hooks/exhaustive-deps -- children should not be part of the dependency array
+	}, [to, insertPosition]);
 
-	useMountEffect(() => {
-		if (!to || insertPosition) return;
-
-		const destination = isString(to) ? document.querySelector<HTMLElement>(to) : to;
-
-		destination && setReactPortal(createPortal(children, destination));
-	});
+	/* eslint-enable react-hooks-extra/no-direct-set-state-in-use-effect -- Allow */
 
 	return reactPortal;
 }

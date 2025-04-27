@@ -5,22 +5,33 @@ import { type InferProps, composeRefs, mergeTwoProps } from "@zayne-labs/toolkit
 import { type RefCallback, useRef } from "react";
 import { handleScrollSnap, resetCursor, updateCursor } from "./utils";
 
-type DragScrollProps<TElement extends HTMLElement> = {
+type ItemProps<TItemElement extends HTMLElement> = InferProps<TItemElement>;
+
+type RootProps<TElement extends HTMLElement> = InferProps<TElement>;
+
+type DragScrollProps<TElement extends HTMLElement, TItemElement extends HTMLElement> = {
 	classNames?: { base?: string; item?: string };
-	extraItemProps?: InferProps<HTMLElement>;
-	extraRootProps?: Omit<InferProps<TElement>, "children">;
+	extraItemProps?: ItemProps<TItemElement>;
+	extraRootProps?: InferProps<TElement>;
 	orientation?: "both" | "horizontal" | "vertical";
 	usage?: "allScreens" | "desktopOnly" | "mobileAndTabletOnly";
 };
 
-const useDragScroll = <TElement extends HTMLElement>(props: DragScrollProps<TElement> = {}) => {
+type DragScrollResult<TElement extends HTMLElement, TItemElement extends HTMLElement> = {
+	getItemProps: (itemProps?: ItemProps<TItemElement>) => ItemProps<TItemElement>;
+	getRootProps: (rootProps?: RootProps<TElement>) => RootProps<TElement>;
+};
+
+const useDragScroll = <TElement extends HTMLElement, TItemElement extends HTMLElement>(
+	props?: DragScrollProps<TElement, TItemElement>
+): DragScrollResult<TElement, TItemElement> => {
 	const {
 		classNames,
 		extraItemProps,
 		extraRootProps,
 		orientation = "horizontal",
 		usage = "allScreens",
-	} = props;
+	} = props ?? {};
 
 	const dragContainerRef = useRef<TElement>(null);
 
@@ -90,7 +101,7 @@ const useDragScroll = <TElement extends HTMLElement>(props: DragScrollProps<TEle
 		return cleanup;
 	});
 
-	const getRootProps = (rootProps?: DragScrollProps<TElement>["extraRootProps"]) => {
+	const getRootProps: DragScrollResult<TElement, TItemElement>["getRootProps"] = (rootProps) => {
 		const mergedRootProps = mergeTwoProps(extraRootProps, rootProps);
 
 		return {
@@ -107,16 +118,15 @@ const useDragScroll = <TElement extends HTMLElement>(props: DragScrollProps<TEle
 			),
 			"data-part": "root",
 			"data-scope": "drag-scroll",
-			ref: composeRefs([
+			"data-slot": "drag-scroll-root",
+			ref: composeRefs(
 				refCallBack,
-				(mergedRootProps as { ref?: React.Ref<TElement> } | undefined)?.ref,
-			]),
+				(mergedRootProps as { ref?: React.Ref<TElement> } | undefined)?.ref
+			),
 		};
 	};
 
-	const getItemProps = <TItemElement extends HTMLElement>(
-		itemProps?: DragScrollProps<TItemElement>["extraItemProps"]
-	) => {
+	const getItemProps: DragScrollResult<TElement, TItemElement>["getItemProps"] = (itemProps) => {
 		const mergedItemProps = mergeTwoProps(extraItemProps, itemProps);
 
 		return {
@@ -124,6 +134,7 @@ const useDragScroll = <TElement extends HTMLElement>(props: DragScrollProps<TEle
 			className: cnMerge("snap-center snap-always", classNames?.item, mergedItemProps.className),
 			"data-part": "item",
 			"data-scope": "drag-scroll",
+			"data-slot": "drag-scroll-item",
 		};
 	};
 
