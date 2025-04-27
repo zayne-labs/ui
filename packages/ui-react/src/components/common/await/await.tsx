@@ -13,32 +13,22 @@ type RenderPropFn<TValue> = (result: TValue) => React.ReactNode;
 
 type AwaitProps<TValue> = AwaitInnerProps<TValue>
 	& Pick<SuspenseWithBoundaryProps, "errorFallback" | "fallback"> & {
-		wrapperVariant?: "none" | "only-boundary" | "only-suspense" | "suspense-and-boundary";
+		withErrorBoundary?: boolean;
 	};
 
 // TODO - Add Support for Slot components
 export function Await<TValue>(props: AwaitProps<TValue>) {
-	const { errorFallback, fallback, wrapperVariant = "suspense-and-boundary", ...restOfProps } = props;
+	const { errorFallback, fallback, withErrorBoundary = true, ...restOfProps } = props;
 
-	const WithErrorBoundary =
-		wrapperVariant === "only-boundary" || wrapperVariant === "suspense-and-boundary"
-			? ErrorBoundary
-			: ReactFragment;
-
-	const WithSuspense =
-		wrapperVariant === "only-suspense" || wrapperVariant === "suspense-and-boundary"
-			? Suspense
-			: ReactFragment;
+	const WithErrorBoundary = withErrorBoundary ? ErrorBoundary : ReactFragment;
 
 	const errorBoundaryProps = Boolean(errorFallback) && { fallback: errorFallback };
 
-	const suspenseProps = Boolean(fallback) && { fallback };
-
 	return (
 		<WithErrorBoundary {...errorBoundaryProps}>
-			<WithSuspense {...suspenseProps}>
+			<Suspense fallback={fallback}>
 				<AwaitInner {...restOfProps} />
-			</WithSuspense>
+			</Suspense>
 		</WithErrorBoundary>
 	);
 }
