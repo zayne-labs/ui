@@ -1,5 +1,11 @@
 # @zayne-labs/ui-react
 
+## 0.8.11
+
+### Patch Changes
+
+- 70dd791: feat: simplify await component
+
 ## 0.8.7
 
 ### Patch Changes
