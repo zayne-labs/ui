@@ -17,7 +17,7 @@ type PortalProps = {
 function Teleport(props: PortalProps) {
 	const { children, insertPosition, to } = props;
 
-	const [reactPortal, setReactPortal] = useState<React.ReactPortal | null>(null);
+	const [portalContainer, setPortalContainer] = useState<HTMLElement | null>(null);
 
 	/* eslint-disable react-hooks-extra/no-direct-set-state-in-use-effect -- Allow */
 
@@ -28,8 +28,7 @@ function Teleport(props: PortalProps) {
 
 		const destination = isString(to) ? document.querySelector<HTMLElement>(to) : to;
 
-		destination && setReactPortal(createPortal(children, destination));
-		// eslint-disable-next-line react-hooks/exhaustive-deps -- children should not be part of the dependency array
+		destination && setPortalContainer(destination);
 	}, [to, insertPosition]);
 
 	useEffect(() => {
@@ -44,17 +43,16 @@ function Teleport(props: PortalProps) {
 
 		destination?.insertAdjacentElement(insertPosition, tempWrapper);
 
-		setReactPortal(createPortal(children, tempWrapper));
+		setPortalContainer(tempWrapper);
 
 		return () => {
 			tempWrapper.remove();
 		};
-		// eslint-disable-next-line react-hooks/exhaustive-deps -- children should not be part of the dependency array
 	}, [to, insertPosition]);
 
 	/* eslint-enable react-hooks-extra/no-direct-set-state-in-use-effect -- Allow */
 
-	return reactPortal;
+	return portalContainer && createPortal(children, portalContainer);
 }
 
 export { Teleport };
