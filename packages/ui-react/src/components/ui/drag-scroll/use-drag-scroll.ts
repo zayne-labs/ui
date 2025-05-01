@@ -5,9 +5,9 @@ import { type InferProps, composeRefs, mergeTwoProps } from "@zayne-labs/toolkit
 import { type RefCallback, useRef } from "react";
 import { handleScrollSnap, resetCursor, updateCursor } from "./utils";
 
-type ItemProps<TItemElement extends HTMLElement> = InferProps<TItemElement>;
+type ItemProps<TItemElement extends HTMLElement> = Omit<InferProps<TItemElement>, "children">;
 
-type RootProps<TElement extends HTMLElement> = InferProps<TElement>;
+type RootProps<TElement extends HTMLElement> = Omit<InferProps<TElement>, "children">;
 
 type DragScrollProps<TElement extends HTMLElement, TItemElement extends HTMLElement> = {
 	classNames?: { base?: string; item?: string };
