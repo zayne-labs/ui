@@ -22,7 +22,7 @@ type DragScrollResult<TElement extends HTMLElement, TItemElement extends HTMLEle
 	getRootProps: (rootProps?: RootProps<TElement>) => RootProps<TElement>;
 };
 
-const useDragScroll = <TElement extends HTMLElement, TItemElement extends HTMLElement>(
+const useDragScroll = <TElement extends HTMLElement, TItemElement extends HTMLElement = HTMLElement>(
 	props?: DragScrollProps<TElement, TItemElement>
 ): DragScrollResult<TElement, TItemElement> => {
 	const {
