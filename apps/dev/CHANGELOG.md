@@ -1,5 +1,12 @@
 # dev
 
+## 0.0.29
+
+### Patch Changes
+
+- Updated dependencies [be58c73]
+   - @zayne-labs/ui-react@0.8.19
+
 ## 0.0.28
 
 ### Patch Changes

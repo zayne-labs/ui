@@ -1,5 +1,11 @@
 # @zayne-labs/ui-react
 
+## 0.8.19
+
+### Patch Changes
+
+- be58c73: add docs
+
 ## 0.8.12
 
 ### Patch Changes
