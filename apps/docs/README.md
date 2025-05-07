@@ -1,4 +1,4 @@
-# @zayne-labs/ui
+# Overview
 
 Welcome to the official documentation for @zayne-labs/ui - a collection of multi-framework UI utilities and unstyled components.
 
