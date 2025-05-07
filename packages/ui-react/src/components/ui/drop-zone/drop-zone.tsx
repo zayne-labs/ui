@@ -39,6 +39,8 @@ export function DropZoneRoot(props: DropZoneWrapperProps) {
 		|| (isValidElement(resolvedChildren) && resolvedChildren.type === ReactFragment);
 
 	const slots = getSlotMap<SlotComponentProps>(resolvedChildren, {
+		// == This is to prevent the slots from being searched for if the the condition is not met
+		// == Instead it will render the children as is from `slots.default`
 		condition: withInternalElements && couldChildrenContainSlots,
 	});
 
@@ -50,11 +52,15 @@ export function DropZoneRoot(props: DropZoneWrapperProps) {
 				{slots.default}
 			</RootComponent>
 
+			{slots.errors}
+
 			{slots.preview}
 		</>
 	);
 }
 
-type SlotComponentProps = GetSlotComponentProps<"preview">;
+type SlotComponentProps = GetSlotComponentProps<"errors" | "preview">;
 
 export const DropZoneImagePreview = withSlotNameAndSymbol<SlotComponentProps>("preview");
+
+export const DropZoneErrors = withSlotNameAndSymbol<SlotComponentProps>("errors");

@@ -172,9 +172,16 @@ export type DropZoneProps = DropZoneRenderProps & {
 	onUploadSuccess?: FileValidationOptions["onSuccess"];
 
 	/**
-	 * Custom validator function to handle file validation
+	 * Custom validation function.
+	 *
+	 * If the function returns false, the file will be rejected
 	 */
-	validator?: FileValidationOptions["validator"];
+	validator?: NonNullable<FileValidationOptions["validationSettings"]>["validator"];
+
+	/**
+	 * Custom validation function that runs after all file validation has occurred
+	 */
+	validatorForAllFiles?: FileValidationOptions["validatorForAllFiles"];
 };
 
 export const useDropZone = (props?: DropZoneProps): DropZoneResult => {
@@ -198,6 +205,7 @@ export const useDropZone = (props?: DropZoneProps): DropZoneResult => {
 		onUploadSuccess,
 		render,
 		validator,
+		validatorForAllFiles,
 	} = props ?? {};
 
 	const inputRef = useRef<HTMLInputElement>(null);
@@ -238,8 +246,14 @@ export const useDropZone = (props?: DropZoneProps): DropZoneResult => {
 			onError: onUploadError,
 			onErrors: onUploadErrors,
 			onSuccess: onUploadSuccess,
-			validationSettings: { allowedFileTypes, disallowDuplicates, maxFileCount, maxFileSize },
-			validator,
+			validationSettings: {
+				allowedFileTypes,
+				disallowDuplicates,
+				maxFileCount,
+				maxFileSize,
+				validator,
+			},
+			validatorForAllFiles,
 		});
 
 		if (validFiles.length === 0) {
