@@ -1,7 +1,7 @@
 import { toArray } from "@zayne-labs/toolkit-core";
 import type { InferProps } from "@zayne-labs/toolkit-react/utils";
 import {
-	type AnyFunction,
+	type CallbackFn,
 	type Prettify,
 	type UnionToIntersection,
 	type UnknownObject,
@@ -19,7 +19,7 @@ type GetSpecificSlotsType<TSlotComponentProps extends GetSlotComponentProps> = {
 /**
  * Maps slot names to their corresponding children types
  */
-type GetSlotMapResult<TSlotComponentProps extends GetSlotComponentProps> = UnionToIntersection<
+export type GetSlotMapResult<TSlotComponentProps extends GetSlotComponentProps> = UnionToIntersection<
 	GetSpecificSlotsType<TSlotComponentProps>
 > & { default: React.ReactNode[] };
 
@@ -28,13 +28,13 @@ type GetSlotMapResult<TSlotComponentProps extends GetSlotComponentProps> = Union
  */
 export const slotComponentSymbol = Symbol("slot-component");
 
-type GetSlotMapOptions = {
-	/**
-	 * If false, the function will bail out early and return only the default slot with the actual children.
-	 * @default true
-	 */
-	condition?: boolean;
-};
+// type GetSlotMapOptions = {
+// 	/**
+// 	 * If false, the function will bail out early and return only the default slot with the actual children.
+// 	 * @default true
+// 	 */
+// 	// condition?: boolean;
+// };
 
 /**
  * @description Creates a map of named slots from React children. Returns an object mapping slot names to their children,
@@ -69,23 +69,16 @@ type GetSlotMapOptions = {
  * ```
  */
 export const getSlotMap = <TSlotComponentProps extends GetSlotComponentProps>(
-	children: React.ReactNode,
-	options?: GetSlotMapOptions
+	children: React.ReactNode
+	// options?: GetSlotMapOptions
 ): Prettify<GetSlotMapResult<TSlotComponentProps>> => {
-	const { condition = true } = options ?? {};
-
-	if (!condition) {
-		return { default: children } as GetSlotMapResult<TSlotComponentProps>;
-	}
-
 	const slots: Record<string, TSlotComponentProps["children"]> & { default: React.ReactNode[] } = {
 		default: [],
 	};
 
-	const actualChildren =
-		isValidElement<InferProps<HTMLElement>>(children) && children.type === ReactFragment
-			? children.props.children
-			: children;
+	const isFragment = isValidElement<InferProps<HTMLElement>>(children) && children.type === ReactFragment;
+
+	const actualChildren = isFragment ? children.props.children : children;
 
 	const childrenArray = toArray<React.ReactNode>(actualChildren);
 
@@ -107,7 +100,11 @@ export const getSlotMap = <TSlotComponentProps extends GetSlotComponentProps>(
 
 		const slotName = childType.slotName ?? child.props.name;
 
-		slots[slotName] = child;
+		const getSlotChild = () => {
+			return child;
+		};
+
+		slots[slotName] = getSlotChild();
 	}
 
 	return slots as GetSlotMapResult<TSlotComponentProps>;
@@ -127,8 +124,8 @@ export const getSlotMap = <TSlotComponentProps extends GetSlotComponentProps>(
  */
 export type GetSlotComponentProps<
 	TName extends string = string,
-	TChildren extends AnyFunction<React.ReactNode> | React.ReactNode =
-		| AnyFunction<React.ReactNode>
+	TChildren extends CallbackFn<never, React.ReactNode> | React.ReactNode =
+		| CallbackFn<never, React.ReactNode>
 		| React.ReactNode,
 > = {
 	/** Content to render in the slot */
@@ -158,9 +155,9 @@ type SlotWithNameAndSymbol<
 	readonly slotSymbol?: symbol;
 };
 
-const DefaultSlotComponent = (props: Pick<GetSlotComponentProps, "children">) => {
-	return isFunction(props.children) ? null : props.children;
-};
+function DefaultSlotComponent(props: Pick<GetSlotComponentProps, "children">): React.ReactNode {
+	return props.children as React.ReactNode;
+}
 
 export const withSlotNameAndSymbol = <
 	TSlotComponentProps extends GetSlotComponentProps,
@@ -174,6 +171,7 @@ export const withSlotNameAndSymbol = <
 	SlotComponent.slotSymbol = slotComponentSymbol;
 	// @ts-expect-error -- This is necessary for the time being, to prevent type errors and accidental overrides on consumer side
 	SlotComponent.slotName = name;
+
 	/* eslint-enable no-param-reassign -- This is necessary */
 
 	return SlotComponent;

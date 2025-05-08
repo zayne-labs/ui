@@ -7,7 +7,7 @@ import { Slot } from "@/components/common/slot";
 import { cnMerge } from "@/lib/utils/cn";
 import { dataAttr } from "@/lib/utils/common";
 import { getMultipleSlots } from "@/lib/utils/getSlot";
-import { toArray } from "@zayne-labs/toolkit-core";
+import { on, toArray } from "@zayne-labs/toolkit-core";
 import { useCallbackRef, useToggle } from "@zayne-labs/toolkit-react";
 import {
 	type DiscriminatedRenderProps,
@@ -38,37 +38,45 @@ import {
 	type FieldContextValue,
 	type FieldState,
 	type FormFieldContextProps,
+	type FormRootContext,
 	LaxFormFieldProvider,
+	LaxFormRootProvider,
 	StrictFormFieldProvider,
-	useFormRootContext,
+	useFormMethodsContext,
 	useLaxFormFieldContext,
 	useLaxFormFieldState,
+	useLaxFormRootContext,
 	useStrictFormFieldContext,
 } from "./form-context";
-import { EyeIconInvisible, EyeIconVisible } from "./icons";
-import { getFormErrorMessage } from "./utils";
+import { getEyeIcon, getFieldErrorMessage } from "./utils";
 
 export type FieldValues = Record<string, unknown>;
 
-type FormRootProps<TFieldValues extends FieldValues> = React.ComponentPropsWithoutRef<"form"> & {
-	children: React.ReactNode;
-	methods: UseFormReturn<TFieldValues>;
-};
+type FormRootProps<TFieldValues extends FieldValues> = FormRootContext
+	& React.ComponentPropsWithoutRef<"form"> & {
+		children: React.ReactNode;
+
+		methods: UseFormReturn<TFieldValues>;
+	};
 
 export function FormRoot<TValues extends FieldValues>(props: FormRootProps<TValues>) {
-	const { children, className, methods, ...restOfProps } = props;
+	const { children, className, methods, withEyeIcon, ...restOfProps } = props;
+
+	const formContextValue = useMemo(() => ({ withEyeIcon }), [withEyeIcon]);
 
 	return (
 		<HookFormProvider {...methods}>
-			<form
-				className={cnMerge("flex flex-col", className)}
-				{...restOfProps}
-				data-scope="form"
-				data-part="root"
-				data-slot="form-root"
-			>
-				{children}
-			</form>
+			<LaxFormRootProvider value={formContextValue}>
+				<form
+					className={cnMerge("flex flex-col", className)}
+					{...restOfProps}
+					data-scope="form"
+					data-part="root"
+					data-slot="form-root"
+				>
+					{children}
+				</form>
+			</LaxFormRootProvider>
 		</HookFormProvider>
 	);
 }
@@ -130,7 +138,30 @@ export function FormField<TControl, TFieldValues extends FieldValues = FieldValu
 	);
 }
 
-export function FormControlledField<TFieldValues extends FieldValues>(
+type FormFieldControllerRenderFn = (props: {
+	field: Omit<ControllerRenderProps, "value"> & {
+		value: never;
+	};
+	fieldState: ControllerFieldState;
+	formState: UseFormStateReturn<never>;
+}) => React.ReactElement;
+
+type FormFieldControllerProps = Omit<
+	ControllerProps<FieldValues, FieldPath<FieldValues>>,
+	"control" | "name" | "render"
+> & {
+	render: FormFieldControllerRenderFn;
+};
+
+export function FormFieldController(props: FormFieldControllerProps) {
+	const { control } = useFormMethodsContext();
+	const { name } = useStrictFormFieldContext();
+	const { render, ...restOfProps } = props;
+
+	return <Controller name={name} control={control} render={render as never} {...restOfProps} />;
+}
+
+export function FormFieldControlledField<TFieldValues extends FieldValues>(
 	props: ControllerProps<TFieldValues>
 ) {
 	const { name } = props;
@@ -155,29 +186,6 @@ export function FormControlledField<TFieldValues extends FieldValues>(
 			</LaxFormFieldProvider>
 		</StrictFormFieldProvider>
 	);
-}
-
-type FormFieldControllerRenderFn = (props: {
-	field: Omit<ControllerRenderProps, "value"> & {
-		value: never;
-	};
-	fieldState: ControllerFieldState;
-	formState: UseFormStateReturn<never>;
-}) => React.ReactElement;
-
-type FormFieldControllerProps = Omit<
-	ControllerProps<FieldValues, FieldPath<FieldValues>>,
-	"control" | "name" | "render"
-> & {
-	render: FormFieldControllerRenderFn;
-};
-
-export function FormFieldController(props: FormFieldControllerProps) {
-	const { control } = useFormRootContext();
-	const { name } = useStrictFormFieldContext();
-	const { render, ...restOfProps } = props;
-
-	return <Controller name={name} control={control} render={render as never} {...restOfProps} />;
 }
 
 export function FormFieldContext(props: FormFieldContextProps) {
@@ -291,7 +299,7 @@ type FormInputPrimitiveProps<TFieldValues extends FieldValues = FieldValues> = O
 	control?: Control<TFieldValues>;
 	fieldState?: FieldState;
 	name?: FieldPath<TFieldValues>;
-	withEyeIcon?: boolean;
+	withEyeIcon?: FormRootContext["withEyeIcon"];
 };
 
 type FormTextAreaPrimitiveProps<TFieldValues extends FieldValues = FieldValues> =
@@ -317,6 +325,8 @@ export function FormInputPrimitive<TFieldValues extends FieldValues>(
 ) {
 	const fieldContextValues = useLaxFormFieldContext();
 
+	const formRootContextValues = useLaxFormRootContext();
+
 	const {
 		className,
 		classNames,
@@ -326,7 +336,7 @@ export function FormInputPrimitive<TFieldValues extends FieldValues>(
 		name = fieldContextValues?.name,
 		rules,
 		type = "text",
-		withEyeIcon = true,
+		withEyeIcon = formRootContextValues?.withEyeIcon ?? true,
 		...restOfProps
 	} = props;
 
@@ -344,7 +354,14 @@ export function FormInputPrimitive<TFieldValues extends FieldValues>(
 		className: cnMerge("w-full", classNames?.inputGroup, isInvalid && classNames?.error),
 	};
 
-	const { register } = useFormRootContext({ strict: false }) ?? {};
+	const { register } = useFormMethodsContext({ strict: false }) ?? {};
+
+	const eyeIcon = getEyeIcon({
+		classNames,
+		iconType: isPasswordVisible ? "closed" : "open",
+		renderIconProps: { isPasswordVisible },
+		withEyeIcon,
+	});
 
 	return (
 		<WrapperElement {...wrapperElementProps}>
@@ -382,11 +399,7 @@ export function FormInputPrimitive<TFieldValues extends FieldValues>(
 					onClick={toggleVisibility}
 					className="size-5 shrink-0 lg:size-6"
 				>
-					{isPasswordVisible ? (
-						<EyeIconInvisible className={cnMerge("size-full", classNames?.eyeIcon)} />
-					) : (
-						<EyeIconVisible className={cnMerge("size-full", classNames?.eyeIcon)} />
-					)}
+					{eyeIcon}
 				</FormInputRightItem>
 			)}
 		</WrapperElement>
@@ -413,7 +426,7 @@ export function FormTextAreaPrimitive<TFieldValues extends FieldValues>(
 
 	const { isDisabled, isInvalid } = fieldState ?? fieldStateFromLaxFormField;
 
-	const { register } = useFormRootContext({ strict: false }) ?? {};
+	const { register } = useFormMethodsContext({ strict: false }) ?? {};
 
 	return (
 		<textarea
@@ -462,7 +475,7 @@ export function FormSelectPrimitive<TFieldValues extends FieldValues>(
 
 	const { isDisabled, isInvalid } = fieldState ?? fieldStateFromLaxFormField;
 
-	const { register } = useFormRootContext({ strict: false }) ?? {};
+	const { register } = useFormMethodsContext({ strict: false }) ?? {};
 
 	return (
 		<select
@@ -521,7 +534,7 @@ export function FormInput(props: CombinedFormInputProps & { rules?: RegisterOpti
 	const { onBlur, onChange, ref, rules, type, ...restOfProps } = props;
 
 	const { name } = useStrictFormFieldContext();
-	const { register } = useFormRootContext();
+	const { register } = useFormMethodsContext();
 
 	const SelectedInput =
 		type === "textarea" || type === "select"
@@ -589,11 +602,11 @@ export type FormErrorMessagePrimitiveProps<TFieldValues extends FieldValues> =
 		disableScrollToErrorField?: boolean;
 	} & (
 			| {
-					errorField: FieldPath<TFieldValues>;
+					fieldName: FieldPath<TFieldValues>;
 					type?: "regular";
 			  }
 			| {
-					errorField: string;
+					fieldName: string;
 					type: "root";
 			  }
 		);
@@ -610,7 +623,7 @@ type FormErrorMessagePrimitiveType = {
 
 export const FormErrorMessagePrimitive: FormErrorMessagePrimitiveType = (props) => {
 	const fieldContextValues = useLaxFormFieldContext();
-	const rootContextValues = useFormRootContext({ strict: false });
+	const rootContextValues = useFormMethodsContext({ strict: false });
 
 	const {
 		children,
@@ -619,12 +632,12 @@ export const FormErrorMessagePrimitive: FormErrorMessagePrimitiveType = (props) 
 		control = rootContextValues?.control,
 		disableErrorAnimation = false,
 		disableScrollToErrorField = false,
-		errorField = fieldContextValues?.name,
+		fieldName = fieldContextValues?.name,
 		render,
 		type = "regular",
 	} = props;
 
-	const { errors } = useLaxFormFieldState({ control, name: errorField });
+	const { errors } = useLaxFormFieldState({ control, name: fieldName });
 
 	const { formMessageId } = useLaxFormFieldContext() ?? {};
 
@@ -634,39 +647,43 @@ export const FormErrorMessagePrimitive: FormErrorMessagePrimitiveType = (props) 
 
 	const errorAnimationClass = classNames?.errorMessageAnimation ?? "animate-shake";
 
-	const addAndRemoveAnimationClass = useCallbackRef(
-		(errorMessageElements: Array<HTMLElement | null> | HTMLCollection) => {
-			if (disableErrorAnimation) return;
-
-			for (const element of errorMessageElements) {
-				element?.classList.add(errorAnimationClass);
-
-				element?.addEventListener(
-					"animationend",
-					() => element.classList.remove(errorAnimationClass),
-					{ once: true }
-				);
-			}
-		}
+	const getErrorElements = useCallbackRef(
+		() => wrapperRef.current?.children ?? [errorParagraphRef.current]
 	);
+
+	useEffect(() => {
+		if (disableErrorAnimation) return;
+
+		if (!errors || Object.keys(errors).length === 0) return;
+
+		const errorMessageElements = getErrorElements();
+
+		if (errorMessageElements.length === 0) return;
+
+		for (const element of errorMessageElements) {
+			if (!element) continue;
+
+			element.classList.add(errorAnimationClass);
+
+			const onAnimationEnd = () => element.classList.remove(errorAnimationClass);
+
+			on("animationend", element, onAnimationEnd, { once: true });
+		}
+	}, [disableErrorAnimation, errorAnimationClass, errors, getErrorElements]);
 
 	useEffect(() => {
 		if (disableScrollToErrorField) return;
 
 		if (!errors || Object.keys(errors).length === 0) return;
 
-		const errorMessageElements = wrapperRef.current?.children ?? [errorParagraphRef.current];
-
-		if (errorMessageElements.length === 0) return;
-
-		addAndRemoveAnimationClass(errorMessageElements);
+		const errorMessageElements = getErrorElements();
 
 		const firstErrorElement = errorMessageElements[0];
 
 		if (!firstErrorElement) return;
 
 		// == Find the input field associated with this error
-		const inputField = document.querySelector(`[name='${errorField}']`);
+		const inputField = document.querySelector(`[name='${fieldName}']`);
 		const isFocusableInput = inputField?.matches(
 			":is(input, select, textarea, [contenteditable='true'])"
 		);
@@ -685,15 +702,15 @@ export const FormErrorMessagePrimitive: FormErrorMessagePrimitiveType = (props) 
 				top: window.scrollY + topWithOffset,
 			});
 		});
-	}, [addAndRemoveAnimationClass, disableScrollToErrorField, errorField, errors]);
+	}, [disableScrollToErrorField, fieldName, errors, getErrorElements]);
 
-	const message = getFormErrorMessage({ errorField, errors, type });
+	const fieldErrorMessage = getFieldErrorMessage({ errors, fieldName, type });
 
-	if (!message) {
+	if (!fieldErrorMessage) {
 		return null;
 	}
 
-	const errorMessageArray = toArray(message);
+	const errorMessageArray = toArray(fieldErrorMessage);
 
 	if (errorMessageArray.length === 0) {
 		return null;
@@ -784,12 +801,12 @@ export function FormErrorMessage<TControl, TFieldValues extends FieldValues = Fi
 
 	const { className, errorField = fieldContextValues?.name, type = "regular" } = props;
 
-	const { control } = useFormRootContext();
+	const { control } = useFormMethodsContext();
 
 	return (
 		<FormErrorMessagePrimitive
 			control={control}
-			errorField={errorField as NonNullable<typeof errorField>}
+			fieldName={errorField as NonNullable<typeof errorField>}
 			type={type as "root"}
 			render={({ props: renderProps, state }) => (
 				<p
@@ -852,7 +869,7 @@ export function FormSubscribeToFieldValue<
 
 	const { children, name = fieldContextValues?.name, render } = props;
 
-	const { control } = useFormRootContext();
+	const { control } = useFormMethodsContext();
 
 	const formValue = useWatch({ control, name: name as string });
 

@@ -1,17 +1,25 @@
 import { ContextError, createCustomContext } from "@zayne-labs/toolkit-react";
 import type { DiscriminatedRenderProps } from "@zayne-labs/toolkit-react/utils";
+import type { UnionDiscriminator } from "@zayne-labs/toolkit-type-helpers";
 import {
 	type Control,
 	type UseFormReturn,
 	type UseFormStateReturn,
-	useFormContext,
 	useFormState,
+	useFormContext as useHookFormContext,
 } from "react-hook-form";
-import type { FieldValues } from "./form";
+import type { FieldValues, FormInputProps } from "./form";
+import { getFieldErrorMessage } from "./utils";
 
-export const useFormRootContext = <TStrict extends boolean = true>(options: { strict?: TStrict } = {}) => {
+type UseFormRootContextResult<TStrict extends boolean = true> = TStrict extends true
+	? UseFormReturn<FieldValues> & { withEyeIcon?: FormInputProps["withEyeIcon"] }
+	: (UseFormReturn<FieldValues> & { withEyeIcon?: FormInputProps["withEyeIcon"] }) | null;
+
+export const useFormMethodsContext = <TStrict extends boolean = true>(
+	options: { strict?: TStrict } = {}
+): UseFormRootContextResult<TStrict> => {
 	const { strict = true } = options;
-	const formContext = useFormContext();
+	const formContext = useHookFormContext();
 
 	if (strict && !(formContext as unknown)) {
 		throw new ContextError(
@@ -19,39 +27,30 @@ export const useFormRootContext = <TStrict extends boolean = true>(options: { st
 		);
 	}
 
-	return formContext as TStrict extends true
-		? UseFormReturn<FieldValues>
-		: UseFormReturn<FieldValues> | null;
-};
-export type FieldState = {
-	errors?: UseFormStateReturn<FieldValues>["errors"];
-	isDisabled?: boolean;
-	isInvalid?: boolean;
+	return formContext;
 };
 
-// eslint-disable-next-line ts-eslint/no-explicit-any -- any is used here for type compatibility
-export type AnyControl = Control<any>;
-
-type FieldStateOptions =
-	| {
-			control: AnyControl | undefined;
-			name?: string;
-	  }
-	| {
-			control?: AnyControl;
-			name: string | undefined;
-	  };
-
-export const useLaxFormFieldState = (options?: FieldStateOptions): FieldState => {
-	const { control = options?.control } = useFormRootContext({ strict: false }) ?? {};
-	const { name = options?.name } = useLaxFormFieldContext() ?? {};
-
-	const getFormState = control ? useFormState : () => ({}) as Partial<ReturnType<typeof useFormState>>;
-
-	const { disabled, errors } = getFormState({ control, name });
-
-	return { errors, isDisabled: disabled, isInvalid: Boolean(options?.name && errors?.[options.name]) };
+export type RenderIconProps = {
+	isPasswordVisible: boolean;
 };
+
+type EyeIconObject = UnionDiscriminator<
+	[
+		{ closed: React.ReactNode; open: React.ReactNode },
+		{ renderIcon: (props: RenderIconProps) => React.ReactNode },
+	]
+>;
+
+export type FormRootContext = {
+	withEyeIcon: boolean | EyeIconObject | undefined;
+};
+
+export const [LaxFormRootProvider, useLaxFormRootContext] = createCustomContext<FormRootContext, false>({
+	hookName: "useLaxFormRootContext",
+	name: "LaxFormRootContext",
+	providerName: "FormRoot",
+	strict: false,
+});
 
 // export const useStrictGetFieldState = () => {
 // 	const { name } = useStrictFormFieldContext();
@@ -91,3 +90,39 @@ export const [LaxFormFieldProvider, useLaxFormFieldContext] = createCustomContex
 	providerName: "FormField",
 	strict: false,
 });
+
+export type FieldState = {
+	errors?: UseFormStateReturn<FieldValues>["errors"];
+	isDisabled?: boolean;
+	isInvalid?: boolean;
+};
+
+// eslint-disable-next-line ts-eslint/no-explicit-any -- any is used here for type compatibility
+export type AnyControl = Control<any>;
+
+type FieldStateOptions =
+	| {
+			control: AnyControl | undefined;
+			name?: string;
+	  }
+	| {
+			control?: AnyControl;
+			name: string | undefined;
+	  };
+
+export const useLaxFormFieldState = (options?: FieldStateOptions): FieldState => {
+	const { control = options?.control } = useFormMethodsContext({ strict: false }) ?? {};
+	const { name = options?.name } = useLaxFormFieldContext() ?? {};
+
+	const getFormState = control ? useFormState : () => ({}) as Partial<ReturnType<typeof useFormState>>;
+
+	const { disabled, errors } = getFormState({ control, name });
+
+	const errorMessage = getFieldErrorMessage({ errors, fieldName: name, type: "regular" });
+
+	return {
+		errors,
+		isDisabled: disabled,
+		isInvalid: Boolean(errorMessage),
+	};
+};

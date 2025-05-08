@@ -36,9 +36,12 @@ The Form component consists of several composable parts:
 - **Form.Root** - The container for the form, manages form state
 - **Form.Field** - Container for individual form fields
 - **Form.Label** - Label for form inputs
-- **Form.Input** - Text input field
-- **Form.TextArea** - Multi-line text input
-- **Form.Select** - Dropdown selection input
+- **Form.Input** - Text input field. When `type="password"` is specified, it automatically renders a toggle-able eye icon. This can be customized using the `withEyeIcon` prop which accepts:
+  - `boolean` - To show/hide the default eye icon
+  - `{ open: ReactNode, closed: ReactNode }` - To provide custom icons for the visible/hidden states
+  - `{ renderIcon: (props: { isPasswordVisible: boolean }) => ReactNode }` - To render the icon with access to password visibility state
+- **Form.TextArea** - Multi-line text input (Wrapper over `<Form.Input type="textarea"/>`)
+- **Form.Select** - Dropdown selection input (Wrapper over `<Form.Input type="select"/>`)
 - **Form.Description** - Helpful text describing a form field
 - **Form.ErrorMessage** - Displays validation errors
 - **Form.InputGroup** - Container for input with prepend/append elements
@@ -51,8 +54,7 @@ The Form component consists of several composable parts:
 ## Basic Usage
 
 ```tsx
-import { useForm } from 'react-hook-form';
-import { Form } from '@zayne-labs/ui-react/form';
+import { Form } from '@zayne-labs/ui-react'
 
 function LoginForm() {
   const methods = useForm({
@@ -67,10 +69,13 @@ function LoginForm() {
   });
 
   return (
-    <Form.Root methods={methods} onSubmit={onSubmit}>
+    <Form.Root
+      methods={methods}
+      onSubmit={onSubmit}
+    >
       <Form.Field name="email">
         <Form.Label>Email</Form.Label>
-        <Form.Input />
+        <Form.Input type="email" />
         <Form.ErrorMessage />
       </Form.Field>
 
@@ -80,14 +85,13 @@ function LoginForm() {
         <Form.ErrorMessage />
       </Form.Field>
 
-      {/* This just renders a button with the type of submit under the hood */}
       <Form.Submit
         className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
       >
         Log in
       </Form.Submit>
     </Form.Root>
-  );
+  )
 }
 ```
 
@@ -244,6 +248,7 @@ function ProfileForm() {
       <div className="space-y-2">
         <span className="text-sm font-medium">Notification Preferences</span>
 
+        {/* Nested fields */}
         <Form.Field name="notifications.0" className="flex items-center gap-2">
           <Form.Input type="checkbox" value="email" className="h-4 w-4" />
           <Form.Label className="text-sm">Email</Form.Label>
@@ -268,51 +273,197 @@ function ProfileForm() {
 }
 ```
 
-## Custom Input Styling
+## Password Input Eye Icons
+
+Password inputs in the Form component come with built-in eye icons for toggling password visibility. This feature can be controlled both globally and locally, and supports custom styling and icons.
+
+### Control Options
+
+1. **Global Control** - Set default behavior for all password inputs:
 
 ```tsx
-import { useForm } from 'react-hook-form';
-import { Form } from '@zayne-labs/ui-react/ui';
+<Form.Root methods={methods} withEyeIcon={false}>
+  {/* All password inputs will have no eye icon by default */}
+</Form.Root>
+```
 
-function StyledForm() {
-  const form = useForm();
+1. **Local Control** - Override for individual inputs:
 
-  return (
-    <Form.Root methods={form} className="max-w-md mx-auto">
-      <Form.Field name="email">
-        <Form.Label className="text-sm font-medium text-gray-700">
-          Email
-        </Form.Label>
-        <Form.Input
-          placeholder="Enter your email"
-          classNames={{
-            input: "mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500",
-            error: "border-red-500 focus:ring-red-500 focus:border-red-500"
-          }}
-          rules={{ required: "Email is required" }}
-        />
-        <Form.ErrorMessage className="text-red-500 text-xs mt-1" />
-      </Form.Field>
+```tsx
+<Form.Field name="password">
+  <Form.Label>Password</Form.Label>
+  <Form.Input
+    type="password"
+    withEyeIcon={true} // Override global setting
+  />
+</Form.Field>
+```
 
-      <Form.Field name="password" className="mt-4">
-        <Form.Label className="text-sm font-medium text-gray-700">
-          Password
-        </Form.Label>
-        <Form.Input
-          type="password"
-          placeholder="Enter your password"
-          classNames={{
-            input: "mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500",
-            error: "border-red-500 focus:ring-red-500 focus:border-red-500",
-            eyeIcon: "text-gray-500 hover:text-gray-700"
-          }}
-          rules={{ required: "Password is required" }}
-        />
-        <Form.ErrorMessage className="text-red-500 text-xs mt-1" />
-      </Form.Field>
-    </Form.Root>
-  );
-}
+### Customizing Icons
+
+The `withEyeIcon` prop accepts several formats for customization:
+
+```tsx
+<Form.Field name="password">
+  <Form.Label>Password</Form.Label>
+
+  {/* 1. Default eye icon */}
+  <Form.Input type="password" />
+
+  {/* 2. Custom icon components */}
+  <Form.Input
+    type="password"
+    withEyeIcon={{
+      open: <CustomVisibleIcon />,
+      closed: <CustomHiddenIcon />
+    }}
+  />
+
+  {/* 3. Dynamic icon with visibility state */}
+  <Form.Input
+    type="password"
+    withEyeIcon={{
+      renderIcon: ({ isPasswordVisible }) => (
+        <CustomIcon state={isPasswordVisible ? "visible" : "hidden"} />
+      )
+    }}
+  />
+</Form.Field>
+```
+
+### Styling
+
+Password inputs with eye icons use `Form.InputGroup` internally, providing two style targets:
+
+> **Note:** For simpler styling, you can disable the eye icon with `withEyeIcon={false}` to use a plain password input instead.
+
+```tsx
+<Form.Input
+  type="password"
+  classNames={{
+    // 1. Style the eye icon itself
+    eyeIcon: "text-gray-400 hover:text-gray-600 transition-colors",
+    // 2. Style the input container
+    inputGroup: "border-2 border-gray-300 rounded-lg focus-within:border-blue-500"
+  }}
+/>
+```
+
+## Field Components Guide
+
+The Form package provides three field components with different levels of control:
+
+### 1. Form.Field
+
+The standard field component. Use this for most form fields.
+
+- Provides field context for child components
+- Handles field registration automatically
+- Works with Form.Input, Form.Label, etc. out of the box
+- Includes optional wrapper div for styling
+
+```tsx
+<Form.Field name="email">
+  <Form.Label>Email</Form.Label>
+  <Form.Input type="email" />
+  <Form.ErrorMessage />
+</Form.Field>
+```
+
+### 2. Form.FieldController
+
+A lightweight render-prop component for custom field rendering within Form.Field. Use this when you need:
+
+- Custom rendering while keeping Form.Field context
+- Access to field state and methods
+- Simple third-party component integration
+
+```tsx
+<Form.Field name="rating">
+  <Form.Label>Rating</Form.Label>
+
+  <Form.FieldController
+    render={({ field, fieldState }) => (
+      <StarRating
+        value={field.value}
+        onChange={field.onChange}
+        error={fieldState.error}
+      />
+    )}
+  />
+  <Form.ErrorMessage />
+</Form.Field>
+```
+
+### 3. Form.ControlledField
+
+A standalone field component that creates its own context. Use this when you need:
+
+- Independent field management outside Form.Field
+- Full control over field context and registration
+- Complex form layouts with custom field groups
+
+```tsx
+{/* No Form.Field wrapper needed */}
+<Form.ControlledField
+  name="customGroup.rating"
+  render={({ field, fieldState }) => (
+    <div>
+      <Form.Label>{field.name}</Form.Label>
+
+      <StarRating
+        ref={field.ref}
+        value={field.value}
+        onChange={field.onChange}
+        error={fieldState.error}
+      />
+
+      <span className="error">{fieldState.error?.message}</span>
+    </div>
+  )}
+/>
+```
+
+### When to Use Each
+
+1. **Use Form.Field when:**
+   - Building standard form layouts
+   - Using Form.* components (Input, Label, etc.)
+   - Need the default field wrapper and context
+
+2. **Use Form.FieldController when:**
+   - Need custom rendering but want Form.Field context
+   - Want to keep using Form.Label and Form.ErrorMessage
+   - Integrating simple third-party components
+
+3. **Use Form.ControlledField when:**
+   - Need fields outside the Form.Field structure
+   - Building custom field groups or complex layouts
+   - Want complete control over the field context
+   - Implementing advanced validation patterns
+
+## Form.ErrorMessage
+
+Displays validation errors in two ways:
+
+1. **Field Errors**: Shows validation errors for a specific field
+2. **Form Errors**: Shows form-wide errors (like API errors or cross-field validation)
+
+```tsx
+// 1. Field-specific error
+<Form.Field name="email">
+  <Form.Input rules={{ required: "Email required" }} />
+  <Form.ErrorMessage /> {/* Shows "Email required" */}
+</Form.Field>
+
+// 2. Form-wide error
+<Form.Root onError={(error) => setError("root.serverError", error)}>
+  <Form.ErrorMessage
+    type="root"
+    errorField="serverError"
+  />
+  {/* Form fields... */}
+</Form.Root>
 ```
 
 ## Form State Subscription
@@ -365,7 +516,115 @@ function FormWithStateSubscription() {
     </Form.Root>
   );
 }
+
+## Form.ErrorMessage
+
+Component to display validation errors for a field.
+
+**Props:**
+
+- `className?: string` - Optional CSS class
+- `type?: "regular" | "root"` - Error type (default: "regular")
+  - `regular`: Shows field-level errors from the parent `Form.Field`
+  - `root`: Shows form-wide errors, requires `errorField` prop
+- `errorField?: string` - Field to show errors for when `type="root"`
+- `...props` - All other properties are passed to the underlying `<p>` element
+
+**Examples:**
+
+```tsx
+// 1. Field-level error
+<Form.Field name="email">
+  <Form.Input />
+  <Form.ErrorMessage /> {/* Shows email field errors */}
+</Form.Field>
+
+// 2. Root-level error
+<Form.Root>
+  <Form.ErrorMessage
+    type="root"
+    errorField="root"
+  /> {/* Shows form-wide errors */}
+  {/* Form fields... */}
+</Form.Root>
 ```
+
+## Form.SubscribeToFieldValue
+
+Component that subscribes to one or more field values and re-renders when they change.
+
+**Props:**
+
+- `name?: string | string[]` - Field(s) to subscribe to (inherits from Form.Field if not provided)
+- `render/children: (props: { value: any }) => ReactNode` - Render function receiving current value(s)
+
+```tsx
+// 1. Single field subscription
+<Form.Field name="email">
+  <Form.SubscribeToFieldValue>
+    {({ value }) => <div>Current email: {value}</div>}
+  </Form.SubscribeToFieldValue>
+</Form.Field>
+
+// 2. Multiple field subscription
+<Form.SubscribeToFieldValue name={['email', 'password']}>
+  {({ value: [email, password] }) => (
+    <div>Form filled: {Boolean(email && password)}</div>
+  )}
+</Form.SubscribeToFieldValue>
+```
+
+## Form.SubscribeToFormState
+
+Component that subscribes to form state changes like validation, submission status, etc.
+
+**Props:**
+
+- `name?: string | string[]` - Optional field(s) to limit state subscription
+- `render/children: (formState: FormState) => ReactNode` - Render function receiving form state
+
+**FormState properties:**
+
+- `isDirty` - Form has been modified
+- `isSubmitting` - Form is being submitted
+- `isValid` - All fields are valid
+- `errors` - Validation errors
+- And [more from react-hook-form](https://react-hook-form.com/docs/useformstate)
+
+```tsx
+import { useForm } from 'react-hook-form';
+import { Form } from '@zayne-labs/ui-react/ui';
+
+function SubscriptionExample() {
+  const form = useForm();
+
+  return (
+    <Form.Root methods={form}>
+      <Form.Field name="email">
+        <Form.Label>Email</Form.Label>
+        <Form.Input />
+
+        {/* 1. Watch value changes */}
+        <Form.SubscribeToFieldValue>
+          {({ value }) => (
+            <div>Current value: {value}</div>
+          )}
+        </Form.SubscribeToFieldValue>
+      </Form.Field>
+
+      {/* 2. Watch form state */}
+      <Form.SubscribeToFormState>
+        {({ isDirty, isSubmitting, isValid }) => (
+          <Form.Submit
+            disabled={!isDirty || isSubmitting || !isValid}
+          >
+            {isSubmitting ? 'Submitting...' : 'Submit'}
+          </Form.Submit>
+        )}
+      </Form.SubscribeToFormState>
+    </Form.Root>
+  );
+}
 
 ## API Reference
 
@@ -376,6 +635,7 @@ The main container for the form that sets up the form context.
 **Props:**
 
 - `methods: UseFormReturn<TFieldValues>` - Form methods from react-hook-form's `useForm`
+- `withEyeIcon?: boolean | EyeIconObject` - Control eye icon visibility globally
 - `children: React.ReactNode` - Form content
 - `className?: string` - Optional CSS class
 - `...props` - All other properties are passed to the underlying `<form>` element

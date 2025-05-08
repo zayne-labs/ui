@@ -1,11 +1,11 @@
 export {
-	FormControlledField as ControlledField,
 	FormDescription as Description,
 	FormErrorMessage as ErrorMessage,
 	FormErrorMessagePrimitive as ErrorMessagePrimitive,
 	FormField as Field,
 	FormFieldContext as FieldContext,
 	FormFieldController as FieldController,
+	FormFieldControlledField as ControlledField,
 	FormInput as Input,
 	FormInputGroup as InputGroup,
 	FormInputLeftItem as InputLeftItem,

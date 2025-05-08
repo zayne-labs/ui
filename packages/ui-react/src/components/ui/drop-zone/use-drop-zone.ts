@@ -9,17 +9,16 @@ import {
 } from "@zayne-labs/toolkit-core";
 import { useCallbackRef } from "@zayne-labs/toolkit-react";
 import {
-	type DiscriminatedRenderProps,
 	type InferProps,
 	composeRefs,
 	composeTwoEventHandlers,
 	mergeTwoProps,
 } from "@zayne-labs/toolkit-react/utils";
-import { type Prettify, isFunction, isString } from "@zayne-labs/toolkit-type-helpers";
+import { type Prettify, isString } from "@zayne-labs/toolkit-type-helpers";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { clearObjectURL, createObjectURL, generateUniqueId } from "./utils";
 
-export type RootProps = InferProps<HTMLElement> & {
+export type ContainerProps = InferProps<HTMLElement> & {
 	classNames?: {
 		base?: string;
 		isDragging?: string;
@@ -74,24 +73,15 @@ export type DropZoneActions = {
 	removeFile: (fileToRemoveOrId: string | FileWithPreview) => void;
 };
 
-export type RenderProps = {
+export type DropZoneResult = {
 	dropZoneActions: DropZoneActions;
 	dropZoneState: DropZoneState;
+	getContainerProps: (containerProps?: ContainerProps) => ContainerProps;
 	getInputProps: (inputProps?: InputProps) => InputProps;
-	getRootProps: (rootProps?: RootProps) => RootProps;
 	inputRef: React.RefObject<HTMLInputElement | null>;
 };
 
-export type DropZoneResult = RenderProps & {
-	getRenderProps: () => RenderProps;
-	getResolvedChildren: () => React.ReactNode;
-};
-
-type DropZoneRenderProps = DiscriminatedRenderProps<
-	React.ReactNode | ((props: RenderProps) => React.ReactNode)
->;
-
-export type DropZoneProps = DropZoneRenderProps & {
+export type DropZoneProps = {
 	/**
 	 * Allowed file types to be uploaded.
 	 */
@@ -100,7 +90,7 @@ export type DropZoneProps = DropZoneRenderProps & {
 	/**
 	 * CSS classes to apply to the various parts of the drop zone
 	 */
-	classNames?: Prettify<RootProps["classNames"] & { input?: string }>;
+	classNames?: Prettify<ContainerProps["classNames"] & { input?: string }>;
 
 	/**
 	 * Whether to disallow duplicate files
@@ -115,14 +105,14 @@ export type DropZoneProps = DropZoneRenderProps & {
 	disallowPreviewForNonImageFiles?: boolean;
 
 	/**
+	 * Extra props to pass to the container element
+	 */
+	extraContainerProps?: ContainerProps;
+
+	/**
 	 * Extra props to pass to the input element
 	 */
 	extraInputProps?: InputProps;
-
-	/**
-	 * Extra props to pass to the root element
-	 */
-	extraRootProps?: RootProps;
 
 	/**
 	 * Initial files to populate the drop zone
@@ -152,7 +142,7 @@ export type DropZoneProps = DropZoneRenderProps & {
 	/**
 	 * Callback function to be called when the render props change
 	 */
-	onRenderPropsChange?: (props: RenderProps) => void;
+	onRenderPropsChange?: (props: DropZoneResult) => void;
 
 	/**
 	 * Callback function to be called when new files are uploaded
@@ -190,12 +180,11 @@ export type DropZoneProps = DropZoneRenderProps & {
 export const useDropZone = (props?: DropZoneProps): DropZoneResult => {
 	const {
 		allowedFileTypes,
-		children,
 		classNames,
 		disallowDuplicates = true,
 		disallowPreviewForNonImageFiles = true,
+		extraContainerProps,
 		extraInputProps,
-		extraRootProps,
 		initialFiles,
 		maxFileCount,
 		maxFileSize,
@@ -206,7 +195,6 @@ export const useDropZone = (props?: DropZoneProps): DropZoneResult => {
 		onUploadError,
 		onUploadErrors,
 		onUploadSuccess,
-		render,
 		validator,
 		validatorForAllFiles,
 	} = props ?? {};
@@ -386,37 +374,37 @@ export const useDropZone = (props?: DropZoneProps): DropZoneResult => {
 		inputRef.current?.click();
 	});
 
-	const getRootProps: DropZoneResult["getRootProps"] = useCallback(
-		(rootProps) => {
-			const mergedRootProps = mergeTwoProps(extraRootProps, rootProps);
+	const getContainerProps: DropZoneResult["getContainerProps"] = useCallback(
+		(containerProps) => {
+			const mergedContainerProps = mergeTwoProps(extraContainerProps, containerProps);
 
 			return {
-				...mergedRootProps,
+				...mergedContainerProps,
 				className: cnMerge(
 					"relative isolate flex flex-col",
-					mergedRootProps.className,
+					mergedContainerProps.className,
 					classNames?.base,
 					dropZoneState.isDragging && [
 						"opacity-60",
 						classNames?.isDragging,
-						rootProps?.classNames?.isDragging,
+						containerProps?.classNames?.isDragging,
 					]
 				),
 				"data-dragging": dataAttr(dropZoneState.isDragging),
 				"data-scope": "dropzone",
 				// eslint-disable-next-line perfectionist/sort-objects -- I need data-scope to be first
-				"data-part": "root",
-				"data-slot": "dropzone-root",
-				onDragEnter: composeTwoEventHandlers(handleDragEnter, mergedRootProps.onDragEnter),
-				onDragLeave: composeTwoEventHandlers(handleDragLeave, mergedRootProps.onDragLeave),
-				onDragOver: composeTwoEventHandlers(handleDragOver, mergedRootProps.onDragOver),
-				onDrop: composeTwoEventHandlers(handleFileUpload, mergedRootProps.onDrop),
+				"data-part": "container",
+				"data-slot": "dropzone-container",
+				onDragEnter: composeTwoEventHandlers(handleDragEnter, mergedContainerProps.onDragEnter),
+				onDragLeave: composeTwoEventHandlers(handleDragLeave, mergedContainerProps.onDragLeave),
+				onDragOver: composeTwoEventHandlers(handleDragOver, mergedContainerProps.onDragOver),
+				onDrop: composeTwoEventHandlers(handleFileUpload, mergedContainerProps.onDrop),
 			};
 		},
 		[
 			classNames?.base,
 			classNames?.isDragging,
-			extraRootProps,
+			extraContainerProps,
 			dropZoneState.isDragging,
 			handleDragEnter,
 			handleDragLeave,
@@ -460,7 +448,7 @@ export const useDropZone = (props?: DropZoneProps): DropZoneResult => {
 
 	const savedOnRenderPropsChange = useCallbackRef(onRenderPropsChange);
 
-	const renderProps = useMemo(() => {
+	const dropZoneResult = useMemo(() => {
 		const propsForRenderFn = {
 			dropZoneActions: {
 				addFiles,
@@ -474,10 +462,10 @@ export const useDropZone = (props?: DropZoneProps): DropZoneResult => {
 				removeFile,
 			},
 			dropZoneState,
+			getContainerProps,
 			getInputProps,
-			getRootProps,
 			inputRef,
-		} satisfies RenderProps;
+		} satisfies DropZoneResult;
 
 		savedOnRenderPropsChange(propsForRenderFn);
 
@@ -489,7 +477,7 @@ export const useDropZone = (props?: DropZoneProps): DropZoneResult => {
 		clearFiles,
 		dropZoneState,
 		getInputProps,
-		getRootProps,
+		getContainerProps,
 		handleDragEnter,
 		handleDragLeave,
 		handleDragOver,
@@ -498,17 +486,5 @@ export const useDropZone = (props?: DropZoneProps): DropZoneResult => {
 		removeFile,
 	]);
 
-	const selectedChildren = children ?? render;
-
-	const getRenderProps = () => renderProps;
-
-	const getResolvedChildren = () => {
-		return isFunction(selectedChildren) ? selectedChildren(renderProps) : selectedChildren;
-	};
-
-	return {
-		...renderProps,
-		getRenderProps,
-		getResolvedChildren,
-	};
+	return dropZoneResult;
 };

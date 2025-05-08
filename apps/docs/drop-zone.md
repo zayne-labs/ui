@@ -83,6 +83,31 @@ function FileUpload() {
 
 ## Component Usage
 
+### Primitive Components
+
+The Drop Zone component can be used in two ways:
+
+1. **Automatic Mode** (default)
+
+```tsx
+<DropZone.Root>
+  {/* Container and Input are automatically rendered */}
+  <p>Drop files here</p>
+</DropZone.Root>
+```
+
+1. **Manual Mode** (for full control)
+
+```tsx
+<DropZone.Root withInternalElements={false}>
+  <DropZone.Container className="p-4 border-2 border-dashed">
+    <DropZone.Input />
+
+    <p>Drop files here</p>
+  </DropZone.Container>
+</DropZone.Root>
+```
+
 ### Basic Usage
 
 ```tsx
@@ -169,37 +194,65 @@ function UploadWithSeparatePreview() {
 }
 ```
 
-**NOTE**: When using `withInternalElements={false}`, you'll need to handle the root element and input yourself. In this case, `DropZone.ImagePreview` isn't necessary since you can render the preview directly:
+### Components
+
+- **DropZone.Root** - The main wrapper component that provides drop zone context
+- **DropZone.Container** - The drop target container that handles drag and drop events
+- **DropZone.Input** - The file input element
+- **DropZone.ImagePreview** - Image preview slot
+
+Both `Container` and `Input` components support the `asChild` prop for custom rendering.
+
+### Using Context
+
+You can access the drop zone state and actions using the `useDropZoneContext` hook:
 
 ```tsx
-<DropZone.Root withInternalElements={false}>
-  {({ getRootProps, getInputProps, dropZoneState, dropZoneActions }) => (
-    <div {...getRootProps({ className: "border-2 border-dashed p-4" })}>
+function CustomDropZone() {
+  const {
+    dropZoneState,
+    dropZoneActions,
+    getContainerProps,
+    getInputProps
+  } = useDropZoneContext();
+
+  return (
+    <div {...getContainerProps({ className: "border-2 border-dashed p-4" })}>
       <input {...getInputProps()} />
       <p>Drop files here</p>
-
-      {/* Preview UI can be rendered directly */}
-      <div className="mt-4 grid grid-cols-4 gap-2">
-        {dropZoneState.filesWithPreview.map((file) => (
-          <div key={file.id} className="relative group">
-            <img
-              src={file.preview}
-              alt={file.file.name}
-              className="w-full aspect-square object-cover rounded"
-            />
-            <button
-              onClick={() => dropZoneActions.removeFile(file)}
-              className="absolute top-2 right-2 bg-black/50 text-white
-                rounded-full p-1 opacity-0 group-hover:opacity-100"
-            >
-              ✕
-            </button>
-          </div>
-        ))}
-      </div>
+      {dropZoneState.isDragging && <p>Drop it!</p>}
     </div>
-  )}
-</DropZone.Root>
+  );
+}
+```
+
+### File Preview Example
+
+```tsx
+function FilePreview() {
+  const { dropZoneState, dropZoneActions } = useDropZoneContext();
+
+  return (
+    <div className="mt-4 grid grid-cols-4 gap-2">
+      {dropZoneState.filesWithPreview.map((file) => (
+        <div key={file.id} className="relative group">
+          <img
+            src={file.preview}
+            alt={file.name}
+            className="h-full w-full object-cover"
+          />
+          <button
+            type="button"
+            onClick={() => dropZoneActions.removeFile(file)}
+            className="absolute right-1 top-1 rounded-full bg-red-500 p-1 text-white"
+          >
+            Remove
+          </button>
+        </div>
+      ))}
+    </div>
+  );
+}
 ```
 
 ## Validation

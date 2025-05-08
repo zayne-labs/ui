@@ -65,11 +65,6 @@ export const matchesAnySlotComponent = (child: React.ReactNode, SlotComponents: 
 
 type SlotOptions = {
 	/**
-	 * @description If false, the function will bail out early and return null as the slot.
-	 * @default true
-	 */
-	condition?: boolean;
-	/**
 	 * @description The error message to throw when multiple slots are found for a given slot component
 	 */
 	errorMessage?: string;
@@ -109,14 +104,9 @@ export const getSingleSlot = (
 	options: SlotOptions = {}
 ) => {
 	const {
-		condition = true,
 		errorMessage = "Only one instance of the SlotComponent is allowed",
 		throwOnMultipleSlotMatch = false,
 	} = options;
-
-	if (!condition) {
-		return null;
-	}
 
 	const actualChildren =
 		isValidElement<InferProps<typeof ReactFragment>>(children) && children.type === ReactFragment
@@ -140,11 +130,6 @@ export const getSingleSlot = (
 // NOTE -  You can imitate const type parameter by extending readonly[] | []
 
 type MultipleSlotsOptions = {
-	/**
-	 * @description If false, the function will bail out early and return the regularChildren with the actual children and an empty slots array.
-	 * @default true
-	 */
-	condition?: boolean;
 	/**
 	 * @description The error message to throw when multiple slots are found for a given slot component
 	 * If a string is provided, the same message will be used for all slot components
@@ -172,11 +157,7 @@ export const getMultipleSlots = <const TSlotComponents extends FunctionalCompone
 	SlotComponents: TSlotComponents,
 	options?: MultipleSlotsOptions
 ): Prettify<GetMultipleSlotsResult<TSlotComponents>> => {
-	const { condition = true, errorMessage, throwOnMultipleSlotMatch } = options ?? {};
-
-	if (!condition) {
-		return { regularChildren: children as never, slots: [] } as GetMultipleSlotsResult<TSlotComponents>;
-	}
+	const { errorMessage, throwOnMultipleSlotMatch } = options ?? {};
 
 	const slots = SlotComponents.map((SlotComponent, index) =>
 		getSingleSlot(children, SlotComponent, {
@@ -197,15 +178,8 @@ export const getMultipleSlots = <const TSlotComponents extends FunctionalCompone
  */
 export const getRegularChildren = (
 	children: React.ReactNode,
-	SlotComponentOrComponents: FunctionalComponent | FunctionalComponent[],
-	options?: Pick<SlotOptions, "condition">
+	SlotComponentOrComponents: FunctionalComponent | FunctionalComponent[]
 ) => {
-	const { condition = true } = options ?? {};
-
-	if (!condition) {
-		return [];
-	}
-
 	const actualChildren =
 		isValidElement<InferProps<typeof ReactFragment>>(children) && children.type === ReactFragment
 			? children.props.children
