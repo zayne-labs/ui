@@ -12,6 +12,7 @@ const sharedOptions = {
 		"src/components/ui/drag-scroll/index.ts",
 		"src/components/ui/form/index.ts",
 
+		// Utility components
 		"src/components/common/await/index.ts",
 		"src/components/common/error-boundary/index.ts",
 		"src/components/common/for/index.ts",
@@ -20,6 +21,10 @@ const sharedOptions = {
 		"src/components/common/suspense-with-boundary/index.ts",
 		"src/components/common/switch/index.ts",
 		"src/components/common/teleport/index.ts",
+
+		// Utilities
+		"src/lib/utils/getSlot/index.ts",
+		"src/lib/utils/getSlotMap/index.ts",
 	],
 	format: ["esm"],
 	platform: "browser",

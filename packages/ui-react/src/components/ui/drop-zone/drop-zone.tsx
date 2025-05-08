@@ -2,14 +2,10 @@
 
 import * as React from "react";
 
-import {
-	type GetSlotComponentProps,
-	getSlotMap,
-	withSlotNameAndSymbol,
-} from "@zayne-labs/toolkit-react/utils";
-import { isArray } from "@zayne-labs/toolkit-type-helpers";
+import { type GetSlotComponentProps, getSlotMap, withSlotNameAndSymbol } from "@/lib/utils/getSlotMap";
+import { isArray, isFunction } from "@zayne-labs/toolkit-type-helpers";
 import { Fragment as ReactFragment, isValidElement } from "react";
-import { type DropZoneProps, useDropZone } from "./use-drop-zone";
+import { type DropZoneProps, type RenderProps, useDropZone } from "./use-drop-zone";
 
 type DropZoneWrapperProps = DropZoneProps & {
 	/**
@@ -41,7 +37,7 @@ export function DropZoneRoot(props: DropZoneWrapperProps) {
 	const slots = getSlotMap<SlotComponentProps>(resolvedChildren, {
 		// == This is to prevent the slots from being searched for if the the condition is not met
 		// == Instead it will render the children as is from `slots.default`
-		condition: withInternalElements && couldChildrenContainSlots,
+		condition: withInternalElements || couldChildrenContainSlots,
 	});
 
 	return (
@@ -52,15 +48,14 @@ export function DropZoneRoot(props: DropZoneWrapperProps) {
 				{slots.default}
 			</RootComponent>
 
-			{slots.errors}
-
-			{slots.preview}
+			{isFunction(slots.preview) ? slots.preview(api.getRenderProps()) : slots.preview}
 		</>
 	);
 }
 
-type SlotComponentProps = GetSlotComponentProps<"errors" | "preview">;
+type SlotComponentProps = GetSlotComponentProps<
+	"preview",
+	React.ReactNode | ((props: RenderProps) => React.ReactNode)
+>;
 
 export const DropZoneImagePreview = withSlotNameAndSymbol<SlotComponentProps>("preview");
-
-export const DropZoneErrors = withSlotNameAndSymbol<SlotComponentProps>("errors");

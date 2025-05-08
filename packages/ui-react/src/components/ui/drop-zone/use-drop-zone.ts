@@ -82,7 +82,10 @@ export type RenderProps = {
 	inputRef: React.RefObject<HTMLInputElement | null>;
 };
 
-export type DropZoneResult = RenderProps & { getResolvedChildren: () => React.ReactNode };
+export type DropZoneResult = RenderProps & {
+	getRenderProps: () => RenderProps;
+	getResolvedChildren: () => React.ReactNode;
+};
 
 type DropZoneRenderProps = DiscriminatedRenderProps<
 	React.ReactNode | ((props: RenderProps) => React.ReactNode)
@@ -497,12 +500,15 @@ export const useDropZone = (props?: DropZoneProps): DropZoneResult => {
 
 	const selectedChildren = children ?? render;
 
+	const getRenderProps = () => renderProps;
+
 	const getResolvedChildren = () => {
 		return isFunction(selectedChildren) ? selectedChildren(renderProps) : selectedChildren;
 	};
 
 	return {
 		...renderProps,
+		getRenderProps,
 		getResolvedChildren,
 	};
 };

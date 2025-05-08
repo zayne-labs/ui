@@ -6,15 +6,15 @@ import { getElementList } from "@/components/common/for";
 import { Slot } from "@/components/common/slot";
 import { cnMerge } from "@/lib/utils/cn";
 import { dataAttr } from "@/lib/utils/common";
+import { getMultipleSlots } from "@/lib/utils/getSlot";
 import { toArray } from "@zayne-labs/toolkit-core";
-import { useToggle } from "@zayne-labs/toolkit-react";
+import { useCallbackRef, useToggle } from "@zayne-labs/toolkit-react";
 import {
 	type DiscriminatedRenderProps,
 	type InferProps,
 	type PolymorphicProps,
 	composeRefs,
 	composeTwoEventHandlers,
-	getMultipleSlots,
 } from "@zayne-labs/toolkit-react/utils";
 import { type AnyString, defineEnum } from "@zayne-labs/toolkit-type-helpers";
 import { Fragment as ReactFragment, useEffect, useId, useMemo, useRef } from "react";
@@ -46,6 +46,7 @@ import {
 	useStrictFormFieldContext,
 } from "./form-context";
 import { EyeIconInvisible, EyeIconVisible } from "./icons";
+import { getFormErrorMessage } from "./utils";
 
 export type FieldValues = Record<string, unknown>;
 
@@ -565,7 +566,7 @@ type ErrorMessageRenderProps = {
 	"data-scope": "form";
 	"data-slot": "form-error-message";
 	id: string | undefined;
-	onAnimationEnd?: React.ReactEventHandler<HTMLElement>;
+	ref: React.RefCallback<HTMLElement>;
 };
 
 type ErrorMessageRenderState = { errorMessage: string; errorMessageArray: string[]; index: number };
@@ -575,7 +576,7 @@ type ErrorMessageRenderFn = (context: {
 	state: ErrorMessageRenderState;
 }) => React.ReactNode;
 
-type FormErrorMessagePrimitiveProps<TFieldValues extends FieldValues> =
+export type FormErrorMessagePrimitiveProps<TFieldValues extends FieldValues> =
 	DiscriminatedRenderProps<ErrorMessageRenderFn> & {
 		className?: string;
 		classNames?: {
@@ -627,43 +628,66 @@ export const FormErrorMessagePrimitive: FormErrorMessagePrimitiveType = (props) 
 
 	const { formMessageId } = useLaxFormFieldContext() ?? {};
 
-	const wrapperRef = useRef<HTMLUListElement>(null);
+	const errorParagraphRef = useRef<HTMLElement>(null);
+
+	const wrapperRef = useRef<HTMLDivElement>(null);
 
 	const errorAnimationClass = classNames?.errorMessageAnimation ?? "animate-shake";
 
-	useEffect(() => {
-		if (disableErrorAnimation) return;
+	const addAndRemoveAnimationClass = useCallbackRef(
+		(errorMessageElements: Array<HTMLElement | null> | HTMLCollection) => {
+			if (disableErrorAnimation) return;
 
-		const errorMessageElements = wrapperRef.current?.children ?? [];
+			for (const element of errorMessageElements) {
+				element?.classList.add(errorAnimationClass);
 
-		for (const element of errorMessageElements) {
-			element.classList.add(errorAnimationClass);
+				element?.addEventListener(
+					"animationend",
+					() => element.classList.remove(errorAnimationClass),
+					{ once: true }
+				);
+			}
 		}
-	}, [errorAnimationClass, disableErrorAnimation]);
+	);
 
 	useEffect(() => {
 		if (disableScrollToErrorField) return;
 
-		const errorMessageElements = wrapperRef.current?.children;
+		if (!errors || Object.keys(errors).length === 0) return;
 
-		if (!errorMessageElements || !errors) return;
+		const errorMessageElements = wrapperRef.current?.children ?? [errorParagraphRef.current];
 
-		// == Scroll to first error message
-		if (Object.keys(errors).indexOf(errorField as string) === 0) {
-			errorMessageElements[0]?.scrollIntoView({
+		if (errorMessageElements.length === 0) return;
+
+		addAndRemoveAnimationClass(errorMessageElements);
+
+		const firstErrorElement = errorMessageElements[0];
+
+		if (!firstErrorElement) return;
+
+		// == Find the input field associated with this error
+		const inputField = document.querySelector(`[name='${errorField}']`);
+		const isFocusableInput = inputField?.matches(
+			":is(input, select, textarea, [contenteditable='true'])"
+		);
+
+		// == Return early if the input field is focusable (Only scrollIntoView for non-focusable fields)
+		if (isFocusableInput) return;
+
+		// == Schedule the scroll to next frame to ensure DOM is ready
+		requestAnimationFrame(() => {
+			// == Get the element's position and scroll in one frame
+			const rect = firstErrorElement.getBoundingClientRect();
+			const topWithOffset = rect.top - 100;
+
+			window.scrollTo({
 				behavior: "smooth",
-				block: "center",
+				top: window.scrollY + topWithOffset,
 			});
+		});
+	}, [addAndRemoveAnimationClass, disableScrollToErrorField, errorField, errors]);
 
-			window.scrollBy({ behavior: "smooth", top: -100 });
-		}
-	}, [disableScrollToErrorField, errorField, errors]);
-
-	const message = (
-		type === "root"
-			? errors?.root?.[errorField as string]?.message
-			: errors?.[errorField as string]?.message
-	) as string | string[];
+	const message = getFormErrorMessage({ errorField, errors, type });
 
 	if (!message) {
 		return null;
@@ -671,44 +695,64 @@ export const FormErrorMessagePrimitive: FormErrorMessagePrimitiveType = (props) 
 
 	const errorMessageArray = toArray(message);
 
-	const [ErrorMessageList] = getElementList();
+	if (errorMessageArray.length === 0) {
+		return null;
+	}
 
-	const onAnimationEnd: React.AnimationEventHandler<HTMLElement> | undefined = disableErrorAnimation
-		? (event) => event.currentTarget.classList.remove(errorAnimationClass)
-		: undefined;
+	const getRenderProps = (options: { index: number }): ErrorMessageRenderProps => {
+		const { index } = options;
 
-	const getRenderProps = ({ index }: { index: number }) =>
-		({
-			className: cnMerge(errorAnimationClass, className, classNames?.errorMessage),
+		return {
+			className: cnMerge(className, classNames?.errorMessage),
 			"data-index": index,
 			"data-part": "error-message",
 			"data-scope": "form",
 			"data-slot": "form-error-message",
 			id: formMessageId,
-			onAnimationEnd,
-		}) satisfies ErrorMessageRenderProps;
+			ref: (node) => {
+				if (!node || errorParagraphRef.current) return;
 
-	const getRenderState = ({ errorMessage, index }: { errorMessage: string; index: number }) =>
-		({
+				errorParagraphRef.current = node;
+			},
+		};
+	};
+
+	const getRenderState = (options: { errorMessage: string; index: number }): ErrorMessageRenderState => {
+		const { errorMessage, index } = options;
+
+		return {
 			errorMessage,
 			errorMessageArray,
 			index,
-		}) satisfies ErrorMessageRenderState;
+		};
+	};
 
-	const renderFn = typeof children === "function" ? children : render;
+	const [ErrorMessageList] = getElementList("base");
+
+	const WrapperComponent = "div";
+
+	const wrapperComponentProps = errorMessageArray.length > 1 && {
+		className: cnMerge("flex flex-col", classNames?.container),
+		"data-part": "error-message-container",
+		"data-scope": "form",
+		"data-slot": "form-error-message-container",
+		ref: wrapperRef,
+	};
+
+	const selectedChildren = typeof children === "function" ? children : render;
 
 	return (
-		<ErrorMessageList
-			each={errorMessageArray}
-			ref={wrapperRef}
-			className={cnMerge("flex flex-col", classNames?.container)}
-			render={(errorMessage, index) => {
-				return renderFn({
-					props: getRenderProps({ index }),
-					state: getRenderState({ errorMessage, index }),
-				});
-			}}
-		/>
+		<WrapperComponent {...wrapperComponentProps}>
+			<ErrorMessageList
+				each={errorMessageArray}
+				render={(errorMessage, index) => {
+					return selectedChildren({
+						props: getRenderProps({ index }),
+						state: getRenderState({ errorMessage, index }),
+					});
+				}}
+			/>
+		</WrapperComponent>
 	);
 };
 
@@ -747,13 +791,18 @@ export function FormErrorMessage<TControl, TFieldValues extends FieldValues = Fi
 			control={control}
 			errorField={errorField as NonNullable<typeof errorField>}
 			type={type as "root"}
-			render={({ props: renderProps, state: { errorMessage } }) => (
+			render={({ props: renderProps, state }) => (
 				<p
-					key={errorMessage}
+					key={state.errorMessage}
 					{...renderProps}
-					className={cnMerge("text-[13px]", "data-[index=0]:mt-1", renderProps.className, className)}
+					className={cnMerge(
+						"text-[13px] text-red-600",
+						"data-[index=0]:mt-1",
+						renderProps.className,
+						className
+					)}
 				>
-					{errorMessage}
+					{state.errorMessage}
 				</p>
 			)}
 		/>
@@ -770,7 +819,7 @@ export function FormSubmit<TElement extends React.ElementType = "button">(
 	const Component = asChild ? Slot : Element;
 
 	return (
-		<Component type={type} {...restOfProps}>
+		<Component data-part="submit" data-scope="form" data-slot="form-submit" type={type} {...restOfProps}>
 			{children}
 		</Component>
 	);
@@ -809,11 +858,11 @@ export function FormSubscribeToFieldValue<
 
 	const fieldProps = { value: formValue };
 
-	if (typeof children === "function") {
-		return children(fieldProps as never);
-	}
+	const selectedChildren = typeof children === "function" ? children : render;
 
-	return render(fieldProps as never);
+	const resolvedChildren = selectedChildren(fieldProps as never);
+
+	return resolvedChildren;
 }
 
 type FormSubscribeToFormStateRenderFn<TFieldValues extends FieldValues> = (
@@ -836,9 +885,9 @@ export function FormSubscribeToFormState<TFieldValues extends FieldValues = Fiel
 
 	const formState = useFormState({ control, name: name as FieldPath<TFieldValues> });
 
-	if (typeof children === "function") {
-		return children(formState as never);
-	}
+	const selectedChildren = typeof children === "function" ? children : render;
 
-	return render(formState as never);
+	const resolvedChildren = selectedChildren(formState as never);
+
+	return resolvedChildren;
 }

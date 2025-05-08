@@ -24,24 +24,24 @@ Our library is organized into two main categories of components, each designed t
 
 UI Components provide interactive elements and complex UI patterns with zero styling:
 
-- [Card](/ui-components/card) - Composable card layouts with flexible content areas
-- [Carousel](/ui-components/carousel) - Fully accessible carousel/slider component
-- [DragScroll](/ui-components/drag-scroll) - Add drag-to-scroll behavior to any scrollable container
-- [DropZone](/ui-components/drop-zone) - File upload zone with drag-and-drop support
-- [Form](/ui-components/form) - Flexible form handling with field subscriptions and validation
+- [Card](/ui/card) - Composable card layouts with flexible content areas
+- [Carousel](/ui/carousel) - Fully accessible carousel/slider component
+- [DragScroll](/ui/drag-scroll) - Add drag-to-scroll behavior to any scrollable container
+- [DropZone](/ui/drop-zone) - File upload zone with drag-and-drop support
+- [Form](/ui/form) - Flexible form handling with field subscriptions and validation
 
 ### Utility Components
 
 Utility Components simplify common UI patterns and make your code more declarative:
 
-- [Await](/utility-components/await) - Handle async states elegantly with built-in loading and error states
-- [ErrorBoundary](/utility-components/error-boundary) - Catch and handle errors gracefully
-- [For](/utility-components/for) - Iterative rendering with built-in empty states
-- [Show](/utility-components/show) - Simplified conditional rendering
-- [Slot](/utility-components/slot) - Flexible component composition pattern
-- [SuspenseWithBoundary](/utility-components/suspense-with-boundary) - Combines React Suspense with error boundary capabilities
-- [Switch](/utility-components/switch) - Conditional rendering with pattern matching
-- [Teleport](/utility-components/teleport) - Render content to a different part of the DOM
+- [Await](/utility/await) - Handle async states elegantly with built-in loading and error states
+- [ErrorBoundary](/utility/error-boundary) - Catch and handle errors gracefully
+- [For](/utility/for) - Iterative rendering with built-in empty states
+- [Show](/utility/show) - Simplified conditional rendering
+- [Slot](/utility/slot) - Flexible component composition pattern
+- [SuspenseWithBoundary](/utility/suspense-with-boundary) - Combines React Suspense with error boundary capabilities
+- [Switch](/utility/switch) - Conditional rendering with pattern matching
+- [Teleport](/utility/teleport) - Render content to a different part of the DOM
 
 ## Installation
 

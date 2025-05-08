@@ -6,14 +6,15 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 const zodSchema = z.object({
-	files: z.instanceof(File).nullable(),
+	files: z.instanceof(File, { message: "Please upload a file" }).nullable(),
+	notifications: z.array(z.coerce.string()),
 	password: z.string().min(8, "Password must be at least 8 characters"),
 	username: z.string().min(6, "Username must be at least 6 characters"),
 });
 
 function MainForm() {
 	const methods = useForm({
-		defaultValues: { password: "", username: "" },
+		defaultValues: { notifications: [], password: "", username: "" },
 		mode: "onChange",
 		resolver: zodResolver(zodSchema),
 	});
@@ -40,21 +41,27 @@ function MainForm() {
 							focus:ring-blue-500/20"
 						placeholder="Enter your username"
 					/>
+
+					<Form.ErrorMessage />
 				</Form.Field>
 
 				<Form.Field control={methods.control} name="password" className="gap-2">
 					<Form.Label className="text-sm font-medium text-gray-900">Password</Form.Label>
 					<Form.Input
 						type="password"
-						className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900
+						classNames={{
+							inputGroup: `w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900
 							placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2
-							focus:ring-blue-500/20"
+							focus:ring-blue-500/20`,
+						}}
 						placeholder="••••••••"
 					/>
+
+					<Form.ErrorMessage />
 				</Form.Field>
 
 				<Form.Field control={methods.control} name="files" className="gap-2">
-					<Form.Label className="text-sm font-medium text-gray-900">Password</Form.Label>
+					<Form.Label className="text-sm font-medium text-gray-900">Files</Form.Label>
 					<Form.FieldController
 						render={({ field }) => (
 							<DropZone.Root
@@ -68,62 +75,131 @@ function MainForm() {
 								maxFileSize={4}
 								maxFileCount={2}
 							>
-								{(ctx) => (
-									<>
-										<svg
-											className="mb-2 size-8 text-gray-400"
-											fill="none"
-											stroke="currentColor"
-											viewBox="0 0 24 24"
-										>
-											<path
-												strokeLinecap="round"
-												strokeLinejoin="round"
-												strokeWidth="2"
-												d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-											/>
-										</svg>
-										<p className="text-sm font-medium text-gray-600">
-											Drop files here or click to upload
-										</p>
-										<p className="mt-1 text-xs text-gray-500">Supported files: PDF, DOC, DOCX</p>
+								<svg
+									className="mb-2 size-8 text-gray-400"
+									fill="none"
+									stroke="currentColor"
+									viewBox="0 0 24 24"
+								>
+									<path
+										strokeLinecap="round"
+										strokeLinejoin="round"
+										strokeWidth="2"
+										d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+									/>
+								</svg>
+								<p className="text-sm font-medium text-gray-600">
+									Drop files here or click to upload
+								</p>
+								<p className="mt-1 text-xs text-gray-500">Supported files: PDF, DOC, DOCX</p>
 
-										<DropZone.ImagePreview>
-											{ctx.dropZoneState.filesWithPreview.map((fileWithPreview) => (
-												<img
-													key={fileWithPreview.id}
-													className="mx-auto size-48 rounded-lg object-cover shadow-md
-														transition-transform hover:scale-105"
-													src={fileWithPreview.preview}
-													alt="File preview"
-												/>
-											))}
+								<DropZone.ImagePreview>
+									{(ctx) => {
+										return (
+											<>
+												{ctx.dropZoneState.filesWithPreview.map((fileWithPreview) => (
+													<img
+														key={fileWithPreview.id}
+														className="mx-auto size-48 rounded-lg object-cover shadow-md
+															transition-transform hover:scale-105"
+														src={fileWithPreview.preview}
+														alt="File preview"
+													/>
+												))}
 
-											{ctx.dropZoneState.errors.map((error) => (
-												<div
-													key={error.errorFile.name}
-													className="flex items-center gap-1 text-xs text-red-600"
-													role="alert"
-												>
-													<Icon icon="lucide:circle-alert" className="size-3 shrink-0" />
-													<span>{error.message}</span>
-												</div>
-											))}
-										</DropZone.ImagePreview>
-									</>
-								)}
+												{ctx.dropZoneState.errors.map((error) => (
+													<div
+														key={error.file.name}
+														className="flex items-center gap-1 text-xs text-red-600"
+														role="alert"
+													>
+														<Icon icon="lucide:circle-alert" className="size-3 shrink-0" />
+														<span>{error.message}</span>
+													</div>
+												))}
+											</>
+										);
+									}}
+								</DropZone.ImagePreview>
 							</DropZone.Root>
 						)}
 					/>
+
+					<Form.ErrorMessage />
 				</Form.Field>
 
-				{/* Submit Button */}
+				<div className="bg-card/50 space-y-4 rounded-lg border p-5">
+					<div className="flex flex-col gap-1">
+						<h3 className="text-lg font-semibold">Notification Preferences</h3>
+						<p className="text-muted-foreground text-sm">Choose how you want to receive updates</p>
+					</div>
+
+					<div className="space-y-4">
+						<Form.Field
+							control={methods.control}
+							name="notifications.0"
+							className="hover:bg-accent/50 group flex-row items-start gap-4 rounded-md p-2"
+						>
+							<Form.Input
+								type="checkbox"
+								value="email"
+								className="group-hover:border-primary mt-1 size-4 rounded-sm border-2"
+							/>
+							<div className="flex flex-1 flex-col gap-1">
+								<Form.Label className="text-sm font-medium">Email Notifications</Form.Label>
+								<span className="text-muted-foreground text-xs">
+									Get important updates and summaries delivered to your inbox
+								</span>
+								<Form.ErrorMessage />
+							</div>
+						</Form.Field>
+
+						<Form.Field
+							control={methods.control}
+							name="notifications.1"
+							className="hover:bg-accent/50 group flex-row items-start gap-4 rounded-md p-2"
+						>
+							<Form.Input
+								type="checkbox"
+								value="sms"
+								className="group-hover:border-primary mt-1 size-4 rounded-sm border-2"
+							/>
+							<div className="flex flex-1 flex-col gap-1">
+								<Form.Label className="text-sm font-medium">SMS Updates</Form.Label>
+								<span className="text-muted-foreground text-xs">
+									Receive time-sensitive notifications via text message
+								</span>
+								<Form.ErrorMessage />
+							</div>
+						</Form.Field>
+
+						<Form.Field
+							control={methods.control}
+							name="notifications.2"
+							className="hover:bg-accent/50 group flex flex-row items-start gap-4 rounded-md p-2"
+						>
+							<Form.Input
+								type="checkbox"
+								value="push"
+								className="group-hover:border-primary mt-1 size-4 rounded-sm border-2"
+							/>
+							<div className="flex flex-1 flex-col gap-1">
+								<Form.Label className="text-sm font-medium">Push Notifications</Form.Label>
+								<span className="text-muted-foreground text-xs">
+									Get instant alerts directly on your device for real-time updates
+								</span>
+								<Form.ErrorMessage />
+							</div>
+						</Form.Field>
+					</div>
+				</div>
+
 				<Form.SubscribeToFormState
 					control={methods.control}
-					render={({ isValid }) => {
+					render={({ isSubmitting }) => {
 						return (
 							<Form.Submit
-								disabled={!isValid}
+								disabled={isSubmitting}
 								className="mt-8 w-full rounded-lg bg-blue-600 px-5 py-3 text-sm font-semibold
 									text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2
 									focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50"

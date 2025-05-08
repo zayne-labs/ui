@@ -3,7 +3,6 @@
 import * as React from "react";
 
 import type { DiscriminatedRenderProps } from "@zayne-labs/toolkit-react/utils";
-import { isFunction } from "@zayne-labs/toolkit-type-helpers";
 import { Fragment as ReactFragment, Suspense, use } from "react";
 import { ErrorBoundary } from "../error-boundary";
 import { Slot } from "../slot";
@@ -33,7 +32,7 @@ export function Await<TValue>(props: AwaitProps<TValue>) {
 	);
 }
 
-export type AwaitInnerProps<TValue> = DiscriminatedRenderProps<React.ReactNode | RenderPropFn<TValue>> & {
+export type AwaitInnerProps<TValue> = DiscriminatedRenderProps<RenderPropFn<TValue>> & {
 	asChild?: boolean;
 	promise: Promise<TValue>;
 };
@@ -47,9 +46,9 @@ function AwaitInner<TValue>(props: AwaitInnerProps<TValue>) {
 
 	const slotProps = asChild && { promise, result };
 
-	const selectedChildren = children ?? render;
+	const selectedChildren = typeof children === "function" ? children : render;
 
-	const resolvedChildren = isFunction(selectedChildren) ? selectedChildren(result) : selectedChildren;
+	const resolvedChildren = selectedChildren(result);
 
 	return <Component {...slotProps}>{resolvedChildren}</Component>;
 }

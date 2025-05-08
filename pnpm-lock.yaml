@@ -9,8 +9,8 @@ importers:
   .:
     devDependencies:
       '@arethetypeswrong/cli':
-        specifier: ^0.17.4
-        version: 0.17.4
+        specifier: ^0.18.0
+        version: 0.18.0
       '@changesets/cli':
         specifier: ^2.29.3
         version: 2.29.3
@@ -18,11 +18,11 @@ importers:
         specifier: ^1.49.0
         version: 1.49.0(eslint@9.26.0(jiti@2.4.2))(ts-api-utils@2.1.0(typescript@5.8.3))(typescript@5.8.3)
       '@types/node':
-        specifier: ^22.15.14
-        version: 22.15.14
+        specifier: ^22.15.15
+        version: 22.15.15
       '@zayne-labs/eslint-config':
         specifier: 0.8.2
-        version: 0.8.2(@eslint-react/eslint-plugin@1.49.0(eslint@9.26.0(jiti@2.4.2))(ts-api-utils@2.1.0(typescript@5.8.3))(typescript@5.8.3))(@zayne-labs/toolkit-type-helpers@0.9.38)(eslint-plugin-react-hooks@5.2.0(eslint@9.26.0(jiti@2.4.2)))(eslint-plugin-react-refresh@0.4.20(eslint@9.26.0(jiti@2.4.2)))(eslint@9.26.0(jiti@2.4.2))(typescript@5.8.3)
+        version: 0.8.2(@eslint-react/eslint-plugin@1.49.0(eslint@9.26.0(jiti@2.4.2))(ts-api-utils@2.1.0(typescript@5.8.3))(typescript@5.8.3))(@zayne-labs/toolkit-type-helpers@0.9.39)(eslint-plugin-react-hooks@5.2.0(eslint@9.26.0(jiti@2.4.2)))(eslint-plugin-react-refresh@0.4.20(eslint@9.26.0(jiti@2.4.2)))(eslint@9.26.0(jiti@2.4.2))(typescript@5.8.3)
       '@zayne-labs/prettier-config':
         specifier: ^0.8.2
         version: 0.8.2
@@ -64,13 +64,13 @@ importers:
     dependencies:
       '@hookform/resolvers':
         specifier: ^5.0.1
-        version: 5.0.1(react-hook-form@7.56.2(react@19.1.0))
+        version: 5.0.1(react-hook-form@7.56.3(react@19.1.0))
       '@iconify/react':
         specifier: ^6.0.0
         version: 6.0.0(react@19.1.0)
       '@zayne-labs/toolkit-core':
-        specifier: 0.9.38
-        version: 0.9.38(@zayne-labs/toolkit-type-helpers@0.9.38)
+        specifier: 0.9.39
+        version: 0.9.39(@zayne-labs/toolkit-type-helpers@0.9.39)
       '@zayne-labs/ui-react':
         specifier: workspace:*
         version: link:../../packages/ui-react
@@ -81,18 +81,18 @@ importers:
         specifier: 19.1.0
         version: 19.1.0(react@19.1.0)
       react-hook-form:
-        specifier: ^7.56.2
-        version: 7.56.2(react@19.1.0)
+        specifier: ^7.56.3
+        version: 7.56.3(react@19.1.0)
       zod:
         specifier: ^3.24.4
         version: 3.24.4
     devDependencies:
       '@tailwindcss/vite':
         specifier: ^4.1.5
-        version: 4.1.5(vite@6.3.5(@types/node@22.15.14)(jiti@2.4.2)(lightningcss@1.29.2)(tsx@4.19.4)(yaml@2.7.1))
+        version: 4.1.5(vite@6.3.5(@types/node@22.15.15)(jiti@2.4.2)(lightningcss@1.29.2)(tsx@4.19.4)(yaml@2.7.1))
       '@types/node':
-        specifier: ^22.15.14
-        version: 22.15.14
+        specifier: ^22.15.15
+        version: 22.15.15
       '@types/react':
         specifier: 19.1.3
         version: 19.1.3
@@ -101,7 +101,7 @@ importers:
         version: 19.1.3(@types/react@19.1.3)
       '@vitejs/plugin-react-swc':
         specifier: ^3.9.0
-        version: 3.9.0(vite@6.3.5(@types/node@22.15.14)(jiti@2.4.2)(lightningcss@1.29.2)(tsx@4.19.4)(yaml@2.7.1))
+        version: 3.9.0(vite@6.3.5(@types/node@22.15.15)(jiti@2.4.2)(lightningcss@1.29.2)(tsx@4.19.4)(yaml@2.7.1))
       '@zayne-labs/tsconfig':
         specifier: 0.8.2
         version: 0.8.2
@@ -119,13 +119,13 @@ importers:
         version: 5.8.3
       vite:
         specifier: ^6.3.5
-        version: 6.3.5(@types/node@22.15.14)(jiti@2.4.2)(lightningcss@1.29.2)(tsx@4.19.4)(yaml@2.7.1)
+        version: 6.3.5(@types/node@22.15.15)(jiti@2.4.2)(lightningcss@1.29.2)(tsx@4.19.4)(yaml@2.7.1)
 
   packages/ui-react:
     devDependencies:
       '@arethetypeswrong/cli':
-        specifier: 0.17.4
-        version: 0.17.4
+        specifier: 0.18.0
+        version: 0.18.0
       '@size-limit/esbuild-why':
         specifier: 11.2.0
         version: 11.2.0(size-limit@11.2.0)
@@ -145,14 +145,14 @@ importers:
         specifier: 19.1.3
         version: 19.1.3(@types/react@19.1.3)
       '@zayne-labs/toolkit-core':
-        specifier: 0.9.38
-        version: 0.9.38(@zayne-labs/toolkit-type-helpers@0.9.38)
+        specifier: 0.9.39
+        version: 0.9.39(@zayne-labs/toolkit-type-helpers@0.9.39)
       '@zayne-labs/toolkit-react':
-        specifier: 0.9.38
-        version: 0.9.38(@types/react@19.1.3)(@zayne-labs/toolkit-core@0.9.38(@zayne-labs/toolkit-type-helpers@0.9.38))(@zayne-labs/toolkit-type-helpers@0.9.38)(react@19.1.0)(zustand@5.0.4(@types/react@19.1.3)(react@19.1.0))
+        specifier: 0.9.39
+        version: 0.9.39(@types/react@19.1.3)(@zayne-labs/toolkit-core@0.9.39(@zayne-labs/toolkit-type-helpers@0.9.39))(@zayne-labs/toolkit-type-helpers@0.9.39)(react@19.1.0)(zustand@5.0.4(@types/react@19.1.3)(react@19.1.0))
       '@zayne-labs/toolkit-type-helpers':
-        specifier: 0.9.38
-        version: 0.9.38
+        specifier: 0.9.39
+        version: 0.9.39
       '@zayne-labs/tsconfig':
         specifier: 0.8.2
         version: 0.8.2
@@ -175,8 +175,8 @@ importers:
         specifier: 19.1.0
         version: 19.1.0(react@19.1.0)
       react-hook-form:
-        specifier: 7.56.2
-        version: 7.56.2(react@19.1.0)
+        specifier: 7.56.3
+        version: 7.56.3(react@19.1.0)
       size-limit:
         specifier: 11.2.0
         version: 11.2.0
@@ -204,14 +204,14 @@ packages:
   '@antfu/install-pkg@1.0.0':
     resolution: {integrity: sha512-xvX6P/lo1B3ej0OsaErAjqgFYzYVcJpamjLAFLYh9vRJngBrMoUG7aVnrGTeqM7yxbyTD5p3F2+0/QUEh8Vzhw==}
 
-  '@arethetypeswrong/cli@0.17.4':
-    resolution: {integrity: sha512-AeiKxtf67XD/NdOqXgBOE5TZWH3EOCt+0GkbUpekOzngc+Q/cRZ5azjWyMxISxxfp0EItgm5NoSld9p7BAA5xQ==}
-    engines: {node: '>=18'}
+  '@arethetypeswrong/cli@0.18.0':
+    resolution: {integrity: sha512-Kf09mDQTGHfjR7Hlex70jsebN8tCy92AUnu37wiyIuMh+noiyssBwq5iuzVdnTyJKScKKfXLKoqQOa3eF8ZNrw==}
+    engines: {node: '>=20'}
     hasBin: true
 
-  '@arethetypeswrong/core@0.17.4':
-    resolution: {integrity: sha512-Izvir8iIoU+X4SKtDAa5kpb+9cpifclzsbA8x/AZY0k0gIfXYQ1fa1B6Epfe6vNA2YfDX8VtrZFgvnXB6aPEoQ==}
-    engines: {node: '>=18'}
+  '@arethetypeswrong/core@0.18.0':
+    resolution: {integrity: sha512-a6JikWs7WxYx7CfZYkV+sBQsI0nhLI4uES1/cSPVSRMR6PnfbiMV2b3LBzsuXzh/UI8FoUGmJJaSKoZFa7mF9g==}
+    engines: {node: '>=20'}
 
   '@babel/helper-validator-identifier@7.27.1':
     resolution: {integrity: sha512-D2hP9eA+Sqx1kBZgzxZh0y1trbuU+JoDkiEwqhQ36nodYqJwyEIhPSdMNd7lOm/4io72luTPWH20Yda0xOuUow==}
@@ -1290,8 +1290,8 @@ packages:
   '@types/node@12.20.55':
     resolution: {integrity: sha512-J8xLz7q2OFulZ2cyGTLE1TbbZcjpno7FaN6zdJNrgAdrJ+DZzh/uFR6YrTb4C+nXakvud8Q4+rbhoIWlYQbUFQ==}
 
-  '@types/node@22.15.14':
-    resolution: {integrity: sha512-BL1eyu/XWsFGTtDWOYULQEs4KR0qdtYfCxYAUYRoB7JP7h9ETYLgQTww6kH8Sj2C0pFGgrpM0XKv6/kbIzYJ1g==}
+  '@types/node@22.15.15':
+    resolution: {integrity: sha512-R5muMcZob3/Jjchn5LcO8jdKwSCbzqmPB6ruBxMcf9kbxtniZHP327s6C37iOfuw8mbKK3cAQa7sEl7afLrQ8A==}
 
   '@types/react-dom@19.1.3':
     resolution: {integrity: sha512-rJXC08OG0h3W6wDMFxQrZF00Kq6qQvw0djHRdzl3U5DnIERz0MRce3WVc7IS6JYBwtaP/DwYtRRjVlvivNveKg==}
@@ -1521,19 +1521,19 @@ packages:
     resolution: {integrity: sha512-5dchwDJUuNRFVj6ZdcbB88zh2InQiNIw+dvYiTJ6mzmleAuj+fUZSt+sQwej1IQmQI5v9IIBcVgCZ9ibs0Ec6g==}
     engines: {node: '>=18.x'}
 
-  '@zayne-labs/toolkit-core@0.9.38':
-    resolution: {integrity: sha512-a3fjSgjYvK47j2JSI9m228gGJSLZKGFx+8XphdR9khHmZ2H91wU4+fsoJiXK2jgeR2CzEK6jOaUx+Jimx7Ah7Q==}
+  '@zayne-labs/toolkit-core@0.9.39':
+    resolution: {integrity: sha512-EEnIZoWV5lbMUQdT9UmIAsEu2x7cHYvupMUnUdJAapnCMGx87mCK6/y8He6BYwXrD/zOw0pvgzXcgQ0lGSRjBQ==}
     engines: {node: '>=18.x'}
     peerDependencies:
-      '@zayne-labs/toolkit-type-helpers': ^0.9.38
+      '@zayne-labs/toolkit-type-helpers': ^0.9.39
 
-  '@zayne-labs/toolkit-react@0.9.38':
-    resolution: {integrity: sha512-K2GqVXEYTA3zMvV/b9YO+gqmHa4NKfnu+PvcoxeZDWEwcDy29eKhoHMlwh98d+G/L08kEnPmXejEAFttDkT1Rw==}
+  '@zayne-labs/toolkit-react@0.9.39':
+    resolution: {integrity: sha512-SKJbpPYqDhaJTZcybqoF96kFys7Mr28TCxdVfebAyG1Vx0KxhETWbjw8mJE+snYJciSNCVBp2NylIk3j3u/iSw==}
     engines: {node: '>=18.x'}
     peerDependencies:
       '@types/react': '>=18.0.0'
-      '@zayne-labs/toolkit-core': ^0.9.38
-      '@zayne-labs/toolkit-type-helpers': ^0.9.38
+      '@zayne-labs/toolkit-core': ^0.9.39
+      '@zayne-labs/toolkit-type-helpers': ^0.9.39
       react: '>=18.0.0'
       zustand: '>=5.0.0'
     peerDependenciesMeta:
@@ -1546,6 +1546,10 @@ packages:
 
   '@zayne-labs/toolkit-type-helpers@0.9.38':
     resolution: {integrity: sha512-sF8+Sa+d5gB9sNDq0FLKUFmcqEi6tjfBICNUYTGKda8QY6/1SJK/RqU6ZLNP+XE6BLnsOueSespoBJN+xBjX/w==}
+    engines: {node: '>=18.x'}
+
+  '@zayne-labs/toolkit-type-helpers@0.9.39':
+    resolution: {integrity: sha512-IvpEi3uKViF/Up4Y49ntl61WIiLrjAzQ8oh4HjeGNfAhSpPHho7OoL2blBALvI4JQY8kyAG0ClSo0pIxRNvsjQ==}
     engines: {node: '>=18.x'}
 
   '@zayne-labs/tsconfig@0.8.2':
@@ -2750,6 +2754,10 @@ packages:
   lru-cache@10.4.3:
     resolution: {integrity: sha512-JNAzZcXrCt42VGLuYz0zfAzDfAvJWW6AfYlDBQyDV5DClI2m5sAmK+OIO7s59XfsRsWHp02jAJrRadPRGTt6SQ==}
 
+  lru-cache@11.1.0:
+    resolution: {integrity: sha512-QIXZUBJUx+2zHUdQujWejBkcD9+cs94tLn0+YL8UrCh+D5sCXZ4c7LaEH48pNwRY3MLDgqUFyhlCyjJPf1WP0A==}
+    engines: {node: 20 || >=22}
+
   marked-terminal@7.3.0:
     resolution: {integrity: sha512-t4rBvPsHc57uE/2nJOLmMbZCQ4tgAccAED3ngXQqW6g+TxA488JzJ+FK3lQkzBQOI1mRV/r/Kq+1ZlJ4D0owQw==}
     engines: {node: '>=16.0.0'}
@@ -3289,8 +3297,8 @@ packages:
     peerDependencies:
       react: ^19.1.0
 
-  react-hook-form@7.56.2:
-    resolution: {integrity: sha512-vpfuHuQMF/L6GpuQ4c3ZDo+pRYxIi40gQqsCmmfUBwm+oqvBhKhwghCuj2o00YCgSfU6bR9KC/xnQGWm3Gr08A==}
+  react-hook-form@7.56.3:
+    resolution: {integrity: sha512-IK18V6GVbab4TAo1/cz3kqajxbDPGofdF0w7VHdCo0Nt8PrPlOZcuuDq9YYIV1BtjcX78x0XsldbQRQnQXWXmw==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       react: ^16.8.0 || ^17 || ^18 || ^19
@@ -3902,9 +3910,9 @@ snapshots:
       package-manager-detector: 0.2.11
       tinyexec: 0.3.2
 
-  '@arethetypeswrong/cli@0.17.4':
+  '@arethetypeswrong/cli@0.18.0':
     dependencies:
-      '@arethetypeswrong/core': 0.17.4
+      '@arethetypeswrong/core': 0.18.0
       chalk: 4.1.2
       cli-table3: 0.6.5
       commander: 10.0.1
@@ -3912,13 +3920,13 @@ snapshots:
       marked-terminal: 7.3.0(marked@9.1.6)
       semver: 7.7.1
 
-  '@arethetypeswrong/core@0.17.4':
+  '@arethetypeswrong/core@0.18.0':
     dependencies:
       '@andrewbranch/untar.js': 1.0.3
       '@loaderkit/resolve': 1.0.4
       cjs-module-lexer: 1.4.3
       fflate: 0.8.2
-      lru-cache: 10.4.3
+      lru-cache: 11.1.0
       semver: 7.7.1
       typescript: 5.6.1-rc
       validate-npm-package-name: 5.0.1
@@ -4405,10 +4413,10 @@ snapshots:
       '@eslint/core': 0.13.0
       levn: 0.4.1
 
-  '@hookform/resolvers@5.0.1(react-hook-form@7.56.2(react@19.1.0))':
+  '@hookform/resolvers@5.0.1(react-hook-form@7.56.3(react@19.1.0))':
     dependencies:
       '@standard-schema/utils': 0.3.0
-      react-hook-form: 7.56.2(react@19.1.0)
+      react-hook-form: 7.56.3(react@19.1.0)
 
   '@humanfs/core@0.19.1': {}
 
@@ -4855,12 +4863,12 @@ snapshots:
       '@tailwindcss/oxide-win32-arm64-msvc': 4.1.5
       '@tailwindcss/oxide-win32-x64-msvc': 4.1.5
 
-  '@tailwindcss/vite@4.1.5(vite@6.3.5(@types/node@22.15.14)(jiti@2.4.2)(lightningcss@1.29.2)(tsx@4.19.4)(yaml@2.7.1))':
+  '@tailwindcss/vite@4.1.5(vite@6.3.5(@types/node@22.15.15)(jiti@2.4.2)(lightningcss@1.29.2)(tsx@4.19.4)(yaml@2.7.1))':
     dependencies:
       '@tailwindcss/node': 4.1.5
       '@tailwindcss/oxide': 4.1.5
       tailwindcss: 4.1.5
-      vite: 6.3.5(@types/node@22.15.14)(jiti@2.4.2)(lightningcss@1.29.2)(tsx@4.19.4)(yaml@2.7.1)
+      vite: 6.3.5(@types/node@22.15.15)(jiti@2.4.2)(lightningcss@1.29.2)(tsx@4.19.4)(yaml@2.7.1)
 
   '@total-typescript/ts-reset@0.6.1': {}
 
@@ -4875,7 +4883,7 @@ snapshots:
 
   '@types/node@12.20.55': {}
 
-  '@types/node@22.15.14':
+  '@types/node@22.15.15':
     dependencies:
       undici-types: 6.21.0
 
@@ -5065,14 +5073,14 @@ snapshots:
   '@unrs/resolver-binding-win32-x64-msvc@1.7.2':
     optional: true
 
-  '@vitejs/plugin-react-swc@3.9.0(vite@6.3.5(@types/node@22.15.14)(jiti@2.4.2)(lightningcss@1.29.2)(tsx@4.19.4)(yaml@2.7.1))':
+  '@vitejs/plugin-react-swc@3.9.0(vite@6.3.5(@types/node@22.15.15)(jiti@2.4.2)(lightningcss@1.29.2)(tsx@4.19.4)(yaml@2.7.1))':
     dependencies:
       '@swc/core': 1.11.24
-      vite: 6.3.5(@types/node@22.15.14)(jiti@2.4.2)(lightningcss@1.29.2)(tsx@4.19.4)(yaml@2.7.1)
+      vite: 6.3.5(@types/node@22.15.15)(jiti@2.4.2)(lightningcss@1.29.2)(tsx@4.19.4)(yaml@2.7.1)
     transitivePeerDependencies:
       - '@swc/helpers'
 
-  '@zayne-labs/eslint-config@0.8.2(@eslint-react/eslint-plugin@1.49.0(eslint@9.26.0(jiti@2.4.2))(ts-api-utils@2.1.0(typescript@5.8.3))(typescript@5.8.3))(@zayne-labs/toolkit-type-helpers@0.9.38)(eslint-plugin-react-hooks@5.2.0(eslint@9.26.0(jiti@2.4.2)))(eslint-plugin-react-refresh@0.4.20(eslint@9.26.0(jiti@2.4.2)))(eslint@9.26.0(jiti@2.4.2))(typescript@5.8.3)':
+  '@zayne-labs/eslint-config@0.8.2(@eslint-react/eslint-plugin@1.49.0(eslint@9.26.0(jiti@2.4.2))(ts-api-utils@2.1.0(typescript@5.8.3))(typescript@5.8.3))(@zayne-labs/toolkit-type-helpers@0.9.39)(eslint-plugin-react-hooks@5.2.0(eslint@9.26.0(jiti@2.4.2)))(eslint-plugin-react-refresh@0.4.20(eslint@9.26.0(jiti@2.4.2)))(eslint@9.26.0(jiti@2.4.2))(typescript@5.8.3)':
     dependencies:
       '@antfu/install-pkg': 1.0.0
       '@clack/prompts': 0.10.1
@@ -5080,7 +5088,7 @@ snapshots:
       '@eslint/compat': 1.2.9(eslint@9.26.0(jiti@2.4.2))
       '@eslint/js': 9.25.1
       '@stylistic/eslint-plugin': 4.2.0(eslint@9.26.0(jiti@2.4.2))(typescript@5.8.3)
-      '@zayne-labs/toolkit-type-helpers': 0.9.38
+      '@zayne-labs/toolkit-type-helpers': 0.9.39
       ansis: 3.17.0
       cac: 6.7.14
       eslint: 9.26.0(jiti@2.4.2)
@@ -5119,20 +5127,22 @@ snapshots:
     dependencies:
       '@zayne-labs/toolkit-type-helpers': 0.9.38
 
-  '@zayne-labs/toolkit-core@0.9.38(@zayne-labs/toolkit-type-helpers@0.9.38)':
+  '@zayne-labs/toolkit-core@0.9.39(@zayne-labs/toolkit-type-helpers@0.9.39)':
     dependencies:
-      '@zayne-labs/toolkit-type-helpers': 0.9.38
+      '@zayne-labs/toolkit-type-helpers': 0.9.39
 
-  '@zayne-labs/toolkit-react@0.9.38(@types/react@19.1.3)(@zayne-labs/toolkit-core@0.9.38(@zayne-labs/toolkit-type-helpers@0.9.38))(@zayne-labs/toolkit-type-helpers@0.9.38)(react@19.1.0)(zustand@5.0.4(@types/react@19.1.3)(react@19.1.0))':
+  '@zayne-labs/toolkit-react@0.9.39(@types/react@19.1.3)(@zayne-labs/toolkit-core@0.9.39(@zayne-labs/toolkit-type-helpers@0.9.39))(@zayne-labs/toolkit-type-helpers@0.9.39)(react@19.1.0)(zustand@5.0.4(@types/react@19.1.3)(react@19.1.0))':
     dependencies:
-      '@zayne-labs/toolkit-core': 0.9.38(@zayne-labs/toolkit-type-helpers@0.9.38)
-      '@zayne-labs/toolkit-type-helpers': 0.9.38
+      '@zayne-labs/toolkit-core': 0.9.39(@zayne-labs/toolkit-type-helpers@0.9.39)
+      '@zayne-labs/toolkit-type-helpers': 0.9.39
     optionalDependencies:
       '@types/react': 19.1.3
       react: 19.1.0
       zustand: 5.0.4(@types/react@19.1.3)(react@19.1.0)
 
   '@zayne-labs/toolkit-type-helpers@0.9.38': {}
+
+  '@zayne-labs/toolkit-type-helpers@0.9.39': {}
 
   '@zayne-labs/tsconfig@0.8.2': {}
 
@@ -6455,6 +6465,8 @@ snapshots:
 
   lru-cache@10.4.3: {}
 
+  lru-cache@11.1.0: {}
+
   marked-terminal@7.3.0(marked@9.1.6):
     dependencies:
       ansi-escapes: 7.0.0
@@ -6799,7 +6811,7 @@ snapshots:
       react: 19.1.0
       scheduler: 0.26.0
 
-  react-hook-form@7.56.2(react@19.1.0):
+  react-hook-form@7.56.3(react@19.1.0):
     dependencies:
       react: 19.1.0
 
@@ -7330,7 +7342,7 @@ snapshots:
 
   vary@1.1.2: {}
 
-  vite@6.3.5(@types/node@22.15.14)(jiti@2.4.2)(lightningcss@1.29.2)(tsx@4.19.4)(yaml@2.7.1):
+  vite@6.3.5(@types/node@22.15.15)(jiti@2.4.2)(lightningcss@1.29.2)(tsx@4.19.4)(yaml@2.7.1):
     dependencies:
       esbuild: 0.25.4
       fdir: 6.4.4(picomatch@4.0.2)
@@ -7339,7 +7351,7 @@ snapshots:
       rollup: 4.40.2
       tinyglobby: 0.2.13
     optionalDependencies:
-      '@types/node': 22.15.14
+      '@types/node': 22.15.15
       fsevents: 2.3.3
       jiti: 2.4.2
       lightningcss: 1.29.2

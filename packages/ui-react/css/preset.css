@@ -1,3 +1,5 @@
 @import "./theme.css";
+@import "./animation.css";
 @import "./utilities.css";
+
 @source "../dist/esm/**/*.js";

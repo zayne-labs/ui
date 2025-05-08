@@ -82,9 +82,9 @@ function BasicCarousel() {
         </Carousel.ItemGroup>
 
         <Carousel.IndicatorGroup>
-          {(_, index) => (
+          {(imageSrc, index) => (
             <Carousel.Indicator
-              key={index}
+              key={imageSrc}
               currentIndex={index}
               classNames={{
                 base: "cursor-pointer",
@@ -135,9 +135,9 @@ function AutoSlidingCarousel() {
         </Carousel.ItemGroup>
 
         <Carousel.IndicatorGroup>
-          {(_, index) => (
+          {(imageSrc, index) => (
             <Carousel.Indicator
-              key={index}
+              key={imageSrc}
               currentIndex={index}
             />
           )}
@@ -167,7 +167,7 @@ function CaptionedCarousel() {
 
         <Carousel.ItemGroup>
           {(slide, index) => (
-            <Carousel.Item key={index}>
+            <Carousel.Item key={slide.image}>
               <img
                 src={slide.image}
                 alt={slide.title}
@@ -181,8 +181,6 @@ function CaptionedCarousel() {
             </Carousel.Item>
           )}
         </Carousel.ItemGroup>
-
-        <Carousel.IndicatorGroup />
       </Carousel.Content>
     </Carousel.Root>
   )
@@ -341,7 +339,7 @@ Individual indicator for each slide.
 
 ## State Management
 
-The Carousel uses Zustand for state management with the following state properties:
+The Carousel uses Zustand internally for state management with the following state properties:
 
 - `currentSlide: number` - Current slide index
 - `maxSlide: number` - Last slide index

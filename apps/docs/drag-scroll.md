@@ -38,9 +38,9 @@ function BasicDragScroll() {
 
   return (
     <div {...getRootProps()}>
-      {Array.from({ length: 10 }).map((_, i) => (
-        <div key={i} {...getItemProps({ className: "flex-shrink-0 w-64 h-40 bg-gray-100 m-2 p-4" })}>
-          Card {i + 1}
+      {[...Array(10).keys()].map((index) => (
+        <div key={index} {...getItemProps({ className: "flex-shrink-0 w-64 h-40 bg-gray-100 m-2 p-4" })}>
+          Card {index + 1}
         </div>
       ))}
     </div>
@@ -80,9 +80,9 @@ function VerticalDragScroll() {
 
   return (
     <div {...getRootProps()}>
-      {Array.from({ length: 10 }).map((_, i) => (
-        <div key={i} {...getItemProps({ className: "w-full h-40 bg-gray-100 my-2 p-4" })}>
-          Card {i + 1}
+      {[...Array(10).keys()].map((index) => (
+        <div key={index} {...getItemProps({ className: "w-full h-40 bg-gray-100 my-2 p-4" })}>
+          Card {index + 1}
         </div>
       ))}
     </div>
@@ -102,9 +102,9 @@ function BidirectionalDragScroll() {
 
   return (
     <div {...getRootProps({ className: "h-96 flex-wrap" })}>
-      {Array.from({ length: 20 }).map((_, i) => (
-        <div key={i} {...getItemProps({ className: "w-64 h-40 bg-gray-100 m-2 p-4" })}>
-          Card {i + 1}
+      {[...Array(20).keys()].map((index) => (
+        <div key={index} {...getItemProps({ className: "w-64 h-40 bg-gray-100 m-2 p-4" })}>
+          Card {index + 1}
         </div>
       ))}
     </div>
@@ -168,15 +168,16 @@ function StyledDragScroll() {
   return (
     <div className="w-full max-w-4xl mx-auto">
       <h2 className="text-xl font-bold mb-4">Scrollable Content</h2>
+
       <div {...getRootProps()}>
-        {Array.from({ length: 10 }).map((_, i) => (
+        {[...Array(10).keys()].map((index) => (
           <div
-            key={i}
+            key={index}
             {...getItemProps({
               className: "flex-shrink-0 w-64 h-40 m-2 p-4 flex items-center justify-center"
             })}
           >
-            Card {i + 1}
+            Card {index + 1}
           </div>
         ))}
       </div>
@@ -190,6 +191,8 @@ function StyledDragScroll() {
 ```tsx
 import { useDragScroll } from '@zayne-labs/ui-react/ui/drag-scroll'
 
+
+// Root level extra props
 function DragScrollWithExtraProps() {
   const { getRootProps, getItemProps } = useDragScroll({
     extraRootProps: {
@@ -206,6 +209,34 @@ function DragScrollWithExtraProps() {
   return (
     <div {...getRootProps()}>
       {/* Scroll items */}
+    </div>
+  )
+}
+
+// Getter level extra props
+
+function DragScrollWithExtraProps() {
+  const { getRootProps, getItemProps } = useDragScroll()
+
+  return (
+    <div
+      {...getRootProps({
+        "aria-label": "Scrollable content",
+        id: "scroll-container",
+        onMouseEnter: () => console.log("Mouse entered scroll area")
+      })}
+    >
+      {[...Array(10).keys()].map((index) => (
+        <div
+          key={index}
+          {...getItemProps({
+            role: "listitem",
+            tabIndex: 0
+          })}
+        >
+          Card {index + 1}
+        </div>
+      ))}
     </div>
   )
 }

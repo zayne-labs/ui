@@ -1,10 +1,10 @@
 # Form
 
-A flexible and powerful form component with zero styling, built on top of react-hook-form.
+A lightweight wrapper around react-hook-form that provides a compound component API.
 
 ## Overview
 
-The Form component provides a comprehensive solution for building forms with validation, field management, and accessibility features. It uses a compound component pattern to create a clean, declarative API while leveraging the power of react-hook-form under the hood.
+The Form component simplifies working with react-hook-form by providing a set of composable components. It handles the form context and validation while letting you focus on the UI.
 
 ## Key Features
 
@@ -13,7 +13,7 @@ The Form component provides a comprehensive solution for building forms with val
 - **Compound Component Pattern** - Composable form elements with clear semantics
 - **Robust Form Validation** - Built-in validation handling with customizable error messages
 - **Accessible By Default** - Proper ARIA attributes and form relationships
-- **Field Subscription** - Subscribe to field values and form state changes
+- **Field Subscription** - Subscribe to field values and form state changes at the component level and avoid needless re-renders
 - **Typescript Support** - Full type inference for form values and validation rules
 
 ## Installation
@@ -55,19 +55,19 @@ import { useForm } from 'react-hook-form';
 import { Form } from '@zayne-labs/ui-react/form';
 
 function LoginForm() {
-  const form = useForm({
+  const methods = useForm({
     defaultValues: {
       email: '',
       password: '',
     },
   });
 
-  const onSubmit = (values) => {
-    console.log(values);
-  };
+  const onSubmit = methods.handleSubmit((data) => {
+    console.log(data);
+  });
 
   return (
-    <Form.Root methods={form} onSubmit={form.handleSubmit(onSubmit)}>
+    <Form.Root methods={methods} onSubmit={onSubmit}>
       <Form.Field name="email">
         <Form.Label>Email</Form.Label>
         <Form.Input />
@@ -80,7 +80,10 @@ function LoginForm() {
         <Form.ErrorMessage />
       </Form.Field>
 
-      <Form.Submit className="mt-4 px-4 py-2 bg-blue-500 text-white rounded">
+      {/* This just renders a button with the type of submit under the hood */}
+      <Form.Submit
+        className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+      >
         Log in
       </Form.Submit>
     </Form.Root>
@@ -103,10 +106,9 @@ const formSchema = z.object({
   password: z.string().min(8, "Password must be at least 8 characters"),
 });
 
-type FormValues = z.infer<typeof formSchema>;
 
 function SignupForm() {
-  const form = useForm<FormValues>({
+  const methods = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       username: '',
@@ -115,12 +117,12 @@ function SignupForm() {
     },
   });
 
-  const onSubmit = (values: FormValues) => {
-    console.log(values);
-  };
+  const onSubmit = methods.handleSubmit((data) => {
+    console.log(data);
+  });
 
   return (
-    <Form.Root methods={form} onSubmit={form.handleSubmit(onSubmit)}>
+    <Form.Root methods={methods} onSubmit={onSubmit}>
       <Form.Field name="username">
         <Form.Label>Username</Form.Label>
         <Form.Input />
@@ -141,9 +143,16 @@ function SignupForm() {
         <Form.ErrorMessage />
       </Form.Field>
 
-      <Form.Submit className="mt-6 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-        Sign up
-      </Form.Submit>
+      <Form.SubscribeToFormState>
+        {({ isSubmitting, isValid }) => (
+          <Form.Submit
+            className="mt-6 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-blue-300 disabled:cursor-not-allowed"
+            disabled={isSubmitting || !isValid}
+          >
+            {isSubmitting ? "Submitting..." : "Sign up"}
+          </Form.Submit>
+        )}
+      </Form.SubscribeToFormState>
     </Form.Root>
   );
 }
@@ -156,7 +165,7 @@ import { useForm } from 'react-hook-form';
 import { Form } from '@zayne-labs/ui-react/ui';
 
 function ProfileForm() {
-  const form = useForm({
+  const methods = useForm({
     defaultValues: {
       fullName: '',
       email: '',
@@ -167,12 +176,12 @@ function ProfileForm() {
     },
   });
 
-  const onSubmit = (data) => {
+  const onSubmit = methods.handleSubmit((data) => {
     console.log(data);
-  };
+  });
 
   return (
-    <Form.Root methods={form} onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+    <Form.Root methods={methods} onSubmit={onSubmit} className="space-y-6">
       <Form.Field name="fullName">
         <Form.Label className="text-sm font-medium">Full Name</Form.Label>
         <Form.Input className="mt-1 border rounded p-2 w-full" />
@@ -181,35 +190,45 @@ function ProfileForm() {
 
       <Form.Field name="email">
         <Form.Label className="text-sm font-medium">Email</Form.Label>
+
         <Form.InputGroup className="mt-1">
           <Form.InputLeftItem className="border-y border-l rounded-l bg-gray-50 px-3">
             @
           </Form.InputLeftItem>
+
           <Form.Input className="border rounded-r p-2 w-full" />
         </Form.InputGroup>
+
         <Form.ErrorMessage />
       </Form.Field>
 
       <Form.Field name="bio">
         <Form.Label className="text-sm font-medium">Bio</Form.Label>
+
+        {/* Wrapper over `<Form.Input type="textarea"/>` */}
         <Form.TextArea
           className="mt-1 border rounded p-2 w-full"
           rows={4}
         />
+
         <Form.Description className="mt-1 text-xs text-gray-500">
           Write a short bio about yourself
         </Form.Description>
+
         <Form.ErrorMessage />
       </Form.Field>
 
       <Form.Field name="role">
         <Form.Label className="text-sm font-medium">Role</Form.Label>
+
+         {/* Wrapper over `<Form.Input type="select"/>` */}
         <Form.Select className="mt-1 border rounded p-2 w-full">
           <option value="">Select a role</option>
           <option value="user">User</option>
           <option value="admin">Admin</option>
           <option value="moderator">Moderator</option>
         </Form.Select>
+
         <Form.ErrorMessage />
       </Form.Field>
 
@@ -218,20 +237,24 @@ function ProfileForm() {
           <Form.Input type="checkbox" className="h-4 w-4" />
           <Form.Label className="text-sm">Subscribe to newsletter</Form.Label>
         </div>
+
         <Form.ErrorMessage />
       </Form.Field>
 
       <div className="space-y-2">
         <span className="text-sm font-medium">Notification Preferences</span>
-        <Form.Field name="notifications" className="flex items-center gap-2">
+
+        <Form.Field name="notifications.0" className="flex items-center gap-2">
           <Form.Input type="checkbox" value="email" className="h-4 w-4" />
           <Form.Label className="text-sm">Email</Form.Label>
         </Form.Field>
-        <Form.Field name="notifications" className="flex items-center gap-2">
+
+        <Form.Field name="notifications.1" className="flex items-center gap-2">
           <Form.Input type="checkbox" value="sms" className="h-4 w-4" />
           <Form.Label className="text-sm">SMS</Form.Label>
         </Form.Field>
-        <Form.Field name="notifications" className="flex items-center gap-2">
+
+        <Form.Field name="notifications.2" className="flex items-center gap-2">
           <Form.Input type="checkbox" value="push" className="h-4 w-4" />
           <Form.Label className="text-sm">Push Notifications</Form.Label>
         </Form.Field>

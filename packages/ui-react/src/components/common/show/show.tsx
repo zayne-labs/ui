@@ -2,7 +2,7 @@
 
 import * as React from "react";
 
-import { getMultipleSlots } from "@zayne-labs/toolkit-react/utils";
+import { getMultipleSlots } from "@/lib/utils/getSlot";
 import { assert, isFunction } from "@zayne-labs/toolkit-type-helpers";
 
 type ShowProps<TWhen> = {
