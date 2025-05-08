@@ -2,6 +2,7 @@
 
 import * as React from "react";
 
+import { Show } from "@/components/common";
 import { getElementList } from "@/components/common/for";
 import { cnMerge } from "@/lib/utils/cn";
 import type { CssWithCustomProperties, PolymorphicProps } from "@zayne-labs/toolkit-react/utils";
@@ -88,33 +89,32 @@ export function CarouselControls(props: CarouselControlProps) {
 
 	return (
 		<div className={cnMerge("absolute inset-0 flex justify-between", classNames?.base)}>
-			{icon?.iconType ? (
-				<>
-					<CarouselButton
-						variant="prev"
-						classNames={{
-							defaultIcon: classNames?.defaultIcon,
-							iconContainer: cnMerge(
-								icon.iconType === "nextIcon" && "rotate-180",
-								classNames?.iconContainer
-							),
-						}}
-						icon={icon.icon}
-					/>
-					<CarouselButton
-						variant="next"
-						classNames={{
-							defaultIcon: classNames?.defaultIcon,
-							iconContainer: cnMerge(
-								icon.iconType === "prevIcon" && "rotate-180",
-								classNames?.iconContainer
-							),
-						}}
-						icon={icon.icon}
-					/>
-				</>
-			) : (
-				<>
+			<Show.Root when={icon?.iconType}>
+				<CarouselButton
+					variant="prev"
+					classNames={{
+						defaultIcon: classNames?.defaultIcon,
+						iconContainer: cnMerge(
+							icon?.iconType === "nextIcon" && "rotate-180",
+							classNames?.iconContainer
+						),
+					}}
+					icon={icon?.icon}
+				/>
+
+				<CarouselButton
+					variant="next"
+					classNames={{
+						defaultIcon: classNames?.defaultIcon,
+						iconContainer: cnMerge(
+							icon?.iconType === "prevIcon" && "rotate-180",
+							classNames?.iconContainer
+						),
+					}}
+					icon={icon?.icon}
+				/>
+
+				<Show.Otherwise>
 					<CarouselButton
 						variant="prev"
 						classNames={{
@@ -123,6 +123,7 @@ export function CarouselControls(props: CarouselControlProps) {
 						}}
 						icon={icon?.prev}
 					/>
+
 					<CarouselButton
 						variant="next"
 						classNames={{
@@ -131,8 +132,8 @@ export function CarouselControls(props: CarouselControlProps) {
 						}}
 						icon={icon?.next}
 					/>
-				</>
-			)}
+				</Show.Otherwise>
+			</Show.Root>
 		</div>
 	);
 }

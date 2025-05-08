@@ -1,6 +1,6 @@
 import type { StoreApi } from "@zayne-labs/toolkit-core";
 import type { DiscriminatedRenderProps } from "@zayne-labs/toolkit-react/utils";
-import type { Prettify } from "@zayne-labs/toolkit-type-helpers";
+import type { Prettify, UnionDiscriminator } from "@zayne-labs/toolkit-type-helpers";
 
 // Carousel store types
 export type ImagesType = Array<Record<string, string>> | string[];
@@ -59,16 +59,12 @@ export type CarouselControlProps = {
 	};
 
 	// == Allow for custom icons, either passing both or just one of the two
-	icon?:
-		| {
-				icon?: React.ReactElement;
-				iconType: "nextIcon" | "prevIcon";
-		  }
-		| {
-				iconType?: null;
-				next?: React.ReactElement;
-				prev?: React.ReactElement;
-		  };
+	icon?: UnionDiscriminator<
+		[
+			{ icon?: React.ReactElement; iconType: "nextIcon" | "prevIcon" },
+			{ next?: React.ReactElement; prev?: React.ReactElement },
+		]
+	>;
 };
 
 export type CarouselIndicatorProps = {
