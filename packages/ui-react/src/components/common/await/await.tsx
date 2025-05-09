@@ -47,7 +47,7 @@ function AwaitInner<TValue>(props: AwaitInnerProps<TValue>) {
 
 	const slotProps = asChild && { promise, result };
 
-	const selectedChildren = typeof children === "function" ? children : render;
+	const selectedChildren = children ?? render;
 
 	const resolvedChildren = isFunction(selectedChildren) ? selectedChildren(result) : selectedChildren;
 
