@@ -175,6 +175,12 @@ export type UseDropZoneProps = {
 	 * Custom validation function that runs after all file validation has occurred
 	 */
 	validatorForAllFiles?: FileValidationOptions["validatorForAllFiles"];
+
+	/**
+	 * Whether to allow the default file picker via the file input element
+	 * @default true
+	 */
+	withDefaultFilePicker?: boolean;
 };
 
 export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
@@ -197,6 +203,7 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 		onUploadSuccess,
 		validator,
 		validatorForAllFiles,
+		withDefaultFilePicker = true,
 	} = props ?? {};
 
 	const inputRef = useRef<HTMLInputElement>(null);
@@ -421,7 +428,7 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 				...mergedInputProps,
 				accept: allowedFileTypes ? allowedFileTypes.join(", ") : mergedInputProps.accept,
 				className: cnMerge(
-					"absolute inset-0 z-[100] cursor-pointer opacity-0",
+					withDefaultFilePicker ? "absolute inset-0 z-[100] cursor-pointer opacity-0" : "hidden",
 					classNames?.input,
 					mergedInputProps.className
 				),
@@ -443,6 +450,7 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 			dropZoneState.isDragging,
 			handleFileUpload,
 			multiple,
+			withDefaultFilePicker,
 		]
 	);
 
