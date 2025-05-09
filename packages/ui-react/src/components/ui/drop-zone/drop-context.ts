@@ -1,7 +1,7 @@
 import { createCustomContext } from "@zayne-labs/toolkit-react";
-import type { DropZoneResult } from "./use-drop-zone";
+import type { UseDropZoneResult } from "./use-drop-zone";
 
-type DropZoneContext = DropZoneResult;
+type DropZoneContext = UseDropZoneResult;
 
 export const [DropZoneContextProvider, useDropZoneContext] = createCustomContext<DropZoneContext>({
 	hookName: "useDropZoneContext",

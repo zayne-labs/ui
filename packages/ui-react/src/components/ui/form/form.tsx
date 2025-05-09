@@ -52,10 +52,9 @@ import { getEyeIcon, getFieldErrorMessage } from "./utils";
 
 export type FieldValues = Record<string, unknown>;
 
-type FormRootProps<TFieldValues extends FieldValues> = FormRootContext
+type FormRootProps<TFieldValues extends FieldValues> = Partial<FormRootContext>
 	& React.ComponentPropsWithoutRef<"form"> & {
 		children: React.ReactNode;
-
 		methods: UseFormReturn<TFieldValues>;
 	};
 

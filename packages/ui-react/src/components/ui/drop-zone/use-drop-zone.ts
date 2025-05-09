@@ -73,7 +73,7 @@ export type DropZoneActions = {
 	removeFile: (fileToRemoveOrId: string | FileWithPreview) => void;
 };
 
-export type DropZoneResult = {
+export type UseDropZoneResult = {
 	dropZoneActions: DropZoneActions;
 	dropZoneState: DropZoneState;
 	getContainerProps: (containerProps?: ContainerProps) => ContainerProps;
@@ -81,7 +81,7 @@ export type DropZoneResult = {
 	inputRef: React.RefObject<HTMLInputElement | null>;
 };
 
-export type DropZoneProps = {
+export type UseDropZoneProps = {
 	/**
 	 * Allowed file types to be uploaded.
 	 */
@@ -142,7 +142,7 @@ export type DropZoneProps = {
 	/**
 	 * Callback function to be called when the render props change
 	 */
-	onRenderPropsChange?: (props: DropZoneResult) => void;
+	onRenderPropsChange?: (props: UseDropZoneResult) => void;
 
 	/**
 	 * Callback function to be called when new files are uploaded
@@ -177,7 +177,7 @@ export type DropZoneProps = {
 	validatorForAllFiles?: FileValidationOptions["validatorForAllFiles"];
 };
 
-export const useDropZone = (props?: DropZoneProps): DropZoneResult => {
+export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 	const {
 		allowedFileTypes,
 		classNames,
@@ -374,7 +374,7 @@ export const useDropZone = (props?: DropZoneProps): DropZoneResult => {
 		inputRef.current?.click();
 	});
 
-	const getContainerProps: DropZoneResult["getContainerProps"] = useCallback(
+	const getContainerProps: UseDropZoneResult["getContainerProps"] = useCallback(
 		(containerProps) => {
 			const mergedContainerProps = mergeTwoProps(extraContainerProps, containerProps);
 
@@ -413,7 +413,7 @@ export const useDropZone = (props?: DropZoneProps): DropZoneResult => {
 		]
 	);
 
-	const getInputProps: DropZoneResult["getInputProps"] = useCallback(
+	const getInputProps: UseDropZoneResult["getInputProps"] = useCallback(
 		(inputProps) => {
 			const mergedInputProps = mergeTwoProps(extraInputProps, inputProps);
 
@@ -465,7 +465,7 @@ export const useDropZone = (props?: DropZoneProps): DropZoneResult => {
 			getContainerProps,
 			getInputProps,
 			inputRef,
-		} satisfies DropZoneResult;
+		} satisfies UseDropZoneResult;
 
 		savedOnRenderPropsChange(propsForRenderFn);
 

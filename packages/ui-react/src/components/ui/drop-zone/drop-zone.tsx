@@ -10,18 +10,18 @@ import { Fragment as ReactFragment, isValidElement } from "react";
 import { DropZoneContextProvider, useDropZoneContext } from "./drop-context";
 import {
 	type ContainerProps,
-	type DropZoneProps,
-	type DropZoneResult,
 	type InputProps,
+	type UseDropZoneProps,
+	type UseDropZoneResult,
 	useDropZone,
 } from "./use-drop-zone";
 
-type DropZoneRenderPropType = DiscriminatedRenderProps<
-	React.ReactNode | ((props: DropZoneResult) => React.ReactNode)
+export type DropZoneRenderPropType = DiscriminatedRenderProps<
+	React.ReactNode | ((props: UseDropZoneResult) => React.ReactNode)
 >;
 
-type DropZoneRootProps = DropZoneProps
-	& DropZoneRenderPropType & {
+export type DropZoneRootProps = DropZoneRenderPropType
+	& UseDropZoneProps & {
 		/**
 		 * Controls whether to include internal elements (root and input) or not.
 		 */
@@ -90,7 +90,7 @@ export function DropZoneContainer<TElement extends React.ElementType = "div">(
 
 type SlotComponentProps = GetSlotComponentProps<
 	"preview",
-	React.ReactNode | ((props: DropZoneResult) => React.ReactNode)
+	React.ReactNode | ((props: UseDropZoneResult) => React.ReactNode)
 >;
 
 export const DropZoneImagePreview = withSlotNameAndSymbol<SlotComponentProps>("preview", (props) => {
