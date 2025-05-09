@@ -66,36 +66,34 @@ Here's a drag-and-drop file uploader:
 
 ```tsx
 import { DropZone } from '@zayne-labs/ui-react/ui/drop-zone'
+import { toast } from 'sonner'
 
 function ImageUploader() {
   return (
     <DropZone.Root
-      allowedFileTypes={['.jpg', '.png']}
+      allowedFileTypes={['image/*']}
+      maxFileCount={4}
+      onUploadSuccess={(ctx) => toast.success("Success", { description: ctx.message })}
       maxFileSize={5}
-      onUploadSuccess={(file) => console.log('Uploaded:', file.name)}
     >
-      {({ dropZoneState }) => (
-        <div className="p-4 border-2 border-dashed rounded hover:border-blue-500">
-          {/* Upload area */}
-          {dropZoneState.isDragging ? (
-            <p>Drop your images here!</p>
-          ) : (
-            <p>Drag images here or click to browse</p>
-          )}
+      <div className="p-6 border rounded-lg bg-gray-50">
+        <p className="text-center text-gray-600">
+          Drop images or click to upload
+        </p>
+      </div>
 
-          {/* Preview grid */}
-          <div className="mt-4 grid grid-cols-3 gap-4">
-            {dropZoneState.filesWithPreview.map((file) => (
-              <img
-                key={file.id}
-                src={file.preview}
-                alt={file.file.name}
-                className="w-full aspect-square object-cover rounded"
-              />
-            ))}
-          </div>
-        </div>
-      )}
+      <DropZone.ImagePreview>
+        {({ dropZoneState }) => (
+          dropZoneState.filesWithPreview.map((file) => (
+            <img
+              key={file.id}
+              src={file.preview}
+              alt={file.name}
+              className="rounded-lg aspect-square object-cover"
+            />
+          ))
+        )}
+      </DropZone.ImagePreview>
     </DropZone.Root>
   )
 }
