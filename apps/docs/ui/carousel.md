@@ -47,7 +47,7 @@ The Carousel consists of several composable parts:
 ## Basic Usage
 
 ```tsx
-import { Carousel } from '@zayne-labs/ui-react/carousel'
+import { Carousel } from '@zayne-labs/ui-react/ui/carousel'
 
 function BasicCarousel() {
   // Images array for the carousel

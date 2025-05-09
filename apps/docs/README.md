@@ -1,47 +1,49 @@
-# Overview
+# Introduction
 
-Welcome to the official documentation for @zayne-labs/ui - a collection of multi-framework UI utilities and unstyled components.
+@zayne-labs/ui is a collection of unstyled UI and utility components, inspired by the composable patterns of Radix UI and Shadcn. Originally built to fill gaps in existing implementations, it's grown into a flexible toolkit that might help solve problems in your projects too.
 
-## Introduction
+## Current Status
 
-@zayne-labs/ui provides a comprehensive suite of framework-agnostic UI utilities and unstyled components. Our library is designed with flexibility and developer experience in mind, giving you complete control over your UI design while providing powerful functionality out of the box.
+We currently offer a production-ready React implementation, built on modern patterns and best practices. Our components are:
 
-Currently, we offer a robust React implementation, with plans to support other frameworks like Vue, Svelte, and Solid in the future.
+- Fully typed with TypeScript
+- Tree-shakeable for small bundles
+- Well-documented with examples
+- Actively maintained
 
-## Key Features
+## Framework Support
 
-- 🚀 **Framework-agnostic design** - Core concepts work across different UI frameworks (React support available now, more coming soon!)
-- 🎨 **Zero-styling approach** - Full control over your UI design with no pre-defined styles to override
-- 🔧 **Highly customizable** - Flexible hooks and components that adapt to your specific needs
-- 📦 **Tree-shakeable modules** - Only import what you need, keeping your bundle size minimal
-- 🌐 **Multi-framework vision** - Use the same concepts across different frameworks (React now, Vue/Svelte/Solid coming soon)
+- **React** - Available now
+- **Vue** - Coming soon
+- **Svelte** - Coming soon
+- **Solid** - Coming soon
 
-## Component Library
+## What's Inside
 
-Our library is organized into two main categories of components, each designed to solve specific UI challenges:
+- 🎨 **Zero Styles** - Style however you want
+- 📦 **Small Bundle** - Import only what you need
+- 🔧 **Easy to Use** - Simple APIs, great TypeScript support
 
-### UI Components
+## Available Components
 
-UI Components provide interactive elements and complex UI patterns with zero styling:
+### Interactive UI
 
-- [Card](/ui/card) - Composable card layouts with flexible content areas
-- [Carousel](/ui/carousel) - Fully accessible carousel/slider component
-- [DragScroll](/ui/drag-scroll) - Add drag-to-scroll behavior to any scrollable container
-- [DropZone](/ui/drop-zone) - File upload zone with drag-and-drop support
-- [Form](/ui/form) - Flexible form handling with field subscriptions and validation
+- **Card** - Flexible container component for grouping related content
+- **Carousel** - Customizable slideshow for cycling through elements
+- **DragScroll** - Add drag-to-scroll behavior to any container
+- **DropZone** - File upload component with drag-and-drop support
+- **Form** - Composable form components with validation and state management
 
-### Utility Components
+### Flow Control
 
-Utility Components simplify common UI patterns and make your code more declarative:
-
-- [Await](/utility/await) - Handle async states elegantly with built-in loading and error states
-- [ErrorBoundary](/utility/error-boundary) - Catch and handle errors gracefully
-- [For](/utility/for) - Iterative rendering with built-in empty states
-- [Show](/utility/show) - Simplified conditional rendering
-- [Slot](/utility/slot) - Flexible component composition pattern
-- [SuspenseWithBoundary](/utility/suspense-with-boundary) - Combines React Suspense with error boundary capabilities
-- [Switch](/utility/switch) - Conditional rendering with pattern matching
-- [Teleport](/utility/teleport) - Render content to a different part of the DOM
+- **Await** - Handle async states declaratively
+- **For** - Iterate over arrays and objects with built-in keying
+- **Show** - Conditional rendering with fallback support
+- **Switch** - Pattern matching for rendering different states
+- **Slot** - Component composition with named slots
+- **ErrorBoundary** - Catch and handle React component errors
+- **SuspenseWithBoundary** - Combined Suspense and ErrorBoundary
+- **Teleport** - Render components anywhere in the DOM tree
 
 ## Installation
 
@@ -58,26 +60,70 @@ yarn add @zayne-labs/ui-react
 
 ## Quick Start
 
-Here's a simple example using the `Switch` utility component:
+### File Upload Example
+
+Here's a drag-and-drop file uploader:
 
 ```tsx
-import { Switch } from '@zayne-labs/ui-react/common'
+import { DropZone } from '@zayne-labs/ui-react/ui/drop-zone'
 
-function App() {
-  const status = "loading"
+function ImageUploader() {
+  return (
+    <DropZone.Root
+      allowedFileTypes={['.jpg', '.png']}
+      maxFileSize={5}
+      onUploadSuccess={(file) => console.log('Uploaded:', file.name)}
+    >
+      {({ dropZoneState }) => (
+        <div className="p-4 border-2 border-dashed rounded hover:border-blue-500">
+          {/* Upload area */}
+          {dropZoneState.isDragging ? (
+            <p>Drop your images here!</p>
+          ) : (
+            <p>Drag images here or click to browse</p>
+          )}
 
+          {/* Preview grid */}
+          <div className="mt-4 grid grid-cols-3 gap-4">
+            {dropZoneState.filesWithPreview.map((file) => (
+              <img
+                key={file.id}
+                src={file.preview}
+                alt={file.file.name}
+                className="w-full aspect-square object-cover rounded"
+              />
+            ))}
+          </div>
+        </div>
+      )}
+    </DropZone.Root>
+  )
+}
+```
+
+### Control Flow Example
+
+Handle different states with `Switch`:
+
+```tsx
+import { Switch } from '@zayne-labs/ui-react/common/switch'
+
+function StatusBadge({ status }: { status: 'active' | 'inactive' | 'pending' }) {
   return (
     <Switch condition={status}>
-      <Switch.Match when="loading">
-        <div>Loading your content...</div>
+      <Switch.Match when="active">
+        <span className="text-green-500">●</span>
+        <span>Active</span>
       </Switch.Match>
 
-      <Switch.Match when="error">
-        <div>Oops! Something went wrong</div>
+      <Switch.Match when="inactive">
+        <span className="text-gray-500">○</span>
+        <span>Inactive</span>
       </Switch.Match>
 
       <Switch.Default>
-        <div>Content loaded successfully!</div>
+        <span className="text-yellow-500">◐</span>
+        <span>Pending</span>
       </Switch.Default>
     </Switch>
   )
@@ -93,23 +139,16 @@ Our documentation is organized into several sections to help you find what you n
 - **Utility Components** - Documentation for each utility component
 - **Advanced Usage** - Deep dives into complex use cases
 - **API Reference** - Detailed API documentation
-- **Migration Guide** - Help with upgrading from previous versions
 
-## Philosophy
+## Need Help?
 
-@zayne-labs/ui is built on a few core principles:
-
-1. **Zero styling by default** - We believe styling decisions should be yours, not ours. Our components provide functionality without enforcing design opinions.
-
-2. **Framework agnostic concepts** - While our implementation is currently React-focused, our core concepts are designed to work across frameworks.
-
-3. **Developer experience first** - We strive for intuitive APIs that make complex UI patterns simple to implement.
-
-4. **Flexibility without complexity** - Components should be easy to use by default, but flexible enough for advanced customization.
+- 📖 Check component docs in the [ui](/ui) and [common](/common) folders
+- 🐛 Found a bug? [Open an issue](https://github.com/zayne-labs/ui/issues)
+- 💡 Have an idea? [Start a discussion](https://github.com/zayne-labs/ui/discussions)
 
 ## Contributing
 
-We welcome contributions! Please see our [contributing guidelines](https://github.com/zayne-labs/contribute.git) for details.
+We welcome contributions! See our [contributing guide](https://github.com/zayne-labs/contribute.git).
 
 ## License
 

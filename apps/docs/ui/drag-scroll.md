@@ -53,7 +53,7 @@ function BasicDragScroll() {
 ### Horizontal Scroll (Default)
 
 ```tsx
-import { useDragScroll } from '@zayne-labs/ui-react/drag-scroll'
+import { useDragScroll } from '@zayne-labs/ui-react/ui/drag-scroll'
 
 function HorizontalDragScroll() {
   const { getRootProps, getItemProps } = useDragScroll({

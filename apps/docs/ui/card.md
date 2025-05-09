@@ -32,7 +32,7 @@ yarn add @zayne-labs/ui-react
 ## Basic Usage
 
 ```tsx
-import { Card } from '@zayne-labs/ui-react/card'
+import { Card } from '@zayne-labs/ui-react/ui/card'
 
 function BasicCard() {
   return (

@@ -20,7 +20,7 @@ pnpm add @zayne-labs/ui-react
 ## Hook Usage
 
 ```tsx
-import { useDropZone } from '@zayne-labs/ui-react/drop-zone'
+import { useDropZone } from '@zayne-labs/ui-react/ui/drop-zone'
 
 function FileUpload() {
   const {

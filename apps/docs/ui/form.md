@@ -54,7 +54,7 @@ The Form component consists of several composable parts:
 ## Basic Usage
 
 ```tsx
-import { Form } from '@zayne-labs/ui-react'
+import { Form } from '@zayne-labs/ui-react/ui/form'
 
 function LoginForm() {
   const methods = useForm({
@@ -101,7 +101,7 @@ function LoginForm() {
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { Form } from '@zayne-labs/ui-react/ui';
+import { Form } from '@zayne-labs/ui-react/ui/form';
 
 // Define validation schema
 const formSchema = z.object({
@@ -166,7 +166,7 @@ function SignupForm() {
 
 ```tsx
 import { useForm } from 'react-hook-form';
-import { Form } from '@zayne-labs/ui-react/ui';
+import { Form } from '@zayne-labs/ui-react/ui/form';
 
 function ProfileForm() {
   const methods = useForm({
@@ -470,7 +470,7 @@ Displays validation errors in two ways:
 
 ```tsx
 import { useForm } from 'react-hook-form';
-import { Form } from '@zayne-labs/ui-react/ui';
+import { Form } from '@zayne-labs/ui-react/ui/form';
 
 function FormWithStateSubscription() {
   const form = useForm({
@@ -593,7 +593,7 @@ Component that subscribes to form state changes like validation, submission stat
 
 ```tsx
 import { useForm } from 'react-hook-form';
-import { Form } from '@zayne-labs/ui-react/ui';
+import { Form } from '@zayne-labs/ui-react/ui/form';
 
 function SubscriptionExample() {
   const form = useForm();
