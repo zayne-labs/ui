@@ -1,5 +1,14 @@
 # @zayne-labs/ui-react
 
+## 0.9.4
+
+### Patch Changes
+
+- a68c115: 📝 docs(docs): Update main README and remove legacy component docs
+  🗑️ rm(docs): Remove individual component documentation markdown files
+  ✨ feat(components): Add new common documentation structure
+  📦 chore(package): Update ui-react package dependencies
+
 ## 0.9.0
 
 ### Minor Changes
