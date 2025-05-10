@@ -4,15 +4,15 @@ A utility component for declaratively handling async operations with built-in Su
 
 ## Overview
 
-The Await component provides a straightforward approach to handling asynchronous operations in React applications. It wraps React's Suspense and ErrorBoundary functionality in a declarative API, making it easy to handle loading states and errors while waiting for promises to resolve.
+The Await component provides a straightforward approach to handling asynchronous operations in React applications. It wraps React's `use` hook along with Suspense and ErrorBoundary functionality in a declarative API, making it easy to handle loading states and errors while waiting for promises to resolve.
 
 ## Key Features
 
 - **Built-in Suspense** - Automatic loading states while promises resolve
-- **Error Boundary Integration** - Graceful error handling for failed promises
+- **Optional Error Boundary** - Configurable error handling with `withErrorBoundary` prop
 - **Declarative API** - Simple prop-based approach to async operations
 - **Render Props Pattern** - Flexible rendering of resolved promise values
-- **Slot Component Support** - Pass resolved values to child components
+- **Slot Component Support** - Pass resolved values to child components via `asChild`
 - **TypeScript Support** - Full type inference for promise values
 
 ## Installation
@@ -64,7 +64,7 @@ function fetchUser(id) {
 ## Error Handling
 
 ```tsx
-import { Await } from '@zayne-labs/ui-react/common';
+import { Await } from '@zayne-labs/ui-react/common/await';
 
 function ProductDetails({ productId }) {
   const productPromise = fetchProduct(productId);
@@ -95,52 +95,12 @@ function ProductDetails({ productId }) {
 }
 ```
 
-## Custom Loading States
+## Server Component Support
+
+When using Await in a Server Component, you can't use render props since they're not supported in RSC. Instead, use the `asChild` prop to pass the resolved value to a the child component:
 
 ```tsx
-import { Await } from '@zayne-labs/ui-react/common';
-
-function DataDashboard() {
-  const dashboardDataPromise = fetchDashboardData();
-
-  return (
-    <div className="dashboard">
-      <h1>Dashboard</h1>
-
-      <Await
-        promise={dashboardDataPromise}
-        fallback={
-          <div className="loading-container">
-            <div className="spinner"></div>
-            <p>Loading your personalized dashboard...</p>
-            <div className="progress-bar">
-              <div className="progress-fill animate-pulse"></div>
-            </div>
-          </div>
-        }
-      >
-        {(data) => (
-          <div className="dashboard-grid">
-            {data.widgets.map(widget => (
-              <div key={widget.id} className="widget">
-                <h3>{widget.title}</h3>
-                <div className="widget-content">{widget.content}</div>
-              </div>
-            ))}
-          </div>
-        )}
-      </Await>
-    </div>
-  );
-}
-```
-
-## Using with Slot Components
-
-The `asChild` prop allows you to pass the resolved promise value to a child component:
-
-```tsx
-import { Await } from '@zayne-labs/ui-react/common';
+import { Await } from '@zayne-labs/ui-react/common/await';
 import { UserCard } from './components/UserCard';
 
 function UserDisplay({ userId }) {
@@ -240,7 +200,7 @@ function DataComponent() {
 |------|------|---------|-------------|
 | `promise` | `Promise<TValue>` | *Required* | The promise to resolve |
 | `fallback` | `React.ReactNode` | `undefined` | Content to show while the promise is pending |
-| `errorFallback` | `(props: { error: Error; reset: () => void }) => React.ReactNode` | `undefined` | Component or function to render when the promise is rejected |
+| `errorFallback` | `React.ReactNode \| ((props: { error: Error; reset: () => void }) => React.ReactNode)` | `undefined` | UI to show when an error occurs |
 | `withErrorBoundary` | `boolean` | `true` | Whether to wrap the component in an error boundary |
 | `asChild` | `boolean` | `false` | Whether to merge props onto the child element |
 | `children` | `React.ReactNode \| ((result: TValue) => React.ReactNode)` | `undefined` | Child elements or render function |

@@ -4,16 +4,16 @@ A utility component for gracefully handling errors in React component trees.
 
 ## Overview
 
-The ErrorBoundary component provides a way to catch JavaScript errors anywhere in a child component tree, log those errors, and display a fallback UI instead of crashing the entire application. It builds upon React's error boundary pattern with additional features like error resetting and context integration.
+Taken from react-error-boundary, with modifications to support both React nodes and render functions for error states, automatic reset via keys, and imperative reset via API.
 
 ## Key Features
 
 - **Error Isolation** - Contains errors within a boundary to prevent full application crashes
-- **Fallback UI** - Displays alternative content when errors occur
-- **Reset Capability** - Allows recovery from errors without full page reloads
+- **Flexible Fallbacks** - Supports both React nodes and render functions for error states
+- **Reset Keys** - Automatically resets when specified dependencies change
+- **Imperative Reset** - Allows manual error recovery via `resetErrorBoundary`
 - **Context Integration** - Exposes error state and reset functions to child components
-- **Hook-Based API** - Provides imperative control over errors with `useErrorBoundary`
-- **TypeScript Support** - Full type safety for errors and fallback props
+- **TypeScript Support** - Full type safety for errors and props
 
 ## Installation
 
@@ -218,9 +218,9 @@ function App() {
 |------|------|---------|-------------|
 | `children` | `React.ReactNode` | *Required* | The components that might throw errors |
 | `fallback` | `React.ReactNode \| ((props: FallbackProps) => React.ReactNode)` | `undefined` | The UI to display when an error occurs |
-| `onError` | `(error: Error, info: React.ErrorInfo) => void` | `undefined` | Called when an error is caught |
-| `onReset` | `(details: { reason: string; parameters?: unknown[]; prev?: unknown[]; next?: unknown[] }) => void` | `undefined` | Called when the error boundary is reset |
-| `resetKeys` | `unknown[]` | `[]` | Array of values that will trigger boundary reset when changed |
+| `onError` | `(error: Error, info: React.ErrorInfo & { ownerStack?: string }) => void` | `undefined` | Called when an error is caught |
+| `onReset` | `(details: { next?: unknown[]; prev?: unknown[]; reason: "keys" } \| { parameters: unknown[]; reason: "imperative-api" }) => void` | `undefined` | Called when the error boundary is reset |
+| `resetKeys` | `unknown[]` | `undefined` | Array of values that will trigger boundary reset when changed |
 
 ### FallbackProps
 
@@ -228,7 +228,7 @@ Props passed to the fallback function:
 
 | Prop | Type | Description |
 |------|------|-------------|
-| `error` | `Error` | The error that was caught |
+| `error` | `unknown` | The error that was caught |
 | `resetErrorBoundary` | `(...args: unknown[]) => void` | Function to reset the error boundary |
 
 ### useErrorBoundary Hook
@@ -257,18 +257,22 @@ Values available through the ErrorBoundaryContext:
 The ErrorBoundary component is built as a class component because React's error boundary feature requires the use of lifecycle methods like `getDerivedStateFromError` and `componentDidCatch`, which are only available in class components.
 
 ```tsx
-// Internal implementation (simplified)
-class ErrorBoundary extends Component {
-  static getDerivedStateFromError(error) {
+class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  static getDerivedStateFromError(error: Error) {
     return { error, hasError: true };
   }
 
-  componentDidCatch(error, info) {
+  componentDidCatch(error: Error, info: React.ErrorInfo) {
     this.props.onError?.(error, info);
   }
 
-  resetErrorBoundary = () => {
-    this.setState({ error: null, hasError: false });
+  #resetErrorBoundary = (...parameters: unknown[]) => {
+    const { error } = this.state;
+
+    if (error !== null) {
+      this.props.onReset?.({ parameters, reason: "imperative-api" });
+      this.setState(initialState);
+    }
   };
 
   // ...render logic

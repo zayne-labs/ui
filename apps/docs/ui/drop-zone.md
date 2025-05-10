@@ -96,7 +96,7 @@ The Drop Zone component can be used in two ways:
 </DropZone.Root>
 ```
 
-1. **Manual Mode** (for full control)
+2. **Manual Mode** (for full control)
 
 ```tsx
 <DropZone.Root withInternalElements={false}>

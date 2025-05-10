@@ -5,22 +5,17 @@ import * as React from "react";
 import { getRegularChildren, getSingleSlot } from "@/lib/utils/getSlot";
 import { isFunction } from "@zayne-labs/toolkit-type-helpers";
 
-type ValidSwitchComponentType = React.ReactElement<SwitchMatchProps>;
+type ValidSwitchComponentType = React.ReactElement<SwitchMatchProps<unknown>>;
 
-type SwitchProps<TCondition> = {
+type SwitchProps = {
 	children: ValidSwitchComponentType | ValidSwitchComponentType[];
-	condition?: TCondition;
+	value?: unknown;
 };
 
-type SwitchMatchProps<TWhen = unknown> = {
-	children: React.ReactNode | ((value: TWhen) => React.ReactNode);
-	when: false | TWhen | null | undefined;
-};
+const defaultValueSymbol = Symbol("default-value");
 
-const defaultConditionSymbol = Symbol("condition-default");
-
-export function SwitchRoot<TCondition = true>(props: SwitchProps<TCondition>) {
-	const { children, condition = defaultConditionSymbol } = props;
+export function SwitchRoot(props: SwitchProps) {
+	const { children, value = defaultValueSymbol } = props;
 
 	const defaultCase = getSingleSlot(children, SwitchDefault, {
 		errorMessage: "Only one <Switch.Default> component is allowed",
@@ -29,21 +24,28 @@ export function SwitchRoot<TCondition = true>(props: SwitchProps<TCondition>) {
 
 	const childrenCasesArray = getRegularChildren(children, SwitchDefault) as ValidSwitchComponentType[];
 
-	const matchedCase = childrenCasesArray.find((child) =>
-		condition === defaultConditionSymbol ? child.props.when : child.props.when === condition
-	);
+	const matchedCase = childrenCasesArray.find((child) => {
+		// == If value is defaultValueSymbol, match the cases in order like switch(true)
+		if (value === defaultValueSymbol) {
+			return Boolean(child.props.when);
+		}
+
+		// == Otherwise, match the cases like switch(value)
+		return child.props.when === value;
+	});
 
 	return matchedCase ?? defaultCase;
 }
 
+type SwitchMatchProps<TWhen> = {
+	children: React.ReactNode | ((value: TWhen) => React.ReactNode);
+	when: false | TWhen | null | undefined;
+};
+
 export function SwitchMatch<TWhen>(props: SwitchMatchProps<TWhen>) {
 	const { children, when } = props;
 
-	if (!when) {
-		return null;
-	}
-
-	const resolvedChildren = isFunction(children) ? children(when) : children;
+	const resolvedChildren = isFunction(children) ? children(when as TWhen) : children;
 
 	return resolvedChildren;
 }

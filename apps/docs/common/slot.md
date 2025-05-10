@@ -2,10 +2,6 @@
 
 A utility component for flexible component composition through prop merging.
 
-## Overview
-
-The Slot component enables powerful component composition patterns by merging props from a parent component onto its child element. This approach, sometimes called the "as child" pattern, allows components to accept another component as a child and enhance it with additional props while preserving refs and existing behavior.
-
 ## Credits
 
 This was inspired entirely by the [Slot](https://www.radix-ui.com/primitives/docs/utilities/slot) component from Radix UI, but has been optimized in certain areas.
@@ -26,34 +22,48 @@ yarn add @zayne-labs/ui-react
 ## Basic Usage
 
 ```tsx
-import { Slot } from '@zayne-labs/ui-react/common/slot';
+import { Slot, Slottable } from '@zayne-labs/ui-react/common/slot';
 
-function Button({ asChild, className, ...props }) {
-  const Component = asChild ? Slot : 'button';
-
+// Basic prop merging
+function Example() {
   return (
-    <Component
-      className={`rounded bg-blue-500 px-4 py-2 text-white ${className}`}
-      {...props}
-    />
+    <Slot className="parent-class">
+      <div className="child-class">Content</div>
+    </Slot>
   );
 }
 
-// Usage with default button rendering
-function App() {
+// Using Slottable for explicit slot designation
+function ComplexExample() {
   return (
-    <Button onClick={() => console.log('Clicked!')}>
-      Click Me
-    </Button>
-  );
-}
-
-// Usage with custom element via Slot
-function AppWithCustomElement() {
-  return (
-    <Button asChild>
-      <a href="/about">Go to About</a>
-    </Button>
+    <Slot className="wrapper">
+      <Slottable>
+        <div className="target">This will receive merged props</div>
+      </Slottable>
+      <div>This is rendered normally</div>
+    </Slot>
   );
 }
 ```
+
+## API Reference
+
+### Slot Props
+
+Accepts all valid HTML element props which will be merged with the child element's props.
+
+### Slottable Props
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `children` | `React.ReactNode` | The element to receive merged props |
+
+## Implementation Details
+
+The Slot component works by:
+
+1. Checking for Slottable children and handling them specially
+2. Merging props between parent and child elements
+3. Composing refs if both parent and child have them
+4. Special handling for React fragments
+5. Validation of child counts and element types
