@@ -82,9 +82,9 @@ function TaskList({ tasks }) {
 }
 
 // These all show the fallback:
-TaskList({ tasks: [] });
-TaskList({ tasks: null });
-TaskList({ tasks: undefined });
+<TaskList tasks={[]} />
+<TaskList tasks={null} />
+<TaskList tasks={undefined} />
 ```
 
 ## Number Sequences
@@ -116,10 +116,10 @@ function Pagination({ pageCount, currentPage, onPageChange }) {
 }
 
 // Creates sequence [0, 1, 2, 3, 4]
-Pagination({ pageCount: 5 });
+<Pagination pageCount={5} />;
 
 // Shows fallback if provided
-Pagination({ pageCount: 0 });
+<Pagination pageCount={0} />;
 ```
 
 ## Container Components
