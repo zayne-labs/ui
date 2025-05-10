@@ -1,4 +1,4 @@
-# Ui Components
+# UI Components
 
 A collection of composable, unstyled UI components that provide powerful building blocks for your React applications.
 
