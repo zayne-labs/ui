@@ -54,7 +54,7 @@ function App() {
   const status = "loading"
 
   return (
-    <Switch condition={status}>
+    <Switch value={status}>
       <Switch.Match when="loading">
         <div>Loading your content...</div>
       </Switch.Match>
