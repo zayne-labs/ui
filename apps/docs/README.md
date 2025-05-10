@@ -1,6 +1,8 @@
 # Introduction
 
-@zayne-labs/ui is a collection of unstyled UI and utility components, inspired by the composable patterns of Radix UI and Shadcn. Originally built to fill gaps in existing implementations, it's grown into a flexible toolkit that might help solve problems in your projects too.
+@zayne-labs/ui is a collection of unstyled UI and utility components, inspired by the composable patterns of Radix UI and Shadcn.
+
+Originally built to fill gaps in existing implementations, it's grown into a flexible toolkit that might help solve problems in your projects too.
 
 ## Current Status
 
