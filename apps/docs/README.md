@@ -26,7 +26,7 @@ We currently offer a production-ready React implementation, built on modern patt
 
 ## Available Components
 
-### Interactive UI
+### UI Components
 
 - **Card** - Flexible container component for grouping related content
 - **Carousel** - Customizable slideshow for cycling through elements
@@ -34,7 +34,7 @@ We currently offer a production-ready React implementation, built on modern patt
 - **DropZone** - File upload component with drag-and-drop support
 - **Form** - Composable form components with validation and state management
 
-### Flow Control
+### Utility Components
 
 - **Await** - Handle async states declaratively
 - **For** - Iterate over arrays and objects with built-in keying
@@ -60,7 +60,7 @@ yarn add @zayne-labs/ui-react
 
 ## Quick Start
 
-### File Upload Example
+### File Upload with a ui component
 
 Here's a drag-and-drop file uploader:
 
@@ -99,7 +99,7 @@ function ImageUploader() {
 }
 ```
 
-### Control Flow Example
+### Control Flow with a utility component
 
 Handle different states with `Switch`:
 
