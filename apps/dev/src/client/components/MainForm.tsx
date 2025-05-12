@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Icon } from "@iconify/react";
-import { DropZone } from "@zayne-labs/ui-react/drop-zone";
-import { Form } from "@zayne-labs/ui-react/form";
+import { DropZone } from "@zayne-labs/ui-react/ui/drop-zone";
+import { Form } from "@zayne-labs/ui-react/ui/form";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
