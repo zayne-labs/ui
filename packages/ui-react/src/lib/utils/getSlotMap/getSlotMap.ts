@@ -13,7 +13,7 @@ type GetSpecificSlotsType<TSlotComponentProps extends GetSlotComponentProps> = {
 	// This conditional before the remapping will prevent an Indexed Record type from showing up if the props are not passed, enhancing type safety
 	[TName in keyof TSlotComponentProps as string extends TSlotComponentProps["name"]
 		? never
-		: TSlotComponentProps["name"]]: TSlotComponentProps["children"];
+		: TSlotComponentProps["name"]]: Extract<TSlotComponentProps["children"], React.ReactNode>;
 };
 
 /**

@@ -57,7 +57,7 @@ export function DropZoneRoot(props: DropZoneRootProps) {
 				{slots.default}
 			</ContainerComponent>
 
-			{isFunction(slots.preview) ? slots.preview(dropZone) : slots.preview}
+			{slots.preview}
 		</DropZoneContextProvider>
 	);
 }
