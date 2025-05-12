@@ -28,14 +28,6 @@ export type GetSlotMapResult<TSlotComponentProps extends GetSlotComponentProps> 
  */
 export const slotComponentSymbol = Symbol("slot-component");
 
-// type GetSlotMapOptions = {
-// 	/**
-// 	 * If false, the function will bail out early and return only the default slot with the actual children.
-// 	 * @default true
-// 	 */
-// 	// condition?: boolean;
-// };
-
 /**
  * @description Creates a map of named slots from React children. Returns an object mapping slot names to their children,
  * with a default slot for unmatched children.
@@ -70,7 +62,6 @@ export const slotComponentSymbol = Symbol("slot-component");
  */
 export const getSlotMap = <TSlotComponentProps extends GetSlotComponentProps>(
 	children: React.ReactNode
-	// options?: GetSlotMapOptions
 ): Prettify<GetSlotMapResult<TSlotComponentProps>> => {
 	const slots: Record<string, TSlotComponentProps["children"]> & { default: React.ReactNode[] } = {
 		default: [],
@@ -100,11 +91,7 @@ export const getSlotMap = <TSlotComponentProps extends GetSlotComponentProps>(
 
 		const slotName = childType.slotName ?? child.props.name;
 
-		const getSlotChild = () => {
-			return child;
-		};
-
-		slots[slotName] = getSlotChild();
+		slots[slotName] = child;
 	}
 
 	return slots as GetSlotMapResult<TSlotComponentProps>;
@@ -135,11 +122,10 @@ export type GetSlotComponentProps<
 };
 
 /**
- * @description Slot component created by createSlotComponent
+ * @description Creates a slot component
  */
-
 export const createSlotComponent = <TSlotComponentProps extends GetSlotComponentProps>() => {
-	const SlotComponent = (props: TSlotComponentProps) => props.children;
+	const SlotComponent = (props: TSlotComponentProps) => props.children as React.ReactNode;
 
 	SlotComponent.slotSymbol = slotComponentSymbol;
 
@@ -159,6 +145,9 @@ function DefaultSlotComponent(props: Pick<GetSlotComponentProps, "children">): R
 	return props.children as React.ReactNode;
 }
 
+/**
+ * @description Adds a slot symbol and name to a slot component passed in
+ */
 export const withSlotNameAndSymbol = <
 	TSlotComponentProps extends GetSlotComponentProps,
 	TActualProps extends UnknownObject = UnknownObject,
