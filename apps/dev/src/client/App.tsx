@@ -1,13 +1,20 @@
-import MainForm from "./components/MainForm";
+import AppOne from "./AppOne";
+import AppTwo from "./AppTwo";
 
-function AnotherApp() {
-	return (
-		<main
-			className="flex min-h-svh flex-col items-center bg-gradient-to-br from-gray-100 to-gray-200 py-12"
-		>
-			<MainForm />
-		</main>
-	);
+function App() {
+	const pathname = globalThis.location.pathname;
+
+	switch (pathname) {
+		case "/": {
+			return <AppOne />;
+		}
+		case "/two": {
+			return <AppTwo />;
+		}
+		default: {
+			return <AppOne />;
+		}
+	}
 }
 
-export default AnotherApp;
+export default App;
