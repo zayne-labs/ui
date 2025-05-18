@@ -10,19 +10,19 @@ type SlotProps = InferProps<HTMLElement>;
  * Slottable
  * ----------------------------------------------------------------------------------------------- */
 
-export function Slottable({ children }: Pick<SlotProps, "children">) {
+export function SlotSlottable({ children }: Pick<SlotProps, "children">) {
 	return children;
 }
 
 const isSlottable = (child: React.ReactNode): child is React.ReactElement => {
-	return isValidElement(child) && child.type === Slottable;
+	return isValidElement(child) && child.type === SlotSlottable;
 };
 
 /* -------------------------------------------------------------------------------------------------
  * Slot
  * ----------------------------------------------------------------------------------------------- */
 
-export function Slot(props: SlotProps) {
+export function SlotRoot(props: SlotProps) {
 	const { children, ...restOfSlotProps } = props;
 
 	const childrenArray = isArray<React.ReactNode>(children) ? children : [children];

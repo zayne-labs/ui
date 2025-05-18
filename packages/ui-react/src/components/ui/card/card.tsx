@@ -49,7 +49,7 @@ export function CardFooter<TElement extends React.ElementType = "footer">(
 ) {
 	const { as: Element = "footer", asChild, ...restOfProps } = props;
 
-	const Component = asChild ? Slot : Element;
+	const Component = asChild ? Slot.Root : Element;
 
 	return <Component {...restOfProps} />;
 }

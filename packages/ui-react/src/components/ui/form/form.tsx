@@ -832,7 +832,7 @@ export function FormSubmit<TElement extends React.ElementType = "button">(
 ) {
 	const { as: Element = "button", asChild, children, type = "submit", ...restOfProps } = props;
 
-	const Component = asChild ? Slot : Element;
+	const Component = asChild ? Slot.Root : Element;
 
 	return (
 		<Component data-part="submit" data-scope="form" data-slot="form-submit" type={type} {...restOfProps}>

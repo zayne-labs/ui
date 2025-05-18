@@ -1,12 +1,7 @@
-import { getSingleSlot } from "@/lib/utils/getSlot";
 import { isFunction } from "@zayne-labs/toolkit-type-helpers";
 import * as React from "react";
 import { Component } from "react";
-import {
-	type ErrorBoundaryContext,
-	ErrorBoundaryContextProvider,
-	useErrorBoundaryContext,
-} from "./error-boundary-context";
+import { ErrorBoundaryContext, type ErrorBoundaryContextType } from "./error-boundary-context";
 import type { ErrorBoundaryProps, FallbackProps } from "./types";
 
 type ErrorBoundaryState =
@@ -45,7 +40,10 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 	}
 
 	override componentDidCatch(error: Error, info: React.ErrorInfo) {
-		this.props.onError?.(error, info);
+		this.props.onError?.({
+			error,
+			info,
+		});
 	}
 
 	override componentDidUpdate(prevProps: ErrorBoundaryProps, prevState: ErrorBoundaryState) {
@@ -57,7 +55,11 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 		// So we make sure that we don't check the resetKeys on the first call of cDU after the error is set.
 
 		if (hasError && prevState.error !== null && hasArrayChanged(prevProps.resetKeys, resetKeys)) {
-			this.props.onReset?.({ next: resetKeys, prev: prevProps.resetKeys, reason: "keys" });
+			this.props.onReset?.({
+				next: resetKeys,
+				prev: prevProps.resetKeys,
+				reason: "keys",
+			});
 
 			this.setState(initialState);
 		}
@@ -69,22 +71,20 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 
 		let childToRender = children;
 
-		const fallBackSlot = getSingleSlot(children, ErrorBoundaryFallBack);
-
 		if (hasError) {
 			switch (true) {
-				case Boolean(fallBackSlot): {
-					childToRender = fallBackSlot;
-					break;
-				}
-
-				case Boolean(fallback): {
+				case isFunction(fallback): {
 					const fallbackRenderProps = {
 						error,
 						resetErrorBoundary: this.#resetErrorBoundary,
 					} satisfies FallbackProps;
 
-					childToRender = isFunction(fallback) ? fallback(fallbackRenderProps) : fallback;
+					childToRender = fallback(fallbackRenderProps);
+					break;
+				}
+
+				case Boolean(fallback): {
+					childToRender = fallback;
 					break;
 				}
 
@@ -98,30 +98,21 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 			error,
 			hasError,
 			resetErrorBoundary: this.#resetErrorBoundary,
-		} satisfies ErrorBoundaryContext;
+		} satisfies ErrorBoundaryContextType;
 
-		return (
-			<ErrorBoundaryContextProvider value={contextValue}>{childToRender}</ErrorBoundaryContextProvider>
-		);
+		return <ErrorBoundaryContext value={contextValue}>{childToRender}</ErrorBoundaryContext>;
 	}
 
 	#resetErrorBoundary = (...parameters: unknown[]) => {
 		const { error } = this.state;
 
 		if (error !== null) {
-			this.props.onReset?.({ parameters, reason: "imperative-api" });
+			this.props.onReset?.({
+				args: parameters,
+				reason: "imperative-api",
+			});
 
 			this.setState(initialState);
 		}
 	};
-}
-
-export function ErrorBoundaryFallBack(props: { children: ErrorBoundaryProps["fallback"] }) {
-	const { children } = props;
-
-	const { error, resetErrorBoundary } = useErrorBoundaryContext();
-
-	const fallbackRenderProps = { error, resetErrorBoundary } satisfies FallbackProps;
-
-	return isFunction(children) ? children(fallbackRenderProps) : children;
 }

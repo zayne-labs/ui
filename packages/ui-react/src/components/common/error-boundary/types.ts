@@ -6,11 +6,18 @@ export type FallbackProps = {
 export type ErrorBoundaryProps = {
 	children: React.ReactNode;
 	fallback?: React.ReactNode | ((props: FallbackProps) => React.ReactNode);
-	onError?: (error: Error, info: React.ErrorInfo & { ownerStack?: string }) => void;
+	onError?: (context: { error: Error; info: React.ErrorInfo & { ownerStack?: string } }) => void;
 	onReset?: (
-		details:
-			| { next: unknown[] | undefined; prev: unknown[] | undefined; reason: "keys" }
-			| { parameters: unknown[]; reason: "imperative-api" }
+		context:
+			| {
+					args: unknown[];
+					reason: "imperative-api";
+			  }
+			| {
+					next: unknown[] | undefined;
+					prev: unknown[] | undefined;
+					reason: "keys";
+			  }
 	) => void;
 	resetKeys?: unknown[];
 };

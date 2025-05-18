@@ -2,54 +2,106 @@
 
 import * as React from "react";
 
-import type { DiscriminatedRenderProps } from "@zayne-labs/toolkit-react/utils";
+import { type GetSlotComponentProps, getSlotMap, withSlotNameAndSymbol } from "@/lib/utils";
 import { isFunction } from "@zayne-labs/toolkit-type-helpers";
-import { Fragment as ReactFragment, Suspense, use } from "react";
-import { ErrorBoundary } from "../error-boundary";
+import { Fragment as ReactFragment, Suspense, use, useMemo } from "react";
+import { ErrorBoundary, type ErrorBoundaryProps, useErrorBoundaryContext } from "../error-boundary";
 import { Slot } from "../slot";
 import type { SuspenseWithBoundaryProps } from "../suspense-with-boundary";
+import { AwaitContext, useAwaitContext } from "./await-context";
 
 type RenderPropFn<TValue> = (result: TValue) => React.ReactNode;
 
-type AwaitProps<TValue> = AwaitInnerProps<TValue>
-	& Pick<SuspenseWithBoundaryProps, "errorFallback" | "fallback"> & {
-		withErrorBoundary?: boolean;
-	};
+type ChildrenType<TValue> = React.ReactNode | RenderPropFn<TValue>;
 
-// TODO - Add Support for Slot components
-export function Await<TValue>(props: AwaitProps<TValue>) {
-	const { errorFallback, fallback, withErrorBoundary = true, ...restOfProps } = props;
+type AwaitRootProps<TValue> = Pick<SuspenseWithBoundaryProps, "errorFallback" | "fallback"> & {
+	asChild?: boolean;
+	children: ChildrenType<TValue>;
+	promise: Promise<TValue>;
+	wrapperVariant?: "all" | "none" | "only-errorBoundary" | "only-suspense";
+};
+
+export function AwaitRoot<TValue>(props: AwaitRootProps<TValue>) {
+	const { children, errorFallback, fallback, wrapperVariant = "all", ...restOfProps } = props;
+
+	const withErrorBoundary = wrapperVariant === "all" || wrapperVariant === "only-errorBoundary";
+	const withSuspense = wrapperVariant === "all" || wrapperVariant === "only-suspense";
 
 	const WithErrorBoundary = withErrorBoundary ? ErrorBoundary : ReactFragment;
+	const WithSuspense = withSuspense ? Suspense : ReactFragment;
 
-	const errorBoundaryProps = Boolean(errorFallback) && { fallback: errorFallback };
+	const slots = !isFunction(children)
+		? getSlotMap<SlotComponentProps>(children)
+		: ({ default: children } as unknown as ReturnType<typeof getSlotMap<SlotComponentProps>>);
+
+	const selectedPendingFallback = slots.pending ?? fallback;
+	const selectedErrorFallback = slots.error ?? errorFallback;
 
 	return (
-		<WithErrorBoundary {...errorBoundaryProps}>
-			<Suspense fallback={fallback}>
-				<AwaitInner {...restOfProps} />
-			</Suspense>
+		<WithErrorBoundary {...(Boolean(selectedErrorFallback) && { fallback: selectedErrorFallback })}>
+			<WithSuspense {...(Boolean(selectedPendingFallback) && { fallback: selectedPendingFallback })}>
+				<AwaitRootInner {...restOfProps}>{slots.default}</AwaitRootInner>
+			</WithSuspense>
 		</WithErrorBoundary>
 	);
 }
 
-export type AwaitInnerProps<TValue> = DiscriminatedRenderProps<React.ReactNode | RenderPropFn<TValue>> & {
-	asChild?: boolean;
-	promise: Promise<TValue>;
-};
+type AwaitRootInnerProps<TValue> = Pick<AwaitRootProps<TValue>, "asChild" | "children" | "promise">;
 
-function AwaitInner<TValue>(props: AwaitInnerProps<TValue>) {
-	const { asChild, children, promise, render } = props;
+function AwaitRootInner<TValue>(props: AwaitRootInnerProps<TValue>) {
+	const { asChild, children, promise } = props;
 
 	const result = use(promise);
 
-	const Component = asChild ? Slot : ReactFragment;
+	const resolvedChildren = isFunction(children) ? children(result) : children;
 
-	const slotProps = asChild && { promise, result };
+	const Component = asChild ? Slot.Root : ReactFragment;
 
-	const selectedChildren = children ?? render;
+	const contextValue = useMemo(() => ({ promise, result }), [promise, result]);
 
-	const resolvedChildren = isFunction(selectedChildren) ? selectedChildren(result) : selectedChildren;
-
-	return <Component {...slotProps}>{resolvedChildren}</Component>;
+	return (
+		<AwaitContext value={contextValue}>
+			<Component {...(asChild && contextValue)}>{resolvedChildren}</Component>
+		</AwaitContext>
+	);
 }
+
+type SlotComponentProps = AwaitErrorProps | AwaitPendingProps | AwaitSuccessProps;
+
+type AwaitSuccessProps<TValue = unknown> = GetSlotComponentProps<"default", ChildrenType<TValue>>;
+
+export function AwaitSuccess<TPromiseOrValue, TValue = Awaited<TPromiseOrValue>>(
+	props: Pick<AwaitSuccessProps<TValue>, "children">
+) {
+	if (isFunction(props.children)) {
+		// eslint-disable-next-line react-hooks/rules-of-hooks -- This hook only uses `use` under the hood so this is safe
+		const { result } = useAwaitContext<TValue>();
+
+		return props.children(result);
+	}
+
+	return props.children;
+}
+
+Object.assign(AwaitSuccess, withSlotNameAndSymbol<AwaitSuccessProps>("default"));
+
+type AwaitPendingProps = GetSlotComponentProps<"pending", React.SuspenseProps["fallback"]>;
+
+export const AwaitPending = withSlotNameAndSymbol<AwaitPendingProps>("pending");
+
+type AwaitErrorProps = GetSlotComponentProps<"error", ErrorBoundaryProps["fallback"]>;
+
+export const AwaitError = withSlotNameAndSymbol<AwaitErrorProps, { asChild?: boolean }>(
+	"error",
+	(props) => {
+		const { asChild, children } = props;
+
+		const errorBoundaryContext = useErrorBoundaryContext();
+
+		const Component = asChild ? Slot.Root : ReactFragment;
+
+		const resolvedChildren = isFunction(children) ? children(errorBoundaryContext) : children;
+
+		return <Component {...(asChild && errorBoundaryContext)}>{resolvedChildren}</Component>;
+	}
+);

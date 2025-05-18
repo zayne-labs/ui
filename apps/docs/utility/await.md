@@ -9,10 +9,11 @@ The Await component provides a straightforward approach to handling asynchronous
 ## Key Features
 
 - **Built-in Suspense** - Automatic loading states while promises resolve
-- **Optional Error Boundary** - Configurable error handling with `withErrorBoundary` prop
+- **Flexible Wrapper Control** - Fine-grained control over Suspense and ErrorBoundary wrappers
 - **Declarative API** - Simple prop-based approach to async operations
 - **Render Props Pattern** - Flexible rendering of resolved promise values
-- **Slot Component Support** - Pass resolved values to child components via `asChild`
+- **Slot Component Support** - Composable loading, error, and success states
+- **Context System** - Access async state in nested components
 - **TypeScript Support** - Full type inference for promise values
 
 ## Installation
@@ -39,7 +40,8 @@ function UserProfile({ userId }) {
   return (
     <Await
       promise={userPromise}
-      fallback={<div>Loading user data...</div>}
+      fallback={<p>Loading user data...</p>}
+      errorFallback={<p>Error loading user data</p>}
     >
       {(user) => (
         <div>
@@ -73,11 +75,11 @@ function ProductDetails({ productId }) {
     <Await
       promise={productPromise}
       fallback={<div>Loading product...</div>}
-      errorFallback={({ error }) => (
+      errorFallback={({ error, resetErrorBoundary }) => (
         <div className="error-container">
           <h2>Error Loading Product</h2>
           <p>{error.message}</p>
-          <button onClick={() => window.location.reload()}>
+          <button onClick={resetErrorBoundary}>
             Try Again
           </button>
         </div>
@@ -109,7 +111,6 @@ function UserDisplay({ userId }) {
   return (
     <Await
       promise={userPromise}
-      fallback={<div>Loading...</div>}
       asChild
     >
       <UserCard />
@@ -118,15 +119,14 @@ function UserDisplay({ userId }) {
 }
 
 // In UserCard.jsx
+// result prop contains the resolved promise value
 function UserCard({ result }) {
-  // result contains the resolved promise value
-  const user = result;
 
   return (
     <div className="user-card">
-      <img src={user.avatar} alt={user.name} />
-      <h2>{user.name}</h2>
-      <p>{user.email}</p>
+      <img src={result.avatar} alt={result.name} />
+      <h2>{result.name}</h2>
+      <p>{result.email}</p>
     </div>
   );
 }
@@ -168,27 +168,65 @@ function UserProfile({ userId }: { userId: string }) {
 }
 ```
 
-## Disabling Error Boundary
+### Wrapper Control
 
-In some cases, you might want to handle errors at a higher level or differently:
+New `wrapperVariant` prop for fine-grained control over internal Suspense and ErrorBoundary wrappers:
 
 ```tsx
-import { Await } from '@zayne-labs/ui-react/common';
+<Await
+  promise={dataPromise}
+  wrapperVariant="only-suspense" // or "all", "none", "only-errorBoundary". Defaults to "all"
+>
+  {(data) => <DataDisplay data={data} />}
+</Await>
+```
 
-function DataComponent() {
-  const dataPromise = fetchData();
+### Slots
+
+The Await component offers an optional slots for better composition:
+
+```tsx
+import { Await } from '@zayne-labs/ui-react/common/await';
+
+function ProductDetails({ productId }) {
+  const productPromise = fetchProduct(productId);
 
   return (
-    <Await
-      promise={dataPromise}
-      fallback={<div>Loading...</div>}
-      withErrorBoundary={false} // Disable built-in error boundary
-    >
-      {(data) => (
-        <div>{data.content}</div>
-      )}
+    <Await promise={productPromise}>
+      <Await.Success>
+        {(product) => (
+          <div className="product-details">
+            <h1>{product.name}</h1>
+            <p>${product.price}</p>
+          </div>
+        )}
+      </Await.Success>
+
+      <Await.Pending>
+        <ProductSkeleton />
+      </Await.Pending>
+
+      <Await.Error>
+        {({ error, resetErrorBoundary }) => (
+          <ErrorDisplay error={error} reset={resetErrorBoundary} />
+        )}
+      </Await.Error>
     </Await>
   );
+}
+```
+
+### Context System
+
+Access `promise` and `result` in components nested under an Await component:
+
+```tsx
+import { useAwaitContext } from '@zayne-labs/ui-react/common/await';
+
+function NestedComponent() {
+  const { result, promise } = useAwaitContext();
+  // Access the resolved value and original promise
+  return <div>{result.someValue}</div>;
 }
 ```
 
@@ -199,12 +237,32 @@ function DataComponent() {
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `promise` | `Promise<TValue>` | *Required* | The promise to resolve |
-| `fallback` | `React.ReactNode` | `undefined` | Content to show while the promise is pending |
-| `errorFallback` | `React.ReactNode \| ((props: { error: Error; reset: () => void }) => React.ReactNode)` | `undefined` | UI to show when an error occurs |
-| `withErrorBoundary` | `boolean` | `true` | Whether to wrap the component in an error boundary |
+| `children` | `React.ReactNode` | `undefined` | Child elements, including slot components |
 | `asChild` | `boolean` | `false` | Whether to merge props onto the child element |
-| `children` | `React.ReactNode \| ((result: TValue) => React.ReactNode)` | `undefined` | Child elements or render function |
-| `render` | `(result: TValue) => React.ReactNode` | `undefined` | Alternative render function |
+| `wrapperVariant` | `"all" \| "none" \| "only-errorBoundary" \| "only-suspense"` | `"all"` | Controls which wrappers (Suspense/ErrorBoundary) are active |
+
+### Slot Components
+
+#### Await.Success
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `children` | `React.ReactNode \| ((result: TValue) => React.ReactNode)` | Content to render when promise resolves |
+| `asChild` | `boolean` | Whether to merge result prop onto child element |
+
+#### Await.Pending
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `children` | `React.ReactNode` | Content to show while promise is pending |
+| `asChild` | `boolean` | Whether to merge pending state onto child element |
+
+#### Await.Error
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `children` | `React.ReactNode \| ((props: { error: Error; resetErrorBoundary: () => void }) => React.ReactNode)` | Content to show on error |
+| `asChild` | `boolean` | Whether to merge error state onto child element |
 
 ### Render Props Function
 
@@ -215,19 +273,6 @@ When using the render props pattern, your function will receive the resolved val
   {(result) => {
     // result is the resolved value of myPromise
     return <div>{result}</div>;
-  }}
-</Await>
-```
-
-### Type Generics
-
-The Await component accepts a type parameter that describes the resolved value of the promise:
-
-```tsx
-<Await<User> promise={fetchUser(1)}>
-  {(user) => {
-    // user is typed as User
-    return <div>{user.name}</div>;
   }}
 </Await>
 ```

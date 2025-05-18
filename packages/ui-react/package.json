@@ -20,9 +20,11 @@
 		".": null,
 		"./style.css": "./dist/style.css",
 		"./css/*": "./css/*",
+		"./ui": "./dist/esm/components/ui/index.js",
 		"./ui/*": "./dist/esm/components/ui/*/index.js",
+		"./common": "./dist/esm/components/common/index.js",
 		"./common/*": "./dist/esm/components/common/*/index.js",
-		"./utils/*": "./dist/esm/lib/utils/*/index.js"
+		"./utils": "./dist/esm/lib/utils/index.js"
 	},
 	"files": [
 		"css",
@@ -46,9 +48,6 @@
 		"release:test": "pnpx pkg-pr-new publish"
 	},
 	"peerDependencies": {
-		"@zayne-labs/toolkit-core": "^0.9.38",
-		"@zayne-labs/toolkit-react": "^0.9.38",
-		"@zayne-labs/toolkit-type-helpers": "^0.9.38",
 		"react": "19.x.x",
 		"react-dom": "19.x.x",
 		"react-hook-form": "7.x.x",
@@ -67,17 +66,19 @@
 			"optional": true
 		}
 	},
+	"dependencies": {
+		"@zayne-labs/toolkit-core": "0.9.42",
+		"@zayne-labs/toolkit-react": "0.9.42",
+		"@zayne-labs/toolkit-type-helpers": "0.9.42"
+	},
 	"devDependencies": {
 		"@arethetypeswrong/cli": "0.18.1",
 		"@size-limit/esbuild-why": "11.2.0",
 		"@size-limit/preset-small-lib": "11.2.0",
-		"@tailwindcss/cli": "^4.1.6",
+		"@tailwindcss/cli": "^4.1.7",
 		"@total-typescript/ts-reset": "0.6.1",
 		"@types/react": "19.1.4",
 		"@types/react-dom": "19.1.5",
-		"@zayne-labs/toolkit-core": "0.9.40",
-		"@zayne-labs/toolkit-react": "0.9.40",
-		"@zayne-labs/toolkit-type-helpers": "0.9.40",
 		"@zayne-labs/tsconfig": "0.8.2",
 		"concurrently": "9.1.2",
 		"cross-env": "7.0.3",
@@ -85,11 +86,11 @@
 		"publish": "^0.6.0",
 		"react": "19.1.0",
 		"react-dom": "19.1.0",
-		"react-hook-form": "7.56.3",
+		"react-hook-form": "7.56.4",
 		"size-limit": "11.2.0",
 		"tailwind-merge": "3.3.0",
-		"tailwindcss": "^4.1.6",
-		"tsup": "8.4.0",
+		"tailwindcss": "^4.1.7",
+		"tsup": "8.5.0",
 		"typescript": "5.8.3",
 		"zustand": "5.0.4"
 	},

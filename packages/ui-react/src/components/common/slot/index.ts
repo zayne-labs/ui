@@ -1,1 +1,2 @@
-export { Slot, Slottable } from "./slot";
+export * from "./slot";
+export * as Slot from "./slot-parts";

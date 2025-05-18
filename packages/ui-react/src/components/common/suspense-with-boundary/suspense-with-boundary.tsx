@@ -7,7 +7,7 @@ export type SuspenseWithBoundaryProps = {
 	fallback?: React.ReactNode;
 };
 
-export function SuspenseWithBoundaryRoot(props: SuspenseWithBoundaryProps) {
+export function SuspenseWithBoundary(props: SuspenseWithBoundaryProps) {
 	const { children, errorFallback, fallback } = props;
 
 	const errorBoundaryProps = Boolean(errorFallback) && { fallback: errorFallback };

@@ -2,6 +2,7 @@ import { toArray } from "@zayne-labs/toolkit-core";
 import type { InferProps } from "@zayne-labs/toolkit-react/utils";
 import {
 	type CallbackFn,
+	type EmptyObject,
 	type Prettify,
 	type UnionToIntersection,
 	type UnknownObject,
@@ -9,11 +10,19 @@ import {
 } from "@zayne-labs/toolkit-type-helpers";
 import { Fragment as ReactFragment, isValidElement } from "react";
 
+type GetSlotName<TSlotComponentProps extends GetSlotComponentProps> =
+	string extends TSlotComponentProps["name"]
+		? never
+		: "default" extends TSlotComponentProps["name"]
+			? never
+			: TSlotComponentProps["name"];
+
 type GetSpecificSlotsType<TSlotComponentProps extends GetSlotComponentProps> = {
 	// This conditional before the remapping will prevent an Indexed Record type from showing up if the props are not passed, enhancing type safety
-	[TName in keyof TSlotComponentProps as string extends TSlotComponentProps["name"]
-		? never
-		: TSlotComponentProps["name"]]: Extract<TSlotComponentProps["children"], React.ReactNode>;
+	[TName in keyof TSlotComponentProps as GetSlotName<TSlotComponentProps>]: Extract<
+		TSlotComponentProps["children"],
+		React.ReactNode
+	>;
 };
 
 /**
@@ -91,6 +100,11 @@ export const getSlotMap = <TSlotComponentProps extends GetSlotComponentProps>(
 
 		const slotName = childType.slotName ?? child.props.name;
 
+		if (slotName === "default") {
+			slots.default.push(child);
+			continue;
+		}
+
 		slots[slotName] = child;
 	}
 
@@ -115,9 +129,10 @@ export type GetSlotComponentProps<
 		| CallbackFn<never, React.ReactNode>
 		| React.ReactNode,
 > = {
-	/** Content to render in the slot */
 	children: TChildren;
-	/** Name of the slot where content should be rendered */
+	/**
+	 * Name of the slot where content should be rendered
+	 */
 	name: TName;
 };
 
@@ -134,9 +149,9 @@ export const createSlotComponent = <TSlotComponentProps extends GetSlotComponent
 
 type SlotWithNameAndSymbol<
 	TSlotComponentProps extends GetSlotComponentProps = GetSlotComponentProps,
-	TActualProps extends UnknownObject = UnknownObject,
+	TOtherProps extends UnknownObject = EmptyObject,
 > = {
-	(props: Pick<TSlotComponentProps, "children"> & TActualProps): React.ReactNode;
+	(props: Pick<TSlotComponentProps, "children"> & TOtherProps): React.ReactNode;
 	readonly slotName?: TSlotComponentProps["name"];
 	readonly slotSymbol?: symbol;
 };
@@ -150,10 +165,10 @@ function DefaultSlotComponent(props: Pick<GetSlotComponentProps, "children">): R
  */
 export const withSlotNameAndSymbol = <
 	TSlotComponentProps extends GetSlotComponentProps,
-	TActualProps extends UnknownObject = UnknownObject,
+	TOtherProps extends UnknownObject = EmptyObject,
 >(
 	name: TSlotComponentProps["name"],
-	SlotComponent: SlotWithNameAndSymbol<TSlotComponentProps, TActualProps> = DefaultSlotComponent
+	SlotComponent: SlotWithNameAndSymbol<TSlotComponentProps, TOtherProps> = DefaultSlotComponent
 ) => {
 	/* eslint-disable no-param-reassign -- This is necessary */
 	// @ts-expect-error -- This is necessary for the time being, to prevent type errors and accidental overrides on consumer side
