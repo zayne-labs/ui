@@ -73,7 +73,7 @@ function App() {
 
 ## Documentation
 
-Visit our documentation site for detailed usage instructions, examples, and API references. [Coming soon]
+Visit our [documentation site](https://zayne-labs.github.io/ui) for detailed usage instructions, examples, and API references.
 
 ## Development
 
