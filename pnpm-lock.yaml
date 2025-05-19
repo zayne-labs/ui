@@ -18,11 +18,11 @@ importers:
         specifier: ^1.49.0
         version: 1.49.0(eslint@9.27.0(jiti@2.4.2))(ts-api-utils@2.1.0(typescript@5.8.3))(typescript@5.8.3)
       '@types/node':
-        specifier: ^22.15.18
-        version: 22.15.18
+        specifier: ^22.15.19
+        version: 22.15.19
       '@zayne-labs/eslint-config':
         specifier: 0.8.2
-        version: 0.8.2(@eslint-react/eslint-plugin@1.49.0(eslint@9.27.0(jiti@2.4.2))(ts-api-utils@2.1.0(typescript@5.8.3))(typescript@5.8.3))(@zayne-labs/toolkit-type-helpers@0.9.42)(eslint-plugin-react-hooks@5.2.0(eslint@9.27.0(jiti@2.4.2)))(eslint-plugin-react-refresh@0.4.20(eslint@9.27.0(jiti@2.4.2)))(eslint@9.27.0(jiti@2.4.2))(typescript@5.8.3)
+        version: 0.8.2(@eslint-react/eslint-plugin@1.49.0(eslint@9.27.0(jiti@2.4.2))(ts-api-utils@2.1.0(typescript@5.8.3))(typescript@5.8.3))(@zayne-labs/toolkit-type-helpers@0.9.44)(eslint-plugin-react-hooks@5.2.0(eslint@9.27.0(jiti@2.4.2)))(eslint-plugin-react-refresh@0.4.20(eslint@9.27.0(jiti@2.4.2)))(eslint@9.27.0(jiti@2.4.2))(typescript@5.8.3)
       '@zayne-labs/prettier-config':
         specifier: ^0.8.2
         version: 0.8.2
@@ -72,11 +72,11 @@ importers:
         specifier: ^1.7.16
         version: 1.7.16
       '@zayne-labs/toolkit-core':
-        specifier: 0.9.42
-        version: 0.9.42
+        specifier: 0.9.44
+        version: 0.9.44
       '@zayne-labs/toolkit-react':
-        specifier: 0.9.42
-        version: 0.9.42(@types/react@19.1.4)(react@19.1.0)(zustand@5.0.4(@types/react@19.1.4)(react@19.1.0))
+        specifier: 0.9.44
+        version: 0.9.44(@types/react@19.1.4)(react@19.1.0)(zustand@5.0.4(@types/react@19.1.4)(react@19.1.0))
       '@zayne-labs/ui-react':
         specifier: workspace:*
         version: link:../../packages/ui-react
@@ -90,15 +90,15 @@ importers:
         specifier: ^7.56.4
         version: 7.56.4(react@19.1.0)
       zod:
-        specifier: ^3.24.4
-        version: 3.24.4
+        specifier: ^3.25.1
+        version: 3.25.1
     devDependencies:
       '@tailwindcss/vite':
         specifier: ^4.1.7
-        version: 4.1.7(vite@6.3.5(@types/node@22.15.18)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.4)(yaml@2.7.1))
+        version: 4.1.7(vite@6.3.5(@types/node@22.15.19)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.4)(yaml@2.7.1))
       '@types/node':
-        specifier: ^22.15.18
-        version: 22.15.18
+        specifier: ^22.15.19
+        version: 22.15.19
       '@types/react':
         specifier: 19.1.4
         version: 19.1.4
@@ -107,7 +107,7 @@ importers:
         version: 19.1.5(@types/react@19.1.4)
       '@vitejs/plugin-react-swc':
         specifier: ^3.9.0
-        version: 3.9.0(vite@6.3.5(@types/node@22.15.18)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.4)(yaml@2.7.1))
+        version: 3.9.0(vite@6.3.5(@types/node@22.15.19)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.4)(yaml@2.7.1))
       '@zayne-labs/tsconfig':
         specifier: 0.8.2
         version: 0.8.2
@@ -125,19 +125,19 @@ importers:
         version: 5.8.3
       vite:
         specifier: ^6.3.5
-        version: 6.3.5(@types/node@22.15.18)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.4)(yaml@2.7.1)
+        version: 6.3.5(@types/node@22.15.19)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.4)(yaml@2.7.1)
 
   packages/ui-react:
     dependencies:
       '@zayne-labs/toolkit-core':
-        specifier: 0.9.42
-        version: 0.9.42
+        specifier: 0.9.44
+        version: 0.9.44
       '@zayne-labs/toolkit-react':
-        specifier: 0.9.42
-        version: 0.9.42(@types/react@19.1.4)(react@19.1.0)(zustand@5.0.4(@types/react@19.1.4)(react@19.1.0))
+        specifier: 0.9.44
+        version: 0.9.44(@types/react@19.1.4)(react@19.1.0)(zustand@5.0.4(@types/react@19.1.4)(react@19.1.0))
       '@zayne-labs/toolkit-type-helpers':
-        specifier: 0.9.42
-        version: 0.9.42
+        specifier: 0.9.44
+        version: 0.9.44
     devDependencies:
       '@arethetypeswrong/cli':
         specifier: 0.18.1
@@ -1309,8 +1309,8 @@ packages:
   '@types/node@12.20.55':
     resolution: {integrity: sha512-J8xLz7q2OFulZ2cyGTLE1TbbZcjpno7FaN6zdJNrgAdrJ+DZzh/uFR6YrTb4C+nXakvud8Q4+rbhoIWlYQbUFQ==}
 
-  '@types/node@22.15.18':
-    resolution: {integrity: sha512-v1DKRfUdyW+jJhZNEI1PYy29S2YRxMV5AOO/x/SjKmW0acCIOqmbj6Haf9eHAhsPmrhlHSxEhv/1WszcLWV4cg==}
+  '@types/node@22.15.19':
+    resolution: {integrity: sha512-3vMNr4TzNQyjHcRZadojpRaD9Ofr6LsonZAoQ+HMUa/9ORTPoxVIw0e0mpqWpdjj8xybyCM+oKOUH2vwFu/oEw==}
 
   '@types/react-dom@19.1.5':
     resolution: {integrity: sha512-CMCjrWucUBZvohgZxkjd6S9h0nZxXjzus6yDfUb+xLxYM7VvjKNH1tQrE9GWLql1XoOP4/Ds3bwFqShHUYraGg==}
@@ -1544,16 +1544,16 @@ packages:
     resolution: {integrity: sha512-5dchwDJUuNRFVj6ZdcbB88zh2InQiNIw+dvYiTJ6mzmleAuj+fUZSt+sQwej1IQmQI5v9IIBcVgCZ9ibs0Ec6g==}
     engines: {node: '>=18.x'}
 
-  '@zayne-labs/toolkit-core@0.9.42':
-    resolution: {integrity: sha512-bAoZgUmMddtgK8lGrbZzKg143RVRFanKYD6gTC7z32duuwT61VjBHZ5I2Rnkgo2MTi8nUUSfymbKe757TtXdAA==}
+  '@zayne-labs/toolkit-core@0.9.44':
+    resolution: {integrity: sha512-JWFIyimSuqzJPU/0PZOTqjcoamg47dcPvyh2hHuwVXP56MctmaGL3NzLxxvwuZ/dqslWlh7DreKF29SNTCvyag==}
     engines: {node: '>=18.x'}
 
-  '@zayne-labs/toolkit-react@0.9.42':
-    resolution: {integrity: sha512-/UOE496vQiFJYZ1lAWyRA3B8Dh57CUEmrlym7qF/tPOux8Le1myGDJdF8hR9Lt4SXT9yjFdJbSN1HqNvyhTpBQ==}
+  '@zayne-labs/toolkit-react@0.9.44':
+    resolution: {integrity: sha512-wx47HgYLmVALAbm/yWqcAQQxmk/w1rF8JeZbxOKqImg4IJsiCNRmSwKX14+cxEHC5JR4JRNruVUV5k9Aylp87Q==}
     engines: {node: '>=18.x'}
     peerDependencies:
-      '@types/react': '>=18.0.0'
-      react: '>=18.0.0'
+      '@types/react': '>=19.0.0'
+      react: '>=19.0.0'
       zustand: '>=5.0.0'
     peerDependenciesMeta:
       '@types/react':
@@ -1567,8 +1567,8 @@ packages:
     resolution: {integrity: sha512-sF8+Sa+d5gB9sNDq0FLKUFmcqEi6tjfBICNUYTGKda8QY6/1SJK/RqU6ZLNP+XE6BLnsOueSespoBJN+xBjX/w==}
     engines: {node: '>=18.x'}
 
-  '@zayne-labs/toolkit-type-helpers@0.9.42':
-    resolution: {integrity: sha512-d+L7H3jO2RCIYuMIpaiZ496u7wKe7eYoDX+EYOpqP/uTscP5H6aL49sLfWYmqkEhpU6417hZ034NSU4Vfv97ZA==}
+  '@zayne-labs/toolkit-type-helpers@0.9.44':
+    resolution: {integrity: sha512-12LOwuNyqabI13/2IZtGKQOzolT1Bj8uN/r9ZAGPRJ8FawrilGIUGLAFu3sfH+4xeAh1k+EFECOeAIJu1fNnJw==}
     engines: {node: '>=18.x'}
 
   '@zayne-labs/tsconfig@0.8.2':
@@ -3645,8 +3645,8 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
 
-  zod@3.24.4:
-    resolution: {integrity: sha512-OdqJE9UDRPwWsrHjLN2F8bPxvwJBK22EHLWtanu0LSYr5YqzsaaW3RMgmjwr8Rypg5k+meEJdSPXJZXE/yqOMg==}
+  zod@3.25.1:
+    resolution: {integrity: sha512-bkxUGQiqWDTXHSgqtevYDri5ee2GPC9szPct4pqpzLEpswgDQmuseDz81ZF0AnNu1xsmnBVmbtv/t/WeUIHlpg==}
 
   zustand@5.0.4:
     resolution: {integrity: sha512-39VFTN5InDtMd28ZhjLyuTnlytDr9HfwO512Ai4I8ZABCoyAj4F1+sr7sD1jP/+p7k77Iko0Pb5NhgBFDCX0kQ==}
@@ -4637,12 +4637,12 @@ snapshots:
       '@tailwindcss/oxide-win32-arm64-msvc': 4.1.7
       '@tailwindcss/oxide-win32-x64-msvc': 4.1.7
 
-  '@tailwindcss/vite@4.1.7(vite@6.3.5(@types/node@22.15.18)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.4)(yaml@2.7.1))':
+  '@tailwindcss/vite@4.1.7(vite@6.3.5(@types/node@22.15.19)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.4)(yaml@2.7.1))':
     dependencies:
       '@tailwindcss/node': 4.1.7
       '@tailwindcss/oxide': 4.1.7
       tailwindcss: 4.1.7
-      vite: 6.3.5(@types/node@22.15.18)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.4)(yaml@2.7.1)
+      vite: 6.3.5(@types/node@22.15.19)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.4)(yaml@2.7.1)
 
   '@total-typescript/ts-reset@0.6.1': {}
 
@@ -4657,7 +4657,7 @@ snapshots:
 
   '@types/node@12.20.55': {}
 
-  '@types/node@22.15.18':
+  '@types/node@22.15.19':
     dependencies:
       undici-types: 6.21.0
 
@@ -4847,16 +4847,16 @@ snapshots:
   '@unrs/resolver-binding-win32-x64-msvc@1.7.2':
     optional: true
 
-  '@vitejs/plugin-react-swc@3.9.0(vite@6.3.5(@types/node@22.15.18)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.4)(yaml@2.7.1))':
+  '@vitejs/plugin-react-swc@3.9.0(vite@6.3.5(@types/node@22.15.19)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.4)(yaml@2.7.1))':
     dependencies:
       '@swc/core': 1.11.24
-      vite: 6.3.5(@types/node@22.15.18)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.4)(yaml@2.7.1)
+      vite: 6.3.5(@types/node@22.15.19)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.4)(yaml@2.7.1)
     transitivePeerDependencies:
       - '@swc/helpers'
 
   '@zayne-labs/callapi@1.7.16': {}
 
-  '@zayne-labs/eslint-config@0.8.2(@eslint-react/eslint-plugin@1.49.0(eslint@9.27.0(jiti@2.4.2))(ts-api-utils@2.1.0(typescript@5.8.3))(typescript@5.8.3))(@zayne-labs/toolkit-type-helpers@0.9.42)(eslint-plugin-react-hooks@5.2.0(eslint@9.27.0(jiti@2.4.2)))(eslint-plugin-react-refresh@0.4.20(eslint@9.27.0(jiti@2.4.2)))(eslint@9.27.0(jiti@2.4.2))(typescript@5.8.3)':
+  '@zayne-labs/eslint-config@0.8.2(@eslint-react/eslint-plugin@1.49.0(eslint@9.27.0(jiti@2.4.2))(ts-api-utils@2.1.0(typescript@5.8.3))(typescript@5.8.3))(@zayne-labs/toolkit-type-helpers@0.9.44)(eslint-plugin-react-hooks@5.2.0(eslint@9.27.0(jiti@2.4.2)))(eslint-plugin-react-refresh@0.4.20(eslint@9.27.0(jiti@2.4.2)))(eslint@9.27.0(jiti@2.4.2))(typescript@5.8.3)':
     dependencies:
       '@antfu/install-pkg': 1.0.0
       '@clack/prompts': 0.10.1
@@ -4864,7 +4864,7 @@ snapshots:
       '@eslint/compat': 1.2.9(eslint@9.27.0(jiti@2.4.2))
       '@eslint/js': 9.25.1
       '@stylistic/eslint-plugin': 4.2.0(eslint@9.27.0(jiti@2.4.2))(typescript@5.8.3)
-      '@zayne-labs/toolkit-type-helpers': 0.9.42
+      '@zayne-labs/toolkit-type-helpers': 0.9.44
       ansis: 3.17.0
       cac: 6.7.14
       eslint: 9.27.0(jiti@2.4.2)
@@ -4903,14 +4903,14 @@ snapshots:
     dependencies:
       '@zayne-labs/toolkit-type-helpers': 0.9.38
 
-  '@zayne-labs/toolkit-core@0.9.42':
+  '@zayne-labs/toolkit-core@0.9.44':
     dependencies:
-      '@zayne-labs/toolkit-type-helpers': 0.9.42
+      '@zayne-labs/toolkit-type-helpers': 0.9.44
 
-  '@zayne-labs/toolkit-react@0.9.42(@types/react@19.1.4)(react@19.1.0)(zustand@5.0.4(@types/react@19.1.4)(react@19.1.0))':
+  '@zayne-labs/toolkit-react@0.9.44(@types/react@19.1.4)(react@19.1.0)(zustand@5.0.4(@types/react@19.1.4)(react@19.1.0))':
     dependencies:
-      '@zayne-labs/toolkit-core': 0.9.42
-      '@zayne-labs/toolkit-type-helpers': 0.9.42
+      '@zayne-labs/toolkit-core': 0.9.44
+      '@zayne-labs/toolkit-type-helpers': 0.9.44
     optionalDependencies:
       '@types/react': 19.1.4
       react: 19.1.0
@@ -4918,7 +4918,7 @@ snapshots:
 
   '@zayne-labs/toolkit-type-helpers@0.9.38': {}
 
-  '@zayne-labs/toolkit-type-helpers@0.9.42': {}
+  '@zayne-labs/toolkit-type-helpers@0.9.44': {}
 
   '@zayne-labs/tsconfig@0.8.2': {}
 
@@ -6824,7 +6824,7 @@ snapshots:
 
   validate-npm-package-name@5.0.1: {}
 
-  vite@6.3.5(@types/node@22.15.18)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.4)(yaml@2.7.1):
+  vite@6.3.5(@types/node@22.15.19)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.19.4)(yaml@2.7.1):
     dependencies:
       esbuild: 0.25.4
       fdir: 6.4.4(picomatch@4.0.2)
@@ -6833,7 +6833,7 @@ snapshots:
       rollup: 4.40.2
       tinyglobby: 0.2.13
     optionalDependencies:
-      '@types/node': 22.15.18
+      '@types/node': 22.15.19
       fsevents: 2.3.3
       jiti: 2.4.2
       lightningcss: 1.30.1
@@ -6909,7 +6909,7 @@ snapshots:
 
   yocto-queue@0.1.0: {}
 
-  zod@3.24.4: {}
+  zod@3.25.1: {}
 
   zustand@5.0.4(@types/react@19.1.4)(react@19.1.0):
     optionalDependencies:

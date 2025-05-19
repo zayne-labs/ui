@@ -19,8 +19,11 @@ const initialState: ErrorBoundaryState = {
 	hasError: false,
 };
 
-const hasArrayChanged = (a: unknown[] = [], b: unknown[] = []) => {
-	return a.length !== b.length || a.some((item, index) => !Object.is(item, b[index]));
+const hasArrayChanged = (arrayOne: unknown[] = [], arrayTwo: unknown[] = []) => {
+	return (
+		arrayOne.length !== arrayTwo.length
+		|| arrayOne.some((item, index) => !Object.is(item, arrayTwo[index]))
+	);
 };
 
 /**
@@ -50,9 +53,9 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 		const { hasError } = this.state;
 		const { resetKeys } = this.props;
 
-		// There's an edge case where if the thing that triggered the error happens to *also* be in the resetKeys array, we'd end up resetting the error boundary immediately.
-		// This would likely trigger a second error to be thrown.
-		// So we make sure that we don't check the resetKeys on the first call of cDU after the error is set.
+		// == There's an edge case where if the thing that triggered the error happens to *also* be in the resetKeys array, we'd end up resetting the error boundary immediately.
+		// == This would likely trigger a second error to be thrown.
+		// == So we make sure that we don't check the resetKeys on the first call of cDU after the error is set.
 
 		if (hasError && prevState.error !== null && hasArrayChanged(prevProps.resetKeys, resetKeys)) {
 			this.props.onReset?.({

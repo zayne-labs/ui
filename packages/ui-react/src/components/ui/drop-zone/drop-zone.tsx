@@ -88,19 +88,23 @@ export function DropZoneContainer<TElement extends React.ElementType = "div">(
 	return <Component {...dropZoneContext.getContainerProps(restOfProps)} />;
 }
 
-type SlotComponentProps = GetSlotComponentProps<
-	"preview",
-	React.ReactNode | ((props: UseDropZoneResult) => React.ReactNode)
->;
+type RenderPropFn = (props: UseDropZoneResult) => React.ReactNode;
+
+type SlotComponentProps = GetSlotComponentProps<"preview", React.ReactNode | RenderPropFn>;
+
+export function DropZoneContext(props: { children: RenderPropFn }) {
+	const { children } = props;
+
+	const dropZoneContext = useDropZoneContext();
+
+	return children(dropZoneContext);
+}
 
 export const DropZoneImagePreview = withSlotNameAndSymbol<SlotComponentProps>("preview", (props) => {
 	const { children } = props;
 
 	if (isFunction(children)) {
-		// == I can afford to call this conditionally because it uses `use` only under the hood
-		const dropZoneContext = useDropZoneContext();
-
-		return children(dropZoneContext);
+		return <DropZoneContext>{children}</DropZoneContext>;
 	}
 
 	return children;

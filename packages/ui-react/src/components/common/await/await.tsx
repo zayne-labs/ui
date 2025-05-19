@@ -8,7 +8,7 @@ import { Fragment as ReactFragment, Suspense, use, useMemo } from "react";
 import { ErrorBoundary, type ErrorBoundaryProps, useErrorBoundaryContext } from "../error-boundary";
 import { Slot } from "../slot";
 import type { SuspenseWithBoundaryProps } from "../suspense-with-boundary";
-import { AwaitContext, useAwaitContext } from "./await-context";
+import { AwaitContextProvider, useAwaitContext } from "./await-context";
 
 type RenderPropFn<TValue> = (result: TValue) => React.ReactNode;
 
@@ -60,9 +60,9 @@ function AwaitRootInner<TValue>(props: AwaitRootInnerProps<TValue>) {
 	const contextValue = useMemo(() => ({ promise, result }), [promise, result]);
 
 	return (
-		<AwaitContext value={contextValue}>
+		<AwaitContextProvider value={contextValue}>
 			<Component {...(asChild && contextValue)}>{resolvedChildren}</Component>
-		</AwaitContext>
+		</AwaitContextProvider>
 	);
 }
 
