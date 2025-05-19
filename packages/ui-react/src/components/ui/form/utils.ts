@@ -1,5 +1,5 @@
 import { cnMerge } from "@/lib/utils/cn";
-import { isObject, isString } from "@zayne-labs/toolkit-type-helpers";
+import { isObject } from "@zayne-labs/toolkit-type-helpers";
 import { createElement } from "react";
 import type { FieldErrors, FieldValues } from "react-hook-form";
 import type { FormErrorMessagePrimitiveProps, FormInputProps } from "./form";
@@ -19,14 +19,14 @@ export const getFieldErrorMessage = (options: {
 		return errors.root?.[fieldName]?.message;
 	}
 
-	// Handle nested paths like 'notifications.0'
+	// == Handle nested paths like `notifications.0`
 	const pathParts = fieldName.includes(".") ? fieldName.split(".") : null;
 
-	// If there are no path parts, return the error message
+	// == If there are no path parts, return the error message
 	if (!pathParts) {
 		const errorMessage = errors[fieldName]?.message;
 
-		return isString(errorMessage) ? errorMessage : null;
+		return errorMessage as string | string[];
 	}
 
 	let extractedError = errors;
@@ -39,7 +39,7 @@ export const getFieldErrorMessage = (options: {
 		extractedError = currentError as never;
 	}
 
-	const errorMessage = isString(extractedError.message) ? extractedError.message : null;
+	const errorMessage = extractedError.message as unknown as string | string[];
 
 	return errorMessage;
 };
