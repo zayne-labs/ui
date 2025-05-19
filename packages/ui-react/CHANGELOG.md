@@ -1,5 +1,27 @@
 # @zayne-labs/ui-react
 
+## 0.9.10
+
+### Patch Changes
+
+- acbb091: feat(form, await): ✨ enhance form and await components
+
+   - feat(form): Add form root context for global eye icon visibility
+   - feat(form): Update FormInput to respect root context with local prop fallback
+   - feat(form): Implement flexible eye icon configuration via boolean or custom render
+   - feat(await): Refactor Await component with new slot-based API
+   - feat(await): Add support for error boundaries and suspense fallbacks
+   - feat(await): Improve type safety and component composition
+   - chore: Update dependencies and lockfile
+
+- fe14949: feat(ui-react/await): 🪝 export `AwaitContextProvider` & `useAwaitContext` hook from custom context
+  fix(ui-react/await): 🐛 use `AwaitContextProvider` in `Await` component for correct rendering
+  fix(ui-react/error-boundary): ⚙️ enhance `resetKeys` prop change detection logic
+  refactor(ui-react/drop-zone): 🏷️ alias `DropZoneContext` as `Context` in part exports
+  fix(ui-react/drop-zone): 🛡️ ensure `DropZoneProvider` consistently wraps children with context
+  chore(deps): 📦 bump React to 19.1.0, update toolkit & other dependencies
+  chore: 🔧 synchronize versions across package.json files & update pnpm-lock.yaml
+
 ## 0.9.8
 
 ### Patch Changes
