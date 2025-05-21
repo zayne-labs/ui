@@ -1,5 +1,5 @@
 import { cnMerge } from "@/lib/utils/cn";
-import { dataAttr } from "@/lib/utils/common";
+import { dataAttr } from "@zayne-labs/toolkit-core";
 import {
 	type FileMeta,
 	type FileValidationErrorContext,
