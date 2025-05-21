@@ -1,5 +1,15 @@
 # @zayne-labs/ui-react
 
+## 0.9.15
+
+### Patch Changes
+
+- 4c7df05: chore(deps): 🔄 update toolkit packages and dependencies
+
+   feat(form): ✨ add form root context for eye icon control
+   feat(drop-zone): 🎯 enhance drop-zone hook implementation
+   refactor(common): 🗑️ remove redundant common utils
+
 ## 0.9.10
 
 ### Patch Changes
