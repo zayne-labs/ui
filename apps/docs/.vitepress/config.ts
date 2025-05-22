@@ -2,11 +2,38 @@ import { defineConfig } from "vitepress";
 
 export default defineConfig({
 	description: "Documentation for @zayne-labs/ui",
-	srcDir: "src",
-	title: "UI",
+	head: [
+		["meta", { content: "#aa99ff", name: "theme-color" }],
+		["meta", { content: "website", name: "og:type" }],
+		["meta", { content: "@zayne-labs/ui", name: "og:title" }],
+		[
+			"meta",
+			{
+				content:
+					"A collection of unstyled UI and utility components, inspired by the composable patterns of Radix UI and Shadcn",
+				name: "og:description",
+			},
+		],
+		["meta", { content: "/logo.svg", name: "og:image" }],
+		["meta", { content: "summary", name: "twitter:card" }],
+		["meta", { content: "@zayne-labs/ui", name: "twitter:title" }],
+		[
+			"meta",
+			{
+				content:
+					"A collection of unstyled UI and utility components, inspired by the composable patterns of Radix UI and Shadcn",
+				name: "twitter:description",
+			},
+		],
+		["meta", { content: "/logo.svg", name: "twitter:image" }],
+		["link", { href: "/logo.svg", rel: "icon", type: "image/svg+xml" }],
+	],
 
-	// eslint-disable-next-line perfectionist/sort-objects
+	srcDir: "src",
+
 	themeConfig: {
+		logo: { height: 24, src: "/logo.svg", width: 24 },
+
 		nav: [
 			{ link: "/", text: "Home" },
 			{ link: "/ui", text: "UI Components" },
@@ -50,4 +77,6 @@ export default defineConfig({
 
 		socialLinks: [{ icon: "github", link: "https://github.com/Ryan-Zayne/Z-COMMERCE--FULLSTACK" }],
 	},
+
+	title: " ",
 });
