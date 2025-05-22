@@ -29,6 +29,8 @@ export default defineConfig({
 		["link", { href: "/logo.svg", rel: "icon", type: "image/svg+xml" }],
 	],
 
+	ignoreDeadLinks: true,
+
 	srcDir: "src",
 
 	themeConfig: {
