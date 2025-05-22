@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Gradient for background -->
+    <linearGradient id="bgGradient" x1="0" y1="0" x2="120" y2="120">
+      <stop offset="0%" stop-color="#1a1a1a"/>
+      <stop offset="100%" stop-color="#2d2d2d"/>
+    </linearGradient>
+    
+    <!-- Gradient for letters -->
+    <linearGradient id="letterGradient" x1="0" y1="0" x2="0" y2="60">
+      <stop offset="0%" stop-color="#BFB3FF"/>
+      <stop offset="100%" stop-color="#AA99FF"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background with subtle gradient -->
+  <circle cx="60" cy="60" r="56" fill="url(#bgGradient)" filter="drop-shadow(0 4px 8px rgba(0,0,0,0.15))"/>
+  
+  <!-- UI Letters with refined styling -->
+  <g transform="translate(32, 35)">
+    <!-- U Letter with perfect curves -->
+    <path d="
+      M 5 5
+      V 35
+      C 5 45 13 53 25 53
+      C 37 53 45 45 45 35
+      V 5"
+      stroke="url(#letterGradient)"
+      stroke-width="10"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      fill="none"
+    />
+    
+    <!-- I Letter with matching proportions -->
+    <g transform="translate(55, 0)">
+      <!-- Top dot -->
+      <circle cx="0" cy="5" r="5" fill="url(#letterGradient)"/>
+      <!-- Vertical line -->
+      <line
+        x1="0" y1="15"
+        x2="0" y2="43"
+        stroke="url(#letterGradient)"
+        stroke-width="10"
+        stroke-linecap="round"
+      />
+      <!-- Bottom dot -->
+      <circle cx="0" cy="53" r="5" fill="url(#letterGradient)"/>
+    </g>
+  </g>
+</svg>

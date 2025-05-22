@@ -1,0 +1,13 @@
+{
+	"extends": "@zayne-labs/tsconfig/bundler/dom/app",
+
+	"compilerOptions": {
+		"baseUrl": ".",
+		"paths": {
+			"@/*": ["src/*"]
+		}
+	},
+
+	"include": ["**/*", "./.vitepress/**/*"],
+	"exclude": ["node_modules/**"]
+}
