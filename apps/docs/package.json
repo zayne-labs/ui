@@ -1,7 +1,6 @@
 {
 	"name": "docs",
 	"type": "module",
-	"version": "1.0.0",
 	"description": "",
 	"author": "",
 	"license": "ISC",
@@ -11,11 +10,11 @@
 		"dev": "vitepress dev",
 		"preview": "vitepress preview"
 	},
-	"devDependencies": {
-		"@zayne-labs/tsconfig": "0.8.2",
-		"vitepress": "^1.6.3"
-	},
 	"dependencies": {
 		"vue": "^3.5.14"
+	},
+	"devDependencies": {
+		"@zayne-labs/tsconfig": "0.9.1",
+		"vitepress": "^1.6.3"
 	}
 }
