@@ -1,5 +1,11 @@
 # @zayne-labs/ui-react
 
+## 0.9.16
+
+### Patch Changes
+
+- aad321c: fix(slot): if the children array contains only one item, extract it to prevent no display
+
 ## 0.9.15
 
 ### Patch Changes
