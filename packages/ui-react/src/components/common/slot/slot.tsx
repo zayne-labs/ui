@@ -65,19 +65,21 @@ type UnknownProps = Record<string, unknown>;
 function SlotClone(props: SlotCloneProps) {
 	const { children, ref: forwardedRef, ...restOfSlotProps } = props;
 
-	if (!isValidElement<UnknownProps>(children)) {
-		return Children.count(children) > 1 ? Children.only(null) : null;
+	const resolvedChildren = isArray(children) && children.length === 1 ? children[0] : children;
+
+	if (!isValidElement<UnknownProps>(resolvedChildren)) {
+		return Children.count(resolvedChildren) > 1 ? Children.only(null) : null;
 	}
 
-	const childRef = (children.props.ref
-		?? (children as unknown as UnknownProps).ref) as React.Ref<HTMLElement>;
+	const childRef = (resolvedChildren.props.ref
+		?? (resolvedChildren as unknown as UnknownProps).ref) as React.Ref<HTMLElement>;
 
 	const mergedRef = forwardedRef ? composeRefs(forwardedRef, childRef) : childRef;
 
 	const clonedProps = {
-		...mergeProps(restOfSlotProps, children.props),
-		...(children.type !== ReactFragment && { ref: mergedRef }),
+		...mergeProps(restOfSlotProps, resolvedChildren.props),
+		...(resolvedChildren.type !== ReactFragment && { ref: mergedRef }),
 	};
 
-	return cloneElement(children, clonedProps);
+	return cloneElement(resolvedChildren, clonedProps);
 }
