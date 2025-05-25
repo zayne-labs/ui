@@ -2,7 +2,7 @@
 
 import * as React from "react";
 
-import { Slot } from "@/components/common";
+import { Show, Slot } from "@/components/common";
 import { type GetSlotComponentProps, getSlotMap, withSlotNameAndSymbol } from "@/lib/utils/getSlotMap";
 import type { DiscriminatedRenderProps, PolymorphicProps } from "@zayne-labs/toolkit-react/utils";
 import { isArray, isFunction } from "@zayne-labs/toolkit-type-helpers";
@@ -106,13 +106,11 @@ export const DropZoneImagePreview = withSlotNameAndSymbol<SlotComponentProps>("p
 	if (isFunction(children)) {
 		return (
 			<DropZoneContext>
-				{(dropZoneCtx) => {
-					if (dropZoneCtx.dropZoneState.filesWithPreview.length === 0) {
-						return null;
-					}
-
-					return children(dropZoneCtx);
-				}}
+				{(dropZoneCtx) => (
+					<Show.Root when={dropZoneCtx.dropZoneState.filesWithPreview.length > 0}>
+						{children(dropZoneCtx)}
+					</Show.Root>
+				)}
 			</DropZoneContext>
 		);
 	}

@@ -12,7 +12,7 @@ type ShowProps<TWhen> = {
 };
 
 export function ShowRoot<TWhen>(props: ShowProps<TWhen>) {
-	const { children, fallback, when } = props;
+	const { children, fallback = null, when } = props;
 
 	const resolvedChildren = isFunction(children) ? children(when as TWhen) : children;
 
