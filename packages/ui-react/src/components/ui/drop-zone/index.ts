@@ -1,3 +1,5 @@
+"use client";
+
 export * from "./drop-zone";
 
 export * as DropZone from "./drop-zone-parts";

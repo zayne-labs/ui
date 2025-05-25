@@ -104,7 +104,17 @@ export const DropZoneImagePreview = withSlotNameAndSymbol<SlotComponentProps>("p
 	const { children } = props;
 
 	if (isFunction(children)) {
-		return <DropZoneContext>{children}</DropZoneContext>;
+		return (
+			<DropZoneContext>
+				{(dropZoneCtx) => {
+					if (dropZoneCtx.dropZoneState.filesWithPreview.length === 0) {
+						return null;
+					}
+
+					return children(dropZoneCtx);
+				}}
+			</DropZoneContext>
+		);
 	}
 
 	return children;

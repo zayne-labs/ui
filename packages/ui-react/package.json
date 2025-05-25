@@ -34,8 +34,8 @@
 		"node": ">=18.x"
 	},
 	"scripts": {
-		"build": "concurrently 'tsup' 'pnpm:build:tailwind'",
-		"build:dev": "cross-env NODE_ENV=development tsup",
+		"build": "concurrently 'pnpm:build:tailwind' 'tsdown'",
+		"build:dev": "cross-env NODE_ENV=development tsdown",
 		"build:tailwind": "tailwindcss -i css/style.css -o ./dist/style.css",
 		"build:test": "concurrently --prefix-colors \"yellow.bold,#7da4f8.bold,magenta\" --names PUBLINT,TSUP 'pnpm:lint:publint' 'pnpm:build:dev'",
 		"dev": "pnpm build:dev --watch",
@@ -90,7 +90,7 @@
 		"size-limit": "11.2.0",
 		"tailwind-merge": "3.3.0",
 		"tailwindcss": "^4.1.7",
-		"tsup": "8.5.0",
+		"tsdown": "^0.12.3",
 		"typescript": "5.8.3",
 		"zustand": "5.0.5"
 	},
