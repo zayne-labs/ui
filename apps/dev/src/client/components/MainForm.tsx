@@ -1,22 +1,22 @@
-import { zodResolver } from "@hookform/resolvers/zod";
+import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { Icon } from "@iconify/react";
 import { DropZone } from "@zayne-labs/ui-react/ui/drop-zone";
 import { Form } from "@zayne-labs/ui-react/ui/form";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 const zodSchema = z.object({
-	files: z.instanceof(File, { message: "Please upload a file" }).nullable(),
+	files: z.file({ error: "Please upload a file" }).nullable(),
 	notifications: z.array(z.coerce.string()),
 	password: z.string().min(8, "Password must be at least 8 characters"),
 	username: z.string().min(6, "Username must be at least 6 characters"),
 });
 
 function MainForm() {
-	const methods = useForm({
+	const methods = useForm<z.infer<typeof zodSchema>>({
 		defaultValues: { notifications: [], password: "", username: "" },
 		mode: "onChange",
-		resolver: zodResolver(zodSchema),
+		resolver: standardSchemaResolver(zodSchema),
 	});
 
 	const onSubmit = methods.handleSubmit((data) => console.info({ formData: data }));

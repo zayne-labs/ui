@@ -1,7 +1,7 @@
 {
 	"name": "@zayne-labs/ui-react",
 	"type": "module",
-	"version": "0.9.17",
+	"version": "0.9.18",
 	"packageManager": "pnpm@9.15.4",
 	"description": "A composable UI/UI-utilities components library. ",
 	"author": "Ryan Zayne",
@@ -35,7 +35,7 @@
 	},
 	"scripts": {
 		"build": "concurrently 'pnpm:build:tailwind' 'tsdown'",
-		"build:dev": "cross-env NODE_ENV=development tsdown",
+		"build:dev": "cross-env NODE_ENV=development tsup",
 		"build:tailwind": "tailwindcss -i css/style.css -o ./dist/style.css",
 		"build:test": "concurrently --prefix-colors \"yellow.bold,#7da4f8.bold,magenta\" --names PUBLINT,TSUP 'pnpm:lint:publint' 'pnpm:build:dev'",
 		"dev": "pnpm build:dev --watch",
@@ -91,6 +91,7 @@
 		"tailwind-merge": "3.3.0",
 		"tailwindcss": "^4.1.7",
 		"tsdown": "^0.12.3",
+		"tsup": "^8.5.0",
 		"typescript": "5.8.3",
 		"zustand": "5.0.5"
 	},
