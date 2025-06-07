@@ -1,7 +1,7 @@
 {
 	"name": "@zayne-labs/ui-react",
 	"type": "module",
-	"version": "0.9.18",
+	"version": "0.9.19",
 	"packageManager": "pnpm@9.15.4",
 	"description": "A composable UI/UI-utilities components library. ",
 	"author": "Ryan Zayne",
@@ -67,18 +67,18 @@
 		}
 	},
 	"dependencies": {
-		"@zayne-labs/toolkit-core": "0.9.46",
-		"@zayne-labs/toolkit-react": "0.9.46",
-		"@zayne-labs/toolkit-type-helpers": "0.9.46"
+		"@zayne-labs/toolkit-core": "0.9.48",
+		"@zayne-labs/toolkit-react": "0.9.48",
+		"@zayne-labs/toolkit-type-helpers": "0.9.48"
 	},
 	"devDependencies": {
 		"@arethetypeswrong/cli": "0.18.1",
 		"@size-limit/esbuild-why": "11.2.0",
 		"@size-limit/preset-small-lib": "11.2.0",
-		"@tailwindcss/cli": "^4.1.7",
+		"@tailwindcss/cli": "^4.1.8",
 		"@total-typescript/ts-reset": "0.6.1",
-		"@types/react": "19.1.5",
-		"@types/react-dom": "19.1.5",
+		"@types/react": "19.1.6",
+		"@types/react-dom": "19.1.6",
 		"@zayne-labs/tsconfig": "0.9.1",
 		"concurrently": "9.1.2",
 		"cross-env": "7.0.3",
@@ -86,11 +86,11 @@
 		"publish": "^0.6.0",
 		"react": "19.1.0",
 		"react-dom": "19.1.0",
-		"react-hook-form": "7.56.4",
+		"react-hook-form": "7.57.0",
 		"size-limit": "11.2.0",
 		"tailwind-merge": "3.3.0",
-		"tailwindcss": "^4.1.7",
-		"tsdown": "^0.12.3",
+		"tailwindcss": "^4.1.8",
+		"tsdown": "^0.12.7",
 		"tsup": "^8.5.0",
 		"typescript": "5.8.3",
 		"zustand": "5.0.5"

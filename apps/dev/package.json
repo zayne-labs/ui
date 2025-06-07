@@ -10,26 +10,26 @@
 		"preview": "vite preview"
 	},
 	"dependencies": {
-		"@hookform/resolvers": "^5.0.1",
+		"@hookform/resolvers": "^5.1.0",
 		"@iconify/react": "^6.0.0",
-		"@zayne-labs/callapi": "^1.7.18",
-		"@zayne-labs/toolkit-core": "0.9.46",
-		"@zayne-labs/toolkit-react": "0.9.46",
+		"@zayne-labs/callapi": "^1.8.2",
+		"@zayne-labs/toolkit-core": "0.9.48",
+		"@zayne-labs/toolkit-react": "0.9.48",
 		"@zayne-labs/ui-react": "workspace:*",
 		"react": "19.1.0",
 		"react-dom": "19.1.0",
-		"react-hook-form": "^7.56.4",
-		"zod": "^3.25.20"
+		"react-hook-form": "^7.57.0",
+		"zod": "^3.25.56"
 	},
 	"devDependencies": {
-		"@tailwindcss/vite": "^4.1.7",
-		"@types/node": "^22.15.21",
-		"@types/react": "19.1.5",
-		"@types/react-dom": "19.1.5",
-		"@vitejs/plugin-react-swc": "^3.9.0",
+		"@tailwindcss/vite": "^4.1.8",
+		"@types/node": "^22.15.30",
+		"@types/react": "19.1.6",
+		"@types/react-dom": "19.1.6",
+		"@vitejs/plugin-react-swc": "^3.10.1",
 		"@zayne-labs/tsconfig": "0.9.1",
 		"publish": "^0.6.0",
-		"tailwindcss": "^4.1.7",
+		"tailwindcss": "^4.1.8",
 		"tsx": "^4.19.4",
 		"typescript": "5.8.3",
 		"vite": "^6.3.5"

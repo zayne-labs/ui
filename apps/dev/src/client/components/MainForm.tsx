@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Icon } from "@iconify/react";
 import { DropZone } from "@zayne-labs/ui-react/ui/drop-zone";
 import { Form } from "@zayne-labs/ui-react/ui/form";
@@ -13,10 +13,10 @@ const zodSchema = z.object({
 });
 
 function MainForm() {
-	const methods = useForm<z.infer<typeof zodSchema>>({
+	const methods = useForm({
 		defaultValues: { notifications: [], password: "", username: "" },
 		mode: "onChange",
-		resolver: standardSchemaResolver(zodSchema),
+		resolver: zodResolver(zodSchema),
 	});
 
 	const onSubmit = methods.handleSubmit((data) => console.info({ formData: data }));
