@@ -1,3 +1,5 @@
 @theme {
 	--color-shadcn-muted-foreground: hsl(215.4, 16.3%, 46.9%);
+	--color-shadcn-card: oklch(1 0 0);
+	--color-shadcn-card-foreground: oklch(0.145 0 0);
 }
