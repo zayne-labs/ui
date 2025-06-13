@@ -1,5 +1,9 @@
 @theme {
-	--color-shadcn-muted-foreground: hsl(215.4, 16.3%, 46.9%);
-	--color-shadcn-card: oklch(1 0 0);
-	--color-shadcn-card-foreground: oklch(0.145 0 0);
+	--color-shadcn-muted-foreground: oklch(0.556 0 0);
+	--color-shadcn-destructive: oklch(0.577 0.245 27.325);
+}
+
+:where(.dark, [data-theme="dark"]) {
+	--color-shadcn-muted-foreground: oklch(0.708 0 0);
+	--color-shadcn-destructive: oklch(0.704 0.191 22.216);
 }

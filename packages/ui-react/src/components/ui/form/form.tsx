@@ -118,7 +118,7 @@ export function FormField<TControl, TFieldValues extends FieldValues = FieldValu
 	const WrapperElement = withWrapper ? "div" : ReactFragment;
 
 	const wrapperElementProps = withWrapper && {
-		className: cnMerge("flex flex-col", className),
+		className: cnMerge("flex flex-col gap-2", className),
 		"data-part": "field",
 		"data-scope": "form",
 		"data-slot": "form-field",
@@ -811,7 +811,7 @@ export function FormErrorMessage<TControl, TFieldValues extends FieldValues = Fi
 					key={state.errorMessage}
 					{...renderProps}
 					className={cnMerge(
-						"text-[13px] text-red-600",
+						"text-shadcn-destructive text-[13px]",
 						"data-[index=0]:mt-1",
 						renderProps.className,
 						className

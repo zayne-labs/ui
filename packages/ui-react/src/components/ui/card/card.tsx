@@ -14,8 +14,7 @@ export function CardRoot<TElement extends React.ElementType = "article">(
 			data-scope="card"
 			data-part="root"
 			data-slot="card-root"
-			className="bg-shadcn-card text-shadcn-card-foreground flex flex-col gap-6 rounded-xl border py-6
-				shadow-sm"
+			className="flex flex-col gap-6 rounded-xl border py-6 shadow-sm"
 			{...restOfProps}
 		/>
 	);
