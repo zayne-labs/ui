@@ -9,7 +9,16 @@ export function CardRoot<TElement extends React.ElementType = "article">(
 ) {
 	const { as: Element = "article", ...restOfProps } = props;
 
-	return <Element {...restOfProps} />;
+	return (
+		<Element
+			data-scope="card"
+			data-part="root"
+			data-slot="card-root"
+			className="bg-shadcn-card text-shadcn-card-foreground flex flex-col gap-6 rounded-xl border py-6
+				shadow-sm"
+			{...restOfProps}
+		/>
+	);
 }
 
 export function CardHeader<TElement extends React.ElementType = "header">(
@@ -17,13 +26,30 @@ export function CardHeader<TElement extends React.ElementType = "header">(
 ) {
 	const { as: Element = "header", ...restOfProps } = props;
 
-	return <Element {...restOfProps} />;
+	return (
+		<Element
+			data-scope="card"
+			data-part="header"
+			data-slot="card-header"
+			className="@container/card-header has-data-[slot=card-action]:grid-cols-[1fr_auto] grid
+				auto-rows-min grid-rows-[auto_auto] items-start gap-1.5 px-6"
+			{...restOfProps}
+		/>
+	);
 }
 
 export function CardTitle<TElement extends React.ElementType = "h3">(props: PolymorphicProps<TElement>) {
 	const { as: Element = "h3", className, ...restOfProps } = props;
 
-	return <Element className={cnMerge("font-semibold", className)} {...restOfProps} />;
+	return (
+		<Element
+			data-scope="card"
+			data-part="title"
+			data-slot="card-title"
+			className={cnMerge("font-semibold leading-none", className)}
+			{...restOfProps}
+		/>
+	);
 }
 
 export function CardDescription<TElement extends React.ElementType = "p">(
@@ -32,24 +58,60 @@ export function CardDescription<TElement extends React.ElementType = "p">(
 	const { as: Element = "p", className, ...restOfProps } = props;
 
 	return (
-		<Element className={cnMerge("text-shadcn-muted-foreground text-sm", className)} {...restOfProps} />
+		<Element
+			data-scope="card"
+			data-part="description"
+			data-slot="card-description"
+			className={cnMerge("text-shadcn-muted-foreground text-sm", className)}
+			{...restOfProps}
+		/>
 	);
 }
 
 export function CardContent<TElement extends React.ElementType = "div">(
 	props: PolymorphicProps<TElement>
 ) {
-	const { as: Element = "div", ...restOfProps } = props;
+	const { as: Element = "div", className, ...restOfProps } = props;
 
-	return <Element {...restOfProps} />;
+	return (
+		<Element
+			data-scope="card"
+			data-part="content"
+			data-slot="card-content"
+			className={cnMerge("px-6", className)}
+			{...restOfProps}
+		/>
+	);
+}
+
+export function CardAction<TElement extends React.ElementType = "div">(props: PolymorphicProps<TElement>) {
+	const { as: Element = "div", className, ...restOfProps } = props;
+
+	return (
+		<Element
+			data-scope="card"
+			data-part="action"
+			data-slot="card-action"
+			className={cnMerge("col-start-2 row-span-2 row-start-1 self-start justify-self-end", className)}
+			{...restOfProps}
+		/>
+	);
 }
 
 export function CardFooter<TElement extends React.ElementType = "footer">(
 	props: PolymorphicProps<TElement, { asChild?: boolean }>
 ) {
-	const { as: Element = "footer", asChild, ...restOfProps } = props;
+	const { as: Element = "footer", asChild, className, ...restOfProps } = props;
 
 	const Component = asChild ? Slot.Root : Element;
 
-	return <Component {...restOfProps} />;
+	return (
+		<Component
+			data-scope="card"
+			data-part="footer"
+			data-slot="card-footer"
+			className={cnMerge("flex items-center px-6", className)}
+			{...restOfProps}
+		/>
+	);
 }
