@@ -1,8 +1,7 @@
+import type { PolymorphicProps } from "@zayne-labs/toolkit-react/utils";
 import * as React from "react";
-
 import { Slot } from "@/components/common/slot";
 import { cnMerge } from "@/lib/utils/cn";
-import type { PolymorphicProps } from "@zayne-labs/toolkit-react/utils";
 
 export function CardRoot<TElement extends React.ElementType = "article">(
 	props: PolymorphicProps<TElement>
@@ -109,7 +108,7 @@ export function CardFooter<TElement extends React.ElementType = "footer">(
 			data-scope="card"
 			data-part="footer"
 			data-slot="card-footer"
-			className={cnMerge("flex items-center px-6", className)}
+			className={cnMerge("px-6", className)}
 			{...restOfProps}
 		/>
 	);
