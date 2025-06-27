@@ -1,8 +1,8 @@
-import { cnMerge } from "@/lib/utils/cn";
 import { off, on } from "@zayne-labs/toolkit-core";
 import { useCallbackRef } from "@zayne-labs/toolkit-react";
-import { type InferProps, composeRefs, mergeTwoProps } from "@zayne-labs/toolkit-react/utils";
+import { composeRefs, type InferProps, mergeTwoProps } from "@zayne-labs/toolkit-react/utils";
 import { type RefCallback, useRef } from "react";
+import { cnMerge } from "@/lib/utils/cn";
 import { handleScrollSnap, resetCursor, updateCursor } from "./utils";
 
 type ItemProps<TItemElement extends HTMLElement> = Omit<InferProps<TItemElement>, "children">;

@@ -1,22 +1,35 @@
 "use client";
 
+import type { CssWithCustomProperties, PolymorphicProps } from "@zayne-labs/toolkit-react/utils";
 import * as React from "react";
-
 import { Show } from "@/components/common";
 import { getElementList } from "@/components/common/for";
 import { cnMerge } from "@/lib/utils/cn";
-import type { CssWithCustomProperties, PolymorphicProps } from "@zayne-labs/toolkit-react/utils";
-import { useCarouselStoreContext } from "./carousel-store-context";
+import {
+	CarouselStoreContextProvider,
+	useCarousel,
+	useCarouselStoreContext,
+} from "./carousel-store-context";
 import { ChevronLeftIcon } from "./icons";
 import type {
 	CarouselButtonsProps,
 	CarouselContentProps,
 	CarouselControlProps,
 	CarouselIndicatorProps,
+	CarouselRootProps,
 	CarouselWrapperProps,
+	ImagesType,
 	OtherCarouselProps,
 } from "./types";
 import { useCarouselOptions } from "./useCarouselOptions";
+
+export function CarouselRoot<TImages extends ImagesType>(props: CarouselRootProps<TImages>) {
+	const { children, images, onSlideBtnClick } = props;
+
+	const carouselStore = useCarousel({ images, onSlideBtnClick });
+
+	return <CarouselStoreContextProvider store={carouselStore}>{children}</CarouselStoreContextProvider>;
+}
 
 // TODO -  Add dragging and swiping support
 export function CarouselContent<TElement extends React.ElementType = "article">(
@@ -90,29 +103,31 @@ export function CarouselControls(props: CarouselControlProps) {
 	return (
 		<div className={cnMerge("absolute inset-0 flex justify-between", classNames?.base)}>
 			<Show.Root when={icon?.iconType}>
-				<CarouselButton
-					variant="prev"
-					classNames={{
-						defaultIcon: classNames?.defaultIcon,
-						iconContainer: cnMerge(
-							icon?.iconType === "nextIcon" && "rotate-180",
-							classNames?.iconContainer
-						),
-					}}
-					icon={icon?.icon}
-				/>
+				<Show.Content>
+					<CarouselButton
+						variant="prev"
+						classNames={{
+							defaultIcon: classNames?.defaultIcon,
+							iconContainer: cnMerge(
+								icon?.iconType === "nextIcon" && "rotate-180",
+								classNames?.iconContainer
+							),
+						}}
+						icon={icon?.icon}
+					/>
 
-				<CarouselButton
-					variant="next"
-					classNames={{
-						defaultIcon: classNames?.defaultIcon,
-						iconContainer: cnMerge(
-							icon?.iconType === "prevIcon" && "rotate-180",
-							classNames?.iconContainer
-						),
-					}}
-					icon={icon?.icon}
-				/>
+					<CarouselButton
+						variant="next"
+						classNames={{
+							defaultIcon: classNames?.defaultIcon,
+							iconContainer: cnMerge(
+								icon?.iconType === "prevIcon" && "rotate-180",
+								classNames?.iconContainer
+							),
+						}}
+						icon={icon?.icon}
+					/>
+				</Show.Content>
 
 				<Show.Otherwise>
 					<CarouselButton
@@ -159,11 +174,9 @@ export function CarouselItemGroup<TArrayItem>(props: CarouselWrapperProps<TArray
 				} satisfies CssWithCustomProperties as CssWithCustomProperties
 			}
 		>
-			{typeof render === "function" ? (
+			{typeof render === "function" ?
 				<ItemList each={images} render={render} />
-			) : (
-				<ItemList each={images}>{children}</ItemList>
-			)}
+			:	<ItemList each={images}>{children}</ItemList>}
 		</ul>
 	);
 }
@@ -205,11 +218,9 @@ export function CarouselIndicatorGroup<TArrayItem>(props: CarouselWrapperProps<T
 				className
 			)}
 		>
-			{typeof render === "function" ? (
+			{typeof render === "function" ?
 				<IndicatorList each={images} render={render} />
-			) : (
-				<IndicatorList each={images}>{children}</IndicatorList>
-			)}
+			:	<IndicatorList each={images}>{children}</IndicatorList>}
 		</ul>
 	);
 }

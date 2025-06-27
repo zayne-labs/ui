@@ -1,6 +1,6 @@
-import { type FileMeta, createImagePreview } from "@zayne-labs/toolkit-core";
+import { createImagePreview, type FileMeta } from "@zayne-labs/toolkit-core";
 import { isFile } from "@zayne-labs/toolkit-type-helpers";
-import type { FileWithPreview } from "./use-drop-zone";
+import type { FileState } from "./types";
 
 export const generateUniqueId = (file: File | FileMeta): string => {
 	if (!isFile(file)) {
@@ -10,21 +10,21 @@ export const generateUniqueId = (file: File | FileMeta): string => {
 	return `${file.name}-(${Math.round(performance.now())})-${crypto.randomUUID().slice(0, 8)}`;
 };
 
-export const createObjectURL = (file: File, disallowPreviewForNonImageFiles: boolean) => {
+export const createObjectURL = (file: File, disallowPreviewForNonImageFiles: boolean | undefined) => {
 	if (disallowPreviewForNonImageFiles && !file.type.startsWith("image/")) return;
 
 	return createImagePreview(file);
 };
 
 export const clearObjectURL = (
-	fileWithPreview: FileWithPreview | undefined,
-	disallowPreviewForNonImageFiles: boolean
+	fileState: FileState | undefined,
+	disallowPreviewForNonImageFiles: boolean | undefined
 ) => {
-	if (!isFile(fileWithPreview?.file)) return;
+	if (!isFile(fileState?.file)) return;
 
-	if (disallowPreviewForNonImageFiles && !fileWithPreview.file.type.startsWith("image/")) return;
+	if (disallowPreviewForNonImageFiles && !fileState.file.type.startsWith("image/")) return;
 
-	if (!fileWithPreview.preview) return;
+	if (!fileState.preview) return;
 
-	URL.revokeObjectURL(fileWithPreview.preview);
+	URL.revokeObjectURL(fileState.preview);
 };

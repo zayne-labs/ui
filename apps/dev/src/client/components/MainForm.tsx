@@ -2,6 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Icon } from "@iconify/react";
 import { DropZone } from "@zayne-labs/ui-react/ui/drop-zone";
 import { Form } from "@zayne-labs/ui-react/ui/form";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod/v4";
 
@@ -20,6 +21,10 @@ function MainForm() {
 	});
 
 	const onSubmit = methods.handleSubmit((data) => console.info({ formData: data }));
+
+	const [max, setMax] = useState(3);
+
+	console.info({ max });
 
 	return (
 		<Form.Root
@@ -66,64 +71,75 @@ function MainForm() {
 						render={({ field }) => (
 							<DropZone.Root
 								classNames={{
-									base: `data-dragging:border-pink-600 data-dragging:bg-pink-50 flex w-full
+									container: `data-drag-over:border-pink-600 data-drag-over:bg-pink-50 flex w-full
 									flex-col items-center justify-center rounded-lg border-2 border-dashed
 									border-gray-300 p-6 transition-colors hover:border-blue-500 hover:bg-blue-50`,
 								}}
-								onUpload={(ctx) => field.onChange(ctx.filesWithPreview[0]?.file)}
-								// multiple={true}
-								maxFileSize={4}
-								maxFileCount={2}
+								onUpload={(ctx) => field.onChange(ctx.fileStateArray[0]?.file)}
+								onUploadError={(ctx) => console.error(ctx.message)}
+								onUploadSuccess={(ctx) => console.info(ctx.message)}
+								multiple={true}
+								allowedFileTypes={["image/jpeg", "image/png", "image/jpg", "image/gif"]}
+								maxFileSize={{ mb: max }}
+								maxFileCount={3}
 							>
-								<svg
-									className="mb-2 size-8 text-gray-400"
-									fill="none"
-									stroke="currentColor"
-									viewBox="0 0 24 24"
-								>
-									<path
-										strokeLinecap="round"
-										strokeLinejoin="round"
-										strokeWidth="2"
-										d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-									/>
-								</svg>
-								<p className="text-sm font-medium text-gray-600">
-									Drop files here or click to upload
-								</p>
-								<p className="mt-1 text-xs text-gray-500">Supported files: PDF, DOC, DOCX</p>
-
-								<DropZone.ImagePreview>
+								<DropZone.Area>
+									<svg
+										className="mb-2 size-8 text-gray-400"
+										fill="none"
+										stroke="currentColor"
+										viewBox="0 0 24 24"
+									>
+										<path
+											strokeLinecap="round"
+											strokeLinejoin="round"
+											strokeWidth="2"
+											d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+										/>
+									</svg>
+									<p className="text-sm font-medium text-gray-600">
+										Drop files here or click to upload
+									</p>
+									<p className="mt-1 text-xs text-gray-500">Supported files: PDF, DOC, DOCX</p>
+								</DropZone.Area>
+								<DropZone.FilePreview>
 									{(ctx) => {
-										return (
-											<>
-												{ctx.dropZoneState.filesWithPreview.map((fileWithPreview) => (
-													<img
-														key={fileWithPreview.id}
-														className="mx-auto size-48 rounded-lg object-cover shadow-md
-															transition-transform hover:scale-105"
-														src={fileWithPreview.preview}
-														alt="File preview"
-													/>
-												))}
-
-												{ctx.dropZoneState.errors.map((error) => (
-													<div
-														key={error.file.name}
-														className="flex items-center gap-1 text-xs text-red-600"
-														role="alert"
-													>
-														<Icon icon="lucide:circle-alert" className="size-3 shrink-0" />
-														<span>{error.message}</span>
-													</div>
-												))}
-											</>
-										);
+										return ctx.fileStateArray.map((fileState) => (
+											<img
+												key={fileState.id}
+												className="mx-auto size-48 rounded-md object-cover shadow-md
+													transition-transform hover:scale-105"
+												src={fileState.preview}
+												alt="File preview"
+											/>
+										));
 									}}
-								</DropZone.ImagePreview>
+								</DropZone.FilePreview>
+								<DropZone.ErrorView>
+									{(ctx) =>
+										ctx.errors.map((error) => (
+											<div
+												key={error.file.name}
+												className="flex items-center gap-1 text-xs text-red-600"
+												role="alert"
+											>
+												<Icon icon="lucide:circle-alert" className="size-3 shrink-0" />
+												<span>{error.message}</span>
+											</div>
+										))
+									}
+								</DropZone.ErrorView>
 							</DropZone.Root>
 						)}
 					/>
+
+					<button
+						type="button"
+						onClick={() => setMax((prev) => prev + 1)}
+						className="mt-2 rounded-md bg-blue-600 px-4 py-2 text-white"
+					>
+						Set max to 10
+					</button>
 
 					<Form.ErrorMessage />
 				</Form.Field>

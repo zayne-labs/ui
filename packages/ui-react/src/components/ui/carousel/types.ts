@@ -5,7 +5,8 @@ import type { Prettify, UnionDiscriminator } from "@zayne-labs/toolkit-type-help
 // Carousel store types
 export type ImagesType = Array<Record<string, string>> | string[];
 
-export type CarouselStore<TImages extends ImagesType = ImagesType> = {
+// eslint-disable-next-line ts-eslint/no-explicit-any -- allow any for type compatibility
+export type CarouselStore<TImages extends ImagesType = any> = {
 	actions: {
 		goToNextSlide: () => void;
 		goToPreviousSlide: () => void;
@@ -19,7 +20,7 @@ export type CarouselStore<TImages extends ImagesType = ImagesType> = {
 
 export type CarouselStoreApi<TImages extends ImagesType = ImagesType> = StoreApi<CarouselStore<TImages>>;
 
-export type CarouselProviderProps<TImages extends ImagesType = ImagesType> = {
+export type CarouselRootProps<TImages extends ImagesType = ImagesType> = {
 	children: React.ReactNode;
 	images: CarouselStore<TImages>["images"];
 	onSlideBtnClick?: () => void;
