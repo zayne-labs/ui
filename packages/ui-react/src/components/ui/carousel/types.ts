@@ -77,11 +77,11 @@ export type CarouselIndicatorProps = {
 	currentIndex: number;
 };
 
-type RenderPropFn<TArrayItem> = (
-	item: NoInfer<TArrayItem>,
-	index: number,
-	array: NoInfer<TArrayItem[]>
-) => React.ReactNode;
+type RenderPropFn<TArrayItem> = (context: {
+	array: NoInfer<TArrayItem[]>;
+	index: number;
+	item: NoInfer<TArrayItem>;
+}) => React.ReactNode;
 
 type BaseWrapperProps<TArrayItem> = Prettify<
 	DiscriminatedRenderProps<RenderPropFn<TArrayItem>> & { each?: TArrayItem[] }

@@ -4,14 +4,14 @@ import type {
 	FileValidationSettingsAsync,
 } from "@zayne-labs/toolkit-core";
 import { dataAttr } from "@zayne-labs/toolkit-core";
-import { useCallbackRef, useConstant, useShallowComparedValue, useStore } from "@zayne-labs/toolkit-react";
+import { useCallbackRef, useConstant, useShallowComparedValue } from "@zayne-labs/toolkit-react";
 import type { InferProps } from "@zayne-labs/toolkit-react/utils";
 import { composeRefs, composeTwoEventHandlers, mergeTwoProps } from "@zayne-labs/toolkit-react/utils";
 import type { Awaitable } from "@zayne-labs/toolkit-type-helpers";
 import { useCallback, useMemo, useRef } from "react";
 import { cnMerge } from "@/lib/utils/cn";
-import { createDropZoneStore } from "./drop-zone-store";
-import type { DropZoneActions, DropZonePropGetters, DropZoneState } from "./types";
+import { createDropZoneStore, useDropZoneStore } from "./drop-zone-store";
+import type { DropZonePropGetters, DropZoneState } from "./types";
 
 export type ExtraProps = {
 	container?: InferProps<HTMLElement>;
@@ -23,11 +23,11 @@ export type ClassNames = {
 	[key in keyof ExtraProps]: string;
 };
 
-export type UseDropZoneResult = DropZoneState & {
-	actions: DropZoneActions;
+export type UseDropZoneResult = {
 	inputRef: React.RefObject<HTMLInputElement | null>;
 	propGetters: DropZonePropGetters;
 	storeApi: ReturnType<typeof createDropZoneStore>;
+	useDropZoneStore: typeof useDropZoneStore;
 };
 
 export type UseDropZoneProps = FileValidationSettingsAsync & {
@@ -164,7 +164,9 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 		savedValidator,
 	]);
 
-	const store = useStore(storeApi);
+	const isDraggingOver = useDropZoneStore(storeApi, (store) => store.isDraggingOver);
+
+	const actions = storeApi.getState().actions;
 
 	const getContainerProps: UseDropZoneResult["propGetters"]["getContainerProps"] = useCallback(
 		(containerProps) => {
@@ -174,38 +176,35 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 				...mergedContainerProps,
 				className: cnMerge(
 					"relative isolate flex flex-col",
-					store.isDraggingOver && "opacity-60",
+					isDraggingOver && "opacity-60",
 					classNames?.container,
 					mergedContainerProps.className
 				),
-				"data-drag-over": dataAttr(store.isDraggingOver),
+				"data-drag-over": dataAttr(isDraggingOver),
 				"data-scope": "dropzone",
 				// eslint-disable-next-line perfectionist/sort-objects -- I need data-scope to be first
 				"data-part": "container",
 				"data-slot": "dropzone-container",
 				onDragEnter: composeTwoEventHandlers(
-					store.actions.handleDragEnter,
+					actions.handleDragEnter,
 					mergedContainerProps.onDragEnter
 				),
 				onDragLeave: composeTwoEventHandlers(
-					store.actions.handleDragLeave,
+					actions.handleDragLeave,
 					mergedContainerProps.onDragLeave
 				),
-				onDragOver: composeTwoEventHandlers(
-					store.actions.handleDragOver,
-					mergedContainerProps.onDragOver
-				),
-				onDrop: composeTwoEventHandlers(store.actions.handleDrop, mergedContainerProps.onDrop),
+				onDragOver: composeTwoEventHandlers(actions.handleDragOver, mergedContainerProps.onDragOver),
+				onDrop: composeTwoEventHandlers(actions.handleDrop, mergedContainerProps.onDrop),
 			};
 		},
 		[
-			store.actions.handleDragEnter,
-			store.actions.handleDragLeave,
-			store.actions.handleDragOver,
-			store.actions.handleDrop,
+			actions.handleDragEnter,
+			actions.handleDragLeave,
+			actions.handleDragOver,
+			actions.handleDrop,
 			classNames?.container,
 			extraProps?.container,
-			store.isDraggingOver,
+			isDraggingOver,
 		]
 	);
 
@@ -223,23 +222,23 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 					classNames?.input,
 					mergedInputProps.className
 				),
-				"data-drag-over": dataAttr(store.isDraggingOver),
+				"data-drag-over": dataAttr(isDraggingOver),
 				"data-scope": "dropzone",
 				// eslint-disable-next-line perfectionist/sort-objects -- I need data-scope to be first
 				"data-part": "input",
 				"data-slot": "dropzone-input",
 				multiple: multiple ?? mergedInputProps.multiple,
-				onChange: composeTwoEventHandlers(store.actions.handleChange, mergedInputProps.onChange),
+				onChange: composeTwoEventHandlers(actions.handleChange, mergedInputProps.onChange),
 				ref: composeRefs(inputRef, mergedInputProps.ref),
 				type: "file",
 			};
 		},
 		[
-			store.actions.handleChange,
+			actions.handleChange,
 			allowedFileTypes,
 			classNames?.input,
 			extraProps?.input,
-			store.isDraggingOver,
+			isDraggingOver,
 			multiple,
 			shouldOpenFilePickerOnAreaClick,
 		]
@@ -256,32 +255,37 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 				// eslint-disable-next-line perfectionist/sort-objects -- I need data-scope to be first
 				"data-part": "trigger",
 				"data-slot": "dropzone-trigger",
-				onClick: composeTwoEventHandlers(store.actions.openFilePicker, mergedTriggerProps.onClick),
+				onClick: composeTwoEventHandlers(actions.openFilePicker, mergedTriggerProps.onClick),
 			};
 		},
-		[store.actions.openFilePicker, classNames?.trigger, extraProps?.trigger]
+		[actions.openFilePicker, classNames?.trigger, extraProps?.trigger]
 	);
 
+	// const getDeleteProps: UseDropZoneResult["propGetters"]["getTriggerProps"] = useCallback(
+	// 	(triggerProps) => {
+	// 		const mergedTriggerProps = mergeTwoProps(extraProps?.trigger, triggerProps);
+
+	// 		return {
+	// 			...mergedTriggerProps,
+	// 			className: cnMerge(classNames?.trigger, mergedTriggerProps.className),
+	// 			"data-scope": "dropzone",
+	// 			// eslint-disable-next-line perfectionist/sort-objects -- I need data-scope to be first
+	// 			"data-part": "trigger",
+	// 			"data-slot": "dropzone-trigger",
+	// 			onClick: composeTwoEventHandlers(actions.openFilePicker, mergedTriggerProps.onClick),
+	// 		};
+	// 	},
+	// 	[actions.openFilePicker, classNames?.trigger, extraProps?.trigger]
+	// );
+
 	const propGetters = useMemo(
-		() => ({
-			getContainerProps,
-			getInputProps,
-			getTriggerProps,
-		}),
+		() => ({ getContainerProps, getInputProps, getTriggerProps }),
 		[getContainerProps, getInputProps, getTriggerProps]
 	);
 
 	const result = useMemo<UseDropZoneResult>(
-		() => ({
-			actions: store.actions,
-			errors: store.errors,
-			fileStateArray: store.fileStateArray,
-			inputRef,
-			isDraggingOver: store.isDraggingOver,
-			propGetters,
-			storeApi,
-		}),
-		[store.actions, store.errors, store.fileStateArray, store.isDraggingOver, propGetters, storeApi]
+		() => ({ inputRef, propGetters, storeApi, useDropZoneStore }) satisfies UseDropZoneResult,
+		[propGetters, storeApi]
 	);
 
 	return result;

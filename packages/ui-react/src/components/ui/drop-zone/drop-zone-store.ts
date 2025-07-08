@@ -1,4 +1,5 @@
 import { createStore, handleFileValidationAsync, toArray } from "@zayne-labs/toolkit-core";
+import { useStore } from "@zayne-labs/toolkit-react";
 import { isString } from "@zayne-labs/toolkit-type-helpers";
 import type { DropZoneActions, DropZoneState } from "./types";
 import type { UseDropZoneProps } from "./use-drop-zone";
@@ -6,7 +7,7 @@ import { clearObjectURL, createObjectURL, generateUniqueId } from "./utils";
 
 export type DropZoneStore = DropZoneState & { actions: DropZoneActions };
 
-const createDropZoneStore = (
+export const createDropZoneStore = (
 	initStoreValues: Pick<
 		UseDropZoneProps,
 		| "allowedFileTypes"
@@ -45,12 +46,10 @@ const createDropZoneStore = (
 
 	const initialFileArray = toArray(initialFiles).filter(Boolean);
 
-	const inputElement = inputRef.current;
-
 	const clearInputValue = () => {
-		if (!inputElement) return;
+		if (!inputRef.current) return;
 
-		inputElement.value = "";
+		inputRef.current.value = "";
 	};
 
 	const store = createStore<DropZoneStore>((set, get) => ({
@@ -93,7 +92,7 @@ const createDropZoneStore = (
 				});
 
 				if (validFiles.length === 0) {
-					set({ errors });
+					set({ errors, isDraggingOver: false });
 					return;
 				}
 
@@ -106,6 +105,7 @@ const createDropZoneStore = (
 				set({
 					errors,
 					fileStateArray: multiple ? [...fileStateArray, ...newFileStateArray] : newFileStateArray,
+					isDraggingOver: false,
 				});
 
 				await onUpload?.({ fileStateArray: newFileStateArray });
@@ -146,23 +146,23 @@ const createDropZoneStore = (
 			handleDragOver: (event) => {
 				event.preventDefault();
 				event.stopPropagation();
-
-				set({ isDraggingOver: true });
 			},
 			handleDrop: async (event) => {
 				event.preventDefault();
 				event.stopPropagation();
+
+				if (inputRef.current?.disabled) {
+					return;
+				}
 
 				const fileList = event.dataTransfer.files;
 
 				const { actions } = get();
 
 				await actions.addFiles(fileList);
-
-				set({ isDraggingOver: false });
 			},
 			openFilePicker: () => {
-				inputElement?.click();
+				inputRef.current?.click();
 			},
 			removeFile: (fileToRemoveOrFileId) => {
 				const { fileStateArray } = get();
@@ -195,4 +195,6 @@ const createDropZoneStore = (
 	return store;
 };
 
-export { createDropZoneStore };
+export const useDropZoneStore: typeof useStore = (...params) => {
+	return useStore(...params);
+};

@@ -1,6 +1,5 @@
 "use client";
 
-import { useShallowComparedSelector } from "@zayne-labs/toolkit-react";
 import type { PolymorphicProps } from "@zayne-labs/toolkit-react/utils";
 import { isFunction, type SelectorFn } from "@zayne-labs/toolkit-type-helpers";
 import * as React from "react";
@@ -19,11 +18,11 @@ export type DropZoneRootProps = UseDropZoneProps & { children: React.ReactNode }
 export function DropZoneRoot(props: DropZoneRootProps) {
 	const { children, ...restOfProps } = props;
 
-	const { propGetters, storeApi } = useDropZone(restOfProps);
+	const dropZone = useDropZone(restOfProps);
 
 	return (
-		<DropZoneStoreContextProvider store={storeApi}>
-			<DropZonePropGettersContextProvider value={propGetters}>
+		<DropZoneStoreContextProvider store={dropZone.storeApi}>
+			<DropZonePropGettersContextProvider value={dropZone.propGetters}>
 				{children}
 			</DropZonePropGettersContextProvider>
 		</DropZoneStoreContextProvider>
@@ -110,31 +109,29 @@ type DropZoneFilePreviewProps = {
 export function DropZoneFilePreview(props: DropZoneFilePreviewProps) {
 	const { children } = props;
 
-	const filePreviewCtx = useDropZoneStoreContext(
-		useShallowComparedSelector(({ actions, fileStateArray }) => ({ actions, fileStateArray }))
-	);
+	const fileStateArray = useDropZoneStoreContext((store) => store.fileStateArray);
+	const actions = useDropZoneStoreContext((store) => store.actions);
 
-	if (filePreviewCtx.fileStateArray.length === 0) return;
+	if (fileStateArray.length === 0) return;
 
-	const resolvedChildren = isFunction(children) ? children(filePreviewCtx) : children;
+	const resolvedChildren = isFunction(children) ? children({ actions, fileStateArray }) : children;
 
 	return resolvedChildren;
 }
 
-type DropZoneErrorViewProps = {
+type DropZoneErrorPreviewProps = {
 	children: React.ReactNode | ((props: Pick<DropZoneStore, "actions" | "errors">) => React.ReactNode);
 };
 
-export function DropZoneErrorView(props: DropZoneErrorViewProps) {
+export function DropZoneErrorPreview(props: DropZoneErrorPreviewProps) {
 	const { children } = props;
 
-	const errorViewCtx = useDropZoneStoreContext(
-		useShallowComparedSelector(({ actions, errors }) => ({ actions, errors }))
-	);
+	const errors = useDropZoneStoreContext((store) => store.errors);
+	const actions = useDropZoneStoreContext((store) => store.actions);
 
-	if (errorViewCtx.errors.length === 0) return;
+	if (errors.length === 0) return;
 
-	const resolvedChildren = isFunction(children) ? children(errorViewCtx) : children;
+	const resolvedChildren = isFunction(children) ? children({ actions, errors }) : children;
 
 	return resolvedChildren;
 }

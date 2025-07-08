@@ -3,7 +3,7 @@
 import type { CssWithCustomProperties, PolymorphicProps } from "@zayne-labs/toolkit-react/utils";
 import * as React from "react";
 import { Show } from "@/components/common";
-import { getElementList } from "@/components/common/for";
+import { For } from "@/components/common/for";
 import { cnMerge } from "@/lib/utils/cn";
 import {
 	CarouselStoreContextProvider,
@@ -156,7 +156,6 @@ export function CarouselControls(props: CarouselControlProps) {
 export function CarouselItemGroup<TArrayItem>(props: CarouselWrapperProps<TArrayItem>) {
 	const { children, className, each, render } = props;
 
-	const [ItemList] = getElementList("base");
 	const currentSlide = useCarouselStoreContext((state) => state.currentSlide);
 	const images = useCarouselStoreContext((state) => each ?? (state.images as TArrayItem[]));
 
@@ -175,8 +174,8 @@ export function CarouselItemGroup<TArrayItem>(props: CarouselWrapperProps<TArray
 			}
 		>
 			{typeof render === "function" ?
-				<ItemList each={images} render={render} />
-			:	<ItemList each={images}>{children}</ItemList>}
+				<For each={images} render={(item, index, array) => render({ array, index, item })} />
+			:	<For each={images}>{(item, index, array) => children({ array, index, item })}</For>}
 		</ul>
 	);
 }
@@ -208,7 +207,6 @@ export function CarouselIndicatorGroup<TArrayItem>(props: CarouselWrapperProps<T
 	const { children, className, each, render } = props;
 
 	const images = useCarouselStoreContext((state) => each ?? (state.images as TArrayItem[]));
-	const [IndicatorList] = getElementList("base");
 
 	return (
 		<ul
@@ -219,8 +217,8 @@ export function CarouselIndicatorGroup<TArrayItem>(props: CarouselWrapperProps<T
 			)}
 		>
 			{typeof render === "function" ?
-				<IndicatorList each={images} render={render} />
-			:	<IndicatorList each={images}>{children}</IndicatorList>}
+				<For each={images} render={(item, index, array) => render({ array, index, item })} />
+			:	<For each={images}>{(item, index, array) => children({ array, index, item })}</For>}
 		</ul>
 	);
 }

@@ -138,9 +138,8 @@ function MainForm() {
 						onClick={() => setMax((prev) => prev + 1)}
 						className="mt-2 rounded-md bg-blue-600 px-4 py-2 text-white"
 					>
-						Set max to 10
+						Increase max size
 					</button>
-
 					<Form.ErrorMessage />
 				</Form.Field>
 
