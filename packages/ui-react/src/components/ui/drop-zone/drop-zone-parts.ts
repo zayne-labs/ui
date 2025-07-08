@@ -2,7 +2,7 @@ export {
 	DropZoneArea as Area,
 	DropZoneContainer as Container,
 	DropZoneContext as Context,
-	DropZoneErrorView as ErrorView,
+	DropZoneErrorPreview as ErrorPreview,
 	DropZoneFilePreview as FilePreview,
 	DropZoneInput as Input,
 	DropZoneRoot as Root,
