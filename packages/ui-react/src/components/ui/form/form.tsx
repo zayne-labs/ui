@@ -51,7 +51,8 @@ import {
 } from "./form-context";
 import { getEyeIcon, getFieldErrorMessage } from "./utils";
 
-export type FieldValues = Record<string, unknown>;
+// eslint-disable-next-line ts-eslint/no-explicit-any -- Necessary so that arrays can also be accepted
+export type FieldValues = Record<string, any>;
 
 type FormRootProps<TFieldValues extends FieldValues> = Partial<FormRootContext>
 	& React.ComponentPropsWithoutRef<"form"> & {
@@ -872,11 +873,11 @@ export function FormSubscribeToFieldValue<
 
 	const { control } = useFormMethodsContext();
 
-	const formValue = useWatch({ control, name: name as string });
-
-	const fieldProps = { value: formValue };
+	const formValue = useWatch({ control, name: name as string }) as unknown;
 
 	const selectedChildren = typeof children === "function" ? children : render;
+
+	const fieldProps = { value: formValue };
 
 	const resolvedChildren = selectedChildren(fieldProps as never);
 
