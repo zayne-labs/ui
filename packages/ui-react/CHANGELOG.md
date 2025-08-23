@@ -1,11 +1,29 @@
 # @zayne-labs/ui-react
 
+## 0.10.0
+
+### Minor Changes
+
+- 3b6a671: feat: a lot of improvements made to the carousel and dropzone
+  refactor(drop-zone): ♻️ optimize drop-zone store and component structure
+
+   refactor(carousel): ♻️ replace getElementList with For component in carousel
+   refactor(drag-scroll): ♻️ optimize useDragScroll with useCallback and useMemo
+   refactor(slot): ♻️ update slot component implementation
+
+   chore: update dependencies and improve component structure
+   - Updated various dependencies in package.json and pnpm-lock.yaml for better compatibility and performance.
+   - Refactored components in the ui-react package, including Carousel and DropZone, to enhance functionality and maintainability.
+   - Adjusted props and types in Carousel and Form components for improved type safety and clarity.
+   - Cleaned up imports and optimized component rendering logic.
+
+   fix(form): update FieldValues type to accept any and ensure compatibility with arrays
+
 ## 0.9.20
 
 ### Patch Changes
 
 - eed8df0: style(theme): update color variables and form styles
-
    - refactor(theme): switch to OKLCH color space for better consistency
    - feat(theme): add dark mode support for destructive colors
    - fix(card): remove hardcoded background and text colors
@@ -45,7 +63,6 @@
 ### Patch Changes
 
 - acbb091: feat(form, await): ✨ enhance form and await components
-
    - feat(form): Add form root context for global eye icon visibility
    - feat(form): Update FormInput to respect root context with local prop fallback
    - feat(form): Implement flexible eye icon configuration via boolean or custom render
@@ -67,11 +84,9 @@
 ### Patch Changes
 
 - 6b470f4: refactor(utils/getSlotMap): improve slot children typing with Extract for ReactNode ♻️
-
    - refactor: use Extract<TSlotComponentProps["children"], React.ReactNode> to refine slot children type in GetSpecificSlotsType for better type safety 🧑‍💻
 
    refactor(drop-zone): simplify preview slot rendering logic ♻️
-
    - refactor: remove function check for slots.preview, now rendered directly (assumes preview is always a ReactNode) 🧹
 
 ## 0.9.4
@@ -177,7 +192,6 @@
 ### Patch Changes
 
 - 50986f9: feat(await): add "use client" directive and enhance component with asChild prop
-
    - feat(await): add "use client" directive and enhance component with asChild prop
    - chore(deps): upgrade @zayne-labs/\* packages to v0.8.0
    - chore(deps): upgrade @eslint-react/eslint-plugin to v1.42.1
@@ -265,7 +279,6 @@
 ### Minor Changes
 
 - 82512d3: feat(ui-react): add FormSubmitButton component
-
    - Added a `FormSubmitButton` component to the `ui-react` package.
    - This component provides a styled submit button for forms, with support for `asChild` and `unstyled` props.
    - Updated `form-parts.ts` to export the new component.
@@ -278,7 +291,6 @@
 - baad855: feat: add granular subscriptions for formstate and values
 
    refactor: restructure project to use workspace-based monorepo
-
    - Reorganized project structure to use pnpm workspace monorepo setup
    - Moved development app to apps/dev directory
    - Updated workspace configuration and dependencies
@@ -289,7 +301,6 @@
    - Removed root-level tailwind config in favor of app-specific config
 
    Key changes:
-
    - Added pnpm-workspace.yaml for monorepo setup
    - Created apps/dev directory with complete Vite app setup
    - Configured build tooling (Vite, TypeScript, TailwindCSS)
@@ -324,7 +335,6 @@
 ### Minor Changes
 
 - f02d029: feat(form):
-
    - ✨ Add FormDescription component for form field descriptions
    - 🏗️ Move context logic to dedicated form-context.ts file
    - 🛠️ Add useFormFieldContext hook with better error handling
@@ -333,7 +343,6 @@
    refactor(form): 🔄 Enhance form component architecture and API
 
    style(form):
-
    - 🎨 Rename compound component exports to use -parts suffix
    - 🔤 Update provider names for better DX
 
@@ -344,12 +353,10 @@
 - 9f1dfce: feat(components): 🚀 Improve Show and Switch component exports and slot symbols
 
    feat(show): 🔍 Update ShowFallback slot symbol for better clarity
-
    - Change `Symbol.for("fallback")` to `Symbol.for("show-fallback")`
    - Add direct `Show` export for easier component usage
 
    feat(switch): 🔀 Enhance Switch component exports and default case handling
-
    - Update default case slot symbol to `Symbol.for("switch-default")`
    - Fix `getSlotElement` to use `SwitchDefault` instead of `Default`
    - Add direct `Switch` export for more intuitive component usage
@@ -359,23 +366,19 @@
 ### Patch Changes
 
 - 038684c: Changes:
-
    - Standardized component paths to use lowercase naming convention
    - Removed `clsx` dependency in favor of direct `tailwind-merge` usage
    - Changed file structure for common components
 
    Features:
-
    - Added new polymorphic Card component with compound pattern
    - Optimized Slot component's children validation logic
 
    Performance:
-
    - Improved type inference in Slot component
    - Enhanced performance in Slot component by optimizing children checks
 
    Dependencies:
-
    - Removed optional peer dependency on `clsx`
    - Simplified className merging utility to use `tailwind-merge` directly
 
