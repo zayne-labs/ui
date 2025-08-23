@@ -4,13 +4,14 @@ import type {
 	FileValidationSettingsAsync,
 } from "@zayne-labs/toolkit-core";
 import { dataAttr } from "@zayne-labs/toolkit-core";
-import { useCallbackRef, useConstant, useShallowComparedValue } from "@zayne-labs/toolkit-react";
+import { useCallbackRef, useConstant, useShallowComparedValue, useStore } from "@zayne-labs/toolkit-react";
 import type { InferProps } from "@zayne-labs/toolkit-react/utils";
 import { composeRefs, composeTwoEventHandlers, mergeTwoProps } from "@zayne-labs/toolkit-react/utils";
 import type { Awaitable } from "@zayne-labs/toolkit-type-helpers";
 import { useCallback, useMemo, useRef } from "react";
 import { cnMerge } from "@/lib/utils/cn";
-import { createDropZoneStore, useDropZoneStore } from "./drop-zone-store";
+import type { useDropZoneStoreContext } from "./drop-zone-context";
+import { createDropZoneStore } from "./drop-zone-store";
 import type { DropZonePropGetters, DropZoneState } from "./types";
 
 export type ExtraProps = {
@@ -27,7 +28,7 @@ export type UseDropZoneResult = {
 	inputRef: React.RefObject<HTMLInputElement | null>;
 	propGetters: DropZonePropGetters;
 	storeApi: ReturnType<typeof createDropZoneStore>;
-	useDropZoneStore: typeof useDropZoneStore;
+	useDropZoneStore: typeof useDropZoneStoreContext;
 };
 
 export type UseDropZoneProps = FileValidationSettingsAsync & {
@@ -164,9 +165,12 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 		savedValidator,
 	]);
 
-	const isDraggingOver = useDropZoneStore(storeApi, (store) => store.isDraggingOver);
+	const useDropZoneStore: UseDropZoneResult["useDropZoneStore"] = (selector) => {
+		return useStore(storeApi, selector);
+	};
 
-	const actions = storeApi.getState().actions;
+	const isDraggingOver = useDropZoneStore((store) => store.isDraggingOver);
+	const actions = useDropZoneStore((store) => store.actions);
 
 	const getContainerProps: UseDropZoneResult["propGetters"]["getContainerProps"] = useCallback(
 		(containerProps) => {
@@ -283,9 +287,17 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 		[getContainerProps, getInputProps, getTriggerProps]
 	);
 
+	const savedUseDropZoneStore = useCallbackRef(useDropZoneStore);
+
 	const result = useMemo<UseDropZoneResult>(
-		() => ({ inputRef, propGetters, storeApi, useDropZoneStore }) satisfies UseDropZoneResult,
-		[propGetters, storeApi]
+		() =>
+			({
+				inputRef,
+				propGetters,
+				storeApi,
+				useDropZoneStore: savedUseDropZoneStore,
+			}) satisfies UseDropZoneResult,
+		[propGetters, storeApi, savedUseDropZoneStore]
 	);
 
 	return result;

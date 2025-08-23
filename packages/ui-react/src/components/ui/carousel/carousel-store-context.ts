@@ -1,8 +1,8 @@
-import { useCallbackRef } from "@zayne-labs/toolkit-react";
+import { createStore } from "@zayne-labs/toolkit-core";
+import { useCallbackRef, useStore } from "@zayne-labs/toolkit-react";
 import { createZustandContext } from "@zayne-labs/toolkit-react/zustand";
 import type { PrettyOmit } from "@zayne-labs/toolkit-type-helpers";
 import { useMemo } from "react";
-import { createStore } from "@zayne-labs/toolkit-core";
 import type { CarouselRootProps, CarouselStore, ImagesType } from "./types";
 
 const [CarouselStoreContextProvider, useCarouselStoreContext] = createZustandContext<CarouselStore>({
@@ -71,7 +71,16 @@ const useCarousel = <TImages extends ImagesType>(props: Omit<CarouselRootProps<T
 		[images, savedOnSlideBtnClick]
 	);
 
-	return carouselStore;
+	const useCarouselStore: typeof useCarouselStoreContext = (selector) => {
+		return useStore(carouselStore, selector);
+	};
+
+	const savedUseCarouselStore = useCallbackRef(useCarouselStore);
+
+	return useMemo(
+		() => ({ carouselStore, useCarouselStore: savedUseCarouselStore }),
+		[carouselStore, savedUseCarouselStore]
+	);
 };
 
 export { CarouselStoreContextProvider, useCarousel, useCarouselStoreContext };

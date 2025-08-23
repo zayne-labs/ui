@@ -1,19 +1,17 @@
 "use client";
 
+// biome-ignore assist/source/organizeImports: needs to be on top
 import * as React from "react";
 
-import { getElementList } from "@/components/common/for";
-import { Slot } from "@/components/common/slot";
-import { cnMerge } from "@/lib/utils/cn";
-import { getMultipleSlots } from "@/lib/utils/getSlot";
 import { dataAttr, on, toArray } from "@zayne-labs/toolkit-core";
 import { useCallbackRef, useToggle } from "@zayne-labs/toolkit-react";
 import {
+	composeRefs,
+	composeTwoEventHandlers,
+	type DiscriminatedRenderItemProps,
 	type DiscriminatedRenderProps,
 	type InferProps,
 	type PolymorphicProps,
-	composeRefs,
-	composeTwoEventHandlers,
 } from "@zayne-labs/toolkit-react/utils";
 import { type AnyString, defineEnum } from "@zayne-labs/toolkit-type-helpers";
 import { Fragment as ReactFragment, useEffect, useId, useMemo, useRef } from "react";
@@ -33,6 +31,10 @@ import {
 	useFormState,
 	useWatch,
 } from "react-hook-form";
+import { getElementList } from "@/components/common/for";
+import { Slot } from "@/components/common/slot";
+import { cnMerge } from "@/lib/utils/cn";
+import { getMultipleSlots } from "@/lib/utils/getSlot";
 import {
 	type FieldContextValue,
 	type FieldState,
@@ -79,15 +81,17 @@ export function FormRoot<TValues extends FieldValues>(props: FormRootProps<TValu
 	);
 }
 
-type FormFieldProps<TControl, TFieldValues extends FieldValues> = (TControl extends Control<infer TValues>
-	? {
-			control?: never;
-			name: FieldPath<TValues>;
-		}
-	: {
-			control?: Control<TFieldValues>;
-			name: FieldPath<TFieldValues>;
-		})
+type FormFieldProps<TControl, TFieldValues extends FieldValues> = (TControl extends (
+	Control<infer TValues>
+) ?
+	{
+		control?: never;
+		name: FieldPath<TValues>;
+	}
+:	{
+		control?: Control<TFieldValues>;
+		name: FieldPath<TFieldValues>;
+	})
 	& (
 		| (InferProps<"div"> & {
 				withWrapper?: true;
@@ -368,9 +372,9 @@ export function FormInputPrimitive<TFieldValues extends FieldValues>(
 				data-part="input"
 				data-slot="form-input"
 				aria-describedby={
-					!isInvalid
-						? fieldContextValues?.formDescriptionId
-						: `${fieldContextValues?.formDescriptionId} ${fieldContextValues?.formMessageId}`
+					!isInvalid ?
+						fieldContextValues?.formDescriptionId
+					:	`${fieldContextValues?.formDescriptionId} ${fieldContextValues?.formMessageId}`
 				}
 				aria-invalid={dataAttr(isInvalid)}
 				data-invalid={dataAttr(isInvalid)}
@@ -432,9 +436,9 @@ export function FormTextAreaPrimitive<TFieldValues extends FieldValues>(
 			data-part="textarea"
 			data-slot="form-textarea"
 			aria-describedby={
-				!isInvalid
-					? fieldContextValues?.formDescriptionId
-					: `${fieldContextValues?.formDescriptionId} ${fieldContextValues?.formMessageId}`
+				!isInvalid ?
+					fieldContextValues?.formDescriptionId
+				:	`${fieldContextValues?.formDescriptionId} ${fieldContextValues?.formMessageId}`
 			}
 			aria-invalid={dataAttr(isInvalid)}
 			data-disabled={dataAttr(isDisabled)}
@@ -482,9 +486,9 @@ export function FormSelectPrimitive<TFieldValues extends FieldValues>(
 			data-part="select"
 			data-slot="form-select"
 			aria-describedby={
-				!isInvalid
-					? fieldContextValues?.formDescriptionId
-					: `${fieldContextValues?.formDescriptionId} ${fieldContextValues?.formMessageId}`
+				!isInvalid ?
+					fieldContextValues?.formDescriptionId
+				:	`${fieldContextValues?.formDescriptionId} ${fieldContextValues?.formMessageId}`
 			}
 			aria-invalid={dataAttr(isInvalid)}
 			data-disabled={dataAttr(isDisabled)}
@@ -535,9 +539,9 @@ export function FormInput(props: CombinedFormInputProps & { rules?: RegisterOpti
 	const { register } = useFormMethodsContext();
 
 	const SelectedInput =
-		type === "textarea" || type === "select"
-			? InputTypeMap[type as Exclude<typeof type, AnyString>]
-			: FormInputPrimitive;
+		type === "textarea" || type === "select" ?
+			InputTypeMap[type as Exclude<typeof type, AnyString>]
+		:	FormInputPrimitive;
 
 	const registerProps = name ? register(name, rules) : null;
 
@@ -588,7 +592,7 @@ type ErrorMessageRenderFn = (context: {
 }) => React.ReactNode;
 
 export type FormErrorMessagePrimitiveProps<TFieldValues extends FieldValues> =
-	DiscriminatedRenderProps<ErrorMessageRenderFn> & {
+	DiscriminatedRenderItemProps<ErrorMessageRenderFn> & {
 		className?: string;
 		classNames?: {
 			container?: string;
@@ -631,7 +635,7 @@ export const FormErrorMessagePrimitive: FormErrorMessagePrimitiveType = (props) 
 		disableErrorAnimation = false,
 		disableScrollToErrorField = false,
 		fieldName = fieldContextValues?.name,
-		render,
+		renderItem,
 		type = "regular",
 	} = props;
 
@@ -754,13 +758,13 @@ export const FormErrorMessagePrimitive: FormErrorMessagePrimitiveType = (props) 
 		ref: wrapperRef,
 	};
 
-	const selectedChildren = typeof children === "function" ? children : render;
+	const selectedChildren = typeof children === "function" ? children : renderItem;
 
 	return (
 		<WrapperComponent {...wrapperComponentProps}>
 			<ErrorMessageList
 				each={errorMessageArray}
-				render={(errorMessage, index) => {
+				renderItem={(errorMessage, index) => {
 					return selectedChildren({
 						props: getRenderProps({ index }),
 						state: getRenderState({ errorMessage, index }),
@@ -772,19 +776,19 @@ export const FormErrorMessagePrimitive: FormErrorMessagePrimitiveType = (props) 
 };
 
 type FormErrorMessageProps<TControl, TFieldValues extends FieldValues> =
-	| (TControl extends Control<infer TValues>
-			? {
-					className?: string;
-					control?: never;
-					errorField?: FieldPath<TValues>;
-					type?: "regular";
-				}
-			: {
-					className?: string;
-					control?: Control<TFieldValues>; // == Here for type inference of errorField prop
-					errorField?: FieldPath<TFieldValues>;
-					type?: "regular";
-				})
+	| (TControl extends Control<infer TValues> ?
+			{
+				className?: string;
+				control?: never;
+				errorField?: FieldPath<TValues>;
+				type?: "regular";
+			}
+	  :	{
+				className?: string;
+				control?: Control<TFieldValues>; // == Here for type inference of errorField prop
+				errorField?: FieldPath<TFieldValues>;
+				type?: "regular";
+			})
 	| {
 			className?: string;
 			control?: never;
@@ -806,7 +810,7 @@ export function FormErrorMessage<TControl, TFieldValues extends FieldValues = Fi
 			control={control}
 			fieldName={errorField as NonNullable<typeof errorField>}
 			type={type as "root"}
-			render={({ props: renderProps, state }) => (
+			renderItem={({ props: renderProps, state }) => (
 				<p
 					key={state.errorMessage}
 					{...renderProps}
@@ -841,11 +845,10 @@ export function FormSubmit<TElement extends React.ElementType = "button">(
 }
 
 type GetFieldValue<TFieldPathOrPaths, TFieldValues extends FieldValues> =
-	TFieldPathOrPaths extends Array<FieldPath<TFieldValues>>
-		? FieldPathValues<TFieldValues, TFieldPathOrPaths>
-		: TFieldPathOrPaths extends FieldPath<TFieldValues>
-			? FieldPathValue<TFieldValues, TFieldPathOrPaths>
-			: unknown;
+	TFieldPathOrPaths extends Array<FieldPath<TFieldValues>> ?
+		FieldPathValues<TFieldValues, TFieldPathOrPaths>
+	: TFieldPathOrPaths extends FieldPath<TFieldValues> ? FieldPathValue<TFieldValues, TFieldPathOrPaths>
+	: unknown;
 
 type FormSubscribeToFieldValueRenderFn<TFieldValues extends FieldValues, TFieldPathOrPaths> = (props: {
 	value: GetFieldValue<TFieldPathOrPaths, TFieldValues>;

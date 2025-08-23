@@ -1,10 +1,9 @@
 "use client";
 
-import * as React from "react";
-
-import { type GetSlotComponentProps, getSlotMap, withSlotNameAndSymbol } from "@/lib/utils";
 import { isFunction } from "@zayne-labs/toolkit-type-helpers";
+import * as React from "react";
 import { Fragment as ReactFragment, Suspense, use, useMemo } from "react";
+import { type GetSlotComponentProps, getSlotMap, withSlotNameAndSymbol } from "@/lib/utils";
 import { ErrorBoundary, type ErrorBoundaryProps, useErrorBoundaryContext } from "../error-boundary";
 import { Slot } from "../slot";
 import type { SuspenseWithBoundaryProps } from "../suspense-with-boundary";
@@ -18,21 +17,27 @@ type AwaitRootProps<TValue> = Pick<SuspenseWithBoundaryProps, "errorFallback" | 
 	asChild?: boolean;
 	children: ChildrenType<TValue>;
 	promise: Promise<TValue>;
-	wrapperVariant?: "all" | "none" | "only-errorBoundary" | "only-suspense";
+	withErrorBoundary?: boolean;
+	withSuspense?: boolean;
 };
 
 export function AwaitRoot<TValue>(props: AwaitRootProps<TValue>) {
-	const { children, errorFallback, fallback, wrapperVariant = "all", ...restOfProps } = props;
-
-	const withErrorBoundary = wrapperVariant === "all" || wrapperVariant === "only-errorBoundary";
-	const withSuspense = wrapperVariant === "all" || wrapperVariant === "only-suspense";
+	const {
+		children,
+		errorFallback,
+		fallback,
+		withErrorBoundary = true,
+		withSuspense = true,
+		...restOfProps
+	} = props;
 
 	const WithErrorBoundary = withErrorBoundary ? ErrorBoundary : ReactFragment;
 	const WithSuspense = withSuspense ? Suspense : ReactFragment;
 
-	const slots = !isFunction(children)
-		? getSlotMap<SlotComponentProps>(children)
-		: ({ default: children } as unknown as ReturnType<typeof getSlotMap<SlotComponentProps>>);
+	const slots =
+		!isFunction(children) ?
+			getSlotMap<SlotComponentProps>(children)
+		:	({ default: children } as unknown as ReturnType<typeof getSlotMap<SlotComponentProps>>);
 
 	const selectedPendingFallback = slots.pending ?? fallback;
 	const selectedErrorFallback = slots.error ?? errorFallback;

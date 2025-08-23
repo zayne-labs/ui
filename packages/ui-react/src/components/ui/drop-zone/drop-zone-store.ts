@@ -1,5 +1,4 @@
 import { createStore, handleFileValidationAsync, toArray } from "@zayne-labs/toolkit-core";
-import { useStore } from "@zayne-labs/toolkit-react";
 import { isString } from "@zayne-labs/toolkit-type-helpers";
 import type { DropZoneActions, DropZoneState } from "./types";
 import type { UseDropZoneProps } from "./use-drop-zone";
@@ -63,6 +62,16 @@ export const createDropZoneStore = (
 
 		// eslint-disable-next-line perfectionist/sort-objects -- Ignore
 		actions: {
+			// registerEventListeners: () => {
+			// 	const containerElement = {}
+			// 	const inputElement = {}
+
+			// 	inputRef.current.addEventListener("change", get().actions.handleChange);
+			// 	inputRef.current.addEventListener("dragenter", get().actions.handleDragEnter);
+			// 	inputRef.current.addEventListener("dragleave", get().actions.handleDragLeave);
+			// 	inputRef.current.addEventListener("dragover", get().actions.handleDragOver);
+			// 	inputRef.current.addEventListener("drop", get().actions.handleDrop);
+			// },
 			addFiles: async (files) => {
 				if (!files || files.length === 0) {
 					console.warn("No file selected!");
@@ -193,8 +202,4 @@ export const createDropZoneStore = (
 	);
 
 	return store;
-};
-
-export const useDropZoneStore: typeof useStore = (...params) => {
-	return useStore(...params);
 };

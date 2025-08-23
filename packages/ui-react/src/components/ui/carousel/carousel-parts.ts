@@ -1,7 +1,6 @@
 export {
 	CarouselButton as Button,
 	CarouselCaption as Caption,
-	CarouselContent as Content,
 	CarouselControls as Controls,
 	CarouselIndicator as Indicator,
 	CarouselIndicatorGroup as IndicatorGroup,

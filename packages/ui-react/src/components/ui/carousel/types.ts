@@ -1,6 +1,5 @@
 import type { StoreApi } from "@zayne-labs/toolkit-core";
-import type { DiscriminatedRenderProps } from "@zayne-labs/toolkit-react/utils";
-import type { Prettify, UnionDiscriminator } from "@zayne-labs/toolkit-type-helpers";
+import type { UnionDiscriminator } from "@zayne-labs/toolkit-type-helpers";
 
 // Carousel store types
 export type ImagesType = Array<Record<string, string>> | string[];
@@ -21,22 +20,15 @@ export type CarouselStore<TImages extends ImagesType = any> = {
 export type CarouselStoreApi<TImages extends ImagesType = ImagesType> = StoreApi<CarouselStore<TImages>>;
 
 export type CarouselRootProps<TImages extends ImagesType = ImagesType> = {
-	children: React.ReactNode;
-	images: CarouselStore<TImages>["images"];
-	onSlideBtnClick?: () => void;
-};
-
-// Carousel component types
-export type CarouselContentProps = {
 	autoSlideInterval?: number;
-
 	children: React.ReactNode;
-
 	classNames?: {
 		base?: string;
 		scrollContainer?: string;
 	};
 	hasAutoSlide?: boolean;
+	images: CarouselStore<TImages>["images"];
+	onSlideBtnClick?: () => void;
 	shouldPauseOnHover?: boolean;
 };
 
@@ -79,13 +71,14 @@ export type CarouselIndicatorProps = {
 
 type RenderPropFn<TArrayItem> = (context: {
 	array: NoInfer<TArrayItem[]>;
+	image: NoInfer<TArrayItem>;
 	index: number;
-	item: NoInfer<TArrayItem>;
 }) => React.ReactNode;
 
-type BaseWrapperProps<TArrayItem> = Prettify<
-	DiscriminatedRenderProps<RenderPropFn<TArrayItem>> & { each?: TArrayItem[] }
->;
+type BaseWrapperProps<TArrayItem> = {
+	children: React.ReactNode | RenderPropFn<TArrayItem>;
+	each?: TArrayItem[];
+};
 
 export type CarouselWrapperProps<TArrayItem> = BaseWrapperProps<TArrayItem> & {
 	className?: string;
