@@ -125,7 +125,7 @@ function LoadingSpinner() {
 		<div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
 			<For
 				each={6}
-				render={(index) => (
+				renderItem={(index) => (
 					<Card.Root key={`skeleton-${index}`} className="overflow-hidden">
 						<Card.Header className="space-y-4 p-6 pb-4">
 							<div className="flex items-center space-x-3">

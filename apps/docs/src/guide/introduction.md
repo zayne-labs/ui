@@ -68,34 +68,37 @@ Here's a drag-and-drop file uploader:
 
 ```tsx
 import { DropZone } from '@zayne-labs/ui-react/ui/drop-zone'
-import { toast } from 'sonner'
 
 function ImageUploader() {
   return (
     <DropZone.Root
       allowedFileTypes={['image/*']}
       maxFileCount={4}
-      onUploadSuccess={(ctx) => toast.success("Success", { description: ctx.message })}
+      onUploadSuccess={(ctx) => console.log("Success", ctx.message)}
       maxFileSize={5}
     >
-      <div className="p-6 border rounded-lg bg-gray-50">
-        <p className="text-center text-gray-600">
-          Drop images or click to upload
-        </p>
-      </div>
+      <DropZone.Area>
+        <div className="p-6 border rounded-lg bg-gray-50">
+          <p className="text-center text-gray-600">
+            Drop images or click to upload
+          </p>
+        </div>
+      </DropZone.Area>
 
-      <DropZone.ImagePreview>
-        {({ dropZoneState }) => (
-          dropZoneState.filesWithPreview.map((file) => (
-            <img
-              key={file.id}
-              src={file.preview}
-              alt={file.name}
-              className="rounded-lg aspect-square object-cover"
-            />
-          ))
+      <DropZone.FilePreview>
+        {(ctx) => (
+          <div className="mt-4 grid grid-cols-4 gap-2">
+            {ctx.fileStateArray.map((fileState) => (
+              <img
+                key={fileState.id}
+                src={fileState.preview}
+                alt={fileState.file.name}
+                className="rounded-lg aspect-square object-cover"
+              />
+            ))}
+          </div>
         )}
-      </DropZone.ImagePreview>
+      </DropZone.FilePreview>
     </DropZone.Root>
   )
 }
@@ -106,11 +109,11 @@ function ImageUploader() {
 Handle different states with `Switch`:
 
 ```tsx
-import { Switch } from '@zayne-labs/ui-react/common/switch'
+import { Switch } from '@zayne-labs/ui-react/common'
 
 function StatusBadge({ status }: { status: 'active' | 'inactive' | 'pending' }) {
   return (
-    <Switch condition={status}>
+    <Switch.Root value={status}>
       <Switch.Match when="active">
         <span className="text-green-500">●</span>
         <span>Active</span>
@@ -125,7 +128,7 @@ function StatusBadge({ status }: { status: 'active' | 'inactive' | 'pending' }) 
         <span className="text-yellow-500">◐</span>
         <span>Pending</span>
       </Switch.Default>
-    </Switch>
+    </Switch.Root>
   )
 }
 ```
@@ -142,7 +145,7 @@ Our documentation is organized into several sections to help you find what you n
 
 ## Need Help?
 
-- 📖 Check component docs in the [ui](../ui) and [common](../common) folders
+- 📖 Check component docs in the [ui](../ui) and [utility](../utility) folders
 - 🐛 Found a bug? [Open an issue](https://github.com/zayne-labs/ui/issues)
 - 💡 Have an idea? [Start a discussion](https://github.com/zayne-labs/ui/discussions)
 

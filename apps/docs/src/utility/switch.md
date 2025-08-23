@@ -81,7 +81,7 @@ In this mode, the first `when` condition that evaluates to `true` will be render
 
 ### Switch.Root
 
-- `condition`: Value to match against cases (optional)
+- `value`: Value to match against cases (optional)
 - `children`: One or more Switch.Match components
 
 ### Switch.Match
@@ -118,7 +118,7 @@ type SwitchDefaultProps = {
 
 The Switch component:
 
-1. Matches `condition` against each `when` prop
+1. Matches `value` against each `when` prop
 2. Renders the first matching case
 3. Falls back to `Default` if no matches
 4. Supports render props for accessing matched values

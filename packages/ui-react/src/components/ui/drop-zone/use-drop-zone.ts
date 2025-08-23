@@ -1,9 +1,9 @@
-import type {
-	FileMeta,
-	FileValidationHooksAsync,
-	FileValidationSettingsAsync,
+import {
+	dataAttr,
+	type FileMeta,
+	type FileValidationHooksAsync,
+	type FileValidationSettingsAsync,
 } from "@zayne-labs/toolkit-core";
-import { dataAttr } from "@zayne-labs/toolkit-core";
 import { useCallbackRef, useConstant, useShallowComparedValue, useStore } from "@zayne-labs/toolkit-react";
 import type { InferProps } from "@zayne-labs/toolkit-react/utils";
 import { composeRefs, composeTwoEventHandlers, mergeTwoProps } from "@zayne-labs/toolkit-react/utils";

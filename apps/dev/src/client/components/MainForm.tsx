@@ -4,7 +4,7 @@ import { DropZone } from "@zayne-labs/ui-react/ui/drop-zone";
 import { Form } from "@zayne-labs/ui-react/ui/form";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod/v4";
+import { z } from "zod";
 
 const zodSchema = z.object({
 	files: z.file({ error: "Please upload a file" }).nullable(),
@@ -102,6 +102,7 @@ function MainForm() {
 									</p>
 									<p className="mt-1 text-xs text-gray-500">Supported files: PDF, DOC, DOCX</p>
 								</DropZone.Area>
+
 								<DropZone.FilePreview>
 									{(ctx) => {
 										return ctx.fileStateArray.map((fileState) => (
@@ -115,7 +116,8 @@ function MainForm() {
 										));
 									}}
 								</DropZone.FilePreview>
-								<DropZone.ErrorView>
+
+								<DropZone.ErrorPreview>
 									{(ctx) =>
 										ctx.errors.map((error) => (
 											<div
@@ -128,7 +130,7 @@ function MainForm() {
 											</div>
 										))
 									}
-								</DropZone.ErrorView>
+								</DropZone.ErrorPreview>
 							</DropZone.Root>
 						)}
 					/>

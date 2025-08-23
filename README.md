@@ -19,6 +19,7 @@ A collection of multi-framework UI utilities and unstyled components. Currently 
 - **Form** - Flexible form handling with field subscriptions and validation, convenience wrapper around react-hook-form
 - **DropZone** - File upload zone with drag-and-drop support
 - **Card** - Composable card layouts
+- **Carousel** - Customizable slideshow for cycling through elements
 - **DragScroll** - Add drag-to-scroll behavior to any container
 
 ### Utility Components
@@ -31,6 +32,8 @@ A collection of multi-framework UI utilities and unstyled components. Currently 
 - **ErrorBoundary** - Graceful error handling
 - **Await** - Handle async states elegantly
 - **Teleport** - Teleport content to a different part of the DOM via react portals
+- **Slot** - Component composition with named slots
+- **SuspenseWithBoundary** - Combined Suspense and ErrorBoundary
 
 ## Installation
 
@@ -105,7 +108,9 @@ pnpm lint:format
 ui/
 ├── packages/
 │   └── ui-react/        # React UI components (More frameworks coming soon!)
-├── dev/                 # Development utilities
+├── apps/
+│   ├── docs/           # Documentation site
+│   └── dev/            # Development playground
 ├── .changeset/         # Changesets for versioning
 └── package.json        # Root package.json
 ```

@@ -23,7 +23,13 @@ pnpm add @zayne-labs/ui-react
 
 ## Usage
 
-Utilities can be imported from their respective modules:
+Utilities can be imported from the main common module:
+
+```tsx
+import { Await, Show, For, Switch, Slot, ErrorBoundary, SuspenseWithBoundary, Teleport } from '@zayne-labs/ui-react/common'
+```
+
+Or import individual components:
 
 ```tsx
 import { Await } from '@zayne-labs/ui-react/common/await'
