@@ -1,119 +1,137 @@
 "use client";
 
+import type { PolymorphicProps } from "@zayne-labs/toolkit-react/utils";
+import { isFunction, type SelectorFn } from "@zayne-labs/toolkit-type-helpers";
 import * as React from "react";
-
-import { Show, Slot } from "@/components/common";
-import { type GetSlotComponentProps, getSlotMap, withSlotNameAndSymbol } from "@/lib/utils/getSlotMap";
-import type { DiscriminatedRenderProps, PolymorphicProps } from "@zayne-labs/toolkit-react/utils";
-import { isArray, isFunction } from "@zayne-labs/toolkit-type-helpers";
-import { Fragment as ReactFragment, isValidElement } from "react";
-import { DropZoneContextProvider, useDropZoneContext } from "./drop-context";
+import { Slot } from "@/components/common";
 import {
-	type ContainerProps,
-	type InputProps,
-	type UseDropZoneProps,
-	type UseDropZoneResult,
-	useDropZone,
-} from "./use-drop-zone";
+	DropZonePropGettersContextProvider,
+	DropZoneStoreContextProvider,
+	useDropZoneStoreContext,
+	usePropGettersContext,
+} from "./drop-zone-context";
+import type { DropZoneStore } from "./drop-zone-store";
+import { type ExtraProps, type UseDropZoneProps, useDropZone } from "./use-drop-zone";
 
-export type DropZoneRenderPropType = DiscriminatedRenderProps<
-	React.ReactNode | ((props: UseDropZoneResult) => React.ReactNode)
->;
-
-export type DropZoneRootProps = DropZoneRenderPropType
-	& UseDropZoneProps & {
-		/**
-		 * Controls whether to include internal elements (root and input) or not.
-		 */
-		withInternalElements?: boolean;
-	};
+export type DropZoneRootProps = UseDropZoneProps & { children: React.ReactNode };
 
 export function DropZoneRoot(props: DropZoneRootProps) {
-	const { children, render, withInternalElements = true, ...restOfProps } = props;
+	const { children, ...restOfProps } = props;
 
 	const dropZone = useDropZone(restOfProps);
 
-	const ContainerComponent = withInternalElements ? DropZoneContainer : ReactFragment;
-	const InputComponent = withInternalElements ? DropZoneInput : ReactFragment;
-
-	const selectedChildren = children ?? render;
-
-	const resolvedChildren = isFunction(selectedChildren) ? selectedChildren(dropZone) : selectedChildren;
-
-	const couldChildrenContainSlots =
-		isArray(resolvedChildren)
-		|| (isValidElement(resolvedChildren) && resolvedChildren.type === ReactFragment);
-
-	const slots =
-		withInternalElements && couldChildrenContainSlots
-			? getSlotMap<SlotComponentProps>(resolvedChildren)
-			: ({ default: resolvedChildren } as ReturnType<typeof getSlotMap<SlotComponentProps>>);
-
 	return (
-		<DropZoneContextProvider value={dropZone}>
-			<ContainerComponent>
-				<InputComponent />
-
-				{slots.default}
-			</ContainerComponent>
-
-			{slots.preview}
-		</DropZoneContextProvider>
+		<DropZoneStoreContextProvider store={dropZone.storeApi}>
+			<DropZonePropGettersContextProvider value={dropZone.propGetters}>
+				{children}
+			</DropZonePropGettersContextProvider>
+		</DropZoneStoreContextProvider>
 	);
 }
 
-type DropZoneInputProps = InputProps & { asChild?: boolean };
+export type DropZoneContextProps<TSlice> = {
+	children: React.ReactNode | ((props: TSlice) => React.ReactNode);
+	selector?: SelectorFn<DropZoneStore, TSlice>;
+};
 
-export function DropZoneInput(props: DropZoneInputProps) {
-	const { asChild, ...restOfProps } = props;
+export function DropZoneContext<TSlice = DropZoneStore>(props: DropZoneContextProps<TSlice>) {
+	const { children, selector } = props;
 
-	const dropZoneContext = useDropZoneContext();
+	const dropZoneCtx = useDropZoneStoreContext(selector);
 
-	const Component = asChild ? Slot.Root : "input";
+	const resolvedChildren = isFunction(children) ? children(dropZoneCtx) : children;
 
-	return <Component {...dropZoneContext.getInputProps(restOfProps)} />;
+	return resolvedChildren;
 }
 
-type DropZoneContainerProps = ContainerProps & { asChild?: boolean };
+type DropZoneContainerProps = ExtraProps["container"] & { asChild?: boolean };
 
 export function DropZoneContainer<TElement extends React.ElementType = "div">(
 	props: PolymorphicProps<TElement, DropZoneContainerProps>
 ) {
 	const { as: Element = "div", asChild, ...restOfProps } = props;
 
-	const dropZoneContext = useDropZoneContext();
+	const propGetters = usePropGettersContext();
 
 	const Component = asChild ? Slot.Root : Element;
 
-	return <Component {...dropZoneContext.getContainerProps(restOfProps)} />;
+	return <Component {...propGetters.getContainerProps(restOfProps)} />;
 }
 
-type RenderPropFn = (props: UseDropZoneResult) => React.ReactNode;
+type DropZoneInputProps = ExtraProps["input"] & { asChild?: boolean };
 
-type SlotComponentProps = GetSlotComponentProps<"preview", React.ReactNode | RenderPropFn>;
+export function DropZoneInput(props: DropZoneInputProps) {
+	const { asChild, ...restOfProps } = props;
 
-export function DropZoneContext(props: { children: RenderPropFn }) {
-	const { children } = props;
+	const propGetters = usePropGettersContext();
 
-	const dropZoneContext = useDropZoneContext();
+	const Component = asChild ? Slot.Root : "input";
 
-	return children(dropZoneContext);
+	return <Component {...propGetters.getInputProps(restOfProps)} />;
 }
 
-export const DropZoneImagePreview = withSlotNameAndSymbol<SlotComponentProps>("preview", (props) => {
+type DropZoneAreaProps<TSlice> = {
+	children: React.ReactNode | ((props: TSlice) => React.ReactNode);
+	extraProps?: Pick<ExtraProps, "container" | "input">;
+	selector?: SelectorFn<DropZoneStore, TSlice>;
+};
+
+export function DropZoneArea<TSlice = DropZoneStore>(props: DropZoneAreaProps<TSlice>) {
+	const { children, extraProps, selector } = props;
+
+	return (
+		<DropZoneContainer {...extraProps?.container}>
+			<DropZoneInput {...extraProps?.input} />
+
+			<DropZoneContext selector={selector}>{children}</DropZoneContext>
+		</DropZoneContainer>
+	);
+}
+
+type DropZoneTriggerProps = ExtraProps["trigger"] & { asChild?: boolean };
+
+export function DropZoneTrigger(props: DropZoneTriggerProps) {
+	const { asChild, ...restOfProps } = props;
+
+	const propGetters = usePropGettersContext();
+
+	const Component = asChild ? Slot.Root : "button";
+
+	return <Component {...propGetters.getTriggerProps(restOfProps)} />;
+}
+
+type DropZoneFilePreviewProps = {
+	children:
+		| React.ReactNode
+		| ((props: Pick<DropZoneStore, "actions" | "fileStateArray">) => React.ReactNode);
+};
+
+export function DropZoneFilePreview(props: DropZoneFilePreviewProps) {
 	const { children } = props;
 
-	if (isFunction(children)) {
-		return (
-			<DropZoneContext>
-				{(dropZoneCtx) => (
-					<Show.Root when={dropZoneCtx.dropZoneState.filesWithPreview.length > 0}>
-						{children(dropZoneCtx)}
-					</Show.Root>
-				)}
-			</DropZoneContext>
-		);
-	}
+	const fileStateArray = useDropZoneStoreContext((store) => store.fileStateArray);
+	const actions = useDropZoneStoreContext((store) => store.actions);
 
-	return children;
-});
+	if (fileStateArray.length === 0) return;
+
+	const resolvedChildren = isFunction(children) ? children({ actions, fileStateArray }) : children;
+
+	return resolvedChildren;
+}
+
+type DropZoneErrorPreviewProps = {
+	children: React.ReactNode | ((props: Pick<DropZoneStore, "actions" | "errors">) => React.ReactNode);
+};
+
+export function DropZoneErrorPreview(props: DropZoneErrorPreviewProps) {
+	const { children } = props;
+
+	const errors = useDropZoneStoreContext((store) => store.errors);
+	const actions = useDropZoneStoreContext((store) => store.actions);
+
+	if (errors.length === 0) return;
+
+	const resolvedChildren = isFunction(children) ? children({ actions, errors }) : children;
+
+	return resolvedChildren;
+}

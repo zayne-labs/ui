@@ -1,11 +1,11 @@
 import type { StoreApi } from "@zayne-labs/toolkit-core";
-import type { DiscriminatedRenderProps } from "@zayne-labs/toolkit-react/utils";
-import type { Prettify, UnionDiscriminator } from "@zayne-labs/toolkit-type-helpers";
+import type { UnionDiscriminator } from "@zayne-labs/toolkit-type-helpers";
 
 // Carousel store types
 export type ImagesType = Array<Record<string, string>> | string[];
 
-export type CarouselStore<TImages extends ImagesType = ImagesType> = {
+// eslint-disable-next-line ts-eslint/no-explicit-any -- allow any for type compatibility
+export type CarouselStore<TImages extends ImagesType = any> = {
 	actions: {
 		goToNextSlide: () => void;
 		goToPreviousSlide: () => void;
@@ -19,23 +19,16 @@ export type CarouselStore<TImages extends ImagesType = ImagesType> = {
 
 export type CarouselStoreApi<TImages extends ImagesType = ImagesType> = StoreApi<CarouselStore<TImages>>;
 
-export type CarouselProviderProps<TImages extends ImagesType = ImagesType> = {
-	children: React.ReactNode;
-	images: CarouselStore<TImages>["images"];
-	onSlideBtnClick?: () => void;
-};
-
-// Carousel component types
-export type CarouselContentProps = {
+export type CarouselRootProps<TImages extends ImagesType = ImagesType> = {
 	autoSlideInterval?: number;
-
 	children: React.ReactNode;
-
 	classNames?: {
 		base?: string;
 		scrollContainer?: string;
 	};
 	hasAutoSlide?: boolean;
+	images: CarouselStore<TImages>["images"];
+	onSlideBtnClick?: () => void;
 	shouldPauseOnHover?: boolean;
 };
 
@@ -76,15 +69,16 @@ export type CarouselIndicatorProps = {
 	currentIndex: number;
 };
 
-type RenderPropFn<TArrayItem> = (
-	item: NoInfer<TArrayItem>,
-	index: number,
-	array: NoInfer<TArrayItem[]>
-) => React.ReactNode;
+type RenderPropFn<TArrayItem> = (context: {
+	array: NoInfer<TArrayItem[]>;
+	image: NoInfer<TArrayItem>;
+	index: number;
+}) => React.ReactNode;
 
-type BaseWrapperProps<TArrayItem> = Prettify<
-	DiscriminatedRenderProps<RenderPropFn<TArrayItem>> & { each?: TArrayItem[] }
->;
+type BaseWrapperProps<TArrayItem> = {
+	children: React.ReactNode | RenderPropFn<TArrayItem>;
+	each?: TArrayItem[];
+};
 
 export type CarouselWrapperProps<TArrayItem> = BaseWrapperProps<TArrayItem> & {
 	className?: string;

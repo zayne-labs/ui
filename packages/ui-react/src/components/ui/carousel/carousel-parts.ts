@@ -1,11 +1,10 @@
-export { CarouselContextProvider as Root } from "./carousel-store-context";
 export {
-	CarouselContent as Content,
-	CarouselControls as Controls,
 	CarouselButton as Button,
-	CarouselItem as Item,
-	CarouselItemGroup as ItemGroup,
 	CarouselCaption as Caption,
+	CarouselControls as Controls,
 	CarouselIndicator as Indicator,
 	CarouselIndicatorGroup as IndicatorGroup,
+	CarouselItem as Item,
+	CarouselItemGroup as ItemGroup,
+	CarouselRoot as Root,
 } from "./carousel";

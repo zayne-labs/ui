@@ -1,8 +1,8 @@
-import { cnMerge } from "@/lib/utils/cn";
 import { off, on } from "@zayne-labs/toolkit-core";
 import { useCallbackRef } from "@zayne-labs/toolkit-react";
-import { type InferProps, composeRefs, mergeTwoProps } from "@zayne-labs/toolkit-react/utils";
-import { type RefCallback, useRef } from "react";
+import { composeRefs, type InferProps, mergeTwoProps } from "@zayne-labs/toolkit-react/utils";
+import { type RefCallback, useCallback, useMemo, useRef } from "react";
+import { cnMerge } from "@/lib/utils/cn";
 import { handleScrollSnap, resetCursor, updateCursor } from "./utils";
 
 type ItemProps<TItemElement extends HTMLElement> = Omit<InferProps<TItemElement>, "children">;
@@ -101,44 +101,52 @@ const useDragScroll = <TElement extends HTMLElement, TItemElement extends HTMLEl
 		return cleanup;
 	});
 
-	const getRootProps: DragScrollResult<TElement, TItemElement>["getRootProps"] = (rootProps) => {
-		const mergedRootProps = mergeTwoProps(extraRootProps, rootProps);
+	const getRootProps: DragScrollResult<TElement, TItemElement>["getRootProps"] = useCallback(
+		(rootProps) => {
+			const mergedRootProps = mergeTwoProps(extraRootProps, rootProps);
 
-		return {
-			...mergedRootProps,
-			className: cnMerge(
-				`scrollbar-hidden flex w-full cursor-grab snap-x snap-mandatory overflow-y-hidden
-				overflow-x-scroll`,
-				orientation === "horizontal" && "flex-row",
-				orientation === "vertical" && "flex-col",
-				usage === "mobileAndTabletOnly" && "md:cursor-default md:flex-col",
-				usage === "desktopOnly" && "max-md:cursor-default max-md:flex-col",
-				classNames?.base,
-				mergedRootProps.className
-			),
-			"data-part": "root",
-			"data-scope": "drag-scroll",
-			"data-slot": "drag-scroll-root",
-			ref: composeRefs(
-				refCallBack,
-				(mergedRootProps as { ref?: React.Ref<TElement> } | undefined)?.ref
-			),
-		};
-	};
+			return {
+				...mergedRootProps,
+				className: cnMerge(
+					`scrollbar-hidden flex w-full cursor-grab snap-x snap-mandatory overflow-y-hidden
+					overflow-x-scroll`,
+					orientation === "horizontal" && "flex-row",
+					orientation === "vertical" && "flex-col",
+					usage === "mobileAndTabletOnly" && "md:cursor-default md:flex-col",
+					usage === "desktopOnly" && "max-md:cursor-default max-md:flex-col",
+					classNames?.base,
+					mergedRootProps.className
+				),
+				"data-part": "root",
+				"data-scope": "drag-scroll",
+				"data-slot": "drag-scroll-root",
+				ref: composeRefs(
+					refCallBack,
+					(mergedRootProps as { ref?: React.Ref<TElement> } | undefined)?.ref
+				),
+			};
+		},
+		[extraRootProps, classNames?.base, orientation, refCallBack, usage]
+	);
 
-	const getItemProps: DragScrollResult<TElement, TItemElement>["getItemProps"] = (itemProps) => {
-		const mergedItemProps = mergeTwoProps(extraItemProps, itemProps);
+	const getItemProps: DragScrollResult<TElement, TItemElement>["getItemProps"] = useCallback(
+		(itemProps) => {
+			const mergedItemProps = mergeTwoProps(extraItemProps, itemProps);
 
-		return {
-			...mergedItemProps,
-			className: cnMerge("snap-center snap-always", classNames?.item, mergedItemProps.className),
-			"data-part": "item",
-			"data-scope": "drag-scroll",
-			"data-slot": "drag-scroll-item",
-		};
-	};
+			return {
+				...mergedItemProps,
+				className: cnMerge("snap-center snap-always", classNames?.item, mergedItemProps.className),
+				"data-part": "item",
+				"data-scope": "drag-scroll",
+				"data-slot": "drag-scroll-item",
+			};
+		},
+		[extraItemProps, classNames?.item]
+	);
 
-	return { getItemProps, getRootProps };
+	const result = useMemo(() => ({ getItemProps, getRootProps }), [getItemProps, getRootProps]);
+
+	return result;
 };
 
 export { useDragScroll };
