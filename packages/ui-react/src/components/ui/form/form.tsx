@@ -685,14 +685,14 @@ export const FormErrorMessagePrimitive: FormErrorMessagePrimitiveType = (props) 
 
 		if (!firstErrorElement) return;
 
-		// == Find the input field associated with this error
-		const inputField = document.querySelector(`[name='${fieldName}']`);
-		const isFocusableInput = inputField?.matches(
-			":is(input, select, textarea, [contenteditable='true'])"
-		);
+		// // == Find the input field associated with this error
+		// const inputField = document.querySelector(`[name='${fieldName}']`);
+		// const isFocusableInput = inputField?.matches(
+		// 	":is(input, select, textarea, [contenteditable='true'])"
+		// );
 
-		// == Return early if the input field is focusable (Only scrollIntoView for non-focusable fields)
-		if (isFocusableInput) return;
+		// // == Return early if the input field is focusable (Only scrollIntoView for non-focusable fields)
+		// if (isFocusableInput) return;
 
 		// == Schedule the scroll to next frame to ensure DOM is ready
 		requestAnimationFrame(() => {
