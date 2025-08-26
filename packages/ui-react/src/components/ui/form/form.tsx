@@ -203,11 +203,11 @@ export function FormFieldContext(props: FormFieldContextProps) {
 }
 
 export function FormLabel(props: InferProps<"label">) {
-	const fieldContextValues = useLaxFormFieldContext();
+	const fieldContextValues = useStrictFormFieldContext();
 
-	const { children, htmlFor = fieldContextValues?.formItemId, ...restOfProps } = props;
+	const { children, htmlFor = fieldContextValues.formItemId, ...restOfProps } = props;
 
-	const { isDisabled, isInvalid } = useLaxFormFieldState({ name: fieldContextValues?.name });
+	const { isDisabled, isInvalid } = useLaxFormFieldState({ name: fieldContextValues.name });
 
 	return (
 		<label

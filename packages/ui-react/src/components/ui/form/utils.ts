@@ -13,7 +13,7 @@ export const getFieldErrorMessage = (options: {
 }): string | string[] | null | undefined => {
 	const { errors, fieldName, type } = options;
 
-	if (!fieldName || !errors || Object.keys(errors).length === 0) return;
+	if (fieldName === undefined || !errors || Object.keys(errors).length === 0) return;
 
 	if (type === "root") {
 		return errors.root?.[fieldName]?.message;
