@@ -54,8 +54,8 @@ import { getEyeIcon, getFieldErrorMessage } from "./utils";
 // eslint-disable-next-line ts-eslint/no-explicit-any -- Necessary so that arrays can also be accepted
 export type FieldValues = Record<string, any>;
 
-type FormRootProps<TFieldValues extends FieldValues> = Partial<FormRootContext>
-	& React.ComponentPropsWithoutRef<"form"> & {
+type FormRootProps<TFieldValues extends FieldValues> = InferProps<"form">
+	& Partial<FormRootContext> & {
 		children: React.ReactNode;
 		methods: UseFormReturn<TFieldValues>;
 	};
