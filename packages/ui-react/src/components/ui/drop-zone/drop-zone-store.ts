@@ -1,7 +1,6 @@
 import { createStore, handleFileValidationAsync, toArray } from "@zayne-labs/toolkit-core";
-import { isString } from "@zayne-labs/toolkit-type-helpers";
-import type { DropZoneActions, DropZoneState } from "./types";
-import type { UseDropZoneProps } from "./use-drop-zone";
+import { isFile, isString } from "@zayne-labs/toolkit-type-helpers";
+import type { DropZoneActions, DropZoneState, UseDropZoneProps } from "./types";
 import { clearObjectURL, createObjectURL, generateUniqueId } from "./utils";
 
 export type DropZoneStore = DropZoneState & { actions: DropZoneActions };
@@ -56,7 +55,7 @@ export const createDropZoneStore = (
 		fileStateArray: initialFileArray.map((fileMeta) => ({
 			file: fileMeta,
 			id: fileMeta.id,
-			preview: fileMeta.url,
+			preview: isString(fileMeta.url) ? fileMeta.url : undefined,
 		})),
 		isDraggingOver: false,
 
@@ -72,6 +71,7 @@ export const createDropZoneStore = (
 			// 	inputRef.current.addEventListener("dragover", get().actions.handleDragOver);
 			// 	inputRef.current.addEventListener("drop", get().actions.handleDrop);
 			// },
+
 			addFiles: async (files) => {
 				if (!files || files.length === 0) {
 					console.warn("No file selected!");
@@ -173,13 +173,20 @@ export const createDropZoneStore = (
 			openFilePicker: () => {
 				inputRef.current?.click();
 			},
-			removeFile: (fileToRemoveOrFileId) => {
+			removeFile: (fileItemOrID) => {
 				const { fileStateArray } = get();
 
-				const actualFileToRemove =
-					isString(fileToRemoveOrFileId) ?
-						fileStateArray.find((file) => file.id === fileToRemoveOrFileId)
-					:	fileToRemoveOrFileId;
+				const actualFileToRemove = fileStateArray.find((fileState) => {
+					if (isString(fileItemOrID)) {
+						return fileState.id === fileItemOrID;
+					}
+
+					if (isFile(fileItemOrID)) {
+						return fileState.file === fileItemOrID;
+					}
+
+					return fileState.id === fileItemOrID?.id;
+				});
 
 				if (!actualFileToRemove) return;
 
@@ -194,11 +201,10 @@ export const createDropZoneStore = (
 		},
 	}));
 
+	// == File change subscription
 	store.subscribe.withSelector(
 		(state) => state.fileStateArray,
-		(fileStateArray) => {
-			onFilesChange?.({ fileStateArray });
-		}
+		(fileStateArray) => onFilesChange?.({ fileStateArray })
 	);
 
 	return store;

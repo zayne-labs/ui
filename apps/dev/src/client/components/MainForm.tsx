@@ -70,11 +70,6 @@ function MainForm() {
 					<Form.FieldController
 						render={({ field }) => (
 							<DropZone.Root
-								classNames={{
-									container: `data-drag-over:border-pink-600 data-drag-over:bg-pink-50 flex w-full
-									flex-col items-center justify-center rounded-lg border-2 border-dashed
-									border-gray-300 p-6 transition-colors hover:border-blue-500 hover:bg-blue-50`,
-								}}
 								onUpload={(ctx) => field.onChange(ctx.fileStateArray[0]?.file)}
 								onUploadError={(ctx) => console.error(ctx.message)}
 								onUploadSuccess={(ctx) => console.info(ctx.message)}
@@ -83,7 +78,13 @@ function MainForm() {
 								maxFileSize={{ mb: max }}
 								maxFileCount={3}
 							>
-								<DropZone.Area>
+								<DropZone.Area
+									classNames={{
+										container: `data-drag-over:border-pink-600 data-drag-over:bg-pink-50 flex
+										w-full flex-col items-center justify-center rounded-lg border-2 border-dashed
+										border-gray-300 p-6 transition-colors hover:border-blue-500 hover:bg-blue-50`,
+									}}
+								>
 									<svg
 										className="mb-2 size-8 text-gray-400"
 										fill="none"
@@ -103,7 +104,7 @@ function MainForm() {
 									<p className="mt-1 text-xs text-gray-500">Supported files: PDF, DOC, DOCX</p>
 								</DropZone.Area>
 
-								<DropZone.FilePreview>
+								<DropZone.FileGroup>
 									{(ctx) => {
 										return ctx.fileStateArray.map((fileState) => (
 											<img
@@ -115,9 +116,9 @@ function MainForm() {
 											/>
 										));
 									}}
-								</DropZone.FilePreview>
+								</DropZone.FileGroup>
 
-								<DropZone.ErrorPreview>
+								<DropZone.ErrorGroup>
 									{(ctx) =>
 										ctx.errors.map((error) => (
 											<div
@@ -130,7 +131,7 @@ function MainForm() {
 											</div>
 										))
 									}
-								</DropZone.ErrorPreview>
+								</DropZone.ErrorGroup>
 							</DropZone.Root>
 						)}
 					/>

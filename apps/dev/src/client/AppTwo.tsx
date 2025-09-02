@@ -1,8 +1,9 @@
 import { css } from "@zayne-labs/toolkit-core";
 import { composeEventHandlers } from "@zayne-labs/toolkit-react/utils";
+import { Show } from "@zayne-labs/ui-react/common";
 import {
-	type GetSlotComponentProps,
 	createSlotComponent,
+	type GetSlotComponentProps,
 	getMultipleSlots,
 	getSlotMap,
 } from "@zayne-labs/ui-react/utils";
@@ -36,9 +37,17 @@ function AppTwo() {
 				</ParentTwo>
 			</section>
 
-			<button type="button" onClick={onClick}>
-				Click me
-			</button>
+			<Show.Root type="content-control">
+				<Show.Content when={false}>
+					<button type="button" onClick={onClick}>
+						Click me
+					</button>
+				</Show.Content>
+
+				{/* <Show.Fallback>
+					<p>Default content</p>
+				</Show.Fallback> */}
+			</Show.Root>
 		</main>
 	);
 }

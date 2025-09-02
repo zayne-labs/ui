@@ -1,110 +1,17 @@
-import {
-	dataAttr,
-	type FileMeta,
-	type FileValidationHooksAsync,
-	type FileValidationSettingsAsync,
-} from "@zayne-labs/toolkit-core";
+import { dataAttr } from "@zayne-labs/toolkit-core";
 import { useCallbackRef, useConstant, useShallowComparedValue, useStore } from "@zayne-labs/toolkit-react";
-import type { InferProps } from "@zayne-labs/toolkit-react/utils";
-import { composeRefs, composeTwoEventHandlers, mergeTwoProps } from "@zayne-labs/toolkit-react/utils";
-import type { Awaitable } from "@zayne-labs/toolkit-type-helpers";
+import { composeRefs, composeTwoEventHandlers } from "@zayne-labs/toolkit-react/utils";
 import { useCallback, useMemo, useRef } from "react";
 import { cnMerge } from "@/lib/utils/cn";
-import type { useDropZoneStoreContext } from "./drop-zone-context";
 import { createDropZoneStore } from "./drop-zone-store";
-import type { DropZonePropGetters, DropZoneState } from "./types";
-
-export type ExtraProps = {
-	container?: InferProps<HTMLElement>;
-	input?: InferProps<"input">;
-	trigger?: InferProps<"button">;
-};
-
-export type ClassNames = {
-	[key in keyof ExtraProps]: string;
-};
-
-export type UseDropZoneResult = {
-	inputRef: React.RefObject<HTMLInputElement | null>;
-	propGetters: DropZonePropGetters;
-	storeApi: ReturnType<typeof createDropZoneStore>;
-	useDropZoneStore: typeof useDropZoneStoreContext;
-};
-
-export type UseDropZoneProps = FileValidationSettingsAsync & {
-	/**
-	 * CSS classes to apply to the various parts of the drop zone
-	 */
-	classNames?: ClassNames;
-
-	/**
-	 * Whether to disallow preview for non-image files
-	 * @default true
-	 */
-	disablePreviewForNonImageFiles?: boolean;
-
-	/**
-	 * Extra props to pass to various parts of the dropzone
-	 */
-	extraProps?: ExtraProps;
-
-	/**
-	 * Initial files to populate the drop zone
-	 */
-	initialFiles?: FileMeta | FileMeta[] | null;
-
-	/**
-	 * Whether to allow multiple files to be uploaded
-	 */
-	multiple?: boolean;
-
-	/**
-	 * Callback function to be called when internal files state changes
-	 */
-	onFilesChange?: (context: Pick<DropZoneState, "fileStateArray">) => void;
-
-	/**
-	 * Callback function to be called when new files are uploaded
-	 */
-	onUpload?: (context: Pick<DropZoneState, "fileStateArray">) => Awaitable<void>;
-
-	/**
-	 * Callback function to be called on each file upload as they occur
-	 */
-	onUploadError?: FileValidationHooksAsync["onError"];
-
-	/**
-	 * Callback function to be called once after all file upload errors have occurred
-	 */
-	onUploadErrorCollection?: FileValidationHooksAsync["onErrorCollection"];
-
-	/**
-	 * Callback function to be called on file upload success
-	 */
-	onUploadSuccess?: FileValidationHooksAsync["onSuccess"];
-
-	/**
-	 * Whether clicking the drop zone area will open the default file picker or not
-	 *
-	 * @default true
-	 */
-	shouldOpenFilePickerOnAreaClick?: boolean;
-
-	/**
-	 * Custom validation function.
-	 *
-	 * If the function returns false, the file will be rejected
-	 *
-	 */
-	validator?: FileValidationSettingsAsync["validator"];
-};
+import type { DropZonePropGetters, UseDropZoneProps, UseDropZoneResult } from "./types";
+import { getScopeAttrs } from "./utils";
 
 export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 	const {
 		allowedFileTypes,
-		classNames,
+		disableInternalStateSubscription = false,
 		disablePreviewForNonImageFiles = true,
-		extraProps,
 		initialFiles,
 		maxFileCount,
 		maxFileSize,
@@ -169,36 +76,30 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 		return useStore(storeApi, selector);
 	};
 
-	const isDraggingOver = useDropZoneStore((store) => store.isDraggingOver);
-	const actions = useDropZoneStore((store) => store.actions);
+	const actions = storeApi.getState().actions;
+
+	const isDraggingOver = useDropZoneStore((state) =>
+		!disableInternalStateSubscription ? state.isDraggingOver : null
+	);
+
+	const hasFiles = useDropZoneStore((state) =>
+		!disableInternalStateSubscription ? state.fileStateArray.length > 0 : null
+	);
 
 	const getContainerProps: UseDropZoneResult["propGetters"]["getContainerProps"] = useCallback(
-		(containerProps) => {
-			const mergedContainerProps = mergeTwoProps(extraProps?.container, containerProps);
-
+		(innerProps) => {
 			return {
-				...mergedContainerProps,
+				...getScopeAttrs("container"),
+				...innerProps,
+				...(isDraggingOver !== null && { "data-drag-over": dataAttr(isDraggingOver) }),
 				className: cnMerge(
-					"relative isolate flex flex-col",
-					isDraggingOver && "opacity-60",
-					classNames?.container,
-					mergedContainerProps.className
+					"relative isolate flex flex-col data-[drag-over]:opacity-60",
+					innerProps.className
 				),
-				"data-drag-over": dataAttr(isDraggingOver),
-				"data-scope": "dropzone",
-				// eslint-disable-next-line perfectionist/sort-objects -- I need data-scope to be first
-				"data-part": "container",
-				"data-slot": "dropzone-container",
-				onDragEnter: composeTwoEventHandlers(
-					actions.handleDragEnter,
-					mergedContainerProps.onDragEnter
-				),
-				onDragLeave: composeTwoEventHandlers(
-					actions.handleDragLeave,
-					mergedContainerProps.onDragLeave
-				),
-				onDragOver: composeTwoEventHandlers(actions.handleDragOver, mergedContainerProps.onDragOver),
-				onDrop: composeTwoEventHandlers(actions.handleDrop, mergedContainerProps.onDrop),
+				onDragEnter: composeTwoEventHandlers(actions.handleDragEnter, innerProps.onDragEnter),
+				onDragLeave: composeTwoEventHandlers(actions.handleDragLeave, innerProps.onDragLeave),
+				onDragOver: composeTwoEventHandlers(actions.handleDragOver, innerProps.onDragOver),
+				onDrop: composeTwoEventHandlers(actions.handleDrop, innerProps.onDrop),
 			};
 		},
 		[
@@ -206,85 +107,120 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 			actions.handleDragLeave,
 			actions.handleDragOver,
 			actions.handleDrop,
-			classNames?.container,
-			extraProps?.container,
 			isDraggingOver,
 		]
 	);
 
 	const getInputProps: UseDropZoneResult["propGetters"]["getInputProps"] = useCallback(
-		(inputProps) => {
-			const mergedInputProps = mergeTwoProps(extraProps?.input, inputProps);
-
+		(innerProps) => {
 			return {
-				...mergedInputProps,
-				accept: allowedFileTypes ? allowedFileTypes.join(", ") : mergedInputProps.accept,
+				...getScopeAttrs("input"),
+				...innerProps,
+				...(isDraggingOver !== null && { "data-drag-over": dataAttr(isDraggingOver) }),
+				accept: allowedFileTypes ? allowedFileTypes.join(", ") : innerProps.accept,
 				className: cnMerge(
 					shouldOpenFilePickerOnAreaClick ?
 						"absolute inset-0 z-[100] cursor-pointer opacity-0"
 					:	"hidden",
-					classNames?.input,
-					mergedInputProps.className
+					innerProps.className
 				),
-				"data-drag-over": dataAttr(isDraggingOver),
-				"data-scope": "dropzone",
-				// eslint-disable-next-line perfectionist/sort-objects -- I need data-scope to be first
-				"data-part": "input",
-				"data-slot": "dropzone-input",
-				multiple: multiple ?? mergedInputProps.multiple,
-				onChange: composeTwoEventHandlers(actions.handleChange, mergedInputProps.onChange),
-				ref: composeRefs(inputRef, mergedInputProps.ref),
+				multiple: multiple ?? innerProps.multiple,
+				onChange: composeTwoEventHandlers(actions.handleChange, innerProps.onChange),
+				ref: composeRefs(inputRef, innerProps.ref),
 				type: "file",
 			};
 		},
-		[
-			actions.handleChange,
-			allowedFileTypes,
-			classNames?.input,
-			extraProps?.input,
-			isDraggingOver,
-			multiple,
-			shouldOpenFilePickerOnAreaClick,
-		]
+		[actions.handleChange, allowedFileTypes, isDraggingOver, multiple, shouldOpenFilePickerOnAreaClick]
 	);
 
 	const getTriggerProps: UseDropZoneResult["propGetters"]["getTriggerProps"] = useCallback(
-		(triggerProps) => {
-			const mergedTriggerProps = mergeTwoProps(extraProps?.trigger, triggerProps);
-
+		(innerProps) => {
 			return {
-				...mergedTriggerProps,
-				className: cnMerge(classNames?.trigger, mergedTriggerProps.className),
-				"data-scope": "dropzone",
-				// eslint-disable-next-line perfectionist/sort-objects -- I need data-scope to be first
-				"data-part": "trigger",
-				"data-slot": "dropzone-trigger",
-				onClick: composeTwoEventHandlers(actions.openFilePicker, mergedTriggerProps.onClick),
+				...getScopeAttrs("trigger"),
+				type: "button",
+				...innerProps,
+				onClick: composeTwoEventHandlers(actions.openFilePicker, innerProps.onClick),
 			};
 		},
-		[actions.openFilePicker, classNames?.trigger, extraProps?.trigger]
+		[actions.openFilePicker]
 	);
 
-	// const getDeleteProps: UseDropZoneResult["propGetters"]["getTriggerProps"] = useCallback(
-	// 	(triggerProps) => {
-	// 		const mergedTriggerProps = mergeTwoProps(extraProps?.trigger, triggerProps);
+	const getFileGroupProps: UseDropZoneResult["propGetters"]["getFileGroupProps"] = useCallbackRef(
+		(innerProps) => {
+			const { orientation = "vertical", ...restOfProps } = innerProps;
 
-	// 		return {
-	// 			...mergedTriggerProps,
-	// 			className: cnMerge(classNames?.trigger, mergedTriggerProps.className),
-	// 			"data-scope": "dropzone",
-	// 			// eslint-disable-next-line perfectionist/sort-objects -- I need data-scope to be first
-	// 			"data-part": "trigger",
-	// 			"data-slot": "dropzone-trigger",
-	// 			onClick: composeTwoEventHandlers(actions.openFilePicker, mergedTriggerProps.onClick),
-	// 		};
-	// 	},
-	// 	[actions.openFilePicker, classNames?.trigger, extraProps?.trigger]
-	// );
+			return {
+				...getScopeAttrs("file-group"),
+				"data-orientation": orientation,
+				...restOfProps,
+				...(hasFiles !== null && { "data-state": hasFiles ? "active" : "inactive" }),
+				className: cnMerge(
+					`data-[state=inactive]:fade-out-0 data-[state=active]:fade-in-0
+					data-[state=inactive]:slide-out-to-top-2 data-[state=active]:slide-in-from-top-2
+					data-[state=active]:animate-in data-[state=inactive]:animate-out flex flex-col gap-2`,
+					orientation === "horizontal" && "flex-row overflow-x-auto p-1.5",
+					innerProps.className
+				),
+			};
+		}
+	);
 
-	const propGetters = useMemo(
-		() => ({ getContainerProps, getInputProps, getTriggerProps }),
-		[getContainerProps, getInputProps, getTriggerProps]
+	const getFileItemProps: UseDropZoneResult["propGetters"]["getFileItemProps"] = useCallbackRef(
+		(innerProps) => {
+			return {
+				...getScopeAttrs("file-item"),
+				...innerProps,
+				className: cnMerge(
+					"relative flex items-center gap-2.5 rounded-md border p-3",
+					innerProps.className
+				),
+			};
+		}
+	);
+
+	const getFileItemProgressProps: UseDropZoneResult["propGetters"]["getFileItemProgressProps"] =
+		useCallbackRef((innerProps) => {
+			return {
+				...getScopeAttrs("file-item-progress"),
+				...innerProps,
+			};
+		});
+
+	const getFileItemDeleteProps: UseDropZoneResult["propGetters"]["getFileItemDeleteProps"] =
+		useCallbackRef((innerProps) => {
+			const { fileItemOrID, ...restOfInnerProps } = innerProps;
+
+			return {
+				...getScopeAttrs("file-item-delete"),
+				type: "button",
+				...restOfInnerProps,
+				onClick: composeTwoEventHandlers(
+					() => fileItemOrID && actions.removeFile(fileItemOrID),
+					restOfInnerProps.onClick
+				),
+			};
+		});
+
+	const propGetters = useMemo<DropZonePropGetters>(
+		() =>
+			({
+				getContainerProps,
+				getFileGroupProps,
+				getFileItemDeleteProps,
+				getFileItemProgressProps,
+				getFileItemProps,
+				getInputProps,
+				getTriggerProps,
+			}) satisfies DropZonePropGetters,
+		[
+			getContainerProps,
+			getFileGroupProps,
+			getFileItemDeleteProps,
+			getFileItemProgressProps,
+			getFileItemProps,
+			getInputProps,
+			getTriggerProps,
+		]
 	);
 
 	const savedUseDropZoneStore = useCallbackRef(useDropZoneStore);

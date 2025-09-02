@@ -1,3 +1,4 @@
+import { Switch } from "@zayne-labs/ui-react/common";
 import AppFour from "./AppFour";
 import AppOne from "./AppOne";
 import AppThree from "./AppThree";
@@ -6,23 +7,25 @@ import AppTwo from "./AppTwo";
 function App() {
 	const pathname = globalThis.location.pathname;
 
-	switch (pathname) {
-		case "/four": {
-			return <AppFour />;
-		}
+	return (
+		<Switch.Root value={pathname}>
+			<Switch.Match when="/four">
+				<AppFour />
+			</Switch.Match>
 
-		case "/three": {
-			return <AppThree />;
-		}
+			<Switch.Match when="/three">
+				<AppThree />
+			</Switch.Match>
 
-		case "/two": {
-			return <AppTwo />;
-		}
+			<Switch.Match when="/two">
+				<AppTwo />
+			</Switch.Match>
 
-		default: {
-			return <AppOne />;
-		}
-	}
+			<Switch.Default>
+				<AppOne />
+			</Switch.Default>
+		</Switch.Root>
+	);
 }
 
 export default App;
