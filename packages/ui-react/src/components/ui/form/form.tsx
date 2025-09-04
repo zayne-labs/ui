@@ -582,7 +582,6 @@ type ErrorMessageRenderProps = {
 	"data-scope": "form";
 	"data-slot": "form-error-message";
 	id: string | undefined;
-	ref: React.RefCallback<HTMLElement>;
 };
 
 type ErrorMessageRenderState = { errorMessage: string; errorMessageArray: string[]; index: number };
@@ -644,15 +643,11 @@ export const FormErrorMessagePrimitive: FormErrorMessagePrimitiveType = (props) 
 
 	const { formMessageId } = useLaxFormFieldContext() ?? {};
 
-	const errorParagraphRef = useRef<HTMLElement>(null);
-
 	const wrapperRef = useRef<HTMLDivElement>(null);
 
 	const errorAnimationClass = classNames?.errorMessageAnimation ?? "animate-shake";
 
-	const getErrorElements = useCallbackRef(
-		() => wrapperRef.current?.children ?? [errorParagraphRef.current]
-	);
+	const getErrorElements = useCallbackRef(() => wrapperRef.current?.children ?? []);
 
 	useEffect(() => {
 		if (disableErrorAnimation) return;
@@ -664,8 +659,6 @@ export const FormErrorMessagePrimitive: FormErrorMessagePrimitiveType = (props) 
 		if (errorMessageElements.length === 0) return;
 
 		for (const element of errorMessageElements) {
-			if (!element) continue;
-
 			element.classList.add(errorAnimationClass);
 
 			const onAnimationEnd = () => element.classList.remove(errorAnimationClass);
@@ -681,24 +674,30 @@ export const FormErrorMessagePrimitive: FormErrorMessagePrimitiveType = (props) 
 
 		const errorMessageElements = getErrorElements();
 
+		if (errorMessageElements.length === 0) return;
+
 		const firstErrorElement = errorMessageElements[0];
 
 		if (!firstErrorElement) return;
 
-		// // == Find the input field associated with this error
-		// const inputField = document.querySelector(`[name='${fieldName}']`);
-		// const isFocusableInput = inputField?.matches(
-		// 	":is(input, select, textarea, [contenteditable='true'])"
-		// );
+		// == Find the input field associated with this error
+		const inputField = document.querySelector(`[name='${fieldName}']`);
 
-		// // == Return early if the input field is focusable (Only scrollIntoView for non-focusable fields)
-		// if (isFocusableInput) return;
+		const isFocusableInput = inputField?.matches(
+			":is(input, select, textarea, [contenteditable='true'])"
+		);
+
+		// == Return early if the input field is focusable (Only scrollIntoView for non-focusable fields)
+		if (isFocusableInput) return;
 
 		// == Schedule the scroll to next frame to ensure DOM is ready
+		// == Get the element's position and scroll in one frame
 		requestAnimationFrame(() => {
-			// == Get the element's position and scroll in one frame
-			const rect = firstErrorElement.getBoundingClientRect();
-			const topWithOffset = rect.top - 100;
+			const elementRect = firstErrorElement.getBoundingClientRect();
+
+			if (elementRect.top === 0) return;
+
+			const topWithOffset = elementRect.top - 100;
 
 			window.scrollTo({
 				behavior: "smooth",
@@ -729,11 +728,11 @@ export const FormErrorMessagePrimitive: FormErrorMessagePrimitiveType = (props) 
 			"data-scope": "form",
 			"data-slot": "form-error-message",
 			id: formMessageId,
-			ref: (node) => {
-				if (!node || errorParagraphRef.current) return;
+			// ref: (node) => {
+			// 	if (!node || errorParagraphRef.current) return;
 
-				errorParagraphRef.current = node;
-			},
+			// 	errorParagraphRef.current = node;
+			// },
 		};
 	};
 
@@ -751,7 +750,7 @@ export const FormErrorMessagePrimitive: FormErrorMessagePrimitiveType = (props) 
 
 	const WrapperComponent = "div";
 
-	const wrapperComponentProps = errorMessageArray.length > 1 && {
+	const wrapperComponentProps = {
 		className: cnMerge("flex flex-col", classNames?.container),
 		"data-part": "error-message-container",
 		"data-scope": "form",

@@ -10,13 +10,14 @@ const sharedOptions = {
 		"src/components/ui/index.ts",
 		"src/components/ui/card/index.ts",
 		"src/components/ui/carousel/index.ts",
-		"src/components/ui/drop-zone/index.ts",
 		"src/components/ui/drag-scroll/index.ts",
+		"src/components/ui/drop-zone/index.ts",
 		"src/components/ui/form/index.ts",
 
 		// Utility components
 		"src/components/common/index.ts",
 		"src/components/common/await/index.ts",
+		"src/components/common/client-gate/index.ts",
 		"src/components/common/error-boundary/index.ts",
 		"src/components/common/for/index.ts",
 		"src/components/common/presence/index.ts",

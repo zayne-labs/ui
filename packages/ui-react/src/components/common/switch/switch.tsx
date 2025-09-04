@@ -1,9 +1,8 @@
 "use client";
 
-import * as React from "react";
-
-import { getRegularChildren, getSingleSlot } from "@/lib/utils/getSlot";
 import { isFunction } from "@zayne-labs/toolkit-type-helpers";
+import * as React from "react";
+import { getRegularChildren, getSingleSlot } from "@/lib/utils/getSlot";
 
 type ValidSwitchComponentType = React.ReactElement<SwitchMatchProps<unknown>>;
 

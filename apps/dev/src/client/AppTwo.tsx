@@ -37,7 +37,7 @@ function AppTwo() {
 				</ParentTwo>
 			</section>
 
-			<Show.Root type="content-control">
+			<Show.Root control="content">
 				<Show.Content when={false}>
 					<button type="button" onClick={onClick}>
 						Click me

@@ -24,8 +24,6 @@ function MainForm() {
 
 	const [max, setMax] = useState(3);
 
-	console.info({ max });
-
 	return (
 		<Form.Root
 			methods={methods}
@@ -218,7 +216,7 @@ function MainForm() {
 						return (
 							<Form.Submit
 								disabled={isSubmitting}
-								className="mt-8 w-full rounded-lg bg-blue-600 px-5 py-3 text-sm font-semibold
+								className="mt-100 w-full rounded-lg bg-blue-600 px-5 py-3 text-sm font-semibold
 									text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2
 									focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50"
 							>
