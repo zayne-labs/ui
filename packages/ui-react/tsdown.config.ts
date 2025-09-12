@@ -4,7 +4,7 @@ const isDevMode = process.env.NODE_ENV === "development";
 
 const sharedOptions = {
 	clean: true, // clean up dist folder,
-	dts: true, // generate d.ts
+	dts: { newContext: true },
 	entry: [
 		// UI components
 		"src/components/ui/index.ts",
@@ -26,16 +26,13 @@ const sharedOptions = {
 		"src/components/common/suspense-with-boundary/index.ts",
 		"src/components/common/switch/index.ts",
 		"src/components/common/teleport/index.ts",
-
-		// Utilities
-		"src/lib/utils/index.ts",
 	],
 	format: ["esm"],
 	platform: "browser",
 	sourcemap: !isDevMode,
 	target: "esnext",
-	treeshake: false,
-	tsconfig: "tsconfig.json",
+	treeshake: true,
+	tsconfig: "tsconfig.tsdown.json",
 } satisfies Options;
 
 const config = defineConfig([

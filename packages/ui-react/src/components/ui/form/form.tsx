@@ -7,6 +7,7 @@ import {
 	composeTwoEventHandlers,
 	type DiscriminatedRenderItemProps,
 	type DiscriminatedRenderProps,
+	getMultipleSlots,
 	type InferProps,
 	type PolymorphicProps,
 } from "@zayne-labs/toolkit-react/utils";
@@ -32,7 +33,6 @@ import {
 import { ForWithWrapper } from "@/components/common/for";
 import { Slot } from "@/components/common/slot";
 import { cnMerge } from "@/lib/utils/cn";
-import { getMultipleSlots } from "@/lib/utils/getSlot";
 import {
 	type FieldContextValue,
 	type FieldState,

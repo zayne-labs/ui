@@ -238,7 +238,7 @@ function RepoCard({ repo }: { repo: GitHubRepo }) {
 				</div>
 			</Card.Header>
 
-			<Card.Content className="flex-1 px-6 pb-6 pt-0">
+			<Card.Content className="flex-1 px-6 pt-0 pb-6">
 				<p className="line-clamp-3 text-gray-600">{repo.description ?? "No description provided."}</p>
 
 				{repo.topics.length > 0 && (

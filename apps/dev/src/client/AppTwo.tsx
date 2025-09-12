@@ -1,12 +1,12 @@
 import { css } from "@zayne-labs/toolkit-core";
-import { composeEventHandlers } from "@zayne-labs/toolkit-react/utils";
-import { Show } from "@zayne-labs/ui-react/common";
 import {
+	composeEventHandlers,
 	createSlotComponent,
 	type GetSlotComponentProps,
 	getMultipleSlots,
 	getSlotMap,
-} from "@zayne-labs/ui-react/utils";
+} from "@zayne-labs/toolkit-react/utils";
+import { Show } from "@zayne-labs/ui-react/common";
 
 const onClick = composeEventHandlers();
 

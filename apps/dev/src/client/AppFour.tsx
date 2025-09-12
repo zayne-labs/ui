@@ -43,21 +43,21 @@ function AppFour() {
 				<Card.Footer className="mt-6 grid grid-cols-3 border-t border-white/20 pt-4 text-center">
 					<div className="flex flex-col gap-1">
 						<span className="text-sm font-semibold text-white">1.2k</span>
-						<span className="text-xs font-medium uppercase tracking-wide text-white/70">
+						<span className="text-xs font-medium tracking-wide text-white/70 uppercase">
 							Followers
 						</span>
 					</div>
 
 					<div className="flex flex-col gap-1">
 						<span className="text-sm font-semibold text-white">234</span>
-						<span className="text-xs font-medium uppercase tracking-wide text-white/70">
+						<span className="text-xs font-medium tracking-wide text-white/70 uppercase">
 							Following
 						</span>
 					</div>
 
 					<div className="flex flex-col gap-1">
 						<span className="text-sm font-semibold text-white">42</span>
-						<span className="text-xs font-medium uppercase tracking-wide text-white/70">
+						<span className="text-xs font-medium tracking-wide text-white/70 uppercase">
 							Projects
 						</span>
 					</div>

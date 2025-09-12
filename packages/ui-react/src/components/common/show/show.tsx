@@ -1,9 +1,9 @@
 "use client";
 
 import { toArray } from "@zayne-labs/toolkit-core";
+import { getMultipleSlots, getSingleSlot } from "@zayne-labs/toolkit-react/utils";
 import { assert, isFunction } from "@zayne-labs/toolkit-type-helpers";
 import * as React from "react";
-import { getMultipleSlots, getSingleSlot } from "@/lib/utils/getSlot";
 
 type ShowProps<TWhen> =
 	| {
