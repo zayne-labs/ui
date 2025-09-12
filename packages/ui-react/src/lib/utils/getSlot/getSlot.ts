@@ -34,9 +34,8 @@ export const matchesSlotComponent = (child: React.ReactNode, SlotComponent: Func
 		return false;
 	}
 
-	const resolvedChildType = isWithSlotReference(child.type)
-		? (child.type.slotReference as FunctionalComponent)
-		: child.type;
+	const resolvedChildType =
+		isWithSlotReference(child.type) ? (child.type.slotReference as FunctionalComponent) : child.type;
 
 	const hasMatchingSlotSymbol =
 		isWithSlotSymbol(resolvedChildType)
@@ -109,9 +108,9 @@ export const getSingleSlot = (
 	} = options;
 
 	const actualChildren =
-		isValidElement<InferProps<typeof ReactFragment>>(children) && children.type === ReactFragment
-			? children.props.children
-			: children;
+		isValidElement<InferProps<typeof ReactFragment>>(children) && children.type === ReactFragment ?
+			children.props.children
+		:	children;
 
 	const childrenArray = toArray<React.ReactNode>(actualChildren);
 
@@ -162,9 +161,8 @@ export const getMultipleSlots = <const TSlotComponents extends FunctionalCompone
 	const slots = SlotComponents.map((SlotComponent, index) =>
 		getSingleSlot(children, SlotComponent, {
 			errorMessage: isArray(errorMessage) ? errorMessage[index] : errorMessage,
-			throwOnMultipleSlotMatch: isArray(throwOnMultipleSlotMatch)
-				? throwOnMultipleSlotMatch[index]
-				: throwOnMultipleSlotMatch,
+			throwOnMultipleSlotMatch:
+				isArray(throwOnMultipleSlotMatch) ? throwOnMultipleSlotMatch[index] : throwOnMultipleSlotMatch,
 		})
 	);
 
@@ -181,9 +179,9 @@ export const getRegularChildren = (
 	SlotComponentOrComponents: FunctionalComponent | FunctionalComponent[]
 ) => {
 	const actualChildren =
-		isValidElement<InferProps<typeof ReactFragment>>(children) && children.type === ReactFragment
-			? children.props.children
-			: children;
+		isValidElement<InferProps<typeof ReactFragment>>(children) && children.type === ReactFragment ?
+			children.props.children
+		:	children;
 
 	const childrenArray = toArray<React.ReactNode>(actualChildren);
 

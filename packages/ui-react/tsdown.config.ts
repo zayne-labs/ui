@@ -34,7 +34,7 @@ const sharedOptions = {
 	platform: "browser",
 	sourcemap: !isDevMode,
 	target: "esnext",
-	treeshake: true,
+	treeshake: false,
 	tsconfig: "tsconfig.json",
 } satisfies Options;
 

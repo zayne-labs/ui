@@ -1,30 +1,20 @@
 import { createStore, handleFileValidationAsync, toArray } from "@zayne-labs/toolkit-core";
-import { isFile, isString } from "@zayne-labs/toolkit-type-helpers";
+import { isString } from "@zayne-labs/toolkit-type-helpers";
 import type { DropZoneActions, DropZoneState, UseDropZoneProps } from "./types";
-import { clearObjectURL, createObjectURL, generateUniqueId } from "./utils";
+import { clearObjectURL, createObjectURL, generateFileID, getErrorContext, isMatchingFile } from "./utils";
 
-export type DropZoneStore = DropZoneState & { actions: DropZoneActions };
+export type DropZoneStore = DropZoneActions & DropZoneState;
 
-export const createDropZoneStore = (
-	initStoreValues: Pick<
-		UseDropZoneProps,
-		| "allowedFileTypes"
-		| "disablePreviewForNonImageFiles"
-		| "initialFiles"
-		| "maxFileCount"
-		| "maxFileSize"
-		| "multiple"
-		| "onFilesChange"
-		| "onUpload"
-		| "onUploadError"
-		| "onUploadErrorCollection"
-		| "onUploadSuccess"
-		| "rejectDuplicateFiles"
-		| "validator"
-	> & {
-		inputRef: React.RefObject<HTMLInputElement | null>;
-	}
-) => {
+type RequiredUseDropZoneProps = {
+	[Key in keyof Required<UseDropZoneProps>]: UseDropZoneProps[Key] | undefined;
+};
+
+type InitStoreValues = Omit<
+	RequiredUseDropZoneProps,
+	"disabled" | "disableInternalStateSubscription" | "extraProps" | "shouldOpenFilePickerOnAreaClick"
+> & { inputRef: React.RefObject<HTMLInputElement | null> };
+
+export const createDropZoneStore = (initStoreValues: InitStoreValues) => {
 	const {
 		allowedFileTypes,
 		disablePreviewForNonImageFiles,
@@ -35,9 +25,8 @@ export const createDropZoneStore = (
 		multiple,
 		onFilesChange,
 		onUpload,
-		onUploadError,
-		onUploadErrorCollection,
-		onUploadSuccess,
+		onValidationError,
+		onValidationSuccess,
 		rejectDuplicateFiles,
 		validator,
 	} = initStoreValues;
@@ -50,47 +39,34 @@ export const createDropZoneStore = (
 		inputRef.current.value = "";
 	};
 
+	const initFileStateArray: DropZoneState["fileStateArray"] = initialFileArray.map((fileMeta) => ({
+		file: fileMeta,
+		id: fileMeta.id,
+		preview: isString(fileMeta.url) ? fileMeta.url : undefined,
+		progress: 0,
+		status: "idle",
+	}));
+
 	const store = createStore<DropZoneStore>((set, get) => ({
-		errors: [],
-		fileStateArray: initialFileArray.map((fileMeta) => ({
-			file: fileMeta,
-			id: fileMeta.id,
-			preview: isString(fileMeta.url) ? fileMeta.url : undefined,
-		})),
-		isDraggingOver: false,
-
-		// eslint-disable-next-line perfectionist/sort-objects -- Ignore
 		actions: {
-			// registerEventListeners: () => {
-			// 	const containerElement = {}
-			// 	const inputElement = {}
-
-			// 	inputRef.current.addEventListener("change", get().actions.handleChange);
-			// 	inputRef.current.addEventListener("dragenter", get().actions.handleDragEnter);
-			// 	inputRef.current.addEventListener("dragleave", get().actions.handleDragLeave);
-			// 	inputRef.current.addEventListener("dragover", get().actions.handleDragOver);
-			// 	inputRef.current.addEventListener("drop", get().actions.handleDrop);
-			// },
-
 			addFiles: async (files) => {
 				if (!files || files.length === 0) {
 					console.warn("No file selected!");
 					return;
 				}
 
-				const { fileStateArray } = get();
+				const { actions, fileStateArray } = get();
 
 				// == In single file mode, only use the first file
-				const newFiles = !multiple ? [files[0]] : files;
+				const resolvedNewFiles = !multiple ? [files[0]] : files;
 
 				const { errors, validFiles } = await handleFileValidationAsync({
 					existingFiles: fileStateArray.map((fileWithPreview) => fileWithPreview.file),
 					hooks: {
-						onError: onUploadError,
-						onErrorCollection: onUploadErrorCollection,
-						onSuccess: onUploadSuccess,
+						onErrorEach: onValidationError,
+						onSuccessBatch: onValidationSuccess,
 					},
-					newFiles,
+					newFiles: resolvedNewFiles,
 					settings: {
 						allowedFileTypes,
 						maxFileCount,
@@ -105,32 +81,43 @@ export const createDropZoneStore = (
 					return;
 				}
 
-				const newFileStateArray = validFiles.map((file) => ({
+				const newFileStateArray: DropZoneState["fileStateArray"] = validFiles.map((file) => ({
 					file,
-					id: generateUniqueId(file),
+					id: generateFileID(file),
 					preview: createObjectURL(file, disablePreviewForNonImageFiles),
+					progress: 0,
+					status: "idle",
 				}));
 
 				set({
 					errors,
-					fileStateArray: multiple ? [...fileStateArray, ...newFileStateArray] : newFileStateArray,
+					fileStateArray: !multiple ? newFileStateArray : [...fileStateArray, ...newFileStateArray],
 					isDraggingOver: false,
 				});
 
-				await onUpload?.({ fileStateArray: newFileStateArray });
+				await actions.handleFileUpload({ newFileStateArray });
 			},
+
 			clearErrors: () => {
 				set({ errors: [] });
 			},
+
 			clearFiles: () => {
+				const { actions } = get();
+
+				actions.clearObjectURLs();
+
+				set({ fileStateArray: [] });
+			},
+
+			clearObjectURLs: () => {
 				const { fileStateArray } = get();
 
 				for (const fileState of fileStateArray) {
 					clearObjectURL(fileState, disablePreviewForNonImageFiles);
 				}
-
-				set({ fileStateArray: [] });
 			},
+
 			handleChange: async (event) => {
 				const fileList = event.target.files;
 
@@ -140,65 +127,167 @@ export const createDropZoneStore = (
 
 				clearInputValue();
 			},
+
 			handleDragEnter: (event) => {
 				event.preventDefault();
 				event.stopPropagation();
 
 				set({ isDraggingOver: true });
 			},
+
 			handleDragLeave: (event) => {
 				event.preventDefault();
 				event.stopPropagation();
 
 				set({ isDraggingOver: false });
 			},
+
 			handleDragOver: (event) => {
 				event.preventDefault();
 				event.stopPropagation();
 			},
+
 			handleDrop: async (event) => {
 				event.preventDefault();
 				event.stopPropagation();
 
-				if (inputRef.current?.disabled) {
-					return;
-				}
+				const { actions } = get();
 
 				const fileList = event.dataTransfer.files;
 
+				await actions.addFiles(fileList);
+			},
+
+			handleFileUpload: async (context) => {
+				const { newFileStateArray } = context;
+
 				const { actions } = get();
+
+				if (!onUpload) {
+					for (const fileState of newFileStateArray) {
+						actions.updateFileState({ fileStateOrID: fileState, progress: 100, status: "success" });
+					}
+					return;
+				}
+
+				try {
+					await onUpload({
+						fileStateArray: newFileStateArray,
+						onError: (ctx) => {
+							const { error, fileStateOrID } = ctx;
+
+							const errorContext = getErrorContext(error);
+
+							actions.updateFileState({ error: errorContext, fileStateOrID, status: "error" });
+						},
+						onProgress: (ctx) => {
+							const { fileStateOrID, progress } = ctx;
+
+							actions.updateFileState({ fileStateOrID, progress });
+						},
+						onSuccess: (ctx) => {
+							const { fileStateOrID } = ctx;
+
+							actions.updateFileState({ fileStateOrID, progress: 100, status: "success" });
+						},
+					});
+
+					// Handle Errors
+				} catch (error) {
+					const errorContext = getErrorContext(error as Error);
+
+					for (const fileState of newFileStateArray) {
+						actions.updateFileState({
+							error: errorContext,
+							fileStateOrID: fileState,
+							status: "error",
+						});
+					}
+
+					// set((prevState) => ({ errors: [...prevState.errors, errorContext] }));
+				}
+			},
+
+			handleKeyDown: (event) => {
+				const isEnterKey = event.key === "Enter";
+				const isSpaceKey = event.key === " ";
+
+				const isAllowedKey = isEnterKey || isSpaceKey;
+
+				if (!isAllowedKey) return;
+
+				event.preventDefault();
+
+				const { actions } = get();
+
+				actions.openFilePicker();
+			},
+
+			handlePaste: async (event) => {
+				event.preventDefault();
+				event.stopPropagation();
+
+				const { actions } = get();
+
+				const fileList = event.clipboardData.files;
 
 				await actions.addFiles(fileList);
 			},
+
 			openFilePicker: () => {
 				inputRef.current?.click();
 			},
-			removeFile: (fileItemOrID) => {
+
+			removeFile: (ctx) => {
+				const { fileStateOrID } = ctx;
+
 				const { fileStateArray } = get();
 
-				const actualFileToRemove = fileStateArray.find((fileState) => {
-					if (isString(fileItemOrID)) {
-						return fileState.id === fileItemOrID;
+				const updatedFileStateArray = fileStateArray.flatMap((fileState) => {
+					if (isMatchingFile({ fileState, fileStateOrID })) {
+						clearObjectURL(fileState, disablePreviewForNonImageFiles);
+
+						return [];
 					}
 
-					if (isFile(fileItemOrID)) {
-						return fileState.file === fileItemOrID;
-					}
-
-					return fileState.id === fileItemOrID?.id;
+					return fileState;
 				});
-
-				if (!actualFileToRemove) return;
-
-				clearObjectURL(actualFileToRemove, disablePreviewForNonImageFiles);
-
-				const updatedFileStateArray = fileStateArray.filter(
-					(file) => file.id !== actualFileToRemove.id
-				);
 
 				set({ errors: [], fileStateArray: updatedFileStateArray });
 			},
+
+			updateFileState: (ctx) => {
+				const { fileStateOrID, ...updatedFileState } = ctx;
+
+				const { fileStateArray } = get();
+
+				const updatedFileStateArray: DropZoneState["fileStateArray"] = fileStateArray.map(
+					(fileState) => {
+						if (isMatchingFile({ fileState, fileStateOrID })) {
+							return {
+								...fileState,
+								...updatedFileState,
+							};
+						}
+
+						return fileState;
+					}
+				);
+
+				// const updatedErrorsState =
+				// 	updatedFileState.error ?
+				// 		{ errors: [...errors, updatedFileState.error] satisfies DropZoneState["errors"] }
+				// 	:	null;
+
+				set({ fileStateArray: updatedFileStateArray });
+			},
 		},
+
+		disabled: false,
+		errors: [],
+		fileStateArray: initFileStateArray,
+
+		isDraggingOver: false,
 	}));
 
 	// == File change subscription

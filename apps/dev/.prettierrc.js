@@ -2,7 +2,6 @@ import { configWithTailwind } from "@zayne-labs/prettier-config";
 
 const config = {
 	...configWithTailwind,
-	tailwindStylesheet: "./packages/ui-react/tailwind.css",
 };
 
 export default config;

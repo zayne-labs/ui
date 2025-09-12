@@ -1,6 +1,5 @@
-import * as React from "react";
-
 import { isFunction } from "@zayne-labs/toolkit-type-helpers";
+import * as React from "react";
 import { Component } from "react";
 import { ErrorBoundaryContext, type ErrorBoundaryContextType } from "./error-boundary-context";
 import type { ErrorBoundaryProps, FallbackProps } from "./types";

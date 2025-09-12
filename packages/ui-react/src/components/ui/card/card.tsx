@@ -29,8 +29,8 @@ export function CardHeader<TElement extends React.ElementType = "header">(
 			data-scope="card"
 			data-part="header"
 			data-slot="card-header"
-			className="@container/card-header has-data-[slot=card-action]:grid-cols-[1fr_auto] grid
-				auto-rows-min grid-rows-[auto_auto] items-start gap-1.5 px-6"
+			className="@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-1.5
+				px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto]"
 			{...restOfProps}
 		/>
 	);
@@ -44,7 +44,7 @@ export function CardTitle<TElement extends React.ElementType = "h3">(props: Poly
 			data-scope="card"
 			data-part="title"
 			data-slot="card-title"
-			className={cnMerge("font-semibold leading-none", className)}
+			className={cnMerge("leading-none font-semibold", className)}
 			{...restOfProps}
 		/>
 	);
@@ -60,7 +60,7 @@ export function CardDescription<TElement extends React.ElementType = "p">(
 			data-scope="card"
 			data-part="description"
 			data-slot="card-description"
-			className={cnMerge("text-shadcn-muted-foreground text-sm", className)}
+			className={cnMerge("text-sm text-zu-muted-foreground", className)}
 			{...restOfProps}
 		/>
 	);

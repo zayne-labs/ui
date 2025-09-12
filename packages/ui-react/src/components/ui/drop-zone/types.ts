@@ -1,19 +1,31 @@
+/* eslint-disable ts-eslint/consistent-type-definitions -- It's allowed */
 import type {
 	FileMeta,
-	FileValidationErrorContext,
+	FileOrFileMeta,
+	FileValidationErrorContextEach,
 	FileValidationHooksAsync,
 	FileValidationSettingsAsync,
 } from "@zayne-labs/toolkit-core";
 import type { InferProps } from "@zayne-labs/toolkit-react/utils";
 import type { Awaitable } from "@zayne-labs/toolkit-type-helpers";
-import type { FileItemContextType, useDropZoneStoreContext } from "./drop-zone-context";
+import type { useDropZoneStoreContext } from "./drop-zone-context";
 import type { createDropZoneStore } from "./drop-zone-store";
+import type { DropZoneError } from "./utils";
 
-export type FileState = {
+type FileErrorContext = Omit<FileValidationErrorContextEach, "code"> & {
+	code: "upload-error" | FileValidationErrorContextEach["code"];
+};
+
+export interface FileState {
+	/**
+	 *  Validation errors for the file
+	 *
+	 */
+	error?: FileErrorContext;
 	/**
 	 *  File object or file metadata
 	 */
-	file: File | FileMeta;
+	file: FileOrFileMeta;
 	/**
 	 *  Unique ID for the file
 	 */
@@ -24,40 +36,64 @@ export type FileState = {
 	 *  - Can also be undefined if `URL.createObjectURL` fails
 	 */
 	preview: string | undefined;
+	/**
+	 *  Progress of the file upload
+	 */
+	progress: number;
+	/**
+	 *  Status of the file upload
+	 */
+	status: "error" | "idle" | "success" | "uploading";
+}
+
+export type FileStateOrIDProp = {
+	fileStateOrID: FileOrFileMeta | FileState | FileState["id"];
 };
 
 type RecordForDataAttr = Record<`data-${string}`, unknown>;
 
-export type PartProps = {
+export interface PartProps {
 	container: {
-		input: InferProps<HTMLElement>;
-		output: InferProps<HTMLElement>;
+		input: PartProps["container"]["output"];
+		output: InferProps<HTMLElement> & RecordForDataAttr;
 	};
 	fileGroup: {
-		input: InferProps<"ul"> & RecordForDataAttr & { orientation?: "horizontal" | "vertical" };
+		input: PartProps["fileGroup"]["output"] & { orientation?: "horizontal" | "vertical" };
 		output: InferProps<"ul"> & RecordForDataAttr;
 	};
 	fileItem: {
-		input: InferProps<"li"> & RecordForDataAttr;
+		input: PartProps["fileItem"]["output"];
 		output: InferProps<"li"> & RecordForDataAttr;
 	};
-	fileItemDelete: {
-		input: InferProps<"button"> & Partial<Pick<FileItemContextType, "fileItemOrID">> & RecordForDataAttr;
+	fileItemClear: {
+		input: PartProps["fileItemClear"]["output"];
 		output: InferProps<"button"> & RecordForDataAttr;
 	};
-	fileItemProgress: {
-		input: InferProps<"div"> & RecordForDataAttr;
+	fileItemDelete: {
+		input: Partial<FileStateOrIDProp> & PartProps["fileItemDelete"]["output"];
+		output: InferProps<"button"> & RecordForDataAttr;
+	};
+	fileItemMetadata: {
+		input: PartProps["fileItemMetadata"]["output"];
 		output: InferProps<"div"> & RecordForDataAttr;
 	};
+	fileItemPreview: {
+		input: PartProps["fileItemPreview"]["output"];
+		output: InferProps<"span"> & RecordForDataAttr;
+	};
+	fileItemProgress: {
+		input: PartProps["fileItemProgress"]["output"] & { variant?: "circular" | "fill" | "linear" };
+		output: InferProps<"span"> & RecordForDataAttr;
+	};
 	input: {
-		input: InferProps<"input"> & RecordForDataAttr;
+		input: PartProps["input"]["output"];
 		output: InferProps<"input"> & RecordForDataAttr;
 	};
 	trigger: {
-		input: InferProps<"button"> & RecordForDataAttr;
+		input: PartProps["trigger"]["output"];
 		output: InferProps<"button"> & RecordForDataAttr;
 	};
-};
+}
 
 export type PartInputProps = {
 	[Key in keyof PartProps]: PartProps[Key]["input"];
@@ -70,10 +106,14 @@ export type DropZonePropGetters = {
 };
 
 export type DropZoneState = {
+	// /**
+	//  *  Whether or not the drop zone is disabled
+	//  */
+	// invalid: boolean;
 	/**
 	 *  List of validation errors
 	 */
-	errors: FileValidationErrorContext[];
+	errors: FileErrorContext[];
 	/**
 	 *  List of files with their preview URLs and unique IDs
 	 */
@@ -85,26 +125,41 @@ export type DropZoneState = {
 };
 
 export type DropZoneActions = {
-	addFiles: (files: File[] | FileList | null) => Awaitable<void>;
-	clearErrors: () => void;
-	clearFiles: () => void;
-	handleChange: (event: React.ChangeEvent<HTMLInputElement>) => Awaitable<void>;
-	handleDragEnter: (event: React.DragEvent<HTMLElement>) => void;
-	handleDragLeave: (event: React.DragEvent<HTMLElement>) => void;
-	handleDragOver: (event: React.DragEvent<HTMLElement>) => void;
-	handleDrop: (event: React.DragEvent<HTMLElement>) => Awaitable<void>;
-	openFilePicker: () => void;
-	removeFile: (fileItemOrID: FileItemContextType["fileItemOrID"]) => void;
+	actions: {
+		addFiles: (files: FileList | FileOrFileMeta[] | null) => Awaitable<void>;
+		clearErrors: () => void;
+		clearFiles: () => void;
+		clearObjectURLs: () => void;
+		handleChange: (event: React.ChangeEvent<HTMLInputElement>) => Awaitable<void>;
+		handleDragEnter: (event: React.DragEvent<HTMLElement>) => void;
+		handleDragLeave: (event: React.DragEvent<HTMLElement>) => void;
+		handleDragOver: (event: React.DragEvent<HTMLElement>) => void;
+		handleDrop: (event: React.DragEvent<HTMLElement>) => Awaitable<void>;
+		handleFileUpload: (ctx: { newFileStateArray: DropZoneState["fileStateArray"] }) => Awaitable<void>;
+		handleKeyDown: (event: React.KeyboardEvent<HTMLElement>) => void;
+		handlePaste: (event: React.ClipboardEvent<HTMLElement>) => Awaitable<void>;
+		openFilePicker: () => void;
+		removeFile: (ctx: FileStateOrIDProp) => void;
+		updateFileState: (
+			ctx: FileStateOrIDProp & Partial<Omit<FileState, "file" | "id" | "preview">>
+		) => void;
+	};
 };
 
-export type UseDropZoneResult = {
+export interface UseDropZoneResult
+	extends Pick<Required<UseDropZoneProps>, "disabled" | "disableInternalStateSubscription"> {
 	inputRef: React.RefObject<HTMLInputElement | null>;
 	propGetters: DropZonePropGetters;
 	storeApi: ReturnType<typeof createDropZoneStore>;
 	useDropZoneStore: typeof useDropZoneStoreContext;
-};
+}
 
-export type UseDropZoneProps = FileValidationSettingsAsync & {
+export interface UseDropZoneProps extends FileValidationSettingsAsync {
+	/**
+	 * Whether or not the drop zone is disabled
+	 */
+	disabled?: boolean;
+
 	/**
 	 *  Whether to disable the internal state subscription such as drag over state etc for setting things like data attributes
 	 *  - This is useful if you want to subscribe to the state yourself
@@ -141,22 +196,23 @@ export type UseDropZoneProps = FileValidationSettingsAsync & {
 	/**
 	 * Callback function to be called when new files are uploaded
 	 */
-	onUpload?: (context: Pick<DropZoneState, "fileStateArray">) => Awaitable<void>;
+	onUpload?: (
+		context: Pick<DropZoneState, "fileStateArray"> & {
+			onError: (ctx: FileStateOrIDProp & { error: DropZoneError }) => void;
+			onProgress: (ctx: FileStateOrIDProp & { progress: number }) => void;
+			onSuccess: (ctx: FileStateOrIDProp) => void;
+		}
+	) => Awaitable<void>;
 
 	/**
-	 * Callback function to be called on each file upload as they occur
+	 * Callback function to be called on each file validation error as they occur
 	 */
-	onUploadError?: FileValidationHooksAsync["onError"];
+	onValidationError?: FileValidationHooksAsync["onErrorEach"];
 
 	/**
-	 * Callback function to be called once after all file upload errors have occurred
+	 * Callback function to be called once after all files have been successfully validated
 	 */
-	onUploadErrorCollection?: FileValidationHooksAsync["onErrorCollection"];
-
-	/**
-	 * Callback function to be called on file upload success
-	 */
-	onUploadSuccess?: FileValidationHooksAsync["onSuccess"];
+	onValidationSuccess?: FileValidationHooksAsync["onSuccessBatch"];
 
 	/**
 	 * Whether clicking the drop zone area will open the default file picker or not
@@ -172,4 +228,4 @@ export type UseDropZoneProps = FileValidationSettingsAsync & {
 	 *
 	 */
 	validator?: FileValidationSettingsAsync["validator"];
-};
+}

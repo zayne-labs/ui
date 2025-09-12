@@ -11,17 +11,20 @@ import {
 import type { FieldValues, FormInputProps } from "./form";
 import { getFieldErrorMessage } from "./utils";
 
-type UseFormRootContextResult<TStrict extends boolean = true> = TStrict extends true
-	? UseFormReturn<FieldValues> & { withEyeIcon?: FormInputProps["withEyeIcon"] }
-	: (UseFormReturn<FieldValues> & { withEyeIcon?: FormInputProps["withEyeIcon"] }) | null;
+type FormReturn = UseFormReturn<FieldValues> & { withEyeIcon?: FormInputProps["withEyeIcon"] };
+
+type UseFormRootContextResult<TStrict extends boolean = true> =
+	TStrict extends true ? FormReturn : FormReturn | null;
 
 export const useFormMethodsContext = <TStrict extends boolean = true>(
 	options: { strict?: TStrict } = {}
 ): UseFormRootContextResult<TStrict> => {
 	const { strict = true } = options;
+
 	const formContext = useHookFormContext();
 
-	if (strict && !(formContext as unknown)) {
+	// eslint-disable-next-line ts-eslint/no-unnecessary-condition -- Allow
+	if (strict && !formContext) {
 		throw new ContextError(
 			`useFormRootContext returned "null". Did you forget to wrap the necessary components within FormRoot?`
 		);
@@ -45,7 +48,8 @@ export type FormRootContext = {
 	withEyeIcon: boolean | EyeIconObject | undefined;
 };
 
-export const [LaxFormRootProvider, useLaxFormRootContext] = createCustomContext<FormRootContext, false>({
+export const [LaxFormRootProvider, useLaxFormRootContext] = createCustomContext({
+	defaultValue: null as unknown as FormRootContext,
 	hookName: "useLaxFormRootContext",
 	name: "LaxFormRootContext",
 	providerName: "FormRoot",
@@ -81,10 +85,8 @@ export const [StrictFormFieldProvider, useStrictFormFieldContext] = createCustom
 	}
 );
 
-export const [LaxFormFieldProvider, useLaxFormFieldContext] = createCustomContext<
-	FieldContextValue,
-	false
->({
+export const [LaxFormFieldProvider, useLaxFormFieldContext] = createCustomContext({
+	defaultValue: null as unknown as FieldContextValue,
 	hookName: "useLaxFormFieldContext",
 	name: "LaxFormFieldContext",
 	providerName: "FormField",

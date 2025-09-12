@@ -138,7 +138,7 @@ export function CarouselControls(props: CarouselControlProps) {
 					/>
 				</Show.Content>
 
-				<Show.Otherwise>
+				<Show.Fallback>
 					<CarouselButton
 						variant="prev"
 						classNames={{
@@ -156,7 +156,7 @@ export function CarouselControls(props: CarouselControlProps) {
 						}}
 						icon={icon?.next}
 					/>
-				</Show.Otherwise>
+				</Show.Fallback>
 			</Show.Root>
 		</div>
 	);
@@ -174,8 +174,8 @@ export function CarouselItemGroup<TArrayItem>(props: CarouselWrapperProps<TArray
 			data-part="item-group"
 			data-slot="carousel-item-group"
 			className={cnMerge(
-				`duration-800 transform-[translate3d(var(--translate-distance),0,0)] flex w-full shrink-0
-				snap-center transition-transform`,
+				`flex w-full shrink-0 transform-[translate3d(var(--translate-distance),0,0)] snap-center
+				transition-transform duration-800`,
 				className
 			)}
 			style={

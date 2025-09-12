@@ -11,11 +11,9 @@ import {
 import { Fragment as ReactFragment, isValidElement } from "react";
 
 type GetSlotName<TSlotComponentProps extends GetSlotComponentProps> =
-	string extends TSlotComponentProps["name"]
-		? never
-		: "default" extends TSlotComponentProps["name"]
-			? never
-			: TSlotComponentProps["name"];
+	string extends TSlotComponentProps["name"] ? never
+	: "default" extends TSlotComponentProps["name"] ? never
+	: TSlotComponentProps["name"];
 
 type GetSpecificSlotsType<TSlotComponentProps extends GetSlotComponentProps> = {
 	// This conditional before the remapping will prevent an Indexed Record type from showing up if the props are not passed, enhancing type safety

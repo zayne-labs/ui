@@ -1,9 +1,15 @@
 @theme {
-	--color-shadcn-muted-foreground: oklch(0.556 0 0);
-	--color-shadcn-destructive: oklch(0.577 0.245 27.325);
+	--color-zu-accent: oklch(0.967 0.001 286.375);
+	--color-zu-destructive: oklch(0.577 0.245 27.325);
+	--color-zu-muted-foreground: oklch(0.556 0 0);
+	--color-zu-primary: oklch(0.21 0.04 265.75);
+	--color-zu-ring: oklch(0.705 0.015 286.067);
 }
 
 :where(.dark, [data-theme="dark"]) {
-	--color-shadcn-muted-foreground: oklch(0.708 0 0);
-	--color-shadcn-destructive: oklch(0.704 0.191 22.216);
+	--color-zu-accent: oklch(0.274 0.006 286.033);
+	--color-zu-muted-foreground: oklch(0.708 0 0);
+	--color-zu-destructive: oklch(0.704 0.191 22.216);
+	--color-zu-primary: oklch(0.92 0.004 286.32);
+	--color-zu-ring: oklch(0.552 0.016 285.938);
 }

@@ -1,7 +1,7 @@
 import { createCustomContext } from "@zayne-labs/toolkit-react";
 import { createZustandContext } from "@zayne-labs/toolkit-react/zustand";
 import type { DropZoneStore } from "./drop-zone-store";
-import type { DropZonePropGetters, FileState } from "./types";
+import type { FileState, UseDropZoneResult } from "./types";
 
 const [DropZoneStoreContextProvider, useDropZoneStoreContext] = createZustandContext<DropZoneStore>({
 	hookName: "useDropZoneStoreContext",
@@ -9,18 +9,25 @@ const [DropZoneStoreContextProvider, useDropZoneStoreContext] = createZustandCon
 	providerName: "DropZoneRoot",
 });
 
-const [DropZonePropGettersContextProvider, usePropGettersContext] =
-	createCustomContext<DropZonePropGetters>({
-		hookName: "usePropGettersContext",
-		name: "PropGettersContext",
+export type DropZoneRootContextType = Pick<
+	UseDropZoneResult,
+	"disabled" | "disableInternalStateSubscription" | "inputRef" | "propGetters"
+>;
+
+const [DropZoneRootContextProvider, useDropZoneRootContext] = createCustomContext<DropZoneRootContextType>(
+	{
+		hookName: "useDropZoneRootContext",
+		name: "DropZoneRootContext",
 		providerName: "DropZoneRoot",
-	});
+	}
+);
 
 export type FileItemContextType = {
-	fileItemOrID: FileState["file"] | FileState["id"] | undefined;
+	fileState: FileState | undefined;
 };
 
-const [FileItemContextProvider, useFileItemContext] = createCustomContext<FileItemContextType, false>({
+const [FileItemContextProvider, useFileItemContext] = createCustomContext({
+	defaultValue: null as unknown as FileItemContextType,
 	hookName: "useFileItemContext",
 	name: "FileItemContext",
 	providerName: "FileItem",
@@ -28,10 +35,10 @@ const [FileItemContextProvider, useFileItemContext] = createCustomContext<FileIt
 });
 
 export {
+	DropZoneRootContextProvider,
 	DropZoneStoreContextProvider,
 	FileItemContextProvider,
-	useFileItemContext,
+	useDropZoneRootContext,
 	useDropZoneStoreContext,
-	DropZonePropGettersContextProvider,
-	usePropGettersContext,
+	useFileItemContext,
 };

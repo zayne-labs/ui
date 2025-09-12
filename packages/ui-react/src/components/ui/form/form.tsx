@@ -1,8 +1,5 @@
 "use client";
 
-// biome-ignore assist/source/organizeImports: needs to be on top
-import * as React from "react";
-
 import { dataAttr, on, toArray } from "@zayne-labs/toolkit-core";
 import { useCallbackRef, useToggle } from "@zayne-labs/toolkit-react";
 import {
@@ -14,6 +11,7 @@ import {
 	type PolymorphicProps,
 } from "@zayne-labs/toolkit-react/utils";
 import { type AnyString, defineEnum } from "@zayne-labs/toolkit-type-helpers";
+import * as React from "react";
 import { Fragment as ReactFragment, useEffect, useId, useMemo, useRef } from "react";
 import {
 	type Control,
@@ -31,7 +29,7 @@ import {
 	useFormState,
 	useWatch,
 } from "react-hook-form";
-import { getElementList } from "@/components/common/for";
+import { ForWithWrapper } from "@/components/common/for";
 import { Slot } from "@/components/common/slot";
 import { cnMerge } from "@/lib/utils/cn";
 import { getMultipleSlots } from "@/lib/utils/getSlot";
@@ -385,8 +383,9 @@ export function FormInputPrimitive<TFieldValues extends FieldValues>(
 				type={type === "password" && isPasswordVisible ? "text" : type}
 				className={cnMerge(
 					!inputTypesWithoutFullWith.has(type) && "flex w-full",
-					`focus-visible:outline-hidden placeholder:text-shadcn-muted-foreground bg-transparent
-					text-sm file:border-0 file:bg-transparent disabled:cursor-not-allowed disabled:opacity-50`,
+					`bg-transparent text-sm file:border-0 file:bg-transparent
+					placeholder:text-zu-muted-foreground focus-visible:outline-hidden
+					disabled:cursor-not-allowed disabled:opacity-50`,
 					className,
 					classNames?.input,
 					type !== "password" && isInvalid && classNames?.error
@@ -447,8 +446,8 @@ export function FormTextAreaPrimitive<TFieldValues extends FieldValues>(
 			id={id}
 			name={name}
 			className={cnMerge(
-				`placeholder:text-shadcn-muted-foreground focus-visible:outline-hidden w-full bg-transparent
-				text-sm disabled:cursor-not-allowed disabled:opacity-50`,
+				`w-full bg-transparent text-sm placeholder:text-zu-muted-foreground
+				focus-visible:outline-hidden disabled:cursor-not-allowed disabled:opacity-50`,
 				className,
 				classNames?.base,
 				isInvalid && classNames?.error
@@ -497,8 +496,8 @@ export function FormSelectPrimitive<TFieldValues extends FieldValues>(
 			id={id}
 			name={name}
 			className={cnMerge(
-				`placeholder:text-shadcn-muted-foreground focus-visible:outline-hidden w-full bg-transparent
-				text-sm disabled:cursor-not-allowed disabled:opacity-50`,
+				`w-full bg-transparent text-sm placeholder:text-zu-muted-foreground
+				focus-visible:outline-hidden disabled:cursor-not-allowed disabled:opacity-50`,
 				className,
 				classNames?.base,
 				isInvalid && classNames?.error
@@ -643,11 +642,11 @@ export const FormErrorMessagePrimitive: FormErrorMessagePrimitiveType = (props) 
 
 	const { formMessageId } = useLaxFormFieldContext() ?? {};
 
-	const wrapperRef = useRef<HTMLDivElement>(null);
+	const containerRef = useRef<HTMLUListElement>(null);
 
 	const errorAnimationClass = classNames?.errorMessageAnimation ?? "animate-shake";
 
-	const getErrorElements = useCallbackRef(() => wrapperRef.current?.children ?? []);
+	const getErrorElements = useCallbackRef(() => containerRef.current?.children ?? []);
 
 	useEffect(() => {
 		if (disableErrorAnimation) return;
@@ -658,13 +657,19 @@ export const FormErrorMessagePrimitive: FormErrorMessagePrimitiveType = (props) 
 
 		if (errorMessageElements.length === 0) return;
 
+		const controller = new AbortController();
+
 		for (const element of errorMessageElements) {
 			element.classList.add(errorAnimationClass);
 
 			const onAnimationEnd = () => element.classList.remove(errorAnimationClass);
 
-			on("animationend", element, onAnimationEnd, { once: true });
+			on("animationend", element, onAnimationEnd, { once: true, signal: controller.signal });
 		}
+
+		return () => {
+			controller.abort();
+		};
 	}, [disableErrorAnimation, errorAnimationClass, errors, getErrorElements]);
 
 	useEffect(() => {
@@ -690,9 +695,8 @@ export const FormErrorMessagePrimitive: FormErrorMessagePrimitiveType = (props) 
 		// == Return early if the input field is focusable (Only scrollIntoView for non-focusable fields)
 		if (isFocusableInput) return;
 
-		// == Schedule the scroll to next frame to ensure DOM is ready
 		// == Get the element's position and scroll in one frame
-		requestAnimationFrame(() => {
+		const frameID = requestAnimationFrame(() => {
 			const elementRect = firstErrorElement.getBoundingClientRect();
 
 			if (elementRect.top === 0) return;
@@ -704,6 +708,10 @@ export const FormErrorMessagePrimitive: FormErrorMessagePrimitiveType = (props) 
 				top: window.scrollY + topWithOffset,
 			});
 		});
+
+		return () => {
+			cancelAnimationFrame(frameID);
+		};
 	}, [disableScrollToErrorField, fieldName, errors, getErrorElements]);
 
 	const fieldErrorMessage = getFieldErrorMessage({ errors, fieldName, type });
@@ -728,11 +736,6 @@ export const FormErrorMessagePrimitive: FormErrorMessagePrimitiveType = (props) 
 			"data-scope": "form",
 			"data-slot": "form-error-message",
 			id: formMessageId,
-			// ref: (node) => {
-			// 	if (!node || errorParagraphRef.current) return;
-
-			// 	errorParagraphRef.current = node;
-			// },
 		};
 	};
 
@@ -746,32 +749,23 @@ export const FormErrorMessagePrimitive: FormErrorMessagePrimitiveType = (props) 
 		};
 	};
 
-	const [ErrorMessageList] = getElementList("base");
-
-	const WrapperComponent = "div";
-
-	const wrapperComponentProps = {
-		className: cnMerge("flex flex-col", classNames?.container),
-		"data-part": "error-message-container",
-		"data-scope": "form",
-		"data-slot": "form-error-message-container",
-		ref: wrapperRef,
-	};
-
 	const selectedChildren = typeof children === "function" ? children : renderItem;
 
 	return (
-		<WrapperComponent {...wrapperComponentProps}>
-			<ErrorMessageList
-				each={errorMessageArray}
-				renderItem={(errorMessage, index) => {
-					return selectedChildren({
-						props: getRenderProps({ index }),
-						state: getRenderState({ errorMessage, index }),
-					});
-				}}
-			/>
-		</WrapperComponent>
+		<ForWithWrapper
+			ref={containerRef}
+			className={cnMerge("flex flex-col", classNames?.container)}
+			data-part="error-message-container"
+			data-scope="form"
+			data-slot="form-error-message-container"
+			each={errorMessageArray}
+			renderItem={(errorMessage, index) => {
+				return selectedChildren({
+					props: getRenderProps({ index }),
+					state: getRenderState({ errorMessage, index }),
+				});
+			}}
+		/>
 	);
 };
 
@@ -811,18 +805,18 @@ export function FormErrorMessage<TControl, TFieldValues extends FieldValues = Fi
 			fieldName={errorField as NonNullable<typeof errorField>}
 			type={type as "root"}
 			renderItem={({ props: renderProps, state }) => (
-				<p
+				<li
 					key={state.errorMessage}
 					{...renderProps}
 					className={cnMerge(
-						"text-shadcn-destructive text-[13px]",
+						"text-[13px] text-zu-destructive",
 						"data-[index=0]:mt-1",
 						renderProps.className,
 						className
 					)}
 				>
 					{state.errorMessage}
-				</p>
+				</li>
 			)}
 		/>
 	);

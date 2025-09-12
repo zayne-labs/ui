@@ -14,6 +14,8 @@ This directory contains utility components that enhance React development with d
 - `ErrorBoundary` - Graceful error handling for component trees
 - `SuspenseWithBoundary` - Combined Suspense and error boundary wrapper
 - `Teleport` - Render components at different DOM locations
+- `ClientGate` - Render components only after client-side hydration
+- `Presence` - Manage component presence with animation support
 
 ## Installation
 
@@ -26,14 +28,27 @@ pnpm add @zayne-labs/ui-react
 Utilities can be imported from the main common module:
 
 ```tsx
-import { Await, Show, For, Switch, Slot, ErrorBoundary, SuspenseWithBoundary, Teleport } from '@zayne-labs/ui-react/common'
+import {
+ Await,
+ Show,
+ For,
+ Switch,
+ Slot,
+ ErrorBoundary,
+ SuspenseWithBoundary,
+ Teleport,
+ ClientGate,
+ Presence,
+} from "@zayne-labs/ui-react/common";
 ```
 
 Or import individual components:
 
 ```tsx
-import { Await } from '@zayne-labs/ui-react/common/await'
-import { Show } from '@zayne-labs/ui-react/common/show'
+import { Await } from "@zayne-labs/ui-react/common/await";
+import { Show } from "@zayne-labs/ui-react/common/show";
+import { ClientGate } from "@zayne-labs/ui-react/common/client-gate";
+import { Presence } from "@zayne-labs/ui-react/common/presence";
 // etc.
 ```
 

@@ -1,5 +1,11 @@
 import { dataAttr } from "@zayne-labs/toolkit-core";
-import { useCallbackRef, useConstant, useShallowComparedValue, useStore } from "@zayne-labs/toolkit-react";
+import {
+	useCallbackRef,
+	useConstant,
+	useShallowComparedValue,
+	useStore,
+	useUnmountEffect,
+} from "@zayne-labs/toolkit-react";
 import { composeRefs, composeTwoEventHandlers } from "@zayne-labs/toolkit-react/utils";
 import { useCallback, useMemo, useRef } from "react";
 import { cnMerge } from "@/lib/utils/cn";
@@ -10,6 +16,7 @@ import { getScopeAttrs } from "./utils";
 export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 	const {
 		allowedFileTypes,
+		disabled = false,
 		disableInternalStateSubscription = false,
 		disablePreviewForNonImageFiles = true,
 		initialFiles,
@@ -18,9 +25,8 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 		multiple,
 		onFilesChange,
 		onUpload,
-		onUploadError,
-		onUploadErrorCollection,
-		onUploadSuccess,
+		onValidationError,
+		onValidationSuccess,
 		rejectDuplicateFiles = true,
 		shouldOpenFilePickerOnAreaClick = true,
 		validator,
@@ -30,9 +36,8 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 
 	const savedOnFilesChange = useCallbackRef(onFilesChange);
 	const savedOnUpload = useCallbackRef(onUpload);
-	const savedOnUploadError = useCallbackRef(onUploadError);
-	const savedOnUploadErrorCollection = useCallbackRef(onUploadErrorCollection);
-	const savedOnUploadSuccess = useCallbackRef(onUploadSuccess);
+	const savedOnUploadError = useCallbackRef(onValidationError);
+	const savedOnUploadSuccess = useCallbackRef(onValidationSuccess);
 	const savedValidator = useCallbackRef(validator);
 
 	const constantInitialFiles = useConstant(() => initialFiles);
@@ -50,9 +55,8 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 			multiple,
 			onFilesChange: savedOnFilesChange,
 			onUpload: savedOnUpload,
-			onUploadError: savedOnUploadError,
-			onUploadErrorCollection: savedOnUploadErrorCollection,
-			onUploadSuccess: savedOnUploadSuccess,
+			onValidationError: savedOnUploadError,
+			onValidationSuccess: savedOnUploadSuccess,
 			rejectDuplicateFiles,
 			validator: savedValidator,
 		});
@@ -66,17 +70,20 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 		savedOnFilesChange,
 		savedOnUpload,
 		savedOnUploadError,
-		savedOnUploadErrorCollection,
 		savedOnUploadSuccess,
 		rejectDuplicateFiles,
 		savedValidator,
 	]);
 
+	const actions = storeApi.getState().actions;
+
+	useUnmountEffect(() => {
+		actions.clearObjectURLs();
+	});
+
 	const useDropZoneStore: UseDropZoneResult["useDropZoneStore"] = (selector) => {
 		return useStore(storeApi, selector);
 	};
-
-	const actions = storeApi.getState().actions;
 
 	const isDraggingOver = useDropZoneStore((state) =>
 		!disableInternalStateSubscription ? state.isDraggingOver : null
@@ -88,18 +95,35 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 
 	const getContainerProps: UseDropZoneResult["propGetters"]["getContainerProps"] = useCallback(
 		(innerProps) => {
+			const isDisabled = disabled;
+			const onFileDrop = !isDisabled ? actions.handleDrop : undefined;
+			const onFilePaste = !isDisabled ? actions.handlePaste : undefined;
+			const onKeyDown = !isDisabled ? actions.handleKeyDown : undefined;
+			const tabIndex = !isDisabled ? 0 : undefined;
+			const onAreaClick =
+				!isDisabled && shouldOpenFilePickerOnAreaClick ? actions.openFilePicker : undefined;
+
 			return {
 				...getScopeAttrs("container"),
+				role: "region",
+				...(!disableInternalStateSubscription && { "data-drag-over": dataAttr(isDraggingOver) }),
 				...innerProps,
-				...(isDraggingOver !== null && { "data-drag-over": dataAttr(isDraggingOver) }),
 				className: cnMerge(
-					"relative isolate flex flex-col data-[drag-over]:opacity-60",
+					`relative flex flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed
+					p-6 transition-colors outline-none select-none hover:bg-zu-accent/30
+					focus-visible:border-zu-ring/50 data-[disabled]:pointer-events-none
+					data-[drag-over]:border-zu-primary/30 data-[drag-over]:bg-zu-accent/30`,
 					innerProps.className
 				),
+				"data-disabled": dataAttr(isDisabled),
+				onClick: composeTwoEventHandlers(onAreaClick, innerProps.onClick),
 				onDragEnter: composeTwoEventHandlers(actions.handleDragEnter, innerProps.onDragEnter),
 				onDragLeave: composeTwoEventHandlers(actions.handleDragLeave, innerProps.onDragLeave),
 				onDragOver: composeTwoEventHandlers(actions.handleDragOver, innerProps.onDragOver),
-				onDrop: composeTwoEventHandlers(actions.handleDrop, innerProps.onDrop),
+				onDrop: composeTwoEventHandlers(onFileDrop, innerProps.onDrop),
+				onKeyDown: composeTwoEventHandlers(onKeyDown, innerProps.onKeyDown),
+				onPaste: composeTwoEventHandlers(onFilePaste, innerProps.onPaste),
+				tabIndex,
 			};
 		},
 		[
@@ -107,62 +131,81 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 			actions.handleDragLeave,
 			actions.handleDragOver,
 			actions.handleDrop,
+			actions.handleKeyDown,
+			actions.handlePaste,
+			actions.openFilePicker,
+			disableInternalStateSubscription,
+			disabled,
 			isDraggingOver,
+			shouldOpenFilePickerOnAreaClick,
 		]
 	);
 
 	const getInputProps: UseDropZoneResult["propGetters"]["getInputProps"] = useCallback(
 		(innerProps) => {
+			const isDisabled = innerProps.disabled ?? disabled;
+
+			const onFileChange = !isDisabled ? actions.handleChange : undefined;
+
 			return {
 				...getScopeAttrs("input"),
+				...(!disableInternalStateSubscription && { "data-drag-over": dataAttr(isDraggingOver) }),
 				...innerProps,
-				...(isDraggingOver !== null && { "data-drag-over": dataAttr(isDraggingOver) }),
 				accept: allowedFileTypes ? allowedFileTypes.join(", ") : innerProps.accept,
-				className: cnMerge(
-					shouldOpenFilePickerOnAreaClick ?
-						"absolute inset-0 z-[100] cursor-pointer opacity-0"
-					:	"hidden",
-					innerProps.className
-				),
+				className: cnMerge("hidden", innerProps.className),
+				"data-disabled": dataAttr(isDisabled),
+				disabled: isDisabled,
 				multiple: multiple ?? innerProps.multiple,
-				onChange: composeTwoEventHandlers(actions.handleChange, innerProps.onChange),
+				onChange: composeTwoEventHandlers(onFileChange, innerProps.onChange),
 				ref: composeRefs(inputRef, innerProps.ref),
 				type: "file",
 			};
 		},
-		[actions.handleChange, allowedFileTypes, isDraggingOver, multiple, shouldOpenFilePickerOnAreaClick]
+		[
+			actions.handleChange,
+			allowedFileTypes,
+			disableInternalStateSubscription,
+			disabled,
+			isDraggingOver,
+			multiple,
+		]
 	);
 
 	const getTriggerProps: UseDropZoneResult["propGetters"]["getTriggerProps"] = useCallback(
 		(innerProps) => {
+			const isDisabled = innerProps.disabled ?? disabled;
+
 			return {
 				...getScopeAttrs("trigger"),
 				type: "button",
 				...innerProps,
+				"data-disabled": dataAttr(isDisabled),
+				disabled: isDisabled,
 				onClick: composeTwoEventHandlers(actions.openFilePicker, innerProps.onClick),
 			};
 		},
-		[actions.openFilePicker]
+		[actions.openFilePicker, disabled]
 	);
 
-	const getFileGroupProps: UseDropZoneResult["propGetters"]["getFileGroupProps"] = useCallbackRef(
+	const getFileGroupProps: UseDropZoneResult["propGetters"]["getFileGroupProps"] = useCallback(
 		(innerProps) => {
-			const { orientation = "vertical", ...restOfProps } = innerProps;
+			const { orientation = "vertical", ...restOfInnerProps } = innerProps;
 
 			return {
 				...getScopeAttrs("file-group"),
 				"data-orientation": orientation,
-				...restOfProps,
-				...(hasFiles !== null && { "data-state": hasFiles ? "active" : "inactive" }),
+				...(!disableInternalStateSubscription && { "data-state": hasFiles ? "active" : "inactive" }),
+				...restOfInnerProps,
 				className: cnMerge(
-					`data-[state=inactive]:fade-out-0 data-[state=active]:fade-in-0
-					data-[state=inactive]:slide-out-to-top-2 data-[state=active]:slide-in-from-top-2
-					data-[state=active]:animate-in data-[state=inactive]:animate-out flex flex-col gap-2`,
+					`flex flex-col gap-2 data-[state=active]:animate-in data-[state=active]:fade-in-0
+					data-[state=active]:slide-in-from-top-2 data-[state=inactive]:animate-out
+					data-[state=inactive]:fade-out-0 data-[state=inactive]:slide-out-to-top-2`,
 					orientation === "horizontal" && "flex-row overflow-x-auto p-1.5",
 					innerProps.className
 				),
 			};
-		}
+		},
+		[disableInternalStateSubscription, hasFiles]
 	);
 
 	const getFileItemProps: UseDropZoneResult["propGetters"]["getFileItemProps"] = useCallbackRef(
@@ -171,7 +214,7 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 				...getScopeAttrs("file-item"),
 				...innerProps,
 				className: cnMerge(
-					"relative flex items-center gap-2.5 rounded-md border p-3",
+					"relative flex items-center gap-2.5 rounded-md border p-2",
 					innerProps.className
 				),
 			};
@@ -180,33 +223,92 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 
 	const getFileItemProgressProps: UseDropZoneResult["propGetters"]["getFileItemProgressProps"] =
 		useCallbackRef((innerProps) => {
+			const { variant = "linear", ...restOfInnerProps } = innerProps;
+
 			return {
 				...getScopeAttrs("file-item-progress"),
-				...innerProps,
+				role: "progressbar",
+				...restOfInnerProps,
+				className: cnMerge(
+					"inline-flex",
+					variant === "circular" && "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
+					variant === "fill"
+						&& `absolute inset-0 bg-zu-primary/50 transition-[clip-path] duration-300 ease-linear
+						[clip-path:var(--clip-path)]`,
+					variant === "linear"
+						&& "relative h-1.5 w-full overflow-hidden rounded-full bg-zu-primary/20",
+					restOfInnerProps.className
+				),
 			};
 		});
 
-	const getFileItemDeleteProps: UseDropZoneResult["propGetters"]["getFileItemDeleteProps"] =
-		useCallbackRef((innerProps) => {
-			const { fileItemOrID, ...restOfInnerProps } = innerProps;
+	const getFileItemDeleteProps: UseDropZoneResult["propGetters"]["getFileItemDeleteProps"] = useCallback(
+		(innerProps) => {
+			const { fileStateOrID, ...restOfInnerProps } = innerProps;
+
+			const isDisabled = innerProps.disabled ?? disabled;
+
+			const onRemoveFile = () => fileStateOrID && actions.removeFile({ fileStateOrID });
 
 			return {
 				...getScopeAttrs("file-item-delete"),
 				type: "button",
 				...restOfInnerProps,
-				onClick: composeTwoEventHandlers(
-					() => fileItemOrID && actions.removeFile(fileItemOrID),
-					restOfInnerProps.onClick
+				"data-disabled": dataAttr(isDisabled),
+				disabled: isDisabled,
+				onClick: composeTwoEventHandlers(onRemoveFile, restOfInnerProps.onClick),
+			};
+		},
+		[actions, disabled]
+	);
+
+	const getFileItemPreviewProps: UseDropZoneResult["propGetters"]["getFileItemPreviewProps"] =
+		useCallbackRef((innerProps) => {
+			return {
+				...getScopeAttrs("file-item-preview"),
+				...innerProps,
+				className: cnMerge(
+					`relative flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-md
+					bg-zu-accent/50 [&>svg]:size-10`,
+					innerProps.className
 				),
 			};
 		});
+
+	const getFileItemMetadataProps: UseDropZoneResult["propGetters"]["getFileItemMetadataProps"] =
+		useCallbackRef((innerProps) => {
+			return {
+				...getScopeAttrs("file-item-metadata"),
+				...innerProps,
+				className: cnMerge("flex min-w-0 grow flex-col", innerProps.className),
+			};
+		});
+
+	const getFileItemClearProps: UseDropZoneResult["propGetters"]["getFileItemClearProps"] = useCallback(
+		(innerProps) => {
+			const isDisabled = innerProps.disabled ?? disabled;
+
+			return {
+				...getScopeAttrs("file-item-clear"),
+				type: "button",
+				...innerProps,
+				"data-disabled": dataAttr(isDisabled),
+				disabled: isDisabled,
+				onClick: composeTwoEventHandlers(actions.clearFiles, innerProps.onClick),
+			};
+		},
+		[actions.clearFiles, disabled]
+	);
 
 	const propGetters = useMemo<DropZonePropGetters>(
 		() =>
 			({
 				getContainerProps,
 				getFileGroupProps,
+				getFileItemClearProps,
 				getFileItemDeleteProps,
+				getFileItemMetadataProps,
+				getFileItemPreviewProps,
 				getFileItemProgressProps,
 				getFileItemProps,
 				getInputProps,
@@ -215,7 +317,10 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 		[
 			getContainerProps,
 			getFileGroupProps,
+			getFileItemClearProps,
 			getFileItemDeleteProps,
+			getFileItemMetadataProps,
+			getFileItemPreviewProps,
 			getFileItemProgressProps,
 			getFileItemProps,
 			getInputProps,
@@ -228,12 +333,14 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 	const result = useMemo<UseDropZoneResult>(
 		() =>
 			({
+				disabled,
+				disableInternalStateSubscription,
 				inputRef,
 				propGetters,
 				storeApi,
 				useDropZoneStore: savedUseDropZoneStore,
 			}) satisfies UseDropZoneResult,
-		[propGetters, storeApi, savedUseDropZoneStore]
+		[disabled, disableInternalStateSubscription, propGetters, storeApi, savedUseDropZoneStore]
 	);
 
 	return result;

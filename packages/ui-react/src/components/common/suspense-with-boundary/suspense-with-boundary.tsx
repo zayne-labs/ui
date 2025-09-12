@@ -1,3 +1,4 @@
+import * as React from "react";
 import { Suspense } from "react";
 import { ErrorBoundary, type ErrorBoundaryProps } from "../error-boundary";
 
