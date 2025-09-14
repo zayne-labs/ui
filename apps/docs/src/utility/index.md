@@ -39,16 +39,16 @@ import {
  Teleport,
  ClientGate,
  Presence,
-} from "@zayne-labs/ui-react/common";
+} from "@zayne-labs/ui-react";
 ```
 
 Or import individual components:
 
 ```tsx
-import { Await } from "@zayne-labs/ui-react/common/await";
-import { Show } from "@zayne-labs/ui-react/common/show";
-import { ClientGate } from "@zayne-labs/ui-react/common/client-gate";
-import { Presence } from "@zayne-labs/ui-react/common/presence";
+import { Await } from "@zayne-labs/ui-react";
+import { Show } from "@zayne-labs/ui-react";
+import { ClientGate } from "@zayne-labs/ui-react";
+import { Presence } from "@zayne-labs/ui-react";
 // etc.
 ```
 

@@ -16,7 +16,7 @@ type PresenceProps = UsePresenceOptions & {
 };
 
 function Presence(props: PresenceProps) {
-	const { children, forceMount = isFunction(children), onExitComplete, present } = props;
+	const { children, forceMount = false, onExitComplete, present } = props;
 
 	const presence = usePresence({ onExitComplete, present });
 

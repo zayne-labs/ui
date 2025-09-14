@@ -14,7 +14,7 @@ Each part of the Card is built as a polymorphic component, allowing you to chang
 - **Polymorphic Components** - Each card part can render as any HTML element via the `as` prop
 - **Zero Styling by Default** - Complete freedom to apply your own styles
 - **Semantic HTML** - Default elements follow appropriate HTML semantics (article, header, etc.)
-- **Slot Support** - CardFooter supports the `asChild` pattern for advanced composition
+- **Slot Support** - CardFooter and CardAction support the `asChild` pattern for advanced composition
 
 ## Installation
 
@@ -102,6 +102,29 @@ function CardWithAsChild() {
 }
 ```
 
+### Card with Action Button
+
+```tsx
+function CardWithAction() {
+  return (
+    <Card.Root className="border rounded-lg p-6">
+      <Card.Header>
+        <Card.Title>Card with Action</Card.Title>
+        <Card.Description>This card has an action button in the header</Card.Description>
+        <Card.Action className="text-blue-500 hover:text-blue-700">
+          Edit
+        </Card.Action>
+      </Card.Header>
+
+      <Card.Content>
+        Content of the card with an action button positioned in the top-right
+        corner of the header.
+      </Card.Content>
+    </Card.Root>
+  )
+}
+```
+
 ### Nested Cards
 
 ```tsx
@@ -140,15 +163,27 @@ The main container for the card.
 - `children: React.ReactNode` - Card content
 - `...props` - All other props are passed to the underlying element
 
-### Card.Header
+### Card.Action
 
-Container for the card header content.
+Action button or controls area positioned in the top-right corner of the header.
 
 **Props:**
 
-- `as?: React.ElementType` - The element to render as (default: 'header')
+- `as?: React.ElementType` - The element to render as (default: 'div')
 - `className?: string` - Additional CSS classes
-- `children: React.ReactNode` - Header content
+- `children: React.ReactNode` - Action content
+- `...props` - All other props are passed to the underlying element
+
+### Card.Footer
+
+Container for the card footer content.
+
+**Props:**
+
+- `as?: React.ElementType` - The element to render as (default: 'footer')
+- `asChild?: boolean` - Use your own component as the root element via the Slot pattern
+- `className?: string` - Additional CSS classes
+- `children: React.ReactNode` - Card content
 - `...props` - All other props are passed to the underlying element
 
 ### Card.Title
