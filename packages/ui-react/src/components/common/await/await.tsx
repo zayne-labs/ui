@@ -82,35 +82,36 @@ type AwaitSuccessProps<TValue = unknown> = GetSlotComponentProps<"default", Chil
 export function AwaitSuccess<TPromiseOrValue, TValue = Awaited<TPromiseOrValue>>(
 	props: Pick<AwaitSuccessProps<TValue>, "children">
 ) {
-	if (isFunction(props.children)) {
-		// eslint-disable-next-line react-hooks/rules-of-hooks -- This hook only uses `use` under the hood so this is safe
-		const { result } = useAwaitContext<TValue>();
+	const { children } = props;
 
-		return props.children(result);
+	if (!isFunction(children)) {
+		return children;
 	}
 
-	return props.children;
+	// eslint-disable-next-line react-hooks/rules-of-hooks -- This hook only uses `use` under the hood so this is safe
+	const { result } = useAwaitContext<TValue>();
+
+	return children(result);
 }
 
 Object.assign(AwaitSuccess, withSlotNameAndSymbol<AwaitSuccessProps>("default"));
 
+type AwaitErrorProps = GetSlotComponentProps<"error", ErrorBoundaryProps["fallback"]>;
+
+export function AwaitError(props: AwaitErrorProps & { asChild?: boolean }) {
+	const { asChild, children } = props;
+
+	const errorBoundaryContext = useErrorBoundaryContext();
+
+	const Component = asChild ? Slot.Root : ReactFragment;
+
+	const resolvedChildren = isFunction(children) ? children(errorBoundaryContext) : children;
+
+	return <Component {...(asChild && errorBoundaryContext)}>{resolvedChildren}</Component>;
+}
+
+Object.assign(AwaitError, withSlotNameAndSymbol<AwaitErrorProps>("error"));
+
 type AwaitPendingProps = GetSlotComponentProps<"pending", React.SuspenseProps["fallback"]>;
 
 export const AwaitPending = withSlotNameAndSymbol<AwaitPendingProps>("pending");
-
-type AwaitErrorProps = GetSlotComponentProps<"error", ErrorBoundaryProps["fallback"]>;
-
-export const AwaitError = withSlotNameAndSymbol<AwaitErrorProps, { asChild?: boolean }>(
-	"error",
-	(props) => {
-		const { asChild, children } = props;
-
-		const errorBoundaryContext = useErrorBoundaryContext();
-
-		const Component = asChild ? Slot.Root : ReactFragment;
-
-		const resolvedChildren = isFunction(children) ? children(errorBoundaryContext) : children;
-
-		return <Component {...(asChild && errorBoundaryContext)}>{resolvedChildren}</Component>;
-	}
-);

@@ -2,9 +2,11 @@
 
 import { dataAttr, formatBytes } from "@zayne-labs/toolkit-core";
 import type { CssWithCustomProperties, PolymorphicProps } from "@zayne-labs/toolkit-react/utils";
-import { isFunction, isNumber, type SelectorFn } from "@zayne-labs/toolkit-type-helpers";
+import { type AnyFunction, isFunction, isNumber, type SelectorFn } from "@zayne-labs/toolkit-type-helpers";
 import * as React from "react";
 import { useMemo } from "react";
+import { For } from "@/components/common";
+import { Presence } from "@/components/common/presence";
 import { Slot } from "@/components/common/slot";
 import { cnMerge } from "@/lib/utils/cn";
 import {
@@ -29,6 +31,7 @@ import {
 } from "./icons";
 import type { PartInputProps, UseDropZoneProps } from "./types";
 import { useDropZone } from "./use-drop-zone";
+import { useShallowCompSelector } from "@zayne-labs/toolkit-react";
 
 type DropZoneRootProps = UseDropZoneProps & { children: React.ReactNode };
 
@@ -64,7 +67,7 @@ type DropZoneContextProps<TSlice> = {
 export function DropZoneContext<TSlice = DropZoneStore>(props: DropZoneContextProps<TSlice>) {
 	const { children, selector } = props;
 
-	const dropZoneCtx = useDropZoneStoreContext(selector);
+	const dropZoneCtx = useDropZoneStoreContext(useShallowCompSelector(selector));
 
 	const resolvedChildren = isFunction(children) ? children(dropZoneCtx) : children;
 
@@ -150,45 +153,79 @@ export function DropZoneTrigger(props: DropZoneTriggerProps) {
 	return <Component {...propGetters.getTriggerProps(restOfProps)} />;
 }
 
-type DropZoneFileGroupProps = Omit<PartInputProps["fileGroup"], "children"> & {
-	asChild?: boolean;
+type FileListPerItemVariant = {
+	children:
+		| React.ReactNode
+		| ((props: {
+				actions: DropZoneStore["actions"];
+				array: DropZoneStore["fileStateArray"];
+				fileState: DropZoneStore["fileStateArray"][number];
+				index: number;
+		  }) => React.ReactNode);
+	renderMode?: "per-item";
+};
+
+type FileListManualListVariant = {
 	children:
 		| React.ReactNode
 		| ((props: Pick<DropZoneStore, "actions" | "fileStateArray">) => React.ReactNode);
-	forceMount?: boolean;
+	renderMode: "manual-list";
 };
 
-export function DropZoneFileGroup<TElement extends React.ElementType = "ul">(
-	props: PolymorphicProps<TElement, DropZoneFileGroupProps>
+type DropZoneFileListProps = Omit<PartInputProps["fileList"], "children"> & {
+	asChild?: boolean;
+	forceMount?: boolean;
+} & (FileListManualListVariant | FileListPerItemVariant);
+
+export function DropZoneFileList<TElement extends React.ElementType = "ul">(
+	props: PolymorphicProps<TElement, DropZoneFileListProps>
 ) {
-	const { as: Element = "ul", asChild, children, forceMount = false, ...restOfProps } = props;
+	const {
+		as: Element = "ul",
+		asChild,
+		children,
+		forceMount = false,
+		renderMode = "per-item",
+		...restOfProps
+	} = props;
 
 	const fileStateArray = useDropZoneStoreContext((store) => store.fileStateArray);
 	const actions = useDropZoneStoreContext((store) => store.actions);
 
 	const { disableInternalStateSubscription, propGetters } = useDropZoneRootContext();
 
+	const childrenMap = {
+		"manual-list": () => {
+			const childrenFn = children as Extract<FileListManualListVariant["children"], AnyFunction>;
+			return childrenFn({ actions, fileStateArray });
+		},
+		"per-item": () => {
+			const childrenFn = children as Extract<FileListPerItemVariant["children"], AnyFunction>;
+
+			return (
+				<For
+					each={fileStateArray}
+					renderItem={(fileState, index, array) => childrenFn({ actions, array, fileState, index })}
+				/>
+			);
+		},
+	} satisfies Record<typeof renderMode, () => React.ReactNode>;
+
 	const hasFiles = fileStateArray.length > 0;
-
-	const shouldRender = forceMount || hasFiles;
-
-	if (!shouldRender) {
-		return null;
-	}
-
-	const resolvedChildren = isFunction(children) ? children({ actions, fileStateArray }) : children;
 
 	const Component = asChild ? Slot.Root : Element;
 
 	return (
-		<Component
-			{...propGetters.getFileGroupProps({
-				...(disableInternalStateSubscription && { "data-state": hasFiles ? "active" : "inactive" }),
-				...restOfProps,
-			})}
-		>
-			{resolvedChildren}
-		</Component>
+		<Presence present={hasFiles} forceMount={forceMount}>
+			<Component
+				{...propGetters.getFileListProps({
+					...(disableInternalStateSubscription && { "data-state": hasFiles ? "active" : "inactive" }),
+					...restOfProps,
+				})}
+			>
+				{isFunction(children) ? childrenMap[renderMode]() : children}
+			</Component>
+		</Presence>
 	);
 }
 
@@ -605,28 +642,4 @@ export function DropZoneFileClear(props: DropZoneFileClearProps) {
 	const Component = asChild ? Slot.Root : "button";
 
 	return <Component {...propGetters.getFileItemClearProps(restOfProps)} />;
-}
-
-type DropZoneErrorGroupProps = {
-	children: React.ReactNode | ((props: Pick<DropZoneStore, "actions" | "errors">) => React.ReactNode);
-	forceMount?: boolean;
-};
-
-export function DropZoneErrorGroup(props: DropZoneErrorGroupProps) {
-	const { children, forceMount = false } = props;
-
-	const errors = useDropZoneStoreContext((store) => store.errors);
-	const actions = useDropZoneStoreContext((store) => store.actions);
-
-	const hasErrors = errors.length > 0;
-
-	const shouldRender = forceMount || hasErrors;
-
-	if (!shouldRender) {
-		return null;
-	}
-
-	const resolvedChildren = isFunction(children) ? children({ actions, errors }) : children;
-
-	return resolvedChildren;
 }

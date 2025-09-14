@@ -57,10 +57,6 @@ export interface PartProps {
 		input: PartProps["container"]["output"];
 		output: InferProps<HTMLElement> & RecordForDataAttr;
 	};
-	fileGroup: {
-		input: PartProps["fileGroup"]["output"] & { orientation?: "horizontal" | "vertical" };
-		output: InferProps<"ul"> & RecordForDataAttr;
-	};
 	fileItem: {
 		input: PartProps["fileItem"]["output"];
 		output: InferProps<"li"> & RecordForDataAttr;
@@ -84,6 +80,10 @@ export interface PartProps {
 	fileItemProgress: {
 		input: PartProps["fileItemProgress"]["output"] & { variant?: "circular" | "fill" | "linear" };
 		output: InferProps<"span"> & RecordForDataAttr;
+	};
+	fileList: {
+		input: PartProps["fileList"]["output"] & { orientation?: "horizontal" | "vertical" };
+		output: InferProps<"ul"> & RecordForDataAttr;
 	};
 	input: {
 		input: PartProps["input"]["output"];

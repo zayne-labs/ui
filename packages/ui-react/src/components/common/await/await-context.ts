@@ -5,10 +5,12 @@ export type AwaitContextType<TValue = unknown> = {
 	result: TValue;
 };
 
-export const [AwaitContextProvider, useAwaitContextImpl] = createCustomContext<AwaitContextType>({
+const [AwaitContextProvider, useAwaitContextImpl] = createCustomContext<AwaitContextType>({
 	hookName: "useAwaitContext",
 	name: "AwaitContext",
 	providerName: "AwaitInner",
 });
 
-export const useAwaitContext = <TValue>() => useAwaitContextImpl() as AwaitContextType<TValue>;
+const useAwaitContext = <TValue>() => useAwaitContextImpl() as AwaitContextType<TValue>;
+
+export { useAwaitContext, AwaitContextProvider };

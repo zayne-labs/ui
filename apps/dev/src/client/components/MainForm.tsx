@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Icon } from "@iconify/react";
-import { DropZone, DropZoneError } from "@zayne-labs/ui-react/ui/drop-zone";
+import { For, ForWithWrapper } from "@zayne-labs/ui-react/common";
+import { DropZone } from "@zayne-labs/ui-react/ui/drop-zone";
 import { Form } from "@zayne-labs/ui-react/ui/form";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -139,52 +140,54 @@ function MainForm() {
 									<p className="mt-1 text-xs text-gray-500">Supported files: PDF, DOC, DOCX</p>
 								</DropZone.Area>
 
-								<DropZone.FileGroup>
-									{(ctx) => {
-										return ctx.fileStateArray.map((fileState) => (
-											<DropZone.FileItem
-												key={fileState.id}
-												fileState={fileState}
-												className="flex-col p-3"
-											>
-												<div className="flex w-full items-center gap-2">
-													<DropZone.FileItemPreview className="size-10">
-														<DropZone.FileItemProgress variant="fill" />
-													</DropZone.FileItemPreview>
+								<DropZone.FileList>
+									{(ctx) => (
+										<DropZone.FileItem
+											key={ctx.fileState.id}
+											fileState={ctx.fileState}
+											className="flex-col p-3"
+										>
+											<div className="flex w-full items-center gap-2">
+												<DropZone.FileItemPreview className="size-10">
+													{/* <DropZone.FileItemProgress variant="fill" /> */}
+												</DropZone.FileItemPreview>
 
-													<DropZone.FileItemMetadata />
+												<DropZone.FileItemMetadata />
 
-													<DropZone.FileItemDelete
-														className={shadcnButtonVariants({
-															className: "size-7 shrink-0",
-															size: "icon",
-															variant: "ghost",
-														})}
-													>
-														<Icon icon="lucide:trash-2" className="size-full" />
-													</DropZone.FileItemDelete>
-												</div>
-
-												<DropZone.FileItemProgress variant="linear" />
-											</DropZone.FileItem>
-										));
-									}}
-								</DropZone.FileGroup>
-
-								<DropZone.ErrorGroup>
-									{(ctx) =>
-										ctx.errors.map((error) => (
-											<div
-												key={error.file.name}
-												className="flex items-center gap-1 text-xs text-red-600"
-												role="alert"
-											>
-												<Icon icon="lucide:circle-alert" className="size-3 shrink-0" />
-												<span>{error.message}</span>
+												<DropZone.FileItemDelete
+													className={shadcnButtonVariants({
+														className: "size-7 shrink-0",
+														size: "icon",
+														variant: "ghost",
+													})}
+												>
+													<Icon icon="lucide:trash-2" className="size-full" />
+												</DropZone.FileItemDelete>
 											</div>
-										))
-									}
-								</DropZone.ErrorGroup>
+
+											<DropZone.FileItemProgress variant="linear" />
+										</DropZone.FileItem>
+									)}
+								</DropZone.FileList>
+
+								<DropZone.Context selector={({ errors }) => ({ errors })}>
+									{(ctx) => (
+										<ForWithWrapper
+											className="flex flex-col gap-1"
+											each={ctx.errors}
+											renderItem={(error) => (
+												<li
+													key={error.file.name}
+													className="flex items-center gap-1 text-xs text-red-600"
+													role="alert"
+												>
+													<Icon icon="lucide:circle-alert" className="size-3 shrink-0" />
+													<span>{error.message}</span>
+												</li>
+											)}
+										/>
+									)}
+								</DropZone.Context>
 							</DropZone.Root>
 						)}
 					/>

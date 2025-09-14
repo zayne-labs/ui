@@ -70,7 +70,7 @@ type SlotCloneProps = {
 function SlotClone(props: SlotCloneProps) {
 	const { children, ref: forwardedRef, ...restOfSlotProps } = props;
 
-	const resolvedChild = isArray(children) && children.length === 1 ? children[0] : children;
+	const resolvedChild = Children.only(children);
 
 	if (!isValidElement<UnknownObject>(resolvedChild)) {
 		return null;

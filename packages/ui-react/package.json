@@ -68,9 +68,9 @@
 		}
 	},
 	"dependencies": {
-		"@zayne-labs/toolkit-core": "0.11.0",
-		"@zayne-labs/toolkit-react": "0.11.0",
-		"@zayne-labs/toolkit-type-helpers": "0.11.0"
+		"@zayne-labs/toolkit-core": "0.11.5",
+		"@zayne-labs/toolkit-react": "0.11.5",
+		"@zayne-labs/toolkit-type-helpers": "0.11.5"
 	},
 	"devDependencies": {
 		"@arethetypeswrong/cli": "0.18.2",
@@ -104,7 +104,7 @@
 	"size-limit": [
 		{
 			"path": "src/components/ui/**/index.ts",
-			"limit": "10 kB"
+			"limit": "7 kB"
 		},
 		{
 			"path": "src/components/common/**/index.ts",

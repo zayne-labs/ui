@@ -162,7 +162,7 @@ export function CarouselControls(props: CarouselControlProps) {
 	);
 }
 
-export function CarouselItemGroup<TArrayItem>(props: CarouselWrapperProps<TArrayItem>) {
+export function CarouselItemList<TArrayItem>(props: CarouselWrapperProps<TArrayItem>) {
 	const { children, className, each } = props;
 
 	const currentSlide = useCarouselStoreContext((state) => state.currentSlide);
@@ -171,8 +171,8 @@ export function CarouselItemGroup<TArrayItem>(props: CarouselWrapperProps<TArray
 	return (
 		<ul
 			data-scope="carousel"
-			data-part="item-group"
-			data-slot="carousel-item-group"
+			data-part="item-list"
+			data-slot="carousel-item-list"
 			className={cnMerge(
 				`flex w-full shrink-0 transform-[translate3d(var(--translate-distance),0,0)] snap-center
 				transition-transform duration-800`,
@@ -224,7 +224,7 @@ export function CarouselCaption<TElement extends React.ElementType = "div">(
 	);
 }
 
-export function CarouselIndicatorGroup<TArrayItem>(props: CarouselWrapperProps<TArrayItem>) {
+export function CarouselIndicatorList<TArrayItem>(props: CarouselWrapperProps<TArrayItem>) {
 	const { children, className, each } = props;
 
 	const images = useCarouselStoreContext((state) => each ?? (state.images as TArrayItem[]));
@@ -232,8 +232,8 @@ export function CarouselIndicatorGroup<TArrayItem>(props: CarouselWrapperProps<T
 	return (
 		<ul
 			data-scope="carousel"
-			data-part="indicator-group"
-			data-slot="carousel-indicator-group"
+			data-part="indicator-list"
+			data-slot="carousel-indicator-list"
 			className={cnMerge(
 				"absolute bottom-[25px] z-[2] flex w-full items-center justify-center gap-[15px]",
 				className

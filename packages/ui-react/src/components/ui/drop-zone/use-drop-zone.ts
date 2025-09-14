@@ -2,7 +2,7 @@ import { dataAttr } from "@zayne-labs/toolkit-core";
 import {
 	useCallbackRef,
 	useConstant,
-	useShallowComparedValue,
+	useShallowCompValue,
 	useStore,
 	useUnmountEffect,
 } from "@zayne-labs/toolkit-react";
@@ -41,8 +41,8 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 	const savedValidator = useCallbackRef(validator);
 
 	const constantInitialFiles = useConstant(() => initialFiles);
-	const shallowComparedMaxFileSize = useShallowComparedValue(maxFileSize);
-	const shallowComparedAllowedFileTypes = useShallowComparedValue(allowedFileTypes);
+	const shallowComparedMaxFileSize = useShallowCompValue(maxFileSize);
+	const shallowComparedAllowedFileTypes = useShallowCompValue(allowedFileTypes);
 
 	const storeApi = useMemo(() => {
 		return createDropZoneStore({
@@ -187,18 +187,17 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 		[actions.openFilePicker, disabled]
 	);
 
-	const getFileGroupProps: UseDropZoneResult["propGetters"]["getFileGroupProps"] = useCallback(
+	const getFileListProps: UseDropZoneResult["propGetters"]["getFileListProps"] = useCallback(
 		(innerProps) => {
 			const { orientation = "vertical", ...restOfInnerProps } = innerProps;
 
 			return {
-				...getScopeAttrs("file-group"),
+				...getScopeAttrs("file-list"),
 				"data-orientation": orientation,
 				...(!disableInternalStateSubscription && { "data-state": hasFiles ? "active" : "inactive" }),
 				...restOfInnerProps,
 				className: cnMerge(
-					`flex flex-col gap-2 data-[state=active]:animate-in data-[state=active]:fade-in-0
-					data-[state=active]:slide-in-from-top-2 data-[state=inactive]:animate-out
+					`flex flex-col gap-2 data-[state=active]:animate-files-in data-[state=inactive]:animate-out
 					data-[state=inactive]:fade-out-0 data-[state=inactive]:slide-out-to-top-2`,
 					orientation === "horizontal" && "flex-row overflow-x-auto p-1.5",
 					innerProps.className
@@ -304,19 +303,19 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 		() =>
 			({
 				getContainerProps,
-				getFileGroupProps,
 				getFileItemClearProps,
 				getFileItemDeleteProps,
 				getFileItemMetadataProps,
 				getFileItemPreviewProps,
 				getFileItemProgressProps,
 				getFileItemProps,
+				getFileListProps,
 				getInputProps,
 				getTriggerProps,
 			}) satisfies DropZonePropGetters,
 		[
 			getContainerProps,
-			getFileGroupProps,
+			getFileListProps,
 			getFileItemClearProps,
 			getFileItemDeleteProps,
 			getFileItemMetadataProps,
