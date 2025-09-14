@@ -48,6 +48,13 @@ export const createDropZoneStore = (initStoreValues: InitStoreValues) => {
 	}));
 
 	const store = createStore<DropZoneStore>((set, get) => ({
+		disabled: false,
+		errors: [],
+		fileStateArray: initFileStateArray,
+		isDraggingOver: false,
+		isInvalid: false,
+
+		// eslint-disable-next-line perfectionist/sort-objects -- ignore
 		actions: {
 			addFiles: async (files) => {
 				if (!files || files.length === 0) {
@@ -99,7 +106,7 @@ export const createDropZoneStore = (initStoreValues: InitStoreValues) => {
 			},
 
 			clearErrors: () => {
-				set({ errors: [] });
+				set({ errors: [], isInvalid: false });
 			},
 
 			clearFiles: () => {
@@ -107,7 +114,7 @@ export const createDropZoneStore = (initStoreValues: InitStoreValues) => {
 
 				actions.clearObjectURLs();
 
-				set({ fileStateArray: [] });
+				set({ errors: [], fileStateArray: [], isInvalid: false });
 			},
 
 			clearObjectURLs: () => {
@@ -282,18 +289,32 @@ export const createDropZoneStore = (initStoreValues: InitStoreValues) => {
 				set({ fileStateArray: updatedFileStateArray });
 			},
 		},
-
-		disabled: false,
-		errors: [],
-		fileStateArray: initFileStateArray,
-
-		isDraggingOver: false,
 	}));
 
 	// == File change subscription
 	store.subscribe.withSelector(
 		(state) => state.fileStateArray,
 		(fileStateArray) => onFilesChange?.({ fileStateArray })
+	);
+
+	// == Set `isInvalid` to true if there are errors
+	store.subscribe.withSelector(
+		(state) => state.errors,
+		(errors) => {
+			if (errors.length === 0) return;
+
+			store.setState({ isInvalid: true });
+		}
+	);
+
+	// == Update `isInvalid` to false after 1.5 seconds
+	store.subscribe.withSelector(
+		(state) => state.isInvalid,
+		(isInvalid) => {
+			if (!isInvalid) return;
+
+			setTimeout(() => store.setState({ isInvalid: !isInvalid }), 1500);
+		}
 	);
 
 	return store;

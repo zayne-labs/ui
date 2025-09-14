@@ -106,10 +106,6 @@ export type PartInputProps = {
 };
 
 export type DropZoneState = {
-	// /**
-	//  *  Whether or not the drop zone is disabled
-	//  */
-	// invalid: boolean;
 	/**
 	 *  List of validation errors
 	 */
@@ -122,6 +118,10 @@ export type DropZoneState = {
 	 *  Whether or not a file is currently being dragged over the drop zone
 	 */
 	isDraggingOver: boolean;
+	/**
+	 *  Whether or not any of the files are invalid
+	 */
+	isInvalid: boolean;
 };
 
 export type DropZoneActions = {

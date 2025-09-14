@@ -110,8 +110,8 @@ function MainForm() {
 								onValidationSuccess={(ctx) => console.info(ctx.message)}
 								multiple={true}
 								allowedFileTypes={["image/jpeg", "image/png", "image/jpg", "image/gif"]}
-								maxFileSize={{ mb: 10 }}
-								maxFileCount={3}
+								maxFileSize={{ mb: 7 }}
+								maxFileCount={2}
 							>
 								<DropZone.Area
 									classNames={{

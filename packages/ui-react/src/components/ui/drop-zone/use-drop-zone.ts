@@ -93,6 +93,10 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 		!disableInternalStateSubscription ? state.fileStateArray.length > 0 : null
 	);
 
+	const isInvalid = useDropZoneStore((state) =>
+		!disableInternalStateSubscription ? state.isInvalid : null
+	);
+
 	const getContainerProps: UseDropZoneResult["propGetters"]["getContainerProps"] = useCallback(
 		(innerProps) => {
 			const isDisabled = disabled;
@@ -106,13 +110,18 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 			return {
 				...getScopeAttrs("container"),
 				role: "region",
-				...(!disableInternalStateSubscription && { "data-drag-over": dataAttr(isDraggingOver) }),
+				...(!disableInternalStateSubscription && {
+					"data-drag-over": dataAttr(isDraggingOver),
+					"data-invalid": dataAttr(isInvalid),
+				}),
 				...innerProps,
 				className: cnMerge(
 					`relative flex flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed
-					p-6 transition-colors outline-none select-none hover:bg-zu-accent/30
-					focus-visible:border-zu-ring/50 data-[disabled]:pointer-events-none
-					data-[drag-over]:border-zu-primary/30 data-[drag-over]:bg-zu-accent/30`,
+					p-6 transition-colors duration-250 ease-out outline-none select-none hover:bg-zu-accent/30
+					focus-visible:border-zu-ring/50`,
+					`data-[disabled]:pointer-events-none data-[drag-over]:border-zu-primary/30
+					data-[drag-over]:bg-zu-accent/30 data-[dragging]:bg-zu-accent/30
+					data-[invalid]:border-zu-destructive data-[invalid]:ring-zu-destructive/20`,
 					innerProps.className
 				),
 				"data-disabled": dataAttr(isDisabled),
@@ -137,6 +146,7 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 			disableInternalStateSubscription,
 			disabled,
 			isDraggingOver,
+			isInvalid,
 			shouldOpenFilePickerOnAreaClick,
 		]
 	);

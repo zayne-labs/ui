@@ -87,12 +87,19 @@ export function DropZoneContainer<TElement extends React.ElementType = "div">(
 		disableInternalStateSubscription ? store.isDraggingOver : null
 	);
 
+	const isInvalid = useDropZoneStoreContext((store) =>
+		disableInternalStateSubscription ? store.isInvalid : null
+	);
+
 	const Component = asChild ? Slot.Root : Element;
 
 	return (
 		<Component
 			{...propGetters.getContainerProps({
-				...(disableInternalStateSubscription && { "data-drag-over": dataAttr(isDraggingOver) }),
+				...(disableInternalStateSubscription && {
+					"data-drag-over": dataAttr(isDraggingOver),
+					"data-invalid": dataAttr(isInvalid),
+				}),
 				...restOfProps,
 			})}
 		/>
