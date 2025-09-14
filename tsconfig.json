@@ -1,0 +1,6 @@
+{
+	"extends": "@zayne-labs/tsconfig/bundler/dom/library",
+
+	"include": ["bump.config.ts"],
+	"exclude": ["dist", "node_modules/**"]
+}

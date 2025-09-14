@@ -45,6 +45,7 @@
 		"lint:format": "prettier --write .",
 		"lint:publint": "publint --strict .",
 		"lint:size": "size-limit",
+		"release": "pnpm publish --no-git-checks",
 		"release:test": "pnpx pkg-pr-new publish"
 	},
 	"peerDependencies": {
