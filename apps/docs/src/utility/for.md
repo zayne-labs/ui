@@ -190,44 +190,6 @@ The ForWithWrapper component:
 - Forwards the ref and other props to the container
 - Supports all For component features (arrays, numbers, fallback)
 
-### Types
-
-```tsx
-// Render function type
-type RenderPropFn<T> = (
-  item: T,
-  index: number,
-  array: T[]
-) => React.ReactNode;
-
-// Base For component props
-type ForProps<T> = {
-  each: T[];             // Array to iterate
-  fallback?: ReactNode;  // Content for empty states
-} & {
-  children?: RenderPropFn<T>;  // Children render function
-  render?: RenderPropFn<T>;    // Alternative render prop
-};
-
-// Number-based For props
-type ForPropsWithNumber<T> = {
-  each: number;          // Number for sequence generation
-  fallback?: ReactNode;  // Content for empty states
-} & {
-  children?: RenderPropFn<T>;  // Children render function
-  render?: RenderPropFn<T>;    // Alternative render prop
-};
-
-// ForWithWrapper props
-type ForListProps<T> = {
-  className?: string;    // Container class name
-} & (ForProps<T> | ForPropsWithNumber<T>);
-
-// Final ForWithWrapper props with polymorphic as prop
-type ForWrapperProps<T, E extends ElementType = 'ul'> =
-  PolymorphicProps<E, ForListProps<T>>;
-```
-
 ## Behavior
 
 The For component:

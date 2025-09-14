@@ -1,7 +1,8 @@
 "use client";
 
 import { dataAttr, formatBytes } from "@zayne-labs/toolkit-core";
-import type { CssWithCustomProperties, PolymorphicProps } from "@zayne-labs/toolkit-react/utils";
+import { useShallowCompSelector } from "@zayne-labs/toolkit-react";
+import type { CssWithCustomProperties, PolymorphicPropsStrict } from "@zayne-labs/toolkit-react/utils";
 import { type AnyFunction, isFunction, isNumber, type SelectorFn } from "@zayne-labs/toolkit-type-helpers";
 import * as React from "react";
 import { useMemo } from "react";
@@ -31,7 +32,6 @@ import {
 } from "./icons";
 import type { PartInputProps, UseDropZoneProps } from "./types";
 import { useDropZone } from "./use-drop-zone";
-import { useShallowCompSelector } from "@zayne-labs/toolkit-react";
 
 type DropZoneRootProps = UseDropZoneProps & { children: React.ReactNode };
 
@@ -77,7 +77,7 @@ export function DropZoneContext<TSlice = DropZoneStore>(props: DropZoneContextPr
 type DropZoneContainerProps = PartInputProps["container"] & { asChild?: boolean };
 
 export function DropZoneContainer<TElement extends React.ElementType = "div">(
-	props: PolymorphicProps<TElement, DropZoneContainerProps>
+	props: PolymorphicPropsStrict<TElement, DropZoneContainerProps>
 ) {
 	const { as: Element = "div", asChild, ...restOfProps } = props;
 
@@ -178,7 +178,7 @@ type DropZoneFileListProps = Omit<PartInputProps["fileList"], "children"> & {
 } & (FileListManualListVariant | FileListPerItemVariant);
 
 export function DropZoneFileList<TElement extends React.ElementType = "ul">(
-	props: PolymorphicProps<TElement, DropZoneFileListProps>
+	props: PolymorphicPropsStrict<TElement, DropZoneFileListProps>
 ) {
 	const {
 		as: Element = "ul",
@@ -232,7 +232,7 @@ export function DropZoneFileList<TElement extends React.ElementType = "ul">(
 type DropZoneFileItemProps = FileItemContextType & PartInputProps["fileItem"] & { asChild?: boolean };
 
 export function DropZoneFileItem<TElement extends React.ElementType = "li">(
-	props: PolymorphicProps<TElement, DropZoneFileItemProps>
+	props: PolymorphicPropsStrict<TElement, DropZoneFileItemProps>
 ) {
 	const { as: Element = "li", asChild, fileState, ...restOfProps } = props;
 
@@ -279,7 +279,7 @@ type DropZoneFileItemProgressProps = PartInputProps["fileItemProgress"] & {
 };
 
 export function DropZoneFileItemProgress<TElement extends React.ElementType = "span">(
-	props: PolymorphicProps<TElement, DropZoneFileItemProgressProps>
+	props: PolymorphicPropsStrict<TElement, DropZoneFileItemProgressProps>
 ) {
 	const {
 		as: Element = "span",
@@ -406,8 +406,8 @@ type DropZoneFileItemPreviewProps = Omit<PartInputProps["fileItemPreview"], "chi
 		renderPreview?: boolean | RenderPreviewProp;
 	};
 
-export function DropZoneFileItemPreview<TElement extends React.ElementType = "span">(
-	props: PolymorphicProps<TElement, DropZoneFileItemPreviewProps>
+export function DropZoneFileItemPreview<TElement extends React.ElementType>(
+	props: PolymorphicPropsStrict<TElement, DropZoneFileItemPreviewProps>
 ) {
 	const {
 		as: Element = "span",

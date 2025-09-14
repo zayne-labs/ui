@@ -22,15 +22,18 @@ export function CardRoot<TElement extends React.ElementType = "article">(
 export function CardHeader<TElement extends React.ElementType = "header">(
 	props: PolymorphicProps<TElement>
 ) {
-	const { as: Element = "header", ...restOfProps } = props;
+	const { as: Element = "header", className, ...restOfProps } = props;
 
 	return (
 		<Element
 			data-scope="card"
 			data-part="header"
 			data-slot="card-header"
-			className="@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-1.5
-				px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto]"
+			className={cnMerge(
+				`@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-1.5 px-6
+				has-data-[slot=card-action]:grid-cols-[1fr_auto]`,
+				className
+			)}
 			{...restOfProps}
 		/>
 	);

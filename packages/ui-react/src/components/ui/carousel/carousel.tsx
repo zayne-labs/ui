@@ -1,6 +1,6 @@
 "use client";
 
-import type { CssWithCustomProperties, PolymorphicProps } from "@zayne-labs/toolkit-react/utils";
+import type { CssWithCustomProperties, PolymorphicPropsStrict } from "@zayne-labs/toolkit-react/utils";
 import { isFunction } from "@zayne-labs/toolkit-type-helpers";
 import * as React from "react";
 import { Show } from "@/components/common";
@@ -25,7 +25,7 @@ import { useCarouselOptions } from "./useCarouselOptions";
 
 // TODO -  Add dragging and swiping support
 export function CarouselRoot<TImages extends ImagesType, TElement extends React.ElementType = "div">(
-	props: PolymorphicProps<TElement, CarouselRootProps<TImages>>
+	props: PolymorphicPropsStrict<TElement, CarouselRootProps<TImages>>
 ) {
 	const {
 		as: Element = "div",
@@ -208,7 +208,7 @@ export function CarouselItem(props: OtherCarouselProps) {
 }
 
 export function CarouselCaption<TElement extends React.ElementType = "div">(
-	props: PolymorphicProps<TElement, OtherCarouselProps>
+	props: PolymorphicPropsStrict<TElement, OtherCarouselProps>
 ) {
 	const { as: HtmlElement = "div", children, className } = props;
 

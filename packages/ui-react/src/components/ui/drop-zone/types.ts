@@ -95,14 +95,14 @@ export interface PartProps {
 	};
 }
 
-export type PartInputProps = {
-	[Key in keyof PartProps]: PartProps[Key]["input"];
-};
-
 export type DropZonePropGetters = {
 	[Key in keyof PartProps as `get${Capitalize<Key>}Props`]: (
 		props: PartProps[Key]["input"]
 	) => PartProps[Key]["output"];
+};
+
+export type PartInputProps = {
+	[Key in keyof PartProps]: PartProps[Key]["input"];
 };
 
 export type DropZoneState = {

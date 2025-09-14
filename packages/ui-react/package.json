@@ -69,9 +69,9 @@
 		}
 	},
 	"dependencies": {
-		"@zayne-labs/toolkit-core": "0.11.5",
-		"@zayne-labs/toolkit-react": "0.11.5",
-		"@zayne-labs/toolkit-type-helpers": "0.11.5"
+		"@zayne-labs/toolkit-core": "0.11.7",
+		"@zayne-labs/toolkit-react": "0.11.7",
+		"@zayne-labs/toolkit-type-helpers": "0.11.7"
 	},
 	"devDependencies": {
 		"@arethetypeswrong/cli": "0.18.2",

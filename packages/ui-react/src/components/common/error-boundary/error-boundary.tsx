@@ -43,10 +43,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 	}
 
 	override componentDidCatch(error: Error, info: React.ErrorInfo) {
-		this.props.onError?.({
-			error,
-			info,
-		});
+		this.props.onError?.({ error, info });
 	}
 
 	override componentDidUpdate(prevProps: ErrorBoundaryProps, prevState: ErrorBoundaryState) {

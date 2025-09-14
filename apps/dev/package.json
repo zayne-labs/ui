@@ -10,11 +10,11 @@
 		"preview": "vite preview"
 	},
 	"dependencies": {
-		"@hookform/resolvers": "^5.2.1",
+		"@hookform/resolvers": "^5.2.2",
 		"@iconify/react": "^6.0.1",
 		"@zayne-labs/callapi": "^1.10.0",
-		"@zayne-labs/toolkit-core": "0.11.5",
-		"@zayne-labs/toolkit-react": "0.11.5",
+		"@zayne-labs/toolkit-core": "0.11.7",
+		"@zayne-labs/toolkit-react": "0.11.7",
 		"@zayne-labs/ui-react": "workspace:*",
 		"react": "19.1.1",
 		"react-dom": "19.1.1",
@@ -24,7 +24,7 @@
 	},
 	"devDependencies": {
 		"@tailwindcss/vite": "^4.1.13",
-		"@types/node": "^24.3.2",
+		"@types/node": "^24.4.0",
 		"@types/react": "19.1.13",
 		"@types/react-dom": "19.1.9",
 		"@vitejs/plugin-react": "^5.0.2",

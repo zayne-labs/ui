@@ -9,7 +9,7 @@ import {
 	type DiscriminatedRenderProps,
 	getMultipleSlots,
 	type InferProps,
-	type PolymorphicProps,
+	type PolymorphicPropsStrict,
 } from "@zayne-labs/toolkit-react/utils";
 import { type AnyString, defineEnum } from "@zayne-labs/toolkit-type-helpers";
 import * as React from "react";
@@ -255,7 +255,7 @@ type FormSideItemProps = {
 };
 
 export function FormInputLeftItem<TElement extends React.ElementType = "span">(
-	props: PolymorphicProps<TElement, FormSideItemProps>
+	props: PolymorphicPropsStrict<TElement, FormSideItemProps>
 ) {
 	const { as: Element = "span", children, className, ...restOfProps } = props;
 
@@ -274,7 +274,7 @@ export function FormInputLeftItem<TElement extends React.ElementType = "span">(
 FormInputLeftItem.slotSymbol = Symbol("input-left-item");
 
 export function FormInputRightItem<TElement extends React.ElementType = "span">(
-	props: PolymorphicProps<TElement, FormSideItemProps>
+	props: PolymorphicPropsStrict<TElement, FormSideItemProps>
 ) {
 	const { as: Element = "span", children, className, ...restOfProps } = props;
 
@@ -825,7 +825,7 @@ export function FormErrorMessage<TControl, TFieldValues extends FieldValues = Fi
 type FormSubmitProps = InferProps<"button"> & { asChild?: boolean };
 
 export function FormSubmit<TElement extends React.ElementType = "button">(
-	props: PolymorphicProps<TElement, FormSubmitProps>
+	props: PolymorphicPropsStrict<TElement, FormSubmitProps>
 ) {
 	const { as: Element = "button", asChild, children, type = "submit", ...restOfProps } = props;
 

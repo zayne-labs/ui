@@ -1,29 +1,40 @@
-import type { DiscriminatedRenderItemProps, PolymorphicProps } from "@zayne-labs/toolkit-react/utils";
-import { type ExtractUnion, isArray, isNumber, type Prettify } from "@zayne-labs/toolkit-type-helpers";
+import type {
+	DiscriminatedRenderItemProps,
+	PolymorphicPropsStrict,
+} from "@zayne-labs/toolkit-react/utils";
+import { isArray, isNumber, type Prettify } from "@zayne-labs/toolkit-type-helpers";
 import * as React from "react";
 
-// prettier-ignore
-type RenderPropFn<TArray> = (
-	item: TArray extends readonly unknown[] ? ExtractUnion<TArray> : TArray extends number ? number : unknown,
+type ArrayOrNumber = number | readonly unknown[];
+
+type GetArrayItemType<TArray extends ArrayOrNumber> =
+	TArray extends readonly unknown[] ? TArray[number]
+	: TArray extends number ? number
+	: unknown;
+
+type RenderPropFn<TArray extends ArrayOrNumber> = (
+	item: GetArrayItemType<TArray>,
 	index: number,
-	array: TArray extends readonly unknown[] ? TArray : TArray extends number ? number[] : unknown[]
+	array: Array<GetArrayItemType<TArray>>
 ) => React.ReactNode;
 
-export type ForRenderProps<TArrayItem> = DiscriminatedRenderItemProps<RenderPropFn<TArrayItem>>;
+export type ForRenderProps<TArray extends ArrayOrNumber> = DiscriminatedRenderItemProps<
+	RenderPropFn<TArray>
+>;
 
 /* eslint-disable perfectionist/sort-intersection-types -- Prefer the object to come first before the render props */
-type ForProps<TArray> = Prettify<
+type ForProps<TArray extends ArrayOrNumber> = Prettify<
 	{
 		each: TArray;
 		fallback?: React.ReactNode;
 	} & ForRenderProps<TArray>
 >;
-
 /* eslint-enable perfectionist/sort-intersection-types -- Prefer the object to come first before the render props */
 
-export function For<const TArray>(props: ForProps<TArray>) {
+export function For<const TArray extends ArrayOrNumber>(props: ForProps<TArray>) {
 	const { children, each, fallback = null, renderItem } = props;
 
+	// eslint-disable-next-line ts-eslint/no-unnecessary-condition -- Allow
 	if (each == null || (isNumber(each) && each === 0) || (isArray(each) && each.length === 0)) {
 		return fallback;
 	}
@@ -34,33 +45,26 @@ export function For<const TArray>(props: ForProps<TArray>) {
 		return fallback;
 	}
 
-	const JSXElementList = resolvedArray.map((...params) => {
+	const selectedChildren = typeof children === "function" ? children : renderItem;
+
+	const elementList = resolvedArray.map((...params) => {
 		type Params = Parameters<RenderPropFn<TArray>>;
 
-		return typeof children === "function" ?
-				children(...(params as Params))
-			:	renderItem(...(params as Params));
+		return selectedChildren(...(params as Params));
 	});
 
-	return JSXElementList;
+	return elementList;
 }
 
-export function ForWithWrapper<TArrayItem, TElement extends React.ElementType = "ul">(
-	props: PolymorphicProps<TElement, ForProps<TArrayItem>>
-) {
-	const {
-		as: ListContainer = "ul",
-		children,
-		className,
-		each,
-		ref,
-		renderItem,
-		...restOfListProps
-	} = props;
+export function ForWithWrapper<
+	const TArray extends ArrayOrNumber,
+	TElement extends React.ElementType = "ul",
+>(props: PolymorphicPropsStrict<TElement, ForProps<TArray>>) {
+	const { as: ListContainer = "ul", children, each, renderItem, ...restOfListProps } = props;
 
 	return (
-		<ListContainer ref={ref} className={className} {...restOfListProps}>
-			<For {...({ children, each, renderItem } as ForProps<TArrayItem>)} />
+		<ListContainer {...restOfListProps}>
+			<For {...({ children, each, renderItem } as ForProps<TArray>)} />
 		</ListContainer>
 	);
 }
