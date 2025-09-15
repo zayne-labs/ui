@@ -84,33 +84,34 @@ export function AwaitSuccess<TPromiseOrValue, TValue = Awaited<TPromiseOrValue>>
 ) {
 	const { children } = props;
 
-	if (!isFunction(children)) {
-		return children;
+	if (isFunction(children)) {
+		// eslint-disable-next-line react-hooks/rules-of-hooks -- This hook only uses `use` under the hood so this is safe
+		const { result } = useAwaitContext<TValue>();
+
+		return children(result);
 	}
 
-	// eslint-disable-next-line react-hooks/rules-of-hooks -- This hook only uses `use` under the hood so this is safe
-	const { result } = useAwaitContext<TValue>();
-
-	return children(result);
+	return children;
 }
 
 Object.assign(AwaitSuccess, withSlotNameAndSymbol<AwaitSuccessProps>("default"));
 
 type AwaitErrorProps = GetSlotComponentProps<"error", ErrorBoundaryProps["fallback"]>;
 
-export function AwaitError(props: AwaitErrorProps & { asChild?: boolean }) {
-	const { asChild, children } = props;
+export const AwaitError = withSlotNameAndSymbol<AwaitErrorProps, { asChild?: boolean }>(
+	"error",
+	(props) => {
+		const { asChild, children } = props;
 
-	const errorBoundaryContext = useErrorBoundaryContext();
+		const errorBoundaryContext = useErrorBoundaryContext();
 
-	const Component = asChild ? Slot.Root : ReactFragment;
+		const Component = asChild ? Slot.Root : ReactFragment;
 
-	const resolvedChildren = isFunction(children) ? children(errorBoundaryContext) : children;
+		const resolvedChildren = isFunction(children) ? children(errorBoundaryContext) : children;
 
-	return <Component {...(asChild && errorBoundaryContext)}>{resolvedChildren}</Component>;
-}
-
-Object.assign(AwaitError, withSlotNameAndSymbol<AwaitErrorProps>("error"));
+		return <Component {...(asChild && errorBoundaryContext)}>{resolvedChildren}</Component>;
+	}
+);
 
 type AwaitPendingProps = GetSlotComponentProps<"pending", React.SuspenseProps["fallback"]>;
 
