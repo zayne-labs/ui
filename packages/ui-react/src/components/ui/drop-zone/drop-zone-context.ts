@@ -23,7 +23,7 @@ const [DropZoneRootContextProvider, useDropZoneRootContext] = createCustomContex
 );
 
 export type FileItemContextType = {
-	fileState: FileState | undefined;
+	fileState: FileState;
 };
 
 const [FileItemContextProvider, useFileItemContext] = createCustomContext({

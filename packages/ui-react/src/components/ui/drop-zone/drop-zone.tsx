@@ -60,7 +60,7 @@ export function DropZoneRoot(props: DropZoneRootProps) {
 }
 
 type DropZoneContextProps<TSlice> = {
-	children: React.ReactNode | ((props: TSlice) => React.ReactNode);
+	children: React.ReactNode | ((context: TSlice) => React.ReactNode);
 	selector?: SelectorFn<DropZoneStore, TSlice>;
 };
 
@@ -130,7 +130,7 @@ export function DropZoneInput(props: DropZoneInputProps) {
 }
 
 type DropZoneAreaProps<TSlice> = {
-	children: React.ReactNode | ((props: TSlice) => React.ReactNode);
+	children: React.ReactNode | ((context: TSlice) => React.ReactNode);
 	classNames?: Partial<Record<Extract<keyof PartInputProps, "container" | "input">, string>>;
 	extraProps?: Pick<PartInputProps, "container" | "input">;
 	selector?: SelectorFn<DropZoneStore, TSlice>;
@@ -160,22 +160,21 @@ export function DropZoneTrigger(props: DropZoneTriggerProps) {
 	return <Component {...propGetters.getTriggerProps(restOfProps)} />;
 }
 
+type ListPerItemContext = Pick<DropZoneStore, "actions"> & {
+	array: DropZoneStore["fileStateArray"];
+	fileState: DropZoneStore["fileStateArray"][number];
+	index: number;
+};
+
 type FileListPerItemVariant = {
-	children:
-		| React.ReactNode
-		| ((props: {
-				actions: DropZoneStore["actions"];
-				array: DropZoneStore["fileStateArray"];
-				fileState: DropZoneStore["fileStateArray"][number];
-				index: number;
-		  }) => React.ReactNode);
+	children: React.ReactNode | ((context: ListPerItemContext) => React.ReactNode);
 	renderMode?: "per-item";
 };
 
+type ListManualListContext = Pick<DropZoneStore, "actions" | "fileStateArray">;
+
 type FileListManualListVariant = {
-	children:
-		| React.ReactNode
-		| ((props: Pick<DropZoneStore, "actions" | "fileStateArray">) => React.ReactNode);
+	children: React.ReactNode | ((context: ListManualListContext) => React.ReactNode);
 	renderMode: "manual-list";
 };
 
@@ -395,7 +394,12 @@ export function DropZoneFileItemProgress<TElement extends React.ElementType = "s
 
 type RenderPreviewDetails = { className?: string; node?: React.ReactNode };
 
-type RenderPreviewProp = (props: Pick<FileItemContextType, "fileState">) => {
+type RenderPropContext = Pick<FileItemContextType, "fileState"> & {
+	fileExtension: string;
+	fileType: string;
+};
+
+type RenderPreview = (context: RenderPropContext) => {
 	archive?: RenderPreviewDetails;
 	audio?: RenderPreviewDetails;
 	code?: RenderPreviewDetails;
@@ -409,8 +413,8 @@ type RenderPreviewProp = (props: Pick<FileItemContextType, "fileState">) => {
 type DropZoneFileItemPreviewProps = Omit<PartInputProps["fileItemPreview"], "children">
 	& Partial<Pick<FileItemContextType, "fileState">> & {
 		asChild?: boolean;
-		children?: React.ReactNode | ((props: Pick<FileItemContextType, "fileState">) => React.ReactNode);
-		renderPreview?: boolean | RenderPreviewProp;
+		children?: React.ReactNode | ((context: RenderPropContext) => React.ReactNode);
+		renderPreview?: boolean | RenderPreview;
 	};
 
 export function DropZoneFileItemPreview<TElement extends React.ElementType>(
@@ -435,54 +439,45 @@ export function DropZoneFileItemPreview<TElement extends React.ElementType>(
 		return null;
 	}
 
+	const fileType = fileState.file.type ?? "";
+
+	const fileExtension = fileState.file.name?.split(".").pop()?.toLowerCase() ?? "";
+
 	const Component = asChild ? Slot.Root : Element;
 
-	const resolvedChildren = isFunction(children) ? children({ fileState }) : children;
+	const resolvedChildren =
+		isFunction(children) ? children({ fileExtension, fileState, fileType }) : children;
 
 	return (
 		<Component {...propGetters.getFileItemPreviewProps(restOfProps)}>
-			{renderPreview && getFilePreviewOrIcon({ fileState, renderPreview })}
+			{renderPreview && getFilePreviewOrIcon({ fileExtension, fileState, fileType, renderPreview })}
 			{resolvedChildren}
 		</Component>
 	);
 }
 
 const getFilePreviewOrIcon = (
-	context: Pick<DropZoneFileItemPreviewProps, "fileState" | "renderPreview">
+	context: Pick<Required<DropZoneFileItemPreviewProps>, "renderPreview"> & Required<RenderPropContext>
 ) => {
-	const { fileState, renderPreview } = context;
+	const { fileExtension, fileState, fileType, renderPreview } = context;
 
-	const type = fileState?.file.type;
-	const extension = fileState?.file.name?.split(".").pop()?.toLowerCase() ?? "";
-
-	const renderPreviewObject = isFunction(renderPreview) ? renderPreview({ fileState }) : {};
-
-	const getDefaultPreview = () => {
-		return (
-			renderPreviewObject.default?.node ?? (
-				<FileIcon className={renderPreviewObject.default?.className} />
-			)
-		);
-	};
-
-	if (!type) {
-		return getDefaultPreview();
-	}
+	const renderPreviewObject =
+		isFunction(renderPreview) ? renderPreview({ fileExtension, fileState, fileType }) : {};
 
 	switch (true) {
-		case type.startsWith("image/"): {
+		case fileType.startsWith("image/"): {
 			return (
 				renderPreviewObject.image?.node ?? (
 					<img
 						src={fileState.preview}
-						alt={fileState.file.name}
+						alt={fileState.file.name ?? ""}
 						className={cnMerge("size-full object-cover", renderPreviewObject.image?.className)}
 					/>
 				)
 			);
 		}
 
-		case type.startsWith("video/"): {
+		case fileType.startsWith("video/"): {
 			return (
 				renderPreviewObject.video?.node ?? (
 					<FileVideoIcon
@@ -492,7 +487,7 @@ const getFilePreviewOrIcon = (
 			);
 		}
 
-		case type.startsWith("audio/"): {
+		case fileType.startsWith("audio/"): {
 			return (
 				renderPreviewObject.audio?.node ?? (
 					<FileAudioIcon
@@ -502,7 +497,7 @@ const getFilePreviewOrIcon = (
 			);
 		}
 
-		case type.startsWith("text/") || ["md", "pdf", "rtf", "txt"].includes(extension): {
+		case fileType.startsWith("text/") || ["md", "pdf", "rtf", "txt"].includes(fileExtension): {
 			return (
 				renderPreviewObject.text?.node ?? (
 					<FileTextIcon className={renderPreviewObject.text?.className} />
@@ -526,7 +521,7 @@ const getFilePreviewOrIcon = (
 			"ts",
 			"tsx",
 			"xml",
-		].includes(extension): {
+		].includes(fileExtension): {
 			return (
 				renderPreviewObject.code?.node ?? (
 					<FileCodeIcon className={renderPreviewObject.code?.className} />
@@ -534,7 +529,7 @@ const getFilePreviewOrIcon = (
 			);
 		}
 
-		case ["7z", "bz2", "gz", "rar", "tar", "zip"].includes(extension): {
+		case ["7z", "bz2", "gz", "rar", "tar", "zip"].includes(fileExtension): {
 			return (
 				renderPreviewObject.archive?.node ?? (
 					<FileArchiveIcon className={renderPreviewObject.archive?.className} />
@@ -542,7 +537,7 @@ const getFilePreviewOrIcon = (
 			);
 		}
 
-		case ["apk", "app", "deb", "exe", "msi", "rpm"].includes(extension): {
+		case ["apk", "app", "deb", "exe", "msi", "rpm"].includes(fileExtension): {
 			return (
 				renderPreviewObject.executable?.node ?? (
 					<FileCogIcon className={renderPreviewObject.executable?.className} />
@@ -551,7 +546,11 @@ const getFilePreviewOrIcon = (
 		}
 
 		default: {
-			return getDefaultPreview();
+			return (
+				renderPreviewObject.default?.node ?? (
+					<FileIcon className={renderPreviewObject.default?.className} />
+				)
+			);
 		}
 	}
 };
@@ -559,7 +558,7 @@ const getFilePreviewOrIcon = (
 type DropZoneFileItemMetadataProps = Omit<PartInputProps["fileItemMetadata"], "children">
 	& Partial<Pick<FileItemContextType, "fileState">> & {
 		asChild?: boolean;
-		children?: React.ReactNode | ((props: Pick<FileItemContextType, "fileState">) => React.ReactNode);
+		children?: React.ReactNode | ((context: Pick<FileItemContextType, "fileState">) => React.ReactNode);
 		classNames?: {
 			name?: string;
 			size?: string;
