@@ -11,13 +11,13 @@ type RequiredUseDropZoneProps = {
 
 type InitStoreValues = Omit<
 	RequiredUseDropZoneProps,
-	"disabled" | "disableInternalStateSubscription" | "extraProps" | "shouldOpenFilePickerOnAreaClick"
+	"disabled" | "disableFilePickerOpenOnAreaClick" | "disableInternalStateSubscription" | "extraProps"
 > & { inputRef: React.RefObject<HTMLInputElement | null> };
 
 export const createDropZoneStore = (initStoreValues: InitStoreValues) => {
 	const {
 		allowedFileTypes,
-		disablePreviewForNonImageFiles,
+		disablePreviewGenForNonImageFiles,
 		initialFiles,
 		inputRef,
 		maxFileCount,
@@ -91,7 +91,7 @@ export const createDropZoneStore = (initStoreValues: InitStoreValues) => {
 				const newFileStateArray: DropZoneState["fileStateArray"] = validFiles.map((file) => ({
 					file,
 					id: generateFileID(file),
-					preview: createObjectURL(file, disablePreviewForNonImageFiles),
+					preview: createObjectURL(file, disablePreviewGenForNonImageFiles),
 					progress: 0,
 					status: "idle",
 				}));
@@ -121,7 +121,7 @@ export const createDropZoneStore = (initStoreValues: InitStoreValues) => {
 				const { fileStateArray } = get();
 
 				for (const fileState of fileStateArray) {
-					clearObjectURL(fileState, disablePreviewForNonImageFiles);
+					clearObjectURL(fileState, disablePreviewGenForNonImageFiles);
 				}
 			},
 
@@ -252,7 +252,7 @@ export const createDropZoneStore = (initStoreValues: InitStoreValues) => {
 
 				const updatedFileStateArray = fileStateArray.flatMap((fileState) => {
 					if (isMatchingFile({ fileState, fileStateOrID })) {
-						clearObjectURL(fileState, disablePreviewForNonImageFiles);
+						clearObjectURL(fileState, disablePreviewGenForNonImageFiles);
 
 						return [];
 					}

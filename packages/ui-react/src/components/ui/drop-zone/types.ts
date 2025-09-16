@@ -161,6 +161,13 @@ export interface UseDropZoneProps extends FileValidationSettingsAsync {
 	disabled?: boolean;
 
 	/**
+	 * Whether clicking the drop zone area will open the default file picker or not
+	 *
+	 * @default false
+	 */
+	disableFilePickerOpenOnAreaClick?: boolean;
+
+	/**
 	 *  Whether to disable the internal state subscription such as drag over state etc for setting things like data attributes
 	 *  - This is useful if you want to subscribe to the state yourself
 	 *  @default false
@@ -168,10 +175,10 @@ export interface UseDropZoneProps extends FileValidationSettingsAsync {
 	disableInternalStateSubscription?: boolean;
 
 	/**
-	 * Whether to disallow preview for non-image files
+	 * Whether to disallow preview generation for non-image files
 	 * @default true
 	 */
-	disablePreviewForNonImageFiles?: boolean;
+	disablePreviewGenForNonImageFiles?: boolean;
 
 	/**
 	 * Extra props to pass to various parts of the dropzone
@@ -213,13 +220,6 @@ export interface UseDropZoneProps extends FileValidationSettingsAsync {
 	 * Callback function to be called once after all files have been successfully validated
 	 */
 	onValidationSuccess?: FileValidationHooksAsync["onSuccessBatch"];
-
-	/**
-	 * Whether clicking the drop zone area will open the default file picker or not
-	 *
-	 * @default true
-	 */
-	shouldOpenFilePickerOnAreaClick?: boolean;
 
 	/**
 	 * Custom validation function.

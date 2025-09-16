@@ -17,8 +17,9 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 	const {
 		allowedFileTypes,
 		disabled = false,
+		disableFilePickerOpenOnAreaClick = false,
 		disableInternalStateSubscription = false,
-		disablePreviewForNonImageFiles = true,
+		disablePreviewGenForNonImageFiles = true,
 		initialFiles,
 		maxFileCount,
 		maxFileSize,
@@ -28,7 +29,6 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 		onValidationError,
 		onValidationSuccess,
 		rejectDuplicateFiles = true,
-		shouldOpenFilePickerOnAreaClick = true,
 		validator,
 	} = props ?? {};
 
@@ -47,7 +47,7 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 	const storeApi = useMemo(() => {
 		return createDropZoneStore({
 			allowedFileTypes: shallowComparedAllowedFileTypes,
-			disablePreviewForNonImageFiles,
+			disablePreviewGenForNonImageFiles,
 			initialFiles: constantInitialFiles,
 			inputRef,
 			maxFileCount,
@@ -62,7 +62,7 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 		});
 	}, [
 		shallowComparedAllowedFileTypes,
-		disablePreviewForNonImageFiles,
+		disablePreviewGenForNonImageFiles,
 		constantInitialFiles,
 		maxFileCount,
 		shallowComparedMaxFileSize,
@@ -105,7 +105,7 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 			const onKeyDown = !isDisabled ? actions.handleKeyDown : undefined;
 			const tabIndex = !isDisabled ? 0 : undefined;
 			const onAreaClick =
-				!isDisabled && shouldOpenFilePickerOnAreaClick ? actions.openFilePicker : undefined;
+				!isDisabled && !disableFilePickerOpenOnAreaClick ? actions.openFilePicker : undefined;
 
 			return {
 				...getScopeAttrs("container"),
@@ -147,7 +147,7 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 			disabled,
 			isDraggingOver,
 			isInvalid,
-			shouldOpenFilePickerOnAreaClick,
+			disableFilePickerOpenOnAreaClick,
 		]
 	);
 
