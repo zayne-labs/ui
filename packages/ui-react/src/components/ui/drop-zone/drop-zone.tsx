@@ -139,11 +139,9 @@ export function DropZoneInput(props: DropZoneInputProps) {
 	);
 }
 
-type DropZoneAreaProps<TSlice> = {
-	children: React.ReactNode | ((context: TSlice) => React.ReactNode);
+type DropZoneAreaProps<TSlice> = DropZoneContextProps<TSlice> & {
 	classNames?: Partial<Record<Extract<keyof PartInputProps, "container" | "input">, string>>;
-	extraProps?: Pick<PartInputProps, "container" | "input">;
-	selector?: SelectorFn<DropZoneStore, TSlice>;
+	extraProps?: Partial<Pick<PartInputProps, "container" | "input">>;
 };
 
 export function DropZoneArea<TSlice = DropZoneStore>(props: DropZoneAreaProps<TSlice>) {

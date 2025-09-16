@@ -102,10 +102,11 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 			const isDisabled = disabled;
 			const onFileDrop = !isDisabled ? actions.handleDrop : undefined;
 			const onFilePaste = !isDisabled ? actions.handlePaste : undefined;
-			const onKeyDown = !isDisabled ? actions.handleKeyDown : undefined;
 			const tabIndex = !isDisabled ? 0 : undefined;
 			const onAreaClick =
 				!isDisabled && !disableFilePickerOpenOnAreaClick ? actions.openFilePicker : undefined;
+			const onKeyDown =
+				!isDisabled && !disableFilePickerOpenOnAreaClick ? actions.handleKeyDown : undefined;
 
 			return {
 				...getScopeAttrs("container"),
