@@ -181,11 +181,6 @@ export interface UseDropZoneProps extends FileValidationSettingsAsync {
 	disablePreviewGenForNonImageFiles?: boolean;
 
 	/**
-	 * Extra props to pass to various parts of the dropzone
-	 */
-	extraProps?: PartProps;
-
-	/**
 	 * Initial files to populate the drop zone
 	 */
 	initialFiles?: FileMeta | FileMeta[] | null;
