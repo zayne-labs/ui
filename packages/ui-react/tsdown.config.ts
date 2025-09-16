@@ -26,7 +26,7 @@ const sharedOptions = {
 		"src/components/common/teleport/index.ts",
 	],
 	format: ["esm"],
-	platform: "browser",
+	platform: "neutral",
 	sourcemap: !isDevMode,
 	target: "esnext",
 	treeshake: true,

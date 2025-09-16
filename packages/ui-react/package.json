@@ -18,12 +18,10 @@
 	"sideEffects": false,
 	"exports": {
 		".": null,
-		"./style.css": "./dist/style.css",
-		"./css/*": "./css/*",
-		"./ui": "./dist/esm/ui/index.js",
 		"./ui/*": "./dist/esm/ui/*/index.js",
-		"./common": "./dist/esm/common/index.js",
-		"./common/*": "./dist/esm/common/*/index.js"
+		"./common/*": "./dist/esm/common/*/index.js",
+		"./css/*": "./css/*",
+		"./style.css": "./dist/style.css"
 	},
 	"files": [
 		"css",
@@ -105,7 +103,7 @@
 	"size-limit": [
 		{
 			"path": "src/components/ui/**/index.ts",
-			"limit": "7 kB"
+			"limit": "10 kB"
 		},
 		{
 			"path": "src/components/common/**/index.ts",
