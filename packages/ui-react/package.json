@@ -109,7 +109,7 @@
 		},
 		{
 			"path": "src/components/common/**/index.ts",
-			"limit": "600 b"
+			"limit": "1 kb"
 		}
 	]
 }

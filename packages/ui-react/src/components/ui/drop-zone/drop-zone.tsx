@@ -2,11 +2,15 @@
 
 import { dataAttr, formatBytes } from "@zayne-labs/toolkit-core";
 import { useShallowCompSelector } from "@zayne-labs/toolkit-react";
-import type { CssWithCustomProperties, PolymorphicPropsStrict } from "@zayne-labs/toolkit-react/utils";
+import type {
+	CssWithCustomProperties,
+	InferProps,
+	PolymorphicPropsStrict,
+} from "@zayne-labs/toolkit-react/utils";
 import { type AnyFunction, isFunction, isNumber, type SelectorFn } from "@zayne-labs/toolkit-type-helpers";
 import * as React from "react";
 import { useMemo } from "react";
-import { For } from "@/components/common";
+import { For } from "@/components/common/for";
 import { Presence } from "@/components/common/presence";
 import { Slot } from "@/components/common/slot";
 import { cnMerge } from "@/lib/utils/cn";
@@ -392,7 +396,9 @@ export function DropZoneFileItemProgress<TElement extends React.ElementType = "s
 	}
 }
 
-type RenderPreviewDetails = { className?: string; node?: React.ReactNode };
+type RenderPreviewDetails<TElement extends React.ElementType = "svg"> = { node?: React.ReactNode } & {
+	props?: InferProps<TElement>;
+};
 
 type RenderPropContext = Pick<FileItemContextType, "fileState"> & {
 	fileExtension: string;
@@ -405,7 +411,7 @@ type RenderPreview = (context: RenderPropContext) => {
 	code?: RenderPreviewDetails;
 	default?: RenderPreviewDetails;
 	executable?: RenderPreviewDetails;
-	image?: RenderPreviewDetails;
+	image?: RenderPreviewDetails<"img">;
 	text?: RenderPreviewDetails;
 	video?: RenderPreviewDetails;
 };
@@ -469,9 +475,13 @@ const getFilePreviewOrIcon = (
 			return (
 				renderPreviewObject.image?.node ?? (
 					<img
+						{...renderPreviewObject.image?.props}
 						src={fileState.preview}
 						alt={fileState.file.name ?? ""}
-						className={cnMerge("size-full object-cover", renderPreviewObject.image?.className)}
+						className={cnMerge(
+							"size-full object-cover",
+							renderPreviewObject.image?.props?.className
+						)}
 					/>
 				)
 			);
@@ -481,7 +491,11 @@ const getFilePreviewOrIcon = (
 			return (
 				renderPreviewObject.video?.node ?? (
 					<FileVideoIcon
-						className={cnMerge("size-full object-cover", renderPreviewObject.video?.className)}
+						{...renderPreviewObject.video?.props}
+						className={cnMerge(
+							"size-full object-cover",
+							renderPreviewObject.video?.props?.className
+						)}
 					/>
 				)
 			);
@@ -491,18 +505,18 @@ const getFilePreviewOrIcon = (
 			return (
 				renderPreviewObject.audio?.node ?? (
 					<FileAudioIcon
-						className={cnMerge("size-full object-cover", renderPreviewObject.audio?.className)}
+						{...renderPreviewObject.audio?.props}
+						className={cnMerge(
+							"size-full object-cover",
+							renderPreviewObject.audio?.props?.className
+						)}
 					/>
 				)
 			);
 		}
 
 		case fileType.startsWith("text/") || ["md", "pdf", "rtf", "txt"].includes(fileExtension): {
-			return (
-				renderPreviewObject.text?.node ?? (
-					<FileTextIcon className={renderPreviewObject.text?.className} />
-				)
-			);
+			return renderPreviewObject.text?.node ?? <FileTextIcon {...renderPreviewObject.text?.props} />;
 		}
 
 		case [
@@ -522,17 +536,13 @@ const getFilePreviewOrIcon = (
 			"tsx",
 			"xml",
 		].includes(fileExtension): {
-			return (
-				renderPreviewObject.code?.node ?? (
-					<FileCodeIcon className={renderPreviewObject.code?.className} />
-				)
-			);
+			return renderPreviewObject.code?.node ?? <FileCodeIcon {...renderPreviewObject.code?.props} />;
 		}
 
 		case ["7z", "bz2", "gz", "rar", "tar", "zip"].includes(fileExtension): {
 			return (
 				renderPreviewObject.archive?.node ?? (
-					<FileArchiveIcon className={renderPreviewObject.archive?.className} />
+					<FileArchiveIcon {...renderPreviewObject.archive?.props} />
 				)
 			);
 		}
@@ -540,17 +550,13 @@ const getFilePreviewOrIcon = (
 		case ["apk", "app", "deb", "exe", "msi", "rpm"].includes(fileExtension): {
 			return (
 				renderPreviewObject.executable?.node ?? (
-					<FileCogIcon className={renderPreviewObject.executable?.className} />
+					<FileCogIcon {...renderPreviewObject.executable?.props} />
 				)
 			);
 		}
 
 		default: {
-			return (
-				renderPreviewObject.default?.node ?? (
-					<FileIcon className={renderPreviewObject.default?.className} />
-				)
-			);
+			return renderPreviewObject.default?.node ?? <FileIcon {...renderPreviewObject.default?.props} />;
 		}
 	}
 };

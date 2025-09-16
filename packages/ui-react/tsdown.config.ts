@@ -7,7 +7,6 @@ const sharedOptions = {
 	dts: { newContext: true },
 	entry: [
 		// UI components
-		"src/components/ui/index.ts",
 		"src/components/ui/card/index.ts",
 		"src/components/ui/carousel/index.ts",
 		"src/components/ui/drag-scroll/index.ts",
@@ -15,7 +14,6 @@ const sharedOptions = {
 		"src/components/ui/form/index.ts",
 
 		// Utility components
-		"src/components/common/index.ts",
 		"src/components/common/await/index.ts",
 		"src/components/common/client-gate/index.ts",
 		"src/components/common/error-boundary/index.ts",

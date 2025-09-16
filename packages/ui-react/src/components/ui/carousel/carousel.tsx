@@ -3,7 +3,7 @@
 import type { CssWithCustomProperties, PolymorphicPropsStrict } from "@zayne-labs/toolkit-react/utils";
 import { isFunction } from "@zayne-labs/toolkit-type-helpers";
 import * as React from "react";
-import { Show } from "@/components/common";
+import { Show } from "@/components/common/show";
 import { For } from "@/components/common/for";
 import { cnMerge } from "@/lib/utils/cn";
 import {
