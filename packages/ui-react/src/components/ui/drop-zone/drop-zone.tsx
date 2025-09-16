@@ -7,7 +7,13 @@ import type {
 	InferProps,
 	PolymorphicPropsStrict,
 } from "@zayne-labs/toolkit-react/utils";
-import { type AnyFunction, isFunction, isNumber, type SelectorFn } from "@zayne-labs/toolkit-type-helpers";
+import {
+	type AnyFunction,
+	isBoolean,
+	isFunction,
+	isNumber,
+	type SelectorFn,
+} from "@zayne-labs/toolkit-type-helpers";
 import * as React from "react";
 import { useMemo } from "react";
 import { For } from "@/components/common/for";
@@ -405,7 +411,7 @@ type RenderPropContext = Pick<FileItemContextType, "fileState"> & {
 	fileType: string;
 };
 
-type RenderPreview = (context: RenderPropContext) => {
+type RenderPreviewObject = {
 	archive?: RenderPreviewDetails;
 	audio?: RenderPreviewDetails;
 	code?: RenderPreviewDetails;
@@ -415,6 +421,9 @@ type RenderPreview = (context: RenderPropContext) => {
 	text?: RenderPreviewDetails;
 	video?: RenderPreviewDetails;
 };
+type RenderPreviewFn = (context: RenderPropContext) => RenderPreviewObject;
+
+type RenderPreview = RenderPreviewFn | RenderPreviewObject;
 
 type DropZoneFileItemPreviewProps = Omit<PartInputProps["fileItemPreview"], "children">
 	& Partial<Pick<FileItemContextType, "fileState">> & {
@@ -467,20 +476,24 @@ const getFilePreviewOrIcon = (
 ) => {
 	const { fileExtension, fileState, fileType, renderPreview } = context;
 
-	const renderPreviewObject =
-		isFunction(renderPreview) ? renderPreview({ fileExtension, fileState, fileType }) : {};
+	const renderPreviewValue = isBoolean(renderPreview) ? {} : renderPreview;
+
+	const resolvedRenderPreviewObject =
+		isFunction(renderPreviewValue) ?
+			renderPreviewValue({ fileExtension, fileState, fileType })
+		:	renderPreviewValue;
 
 	switch (true) {
 		case fileType.startsWith("image/"): {
 			return (
-				renderPreviewObject.image?.node ?? (
+				resolvedRenderPreviewObject.image?.node ?? (
 					<img
-						{...renderPreviewObject.image?.props}
+						{...resolvedRenderPreviewObject.image?.props}
 						src={fileState.preview}
 						alt={fileState.file.name ?? ""}
 						className={cnMerge(
 							"size-full object-cover",
-							renderPreviewObject.image?.props?.className
+							resolvedRenderPreviewObject.image?.props?.className
 						)}
 					/>
 				)
@@ -489,12 +502,12 @@ const getFilePreviewOrIcon = (
 
 		case fileType.startsWith("video/"): {
 			return (
-				renderPreviewObject.video?.node ?? (
+				resolvedRenderPreviewObject.video?.node ?? (
 					<FileVideoIcon
-						{...renderPreviewObject.video?.props}
+						{...resolvedRenderPreviewObject.video?.props}
 						className={cnMerge(
 							"size-full object-cover",
-							renderPreviewObject.video?.props?.className
+							resolvedRenderPreviewObject.video?.props?.className
 						)}
 					/>
 				)
@@ -503,12 +516,12 @@ const getFilePreviewOrIcon = (
 
 		case fileType.startsWith("audio/"): {
 			return (
-				renderPreviewObject.audio?.node ?? (
+				resolvedRenderPreviewObject.audio?.node ?? (
 					<FileAudioIcon
-						{...renderPreviewObject.audio?.props}
+						{...resolvedRenderPreviewObject.audio?.props}
 						className={cnMerge(
 							"size-full object-cover",
-							renderPreviewObject.audio?.props?.className
+							resolvedRenderPreviewObject.audio?.props?.className
 						)}
 					/>
 				)
@@ -516,7 +529,11 @@ const getFilePreviewOrIcon = (
 		}
 
 		case fileType.startsWith("text/") || ["md", "pdf", "rtf", "txt"].includes(fileExtension): {
-			return renderPreviewObject.text?.node ?? <FileTextIcon {...renderPreviewObject.text?.props} />;
+			return (
+				resolvedRenderPreviewObject.text?.node ?? (
+					<FileTextIcon {...resolvedRenderPreviewObject.text?.props} />
+				)
+			);
 		}
 
 		case [
@@ -536,27 +553,35 @@ const getFilePreviewOrIcon = (
 			"tsx",
 			"xml",
 		].includes(fileExtension): {
-			return renderPreviewObject.code?.node ?? <FileCodeIcon {...renderPreviewObject.code?.props} />;
+			return (
+				resolvedRenderPreviewObject.code?.node ?? (
+					<FileCodeIcon {...resolvedRenderPreviewObject.code?.props} />
+				)
+			);
 		}
 
 		case ["7z", "bz2", "gz", "rar", "tar", "zip"].includes(fileExtension): {
 			return (
-				renderPreviewObject.archive?.node ?? (
-					<FileArchiveIcon {...renderPreviewObject.archive?.props} />
+				resolvedRenderPreviewObject.archive?.node ?? (
+					<FileArchiveIcon {...resolvedRenderPreviewObject.archive?.props} />
 				)
 			);
 		}
 
 		case ["apk", "app", "deb", "exe", "msi", "rpm"].includes(fileExtension): {
 			return (
-				renderPreviewObject.executable?.node ?? (
-					<FileCogIcon {...renderPreviewObject.executable?.props} />
+				resolvedRenderPreviewObject.executable?.node ?? (
+					<FileCogIcon {...resolvedRenderPreviewObject.executable?.props} />
 				)
 			);
 		}
 
 		default: {
-			return renderPreviewObject.default?.node ?? <FileIcon {...renderPreviewObject.default?.props} />;
+			return (
+				resolvedRenderPreviewObject.default?.node ?? (
+					<FileIcon {...resolvedRenderPreviewObject.default?.props} />
+				)
+			);
 		}
 	}
 };
