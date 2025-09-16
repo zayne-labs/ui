@@ -118,10 +118,9 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 				...innerProps,
 				className: cnMerge(
 					`relative flex flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed
-					p-6 transition-colors duration-250 ease-out outline-none select-none hover:bg-zu-accent/30
+					p-6 transition-colors duration-250 ease-out outline-none select-none
 					focus-visible:border-zu-ring/50`,
-					`data-[disabled]:pointer-events-none data-[drag-over]:border-zu-primary/30
-					data-[drag-over]:bg-zu-accent/30 data-[dragging]:bg-zu-accent/30
+					`data-[disabled]:pointer-events-none data-[drag-over]:opacity-60
 					data-[invalid]:border-zu-destructive data-[invalid]:ring-zu-destructive/20`,
 					innerProps.className
 				),
