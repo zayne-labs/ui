@@ -148,8 +148,14 @@ export function DropZoneArea<TSlice = DropZoneStore>(props: DropZoneAreaProps<TS
 	const { children, classNames, extraProps, selector } = props;
 
 	return (
-		<DropZoneContainer {...extraProps?.container} className={classNames?.container}>
-			<DropZoneInput {...extraProps?.input} className={classNames?.input} />
+		<DropZoneContainer
+			{...extraProps?.container}
+			className={cnMerge(extraProps?.container?.className, classNames?.container)}
+		>
+			<DropZoneInput
+				{...extraProps?.input}
+				className={cnMerge(extraProps?.input?.className, classNames?.input)}
+			/>
 
 			<DropZoneContext selector={selector}>{children}</DropZoneContext>
 		</DropZoneContainer>
