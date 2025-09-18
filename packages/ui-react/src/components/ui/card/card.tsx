@@ -30,7 +30,7 @@ export function CardHeader<TElement extends React.ElementType = "header">(
 			data-part="header"
 			data-slot="card-header"
 			className={cnMerge(
-				`grid auto-rows-min grid-rows-[auto_auto] items-start gap-1.5 px-6
+				`grid auto-rows-min grid-rows-[auto_auto] items-start gap-1.5 px-3
 				has-data-[slot=card-action]:grid-cols-[1fr_auto]`,
 				className
 			)}
@@ -79,7 +79,7 @@ export function CardContent<TElement extends React.ElementType = "div">(
 			data-scope="card"
 			data-part="content"
 			data-slot="card-content"
-			className={cnMerge("px-6", className)}
+			className={cnMerge("px-3", className)}
 			{...restOfProps}
 		/>
 	);
