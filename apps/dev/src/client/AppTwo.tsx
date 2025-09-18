@@ -1,3 +1,4 @@
+/* eslint-disable tailwindcss-better/no-unregistered-classes */
 import { css } from "@zayne-labs/toolkit-core";
 import {
 	composeEventHandlers,
@@ -6,7 +7,7 @@ import {
 	getMultipleSlots,
 	getSlotMap,
 } from "@zayne-labs/toolkit-react/utils";
-import { Show } from "@zayne-labs/ui-react/common";
+import { Show } from "@zayne-labs/ui-react/common/show";
 
 const onClick = composeEventHandlers();
 

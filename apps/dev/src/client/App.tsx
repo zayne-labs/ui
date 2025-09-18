@@ -1,4 +1,4 @@
-import { Switch } from "@zayne-labs/ui-react/common";
+import { Switch } from "@zayne-labs/ui-react/common/switch";
 import AppFour from "./AppFour";
 import AppOne from "./AppOne";
 import AppThree from "./AppThree";

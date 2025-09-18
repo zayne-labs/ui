@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Icon } from "@iconify/react";
-import { For, ForWithWrapper } from "@zayne-labs/ui-react/common";
+import { ForWithWrapper } from "@zayne-labs/ui-react/common/for";
 import { DropZone } from "@zayne-labs/ui-react/ui/drop-zone";
 import { Form } from "@zayne-labs/ui-react/ui/form";
 import { useForm } from "react-hook-form";
