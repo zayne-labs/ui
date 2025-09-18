@@ -207,8 +207,7 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 				...(!disableInternalStateSubscription && { "data-state": hasFiles ? "active" : "inactive" }),
 				...restOfInnerProps,
 				className: cnMerge(
-					`flex flex-col gap-2 data-[state=active]:animate-files-in data-[state=inactive]:animate-out
-					data-[state=inactive]:fade-out-0 data-[state=inactive]:slide-out-to-top-2`,
+					"flex flex-col gap-2 data-[state=active]:animate-files-in",
 					orientation === "horizontal" && "flex-row overflow-x-auto p-1.5",
 					innerProps.className
 				),
