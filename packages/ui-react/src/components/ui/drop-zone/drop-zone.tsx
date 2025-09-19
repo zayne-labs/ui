@@ -139,18 +139,20 @@ export function DropZoneInput(props: DropZoneInputProps) {
 	);
 }
 
-type DropZoneAreaProps<TSlice> = DropZoneContextProps<TSlice> & {
-	classNames?: Partial<Record<Extract<keyof PartInputProps, "container" | "input">, string>>;
-	extraProps?: Partial<Pick<PartInputProps, "container" | "input">>;
-};
+type DropZoneAreaProps<TSlice> = DropZoneContextProps<TSlice>
+	& PartInputProps["container"] & {
+		classNames?: Partial<Record<Extract<keyof PartInputProps, "container" | "input">, string>>;
+		extraProps?: Partial<Pick<PartInputProps, "container" | "input">>;
+	};
 
 export function DropZoneArea<TSlice = DropZoneStore>(props: DropZoneAreaProps<TSlice>) {
-	const { children, classNames, extraProps, selector } = props;
+	const { children, className, classNames, extraProps, selector, ...restOfProps } = props;
 
 	return (
 		<DropZoneContainer
 			{...extraProps?.container}
-			className={cnMerge(extraProps?.container?.className, classNames?.container)}
+			{...restOfProps}
+			className={cnMerge(extraProps?.container?.className, className, classNames?.container)}
 		>
 			<DropZoneInput
 				{...extraProps?.input}
