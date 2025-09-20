@@ -28,7 +28,7 @@ Switch can be used in two ways:
 Like `switch(value)` in JavaScript - match a specific value against cases:
 
 ```tsx
-import { Switch } from '@zayne-labs/ui-react/common';
+import { Switch } from '@zayne-labs/ui-react/common/switch';
 
 function UserRole({ role }) {
   return (
@@ -54,7 +54,7 @@ function UserRole({ role }) {
 When no `value` prop is provided, Switch evaluates each `when` condition in order, similar to `switch(true)` in JavaScript:
 
 ```tsx
-import { Switch } from '@zayne-labs/ui-react/common';
+import { Switch } from '@zayne-labs/ui-react/common/switch';
 
 function Counter({ count }) {
   return (

@@ -214,7 +214,7 @@ The description component for the card.
 
 **Default Styling:**
 
-- `text-shadcn-muted-foreground text-sm` - Applied by default
+- `text-zu-muted-foreground text-sm` - Applied by default
 
 ### Card.Content
 
@@ -245,8 +245,8 @@ Container for the card footer content.
 
 The Card component follows a zero-styling philosophy, with minimal default styles:
 
-- `Card.Title` has a `font-semibold` style
-- `Card.Description` has `text-shadcn-muted-foreground text-sm` styles
+- `Card.Title` has a `font-semibold leading-none` style
+- `Card.Description` has `text-zu-muted-foreground text-sm` styles
 
 All other styling is entirely up to you, giving complete freedom to match your design system.
 

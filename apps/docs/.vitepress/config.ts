@@ -65,8 +65,10 @@ export default defineConfig({
 				items: [
 					{ link: "/utility", text: "Overview" },
 					{ link: "/utility/await", text: "Await" },
+					{ link: "/utility/client-gate", text: "ClientGate" },
 					{ link: "/utility/error-boundary", text: "ErrorBoundary" },
 					{ link: "/utility/for", text: "For" },
+					{ link: "/utility/presence", text: "Presence" },
 					{ link: "/utility/show", text: "Show" },
 					{ link: "/utility/slot", text: "Slot" },
 					{ link: "/utility/suspense-with-boundary", text: "SuspenseWithBoundary" },
@@ -77,7 +79,7 @@ export default defineConfig({
 			},
 		],
 
-		socialLinks: [{ icon: "github", link: "https://github.com/Ryan-Zayne/Z-COMMERCE--FULLSTACK" }],
+		socialLinks: [{ icon: "github", link: "https://github.com/zayne-labs/ui" }],
 	},
 
 	title: " ",

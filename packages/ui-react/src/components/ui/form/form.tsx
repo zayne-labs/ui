@@ -345,7 +345,7 @@ export function FormInputPrimitive<TFieldValues extends FieldValues>(
 
 	const { isDisabled, isInvalid } = fieldState ?? fieldStateFromLaxFormField;
 
-	const [isPasswordVisible, toggleVisibility] = useToggle(false);
+	const [isPasswordVisible, toggleIsPasswordVisible] = useToggle(false);
 
 	const shouldHaveEyeIcon = withEyeIcon && type === "password";
 
@@ -398,7 +398,7 @@ export function FormInputPrimitive<TFieldValues extends FieldValues>(
 				<FormInputRightItem
 					as="button"
 					type="button"
-					onClick={toggleVisibility}
+					onClick={toggleIsPasswordVisible}
 					className="size-5 shrink-0 lg:size-6"
 				>
 					{eyeIcon}

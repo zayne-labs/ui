@@ -51,7 +51,7 @@ yarn add @zayne-labs/ui-react
 ## Quick Start
 
 ```tsx
-import { Switch } from '@zayne-labs/ui-react/common'
+import { Switch } from '@zayne-labs/ui-react/common/switch'
 
 function App() {
   const status = "loading"

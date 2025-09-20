@@ -6,7 +6,7 @@
 	"description": "A composable UI/UI-utilities components library. ",
 	"author": "Ryan Zayne",
 	"license": "MIT",
-	"homepage": "https://github.com/zayne-labs/ui#readme",
+	"homepage": "https://zayne-labs-ui.netlify.app",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/zayne-labs/ui.git"
@@ -67,9 +67,9 @@
 		}
 	},
 	"dependencies": {
-		"@zayne-labs/toolkit-core": "0.11.7",
-		"@zayne-labs/toolkit-react": "0.11.7",
-		"@zayne-labs/toolkit-type-helpers": "0.11.7"
+		"@zayne-labs/toolkit-core": "0.11.10",
+		"@zayne-labs/toolkit-react": "0.11.10",
+		"@zayne-labs/toolkit-type-helpers": "0.11.10"
 	},
 	"devDependencies": {
 		"@arethetypeswrong/cli": "0.18.2",
@@ -82,15 +82,15 @@
 		"@zayne-labs/tsconfig": "0.9.15",
 		"concurrently": "9.2.1",
 		"cross-env": "10.0.0",
-		"publint": "0.3.12",
+		"publint": "0.3.13",
 		"publish": "^0.6.0",
 		"react": "19.1.1",
 		"react-dom": "19.1.1",
-		"react-hook-form": "7.62.0",
+		"react-hook-form": "7.63.0",
 		"size-limit": "11.2.0",
 		"tailwind-merge": "3.3.1",
 		"tailwindcss": "^4.1.13",
-		"tsdown": "0.15.1",
+		"tsdown": "0.15.3",
 		"tw-animate-css": "^1.3.7",
 		"typescript": "5.9.2",
 		"zustand": "5.0.8"
