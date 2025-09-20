@@ -31,22 +31,20 @@ function FileUpload() {
 			</DropZone.Area>
 
 			<DropZone.FileList className="mt-4 space-y-2">
-				{({ fileStateArray, actions }) =>
-					fileStateArray.map((fileState) => (
-						<DropZone.FileItem
-							key={fileState.id}
-							fileState={fileState}
-							className="flex items-center gap-4 rounded border p-3"
-						>
-							<DropZone.FileItemPreview className="h-12 w-12" />
-							<DropZone.FileItemMetadata className="flex-1" />
-							<DropZone.FileItemProgress className="w-20" />
-							<DropZone.FileItemDelete className="text-red-500 hover:text-red-700">
-								✕
-							</DropZone.FileItemDelete>
-						</DropZone.FileItem>
-					))
-				}
+				{(ctx) => (
+					<DropZone.FileItem
+						key={ctx.fileState.id}
+						fileState={ctx.fileState}
+						className="flex items-center gap-4 rounded border p-3"
+					>
+						<DropZone.FileItemPreview className="h-12 w-12" />
+						<DropZone.FileItemMetadata className="flex-1" />
+						<DropZone.FileItemProgress className="w-20" />
+						<DropZone.FileItemDelete className="text-red-500 hover:text-red-700">
+							✕
+						</DropZone.FileItemDelete>
+					</DropZone.FileItem>
+				)}
 			</DropZone.FileList>
 		</DropZone.Root>
 	);
@@ -61,14 +59,15 @@ For more control, use the hook directly:
 import { useDropZone } from "@zayne-labs/ui-react/ui/drop-zone";
 
 function CustomFileUpload() {
-	const { propGetters, storeApi } = useDropZone({
+	const { propGetters, useDropZoneStore } = useDropZone({
 		allowedFileTypes: [".jpg", ".png"],
 		maxFileSize: { mb: 5 },
 		multiple: true,
 	});
 
-	const fileStateArray = storeApi.getState().fileStateArray;
-	const isDraggingOver = storeApi.getState().isDraggingOver;
+	const fileStateArray = useDropZoneStore((store) => store.fileStateArray);
+	const isDraggingOver = useDropZoneStore((store) => store.isDraggingOver);
+	const storeActions = useDropZoneStore((store) => store.actions);
 
 	return (
 		<div {...propGetters.getContainerProps({ className: "border-2 border-dashed p-4" })}>
@@ -89,7 +88,7 @@ function CustomFileUpload() {
 							className="aspect-square w-full rounded object-cover"
 						/>
 						<button
-							onClick={() => storeApi.getState().actions.removeFile(fileState.id)}
+							onClick={() => storeActions.removeFile({ fileStateOrID: fileState })}
 							className="absolute right-2 top-2 h-6 w-6 rounded-full bg-red-500 text-white"
 						>
 							✕
@@ -142,16 +141,14 @@ function UploadWithProgress() {
 			</DropZone.Area>
 
 			<DropZone.FileList>
-				{({ fileStateArray }) =>
-					fileStateArray.map((fileState) => (
-						<DropZone.FileItem key={fileState.id} fileState={fileState}>
-							<DropZone.FileItemPreview />
-							<DropZone.FileItemMetadata />
-							<DropZone.FileItemProgress variant="linear" />
-							<DropZone.FileItemDelete />
-						</DropZone.FileItem>
-					))
-				}
+				{({ fileState }) => (
+					<DropZone.FileItem key={fileState.id} fileState={fileState}>
+						<DropZone.FileItemPreview />
+						<DropZone.FileItemMetadata />
+						<DropZone.FileItemProgress variant="linear" />
+						<DropZone.FileItemDelete />
+					</DropZone.FileItem>
+				)}
 			</DropZone.FileList>
 
 			<DropZone.FileClear>Clear All Files</DropZone.FileClear>
@@ -171,34 +168,22 @@ function CustomPreviews() {
 			</DropZone.Area>
 
 			<DropZone.FileList>
-				{({ fileStateArray }) => (
-					<div className="grid grid-cols-3 gap-4">
-						{fileStateArray.map((fileState) => (
-							<div key={fileState.id} className="rounded-lg border p-4">
-								<DropZone.FileItemPreview
-									fileState={fileState}
-									renderPreview={({ fileType, fileExtension }) => ({
-										image: {
-											node: (
-												<img
-													src={fileState.preview}
-													alt={fileState.file.name}
-													className="h-32 w-full rounded object-cover"
-												/>
-											),
-										},
-										default: {
-											node: (
-												<div className="flex h-32 w-full items-center justify-center rounded bg-gray-100">
-													📄 {fileExtension.toUpperCase()}
-												</div>
-											),
-										},
-									})}
-								/>
-								<DropZone.FileItemMetadata className="mt-2" />
-							</div>
-						))}
+				{({ fileState }) => (
+					<div key={fileState.id} className="rounded-lg border p-4">
+						<DropZone.FileItemPreview fileState={fileState} className="h-32 w-full">
+							{({ fileType, fileExtension }) =>
+								fileType.startsWith("image/") ?
+									<img
+										src={fileState.preview}
+										alt={fileState.file.name}
+										className="h-full w-full rounded object-cover"
+									/>
+								:	<div className="flex h-full w-full items-center justify-center rounded bg-gray-100">
+										📄 {fileExtension.toUpperCase()}
+									</div>
+							}
+						</DropZone.FileItemPreview>
+						<DropZone.FileItemMetadata className="mt-2" />
 					</div>
 				)}
 			</DropZone.FileList>
@@ -222,8 +207,8 @@ function CustomPreviews() {
 	// Prevent duplicates (default: true)
 	rejectDuplicateFiles={true}
 	// Validation callbacks
-	onValidationErrorEach={(error) => console.log("File error:", error)}
-	onValidationSuccessBatch={(successes) => console.log("Valid files:", successes.length)}
+	onValidationError={(error) => console.log("File error:", error)}
+	onValidationSuccess={(ctx) => console.log("File success:", ctx.fileStateArray)}
 >
 	{/* Your UI */}
 </DropZone.Root>
@@ -231,25 +216,32 @@ function CustomPreviews() {
 
 ### Custom Validation
 
+The custom validation can be either sync or async. The context object contains the file and the store actions.
+
+Example: Custom validation file with server API
+
 ```tsx
 function CustomValidation() {
-	const customValidator = async ({ file }) => {
-		// Example: Check image dimensions
-		if (file.type.startsWith("image/")) {
-			return new Promise((resolve) => {
-				const img = new Image();
-				img.onload = () => {
-					const isValid = img.width >= 800 && img.height >= 600;
-					resolve(isValid);
-				};
-				img.src = URL.createObjectURL(file);
-			});
-		}
-		return true;
-	};
-
 	return (
-		<DropZone.Root allowedFileTypes={[".jpg", ".png"]} validator={customValidator}>
+		<DropZone.Root
+			allowedFileTypes={[".jpg", ".png"]}
+			validator={async ({ file }) => {
+				const formData = new FormData();
+				formData.append("file", file);
+				try {
+					const response = await fetch("/api/validate-file", {
+						method: "POST",
+						body: formData,
+					});
+
+					const result = await response.json();
+					return result.isValid;
+				} catch (error) {
+					console.error("Validation failed:", error);
+					return false;
+				}
+			}}
+		>
 			<DropZone.Area>
 				<p>Drop images (min 800x600)</p>
 			</DropZone.Area>
@@ -312,6 +304,8 @@ Container for displaying uploaded files.
 **Props:**
 
 - `renderMode?: "per-item" | "manual-list"` - Rendering mode (default: "per-item")
+   - `"per-item"`: Render function called for each file individually with `(ctx) => { fileState, index, array, actions }`
+   - `"manual-list"`: Render function called once with all files `(ctx) => { fileStateArray, actions }`
 - `forceMount?: boolean` - Always render even when empty
 - `children: React.ReactNode | ((context) => React.ReactNode)` - List content or render function
 

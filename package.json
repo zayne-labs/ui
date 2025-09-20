@@ -10,6 +10,7 @@
 		"build:test": "turbo run --filter=./packages/* build:test",
 		"bump": "bumpp",
 		"dev:dev": "turbo run --filter=./apps/dev dev",
+		"dev:docs": "turbo run --filter=./apps/docs dev",
 		"dev:react": "turbo run --filter=./packages/ui-react dev",
 		"inspect:eslint-config": "pnpx @eslint/config-inspector@latest",
 		"lint:attw": "turbo run --filter=./packages/* lint:attw",

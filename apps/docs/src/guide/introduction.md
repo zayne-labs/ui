@@ -64,30 +64,34 @@ yarn add @zayne-labs/ui-react
 
 ### File Upload with a ui component
 
-Here's a drag-and-drop file uploader:
+Here's a drag-and-drop file uploader and preview:
 
 ```tsx
 import { DropZone } from "@zayne-labs/ui-react/ui/drop-zone";
 
 function ImageUploader() {
 	return (
-		<DropZone.Root allowedFileTypes={["image/*"]} maxFileCount={4} maxFileSize={5}>
-			<DropZone.Area className="rounded-lg border bg-gray-50 p-6">
-				<p className="text-center text-gray-600">Drop images or click to upload</p>
+		<DropZone.Root allowedFileTypes={["image/*"]} maxFileSize={{ mb: 5 }} maxFileCount={4}>
+			<DropZone.Area className="rounded-lg border-2 border-dashed border-gray-300 p-6 text-center">
+				<p className="text-gray-600">Drop images or click to upload</p>
 			</DropZone.Area>
 
 			<DropZone.FileList>
-				{({ fileStateArray }) => (
-					<div className="mt-4 grid grid-cols-4 gap-2">
-						{fileStateArray.map((fileState) => (
-							<img
-								key={fileState.id}
-								src={fileState.preview}
-								alt={fileState.file.name}
-								className="aspect-square rounded-lg object-cover"
-							/>
-						))}
-					</div>
+				{({ fileState }) => (
+					<DropZone.FileItem
+						key={fileState.id}
+						fileState={fileState}
+						className="mt-4 flex flex-col gap-2 rounded-lg border p-3"
+					>
+						<div className="flex items-center gap-3">
+							<DropZone.FileItemPreview className="size-12 rounded object-cover" />
+							<DropZone.FileItemMetadata className="flex-1" />
+							<DropZone.FileItemDelete className="text-red-500 hover:text-red-700">
+								✕
+							</DropZone.FileItemDelete>
+						</div>
+						<DropZone.FileItemProgress variant="linear" />
+					</DropZone.FileItem>
 				)}
 			</DropZone.FileList>
 		</DropZone.Root>
