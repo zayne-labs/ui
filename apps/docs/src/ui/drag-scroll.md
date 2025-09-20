@@ -31,20 +31,23 @@ yarn add @zayne-labs/ui-react
 ## Basic Usage
 
 ```tsx
-import { useDragScroll } from '@zayne-labs/ui-react/ui/drag-scroll'
+import { useDragScroll } from "@zayne-labs/ui-react/ui/drag-scroll";
 
 function BasicDragScroll() {
-  const { getRootProps, getItemProps } = useDragScroll()
+	const { getRootProps, getItemProps } = useDragScroll();
 
-  return (
-    <div {...getRootProps()}>
-      {[...Array(10).keys()].map((index) => (
-        <div key={index} {...getItemProps({ className: "flex-shrink-0 w-64 h-40 bg-gray-100 m-2 p-4" })}>
-          Card {index + 1}
-        </div>
-      ))}
-    </div>
-  )
+	return (
+		<div {...getRootProps()}>
+			{[...Array(10).keys()].map((index) => (
+				<div
+					key={index}
+					{...getItemProps({ className: "flex-shrink-0 w-64 h-40 bg-gray-100 m-2 p-4" })}
+				>
+					Card {index + 1}
+				</div>
+			))}
+		</div>
+	);
 }
 ```
 
@@ -53,62 +56,58 @@ function BasicDragScroll() {
 ### Horizontal Scroll (Default)
 
 ```tsx
-import { useDragScroll } from '@zayne-labs/ui-react/ui/drag-scroll'
+import { useDragScroll } from "@zayne-labs/ui-react/ui/drag-scroll";
 
 function HorizontalDragScroll() {
-  const { getRootProps, getItemProps } = useDragScroll({
-    orientation: "horizontal" // Default
-  })
+	const { getRootProps, getItemProps } = useDragScroll({
+		orientation: "horizontal", // Default
+	});
 
-  return (
-    <div {...getRootProps()}>
-      {/* Scroll items */}
-    </div>
-  )
+	return <div {...getRootProps()}>{/* Scroll items */}</div>;
 }
 ```
 
 ### Vertical Scroll
 
 ```tsx
-import { useDragScroll } from '@zayne-labs/ui-react/ui/drag-scroll'
+import { useDragScroll } from "@zayne-labs/ui-react/ui/drag-scroll";
 
 function VerticalDragScroll() {
-  const { getRootProps, getItemProps } = useDragScroll({
-    orientation: "vertical"
-  })
+	const { getRootProps, getItemProps } = useDragScroll({
+		orientation: "vertical",
+	});
 
-  return (
-    <div {...getRootProps()}>
-      {[...Array(10).keys()].map((index) => (
-        <div key={index} {...getItemProps({ className: "w-full h-40 bg-gray-100 my-2 p-4" })}>
-          Card {index + 1}
-        </div>
-      ))}
-    </div>
-  )
+	return (
+		<div {...getRootProps()}>
+			{[...Array(10).keys()].map((index) => (
+				<div key={index} {...getItemProps({ className: "w-full h-40 bg-gray-100 my-2 p-4" })}>
+					Card {index + 1}
+				</div>
+			))}
+		</div>
+	);
 }
 ```
 
 ### Both Directions
 
 ```tsx
-import { useDragScroll } from '@zayne-labs/ui-react/ui/drag-scroll'
+import { useDragScroll } from "@zayne-labs/ui-react/ui/drag-scroll";
 
 function BidirectionalDragScroll() {
-  const { getRootProps, getItemProps } = useDragScroll({
-    orientation: "both"
-  })
+	const { getRootProps, getItemProps } = useDragScroll({
+		orientation: "both",
+	});
 
-  return (
-    <div {...getRootProps({ className: "h-96 flex-wrap" })}>
-      {[...Array(20).keys()].map((index) => (
-        <div key={index} {...getItemProps({ className: "w-64 h-40 bg-gray-100 m-2 p-4" })}>
-          Card {index + 1}
-        </div>
-      ))}
-    </div>
-  )
+	return (
+		<div {...getRootProps({ className: "h-96 flex-wrap" })}>
+			{[...Array(20).keys()].map((index) => (
+				<div key={index} {...getItemProps({ className: "w-64 h-40 bg-gray-100 m-2 p-4" })}>
+					Card {index + 1}
+				</div>
+			))}
+		</div>
+	);
 }
 ```
 
@@ -117,36 +116,28 @@ function BidirectionalDragScroll() {
 ### Desktop Only
 
 ```tsx
-import { useDragScroll } from '@zayne-labs/ui-react/ui/drag-scroll'
+import { useDragScroll } from "@zayne-labs/ui-react/ui/drag-scroll";
 
 function DesktopOnlyDragScroll() {
-  const { getRootProps, getItemProps } = useDragScroll({
-    usage: "desktopOnly" // Only applies drag behavior on desktop screens
-  })
+	const { getRootProps, getItemProps } = useDragScroll({
+		usage: "desktopOnly", // Only applies drag behavior on desktop screens
+	});
 
-  return (
-    <div {...getRootProps()}>
-      {/* Scroll items */}
-    </div>
-  )
+	return <div {...getRootProps()}>{/* Scroll items */}</div>;
 }
 ```
 
 ### Mobile and Tablet Only
 
 ```tsx
-import { useDragScroll } from '@zayne-labs/ui-react/ui/drag-scroll'
+import { useDragScroll } from "@zayne-labs/ui-react/ui/drag-scroll";
 
 function MobileTabletDragScroll() {
-  const { getRootProps, getItemProps } = useDragScroll({
-    usage: "mobileAndTabletOnly" // Only applies drag behavior on mobile/tablet screens
-  })
+	const { getRootProps, getItemProps } = useDragScroll({
+		usage: "mobileAndTabletOnly", // Only applies drag behavior on mobile/tablet screens
+	});
 
-  return (
-    <div {...getRootProps()}>
-      {/* Scroll items */}
-    </div>
-  )
+	return <div {...getRootProps()}>{/* Scroll items */}</div>;
 }
 ```
 
@@ -155,90 +146,85 @@ function MobileTabletDragScroll() {
 ### With Custom Styling
 
 ```tsx
-import { useDragScroll } from '@zayne-labs/ui-react/ui/drag-scroll'
+import { useDragScroll } from "@zayne-labs/ui-react/ui/drag-scroll";
 
 function StyledDragScroll() {
-  const { getRootProps, getItemProps } = useDragScroll({
-    classNames: {
-      base: "bg-gray-50 rounded-lg p-4 shadow-inner",
-      item: "rounded-md shadow-sm bg-white hover:shadow-md transition-shadow"
-    }
-  })
+	const { getRootProps, getItemProps } = useDragScroll({
+		classNames: {
+			base: "bg-gray-50 rounded-lg p-4 shadow-inner",
+			item: "rounded-md shadow-sm bg-white hover:shadow-md transition-shadow",
+		},
+	});
 
-  return (
-    <div className="w-full max-w-4xl mx-auto">
-      <h2 className="text-xl font-bold mb-4">Scrollable Content</h2>
+	return (
+		<div className="mx-auto w-full max-w-4xl">
+			<h2 className="mb-4 text-xl font-bold">Scrollable Content</h2>
 
-      <div {...getRootProps()}>
-        {[...Array(10).keys()].map((index) => (
-          <div
-            key={index}
-            {...getItemProps({
-              className: "flex-shrink-0 w-64 h-40 m-2 p-4 flex items-center justify-center"
-            })}
-          >
-            Card {index + 1}
-          </div>
-        ))}
-      </div>
-    </div>
-  )
+			<div {...getRootProps()}>
+				{[...Array(10).keys()].map((index) => (
+					<div
+						key={index}
+						{...getItemProps({
+							className: "flex-shrink-0 w-64 h-40 m-2 p-4 flex items-center justify-center",
+						})}
+					>
+						Card {index + 1}
+					</div>
+				))}
+			</div>
+		</div>
+	);
 }
 ```
 
 ### With Extra Props
 
 ```tsx
-import { useDragScroll } from '@zayne-labs/ui-react/ui/drag-scroll'
-
+import { useDragScroll } from "@zayne-labs/ui-react/ui/drag-scroll";
 
 // Root level extra props
 function DragScrollWithExtraProps() {
-  const { getRootProps, getItemProps } = useDragScroll({
-    extraRootProps: {
-      "aria-label": "Scrollable content",
-      id: "scroll-container",
-      onMouseEnter: () => console.log("Mouse entered scroll area")
-    },
-    extraItemProps: {
-      role: "listitem",
-      tabIndex: 0
-    }
-  })
+	const { getRootProps, getItemProps } = useDragScroll({
+		extraRootProps: {
+			"aria-label": "Scrollable content",
+			id: "scroll-container",
+			onMouseEnter: () => console.log("Mouse entered scroll area"),
+		},
+		extraItemProps: {
+			role: "listitem",
+			tabIndex: 0,
+		},
+	});
 
-  return (
-    <div {...getRootProps()}>
-      {/* Scroll items */}
-    </div>
-  )
+	return <div {...getRootProps()}>{/* Scroll items */}</div>;
 }
 
 // Getter level extra props
 
 function DragScrollWithExtraProps() {
-  const { getRootProps, getItemProps } = useDragScroll()
+	const { getRootProps, getItemProps } = useDragScroll();
 
-  return (
-    <div
-      {...getRootProps({
-        "aria-label": "Scrollable content",
-        id: "scroll-container",
-        onMouseEnter: () => console.log("Mouse entered scroll area")
-      })}
-    >
-      {[...Array(10).keys()].map((index) => (
-        <div
-          key={index}
-          {...getItemProps({
-            role: "listitem",
-            tabIndex: 0
-          })}
-        >
-          Card {index + 1}
-        </div>
-      ))}
-    </div>
-  )
+	return (
+		<div
+			{...getRootProps({
+				"aria-label": "Scrollable content",
+				id: "scroll-container",
+				onMouseEnter: () => console.log("Mouse entered scroll area"),
+			})}
+		>
+			{[...Array(10).keys()].map((index) => (
+				<div
+					key={index}
+					{...getItemProps({
+						role: "listitem",
+						tabIndex: 0,
+					})}
+				>
+					Card {index + 1}
+				</div>
+			))}
+		</div>
+	);
 }
 ```
 
@@ -252,20 +238,20 @@ const { getRootProps, getItemProps } = useDragScroll(options?)
 
 #### Options
 
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `orientation` | `"horizontal" \| "vertical" \| "both"` | `"horizontal"` | The direction of scrolling |
-| `usage` | `"allScreens" \| "desktopOnly" \| "mobileAndTabletOnly"` | `"allScreens"` | Target device types for drag behavior |
-| `classNames` | `{ base?: string, item?: string }` | `undefined` | CSS classes for styling |
-| `extraRootProps` | `object` | `undefined` | Additional props to apply to the root element |
-| `extraItemProps` | `object` | `undefined` | Additional props to apply to item elements |
+| Option           | Type                                                     | Default        | Description                                   |
+| ---------------- | -------------------------------------------------------- | -------------- | --------------------------------------------- |
+| `orientation`    | `"horizontal" \| "vertical" \| "both"`                   | `"horizontal"` | The direction of scrolling                    |
+| `usage`          | `"allScreens" \| "desktopOnly" \| "mobileAndTabletOnly"` | `"allScreens"` | Target device types for drag behavior         |
+| `classNames`     | `{ base?: string, item?: string }`                       | `undefined`    | CSS classes for styling                       |
+| `extraRootProps` | `object`                                                 | `undefined`    | Additional props to apply to the root element |
+| `extraItemProps` | `object`                                                 | `undefined`    | Additional props to apply to item elements    |
 
 #### Return Value
 
-| Property | Type | Description |
-|----------|------|-------------|
+| Property       | Type                         | Description                                        |
+| -------------- | ---------------------------- | -------------------------------------------------- |
 | `getRootProps` | `(props?: object) => object` | Function to get props for the scrollable container |
-| `getItemProps` | `(props?: object) => object` | Function to get props for each scrollable item |
+| `getItemProps` | `(props?: object) => object` | Function to get props for each scrollable item     |
 
 ## Default Styling
 

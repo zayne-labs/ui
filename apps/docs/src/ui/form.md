@@ -35,6 +35,8 @@ The Form component consists of several composable parts:
 
 - **Form.Root** - The container for the form, manages form state
 - **Form.Field** - Container for individual form fields
+- **Form.FieldController** - Render prop component for custom field rendering within Form.Field
+- **Form.ControlledField** - Standalone controlled field component that creates its own context
 - **Form.Label** - Label for form inputs
 - **Form.Input** - Input field with automatic registration
 - **Form.TextArea** - Multi-line text input
@@ -51,101 +53,101 @@ The Form component consists of several composable parts:
 ## Basic Usage
 
 ```tsx
-import { useForm } from 'react-hook-form';
-import { Form } from '@zayne-labs/ui-react/ui/form';
+import { useForm } from "react-hook-form";
+import { Form } from "@zayne-labs/ui-react/ui/form";
 
 function LoginForm() {
-  const methods = useForm({
-    defaultValues: {
-      email: '',
-      password: '',
-    },
-  });
+	const form = useForm({
+		defaultValues: {
+			email: "",
+			password: "",
+		},
+	});
 
-  const onSubmit = methods.handleSubmit((data) => {
-    console.log(data);
-  });
+	const onSubmit = form.handleSubmit((data) => {
+		console.log(data);
+	});
 
-  return (
-    <Form.Root methods={methods} onSubmit={onSubmit}>
-      <Form.Field name="email">
-        <Form.Label>Email</Form.Label>
-        <Form.Input type="email" />
-        <Form.ErrorMessage />
-      </Form.Field>
+	return (
+		<Form.Root form={form} onSubmit={onSubmit}>
+			<Form.Field name="email">
+				<Form.Label>Email</Form.Label>
+				<Form.Input type="email" />
+				<Form.ErrorMessage />
+			</Form.Field>
 
-      <Form.Field name="password">
-        <Form.Label>Password</Form.Label>
-        <Form.Input type="password" />
-        <Form.ErrorMessage />
-      </Form.Field>
+			<Form.Field name="password">
+				<Form.Label>Password</Form.Label>
+				<Form.Input type="password" />
+				<Form.ErrorMessage />
+			</Form.Field>
 
-      <Form.Submit>Log in</Form.Submit>
-    </Form.Root>
-  );
+			<Form.Submit>Log in</Form.Submit>
+		</Form.Root>
+	);
 }
 ```
 
 ## Form Validation Example
 
 ```tsx
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
-import { Form } from '@zayne-labs/ui-react/ui/form';
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { Form } from "@zayne-labs/ui-react/ui/form";
 
 // Define validation schema
 const formSchema = z.object({
-  username: z.string().min(3, "Username must be at least 3 characters"),
-  email: z.string().email("Please enter a valid email address"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
+	username: z.string().min(3, "Username must be at least 3 characters"),
+	email: z.string().email("Please enter a valid email address"),
+	password: z.string().min(8, "Password must be at least 8 characters"),
 });
 
 function SignupForm() {
-  const methods = useForm({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      username: '',
-      email: '',
-      password: '',
-    },
-  });
+	const methods = useForm({
+		resolver: zodResolver(formSchema),
+		defaultValues: {
+			username: "",
+			email: "",
+			password: "",
+		},
+	});
 
-  const onSubmit = methods.handleSubmit((data) => {
-    console.log(data);
-  });
+	const onSubmit = methods.handleSubmit((data) => {
+		console.log(data);
+	});
 
-  return (
-    <Form.Root methods={methods} onSubmit={onSubmit}>
-      <Form.Field name="username">
-        <Form.Label>Username</Form.Label>
-        <Form.Input />
-        <Form.Description>Choose a unique username</Form.Description>
-        <Form.ErrorMessage />
-      </Form.Field>
+	return (
+		<Form.Root methods={methods} onSubmit={onSubmit}>
+			<Form.Field name="username">
+				<Form.Label>Username</Form.Label>
+				<Form.Input />
+				<Form.Description>Choose a unique username</Form.Description>
+				<Form.ErrorMessage />
+			</Form.Field>
 
-      <Form.Field name="email">
-        <Form.Label>Email</Form.Label>
-        <Form.Input type="email" />
-        <Form.ErrorMessage />
-      </Form.Field>
+			<Form.Field name="email">
+				<Form.Label>Email</Form.Label>
+				<Form.Input type="email" />
+				<Form.ErrorMessage />
+			</Form.Field>
 
-      <Form.Field name="password">
-        <Form.Label>Password</Form.Label>
-        <Form.Input type="password" />
-        <Form.Description>Must be at least 8 characters</Form.Description>
-        <Form.ErrorMessage />
-      </Form.Field>
+			<Form.Field name="password">
+				<Form.Label>Password</Form.Label>
+				<Form.Input type="password" />
+				<Form.Description>Must be at least 8 characters</Form.Description>
+				<Form.ErrorMessage />
+			</Form.Field>
 
-      <Form.SubscribeToFormState>
-        {({ isSubmitting, isValid }) => (
-          <Form.Submit disabled={isSubmitting || !isValid}>
-            {isSubmitting ? "Submitting..." : "Sign up"}
-          </Form.Submit>
-        )}
-      </Form.SubscribeToFormState>
-    </Form.Root>
-  );
+			<Form.SubscribeToFormState>
+				{({ isSubmitting, isValid }) => (
+					<Form.Submit disabled={isSubmitting || !isValid}>
+						{isSubmitting ? "Submitting..." : "Sign up"}
+					</Form.Submit>
+				)}
+			</Form.SubscribeToFormState>
+		</Form.Root>
+	);
 }
 ```
 
@@ -155,28 +157,25 @@ Password inputs automatically include an eye icon for toggling visibility:
 
 ```tsx
 function PasswordForm() {
-  const methods = useForm();
+	const methods = useForm();
 
-  return (
-    <Form.Root methods={methods}>
-      <Form.Field name="password">
-        <Form.Label>Password</Form.Label>
-        {/* Eye icon is included by default */}
-        <Form.Input type="password" />
-        <Form.ErrorMessage />
-      </Form.Field>
+	return (
+		<Form.Root methods={methods}>
+			<Form.Field name="password">
+				<Form.Label>Password</Form.Label>
+				{/* Eye icon is included by default */}
+				<Form.Input type="password" />
+				<Form.ErrorMessage />
+			</Form.Field>
 
-      {/* Disable eye icon globally */}
-      <Form.Field name="confirmPassword">
-        <Form.Label>Confirm Password</Form.Label>
-        <Form.Input
-          type="password"
-          withEyeIcon={false}
-        />
-        <Form.ErrorMessage />
-      </Form.Field>
-    </Form.Root>
-  );
+			{/* Disable eye icon globally */}
+			<Form.Field name="confirmPassword">
+				<Form.Label>Confirm Password</Form.Label>
+				<Form.Input type="password" withEyeIcon={false} />
+				<Form.ErrorMessage />
+			</Form.Field>
+		</Form.Root>
+	);
 }
 ```
 
@@ -186,30 +185,30 @@ Use input groups to add elements before or after inputs:
 
 ```tsx
 function ProfileForm() {
-  const methods = useForm();
+	const methods = useForm();
 
-  return (
-    <Form.Root methods={methods}>
-      <Form.Field name="website">
-        <Form.Label>Website</Form.Label>
-        <Form.InputGroup>
-          <Form.InputLeftItem>https://</Form.InputLeftItem>
-          <Form.Input placeholder="example.com" />
-        </Form.InputGroup>
-        <Form.ErrorMessage />
-      </Form.Field>
+	return (
+		<Form.Root methods={methods}>
+			<Form.Field name="website">
+				<Form.Label>Website</Form.Label>
+				<Form.InputGroup>
+					<Form.InputLeftItem>https://</Form.InputLeftItem>
+					<Form.Input placeholder="example.com" />
+				</Form.InputGroup>
+				<Form.ErrorMessage />
+			</Form.Field>
 
-      <Form.Field name="price">
-        <Form.Label>Price</Form.Label>
-        <Form.InputGroup>
-          <Form.InputLeftItem>$</Form.InputLeftItem>
-          <Form.Input type="number" />
-          <Form.InputRightItem>.00</Form.InputRightItem>
-        </Form.InputGroup>
-        <Form.ErrorMessage />
-      </Form.Field>
-    </Form.Root>
-  );
+			<Form.Field name="price">
+				<Form.Label>Price</Form.Label>
+				<Form.InputGroup>
+					<Form.InputLeftItem>$</Form.InputLeftItem>
+					<Form.Input type="number" />
+					<Form.InputRightItem>.00</Form.InputRightItem>
+				</Form.InputGroup>
+				<Form.ErrorMessage />
+			</Form.Field>
+		</Form.Root>
+	);
 }
 ```
 
@@ -219,26 +218,27 @@ For custom components or third-party integrations:
 
 ```tsx
 function CustomFieldForm() {
-  const methods = useForm();
+	const methods = useForm();
 
-  return (
-    <Form.Root methods={methods}>
-      <Form.Field name="rating">
-        <Form.Label>Rating</Form.Label>
-        <Form.FieldController
-          render={({ field, fieldState }) => (
-            <StarRating
-              value={field.value}
-              onChange={field.onChange}
-              onBlur={field.onBlur}
-              error={fieldState.error}
-            />
-          )}
-        />
-        <Form.ErrorMessage />
-      </Form.Field>
-    </Form.Root>
-  );
+	return (
+		<Form.Root methods={methods}>
+			<Form.Field name="rating">
+				<Form.Label>Rating</Form.Label>
+
+				<Form.FieldController
+					render={({ field, fieldState }) => (
+						<StarRating
+							value={field.value}
+							onChange={field.onChange}
+							onBlur={field.onBlur}
+							error={fieldState.error}
+						/>
+					)}
+				/>
+				<Form.ErrorMessage />
+			</Form.Field>
+		</Form.Root>
+	);
 }
 ```
 
@@ -248,39 +248,33 @@ Subscribe to field values and form state:
 
 ```tsx
 function SubscriptionExample() {
-  const methods = useForm({
-    defaultValues: {
-      firstName: '',
-      lastName: '',
-    },
-  });
+	const methods = useForm({
+		defaultValues: {
+			firstName: "",
+			lastName: "",
+		},
+	});
 
-  return (
-    <Form.Root methods={methods}>
-      <Form.Field name="firstName">
-        <Form.Label>First Name</Form.Label>
-        <Form.Input />
-        <Form.SubscribeToFieldValue>
-          {({ value }) => (
-            value && <p>Hello, {value}!</p>
-          )}
-        </Form.SubscribeToFieldValue>
-      </Form.Field>
+	return (
+		<Form.Root methods={methods}>
+			<Form.Field name="firstName">
+				<Form.Label>First Name</Form.Label>
+				<Form.Input />
+				<Form.SubscribeToFieldValue>
+					{({ value }) => value && <p>Hello, {value}!</p>}
+				</Form.SubscribeToFieldValue>
+			</Form.Field>
 
-      <Form.Field name="lastName">
-        <Form.Label>Last Name</Form.Label>
-        <Form.Input />
-      </Form.Field>
+			<Form.Field name="lastName">
+				<Form.Label>Last Name</Form.Label>
+				<Form.Input />
+			</Form.Field>
 
-      <Form.SubscribeToFormState>
-        {({ isDirty, isValid }) => (
-          <Form.Submit disabled={!isDirty || !isValid}>
-            Submit
-          </Form.Submit>
-        )}
-      </Form.SubscribeToFormState>
-    </Form.Root>
-  );
+			<Form.SubscribeToFormState>
+				{({ isDirty, isValid }) => <Form.Submit disabled={!isDirty || !isValid}>Submit</Form.Submit>}
+			</Form.SubscribeToFormState>
+		</Form.Root>
+	);
 }
 ```
 
@@ -291,6 +285,7 @@ function SubscriptionExample() {
 The main container for the form.
 
 **Props:**
+
 - `methods: UseFormReturn<TFieldValues>` - Form methods from react-hook-form's `useForm`
 - `withEyeIcon?: boolean` - Control eye icon visibility globally (default: true)
 - `children: React.ReactNode` - Form content
@@ -301,16 +296,77 @@ The main container for the form.
 Container for form field components.
 
 **Props:**
+
 - `name: string` - Field name (from form schema)
 - `withWrapper?: boolean` - Whether to wrap the field in a div (default: true)
 - `className?: string` - Optional CSS class for the wrapper
 - `children: React.ReactNode` - Field content
+
+### Form.FieldController
+
+Render prop component for custom field rendering within Form.Field context.
+
+**Props:**
+
+- `render: ({ field, fieldState }) => React.ReactElement` - Render function that receives field props and state
+- `rules?: RegisterOptions` - Validation rules from react-hook-form
+
+**Usage:**
+
+```tsx
+<Form.Field name="rating">
+	<Form.Label>Rating</Form.Label>
+	<Form.FieldController
+		render={({ field, fieldState }) => (
+			<StarRating
+				value={field.value}
+				onChange={field.onChange}
+				onBlur={field.onBlur}
+				error={fieldState.error}
+			/>
+		)}
+	/>
+	<Form.ErrorMessage />
+</Form.Field>
+```
+
+### Form.ControlledField
+
+Standalone controlled field component that creates its own field context.
+
+**Props:**
+
+- `name: string` - Field name
+- `control?: Control` - Form control (uses context if not provided)
+- `render: ({ field, fieldState, formState }) => React.ReactElement` - Render function
+- `rules?: RegisterOptions` - Validation rules
+- `defaultValue?: any` - Default field value
+
+**Usage:**
+
+```tsx
+<Form.ControlledField
+	name="customField"
+	render={({ field, fieldState }) => (
+		<div>
+			<label htmlFor={field.name}>Custom Field</label>
+			<CustomInput
+				id={field.name}
+				value={field.value}
+				onChange={field.onChange}
+				error={fieldState.error?.message}
+			/>
+		</div>
+	)}
+/>
+```
 
 ### Form.Input
 
 Input element with automatic registration.
 
 **Props:**
+
 - `type?: string` - Input type (text, password, email, etc.)
 - `withEyeIcon?: boolean` - Whether to show eye icon for password fields
 - `classNames?: object` - CSS classes for different parts
@@ -322,6 +378,7 @@ Input element with automatic registration.
 Label for form inputs.
 
 **Props:**
+
 - `children: React.ReactNode` - Label content
 - `...props` - All other properties are passed to the underlying `<label>` element
 
@@ -330,6 +387,7 @@ Label for form inputs.
 Displays validation errors.
 
 **Props:**
+
 - `className?: string` - Optional CSS class
 - `type?: "regular" | "root"` - Error type (default: "regular")
 - `errorField?: string` - Field name to display errors for
@@ -339,6 +397,7 @@ Displays validation errors.
 Subscribe to field value changes.
 
 **Props:**
+
 - `name?: string` - Field name to subscribe to
 - `children: ({ value }) => React.ReactNode` - Render function
 
@@ -347,6 +406,7 @@ Subscribe to field value changes.
 Subscribe to form state changes.
 
 **Props:**
+
 - `children: (formState) => React.ReactNode` - Render function receiving form state
 
 ## Styling
@@ -356,28 +416,28 @@ The Form components are completely unstyled by default. Use data attributes for 
 ```css
 /* Form root */
 [data-scope="form"][data-part="root"] {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
 }
 
 /* Form field */
 [data-scope="form"][data-part="field"] {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
 }
 
 /* Form input */
 [data-scope="form"][data-part="input"] {
-  padding: 0.5rem;
-  border: 1px solid #d1d5db;
-  border-radius: 0.375rem;
+	padding: 0.5rem;
+	border: 1px solid #d1d5db;
+	border-radius: 0.375rem;
 }
 
 /* Invalid state */
 [data-scope="form"][data-part="input"][data-invalid="true"] {
-  border-color: #ef4444;
+	border-color: #ef4444;
 }
 ```
 

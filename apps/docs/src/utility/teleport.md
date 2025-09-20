@@ -25,50 +25,50 @@ yarn add @zayne-labs/ui-react
 You can target elements using either a CSS selector string or a direct element reference:
 
 ```tsx
-import { Teleport } from '@zayne-labs/ui-react/common/teleport';
+import { Teleport } from "@zayne-labs/ui-react/common/teleport";
 
 function App() {
-  // Using CSS selector
-  return (
-    <div>
-      <Teleport to="body">
-        <div>Renders to body</div>
-      </Teleport>
-    </div>
-  );
+	// Using CSS selector
+	return (
+		<div>
+			<Teleport to="body">
+				<div>Renders to body</div>
+			</Teleport>
+		</div>
+	);
 }
 
 function AppWithRef() {
-  // Using element reference
-  const containerRef = useRef<HTMLDivElement>(null);
+	// Using element reference
+	const containerRef = useRef<HTMLDivElement>(null);
 
-  return (
-    <div>
-      <div ref={containerRef} />
+	return (
+		<div>
+			<div ref={containerRef} />
 
-      {containerRef.current && (
-        <Teleport to={containerRef.current}>
-          <div>Renders to the referenced element</div>
-        </Teleport>
-      )}
-    </div>
-  );
+			{containerRef.current && (
+				<Teleport to={containerRef.current}>
+					<div>Renders to the referenced element</div>
+				</Teleport>
+			)}
+		</div>
+	);
 }
 ```
 
 ### Target Specific Elements
 
 ```tsx
-import { Teleport } from '@zayne-labs/ui-react/common/teleport';
+import { Teleport } from "@zayne-labs/ui-react/common/teleport";
 
 function App() {
-  return (
-    <div>
-      <Teleport to="body > #notifications">
-        <div className="toast">New message!</div>
-      </Teleport>
-    </div>
-  );
+	return (
+		<div>
+			<Teleport to="body > #notifications">
+				<div className="toast">New message!</div>
+			</Teleport>
+		</div>
+	);
 }
 ```
 
@@ -82,24 +82,24 @@ Control where content is inserted relative to the target element using the `inse
 - `afterend`: After the target element
 
 ```tsx
-import { Teleport } from '@zayne-labs/ui-react/common/teleport';
+import { Teleport } from "@zayne-labs/ui-react/common/teleport";
 
 function App() {
-  return (
-    <div>
-      <div id="menu">
-        <h2>Menu</h2>
-      </div>
+	return (
+		<div>
+			<div id="menu">
+				<h2>Menu</h2>
+			</div>
 
-      <Teleport to="#menu" insertPosition="afterbegin">
-        <div>Appears first in menu</div>
-      </Teleport>
+			<Teleport to="#menu" insertPosition="afterbegin">
+				<div>Appears first in menu</div>
+			</Teleport>
 
-      <Teleport to="#menu" insertPosition="beforeend">
-        <div>Appears last in menu</div>
-      </Teleport>
-    </div>
-  );
+			<Teleport to="#menu" insertPosition="beforeend">
+				<div>Appears last in menu</div>
+			</Teleport>
+		</div>
+	);
 }
 ```
 
@@ -108,100 +108,100 @@ function App() {
 ### Modal Dialog
 
 ```tsx
-import { Teleport } from '@zayne-labs/ui-react/common/teleport';
+import { Teleport } from "@zayne-labs/ui-react/common/teleport";
 
 function Modal({ isOpen, onClose, children }) {
-  if (!isOpen) return null;
+	if (!isOpen) return null;
 
-  return (
-    <Teleport to="body > #modal-container">
-      <div className="modal-overlay" onClick={onClose}>
-        <div className="modal-content" onClick={e => e.stopPropagation()}>
-          {children}
-        </div>
-      </div>
-    </Teleport>
-  );
+	return (
+		<Teleport to="body > #modal-container">
+			<div className="modal-overlay" onClick={onClose}>
+				<div className="modal-content" onClick={(e) => e.stopPropagation()}>
+					{children}
+				</div>
+			</div>
+		</Teleport>
+	);
 }
 ```
 
 ### Tooltip
 
 ```tsx
-import { Teleport } from '@zayne-labs/ui-react/common/teleport';
+import { Teleport } from "@zayne-labs/ui-react/common/teleport";
 
 function Tooltip({ text, children }) {
-  const [isVisible, setIsVisible] = useState(false);
-  const triggerRef = useRef(null);
+	const [isVisible, setIsVisible] = useState(false);
+	const triggerRef = useRef(null);
 
-  return (
-    <>
-      <div
-        ref={triggerRef}
-        onMouseEnter={() => setIsVisible(true)}
-        onMouseLeave={() => setIsVisible(false)}
-      >
-        {children}
-      </div>
+	return (
+		<>
+			<div
+				ref={triggerRef}
+				onMouseEnter={() => setIsVisible(true)}
+				onMouseLeave={() => setIsVisible(false)}
+			>
+				{children}
+			</div>
 
-      {isVisible && triggerRef.current && (
-        <Teleport to="body > #tooltip-container">
-          <div
-            className="tooltip"
-            style={{
-              position: 'absolute',
-              top: triggerRef.current.getBoundingClientRect().bottom + 5,
-              left: triggerRef.current.getBoundingClientRect().left
-            }}
-          >
-            {text}
-          </div>
-        </Teleport>
-      )}
-    </>
-  );
+			{isVisible && triggerRef.current && (
+				<Teleport to="body > #tooltip-container">
+					<div
+						className="tooltip"
+						style={{
+							position: "absolute",
+							top: triggerRef.current.getBoundingClientRect().bottom + 5,
+							left: triggerRef.current.getBoundingClientRect().left,
+						}}
+					>
+						{text}
+					</div>
+				</Teleport>
+			)}
+		</>
+	);
 }
 ```
 
 ### Floating UI Integration
 
 ```tsx
-import { Teleport } from '@zayne-labs/ui-react/common/teleport';
-import { useFloating, shift, offset } from '@floating-ui/react';
+import { Teleport } from "@zayne-labs/ui-react/common/teleport";
+import { useFloating, shift, offset } from "@floating-ui/react";
 
 function Popover({ trigger, content }) {
-  const [isOpen, setIsOpen] = useState(false);
-  const { refs, floatingStyles } = useFloating({
-    open: isOpen,
-    onOpenChange: setIsOpen,
-    middleware: [offset(10), shift()]
-  });
+	const [isOpen, setIsOpen] = useState(false);
+	const { refs, floatingStyles } = useFloating({
+		open: isOpen,
+		onOpenChange: setIsOpen,
+		middleware: [offset(10), shift()],
+	});
 
-  return (
-    <>
-      <button ref={refs.setReference} onClick={() => setIsOpen(!isOpen)}>
-        {trigger}
-      </button>
+	return (
+		<>
+			<button ref={refs.setReference} onClick={() => setIsOpen(!isOpen)}>
+				{trigger}
+			</button>
 
-      {isOpen && (
-        <Teleport to="body > #popover-container">
-          <div ref={refs.setFloating} style={floatingStyles}>
-            {content}
-          </div>
-        </Teleport>
-      )}
-    </>
-  );
+			{isOpen && (
+				<Teleport to="body > #popover-container">
+					<div ref={refs.setFloating} style={floatingStyles}>
+						{content}
+					</div>
+				</Teleport>
+			)}
+		</>
+	);
 }
 ```
 
 ## Props
 
-| Prop | Type | Description |
-|------|------|-------------|
-| `to` | `string \| HTMLElement` | Target element (CSS selector or element reference) |
-| `insertPosition` | `'beforebegin' \| 'afterbegin' \| 'beforeend' \| 'afterend'` | Where to insert relative to target |
-| `children` | `React.ReactNode` | Content to render |
+| Prop             | Type                                                         | Description                                        |
+| ---------------- | ------------------------------------------------------------ | -------------------------------------------------- |
+| `to`             | `string \| HTMLElement`                                      | Target element (CSS selector or element reference) |
+| `insertPosition` | `'beforebegin' \| 'afterbegin' \| 'beforeend' \| 'afterend'` | Where to insert relative to target                 |
+| `children`       | `React.ReactNode`                                            | Content to render                                  |
 
 ## Notes
 

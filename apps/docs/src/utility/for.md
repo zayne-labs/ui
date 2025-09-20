@@ -32,26 +32,26 @@ yarn add @zayne-labs/ui-react
 Here's how to render a list of items:
 
 ```tsx
-import { For } from '@zayne-labs/ui-react/common/for';
+import { For } from "@zayne-labs/ui-react/common/for";
 
 function UserList() {
-  const users = [
-    { id: 1, name: 'Alice' },
-    { id: 2, name: 'Bob' },
-    { id: 3, name: 'Charlie' }
-  ];
+	const users = [
+		{ id: 1, name: "Alice" },
+		{ id: 2, name: "Bob" },
+		{ id: 3, name: "Charlie" },
+	];
 
-  return (
-    <ul className="user-list">
-      <For each={users}>
-        {(user, index, array) => (
-          <li key={user.id}>
-            {user.name} ({index + 1} of {array.length})
-          </li>
-        )}
-      </For>
-    </ul>
-  );
+	return (
+		<ul className="user-list">
+			<For each={users}>
+				{(user, index, array) => (
+					<li key={user.id}>
+						{user.name} ({index + 1} of {array.length})
+					</li>
+				)}
+			</For>
+		</ul>
+	);
 }
 ```
 
@@ -92,27 +92,24 @@ function TaskList({ tasks }) {
 Pass a number to generate a sequence of indices:
 
 ```tsx
-import { For } from '@zayne-labs/ui-react/common/for';
+import { For } from "@zayne-labs/ui-react/common/for";
 
 function Pagination({ pageCount, currentPage, onPageChange }) {
-  return (
-    <nav>
-      <ul>
-        <For each={pageCount}>
-          {(index, stillIndex, array) => (
-            <li key={index}>
-              <button
-                disabled={index === currentPage}
-                onClick={() => onPageChange(index)}
-              >
-                Page {index + 1} of {array.length}
-              </button>
-            </li>
-          )}
-        </For>
-      </ul>
-    </nav>
-  );
+	return (
+		<nav>
+			<ul>
+				<For each={pageCount}>
+					{(index, stillIndex, array) => (
+						<li key={index}>
+							<button disabled={index === currentPage} onClick={() => onPageChange(index)}>
+								Page {index + 1} of {array.length}
+							</button>
+						</li>
+					)}
+				</For>
+			</ul>
+		</nav>
+	);
 }
 
 // Creates sequence [0, 1, 2, 3, 4]
@@ -131,18 +128,16 @@ The For component comes in two variants:
 The basic For component lets you control the container element:
 
 ```tsx
-import { For } from '@zayne-labs/ui-react/common/for';
+import { For } from "@zayne-labs/ui-react/common/for";
 
 function ItemList() {
-  return (
-    <ul>
-      <For each={['item1', 'item2', 'item3']}>
-        {(item, index, array) => (
-          <li key={index}>{item}</li>
-        )}
-      </For>
-    </ul>
-  );
+	return (
+		<ul>
+			<For each={["item1", "item2", "item3"]}>
+				{(item, index, array) => <li key={index}>{item}</li>}
+			</For>
+		</ul>
+	);
 }
 ```
 
@@ -151,35 +146,28 @@ function ItemList() {
 ForWithWrapper creates the container element for you:
 
 ```tsx
-import { ForWithWrapper } from '@zayne-labs/ui-react/common/for';
+import { ForWithWrapper } from "@zayne-labs/ui-react/common/for";
 
 function ItemList() {
-  // Uses <ul> by default
-  return (
-    <ForWithWrapper
-      each={['item1', 'item2', 'item3']}
-      className="item-list"
-    >
-      {(item) => <li key={item}>{item}</li>}
-    </ForWithWrapper>
-  );
+	// Uses <ul> by default
+	return (
+		<ForWithWrapper each={["item1", "item2", "item3"]} className="item-list">
+			{(item) => <li key={item}>{item}</li>}
+		</ForWithWrapper>
+	);
 }
 
 // Can use any element type
 function NavMenu() {
-  return (
-    <ForWithWrapper
-      as="nav"
-      className="nav-menu"
-      each={['Home', 'About', 'Contact']}
-    >
-      {(item) => (
-        <a key={item} href={`/${item.toLowerCase()}`}>
-          {item}
-        </a>
-      )}
-    </ForWithWrapper>
-  );
+	return (
+		<ForWithWrapper as="nav" className="nav-menu" each={["Home", "About", "Contact"]}>
+			{(item) => (
+				<a key={item} href={`/${item.toLowerCase()}`}>
+					{item}
+				</a>
+			)}
+		</ForWithWrapper>
+	);
 }
 ```
 

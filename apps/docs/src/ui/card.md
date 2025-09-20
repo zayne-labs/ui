@@ -32,25 +32,23 @@ yarn add @zayne-labs/ui-react
 ## Basic Usage
 
 ```tsx
-import { Card } from '@zayne-labs/ui-react/ui/card'
+import { Card } from "@zayne-labs/ui-react/ui/card";
 
 function BasicCard() {
-  return (
-    <Card.Root className="border rounded-lg p-6 shadow-sm">
-      <Card.Header className="space-y-1.5 pb-4">
-        <Card.Title>Card Title</Card.Title>
-        <Card.Description>Card description goes here</Card.Description>
-      </Card.Header>
+	return (
+		<Card.Root className="rounded-lg border p-6 shadow-sm">
+			<Card.Header className="space-y-1.5 pb-4">
+				<Card.Title>Card Title</Card.Title>
+				<Card.Description>Card description goes here</Card.Description>
+			</Card.Header>
 
-      <Card.Content className="py-4">
-        This is the main content of the card.
-      </Card.Content>
+			<Card.Content className="py-4">This is the main content of the card.</Card.Content>
 
-      <Card.Footer className="pt-4 flex justify-end">
-        <button className="px-4 py-2 bg-blue-500 text-white rounded">Action</button>
-      </Card.Footer>
-    </Card.Root>
-  )
+			<Card.Footer className="flex justify-end pt-4">
+				<button className="rounded bg-blue-500 px-4 py-2 text-white">Action</button>
+			</Card.Footer>
+		</Card.Root>
+	);
 }
 ```
 
@@ -62,22 +60,18 @@ Change the underlying HTML element of any card part using the `as` prop:
 
 ```tsx
 function PolymorphicCard() {
-  return (
-    <Card.Root as="div" className="border rounded-lg p-6">
-      <Card.Header as="section">
-        <Card.Title as="h2">Custom Elements</Card.Title>
-        <Card.Description as="div">Using different HTML elements</Card.Description>
-      </Card.Header>
+	return (
+		<Card.Root as="div" className="rounded-lg border p-6">
+			<Card.Header as="section">
+				<Card.Title as="h2">Custom Elements</Card.Title>
+				<Card.Description as="div">Using different HTML elements</Card.Description>
+			</Card.Header>
 
-      <Card.Content as="section">
-        Content in a section instead of a div.
-      </Card.Content>
+			<Card.Content as="section">Content in a section instead of a div.</Card.Content>
 
-      <Card.Footer as="div">
-        Custom footer
-      </Card.Footer>
-    </Card.Root>
-  )
+			<Card.Footer as="div">Custom footer</Card.Footer>
+		</Card.Root>
+	);
 }
 ```
 
@@ -87,18 +81,18 @@ The `asChild` prop allows you to use your own component as the root element:
 
 ```tsx
 function CardWithAsChild() {
-  return (
-    <Card.Root className="border rounded-lg p-6">
-      {/* Other card parts */}
+	return (
+		<Card.Root className="rounded-lg border p-6">
+			{/* Other card parts */}
 
-      <Card.Footer asChild>
-        <div className="flex justify-between items-center pt-4">
-          <button>Cancel</button>
-          <button>Submit</button>
-        </div>
-      </Card.Footer>
-    </Card.Root>
-  )
+			<Card.Footer asChild>
+				<div className="flex items-center justify-between pt-4">
+					<button>Cancel</button>
+					<button>Submit</button>
+				</div>
+			</Card.Footer>
+		</Card.Root>
+	);
 }
 ```
 
@@ -106,22 +100,19 @@ function CardWithAsChild() {
 
 ```tsx
 function CardWithAction() {
-  return (
-    <Card.Root className="border rounded-lg p-6">
-      <Card.Header>
-        <Card.Title>Card with Action</Card.Title>
-        <Card.Description>This card has an action button in the header</Card.Description>
-        <Card.Action className="text-blue-500 hover:text-blue-700">
-          Edit
-        </Card.Action>
-      </Card.Header>
+	return (
+		<Card.Root className="rounded-lg border p-6">
+			<Card.Header>
+				<Card.Title>Card with Action</Card.Title>
+				<Card.Description>This card has an action button in the header</Card.Description>
+				<Card.Action className="text-blue-500 hover:text-blue-700">Edit</Card.Action>
+			</Card.Header>
 
-      <Card.Content>
-        Content of the card with an action button positioned in the top-right
-        corner of the header.
-      </Card.Content>
-    </Card.Root>
-  )
+			<Card.Content>
+				Content of the card with an action button positioned in the top-right corner of the header.
+			</Card.Content>
+		</Card.Root>
+	);
 }
 ```
 
@@ -129,24 +120,22 @@ function CardWithAction() {
 
 ```tsx
 function NestedCards() {
-  return (
-    <Card.Root className="border rounded-lg p-6">
-      <Card.Header>
-        <Card.Title>Parent Card</Card.Title>
-      </Card.Header>
+	return (
+		<Card.Root className="rounded-lg border p-6">
+			<Card.Header>
+				<Card.Title>Parent Card</Card.Title>
+			</Card.Header>
 
-      <Card.Content className="py-4">
-        <Card.Root className="border rounded-lg p-4 bg-gray-50">
-          <Card.Header>
-            <Card.Title>Nested Card</Card.Title>
-          </Card.Header>
-          <Card.Content>
-            This is a nested card within the parent card.
-          </Card.Content>
-        </Card.Root>
-      </Card.Content>
-    </Card.Root>
-  )
+			<Card.Content className="py-4">
+				<Card.Root className="rounded-lg border bg-gray-50 p-4">
+					<Card.Header>
+						<Card.Title>Nested Card</Card.Title>
+					</Card.Header>
+					<Card.Content>This is a nested card within the parent card.</Card.Content>
+				</Card.Root>
+			</Card.Content>
+		</Card.Root>
+	);
 }
 ```
 
@@ -255,7 +244,7 @@ All other styling is entirely up to you, giving complete freedom to match your d
 1. **Add border and padding to Card.Root:**
 
    ```tsx
-   <Card.Root className="border rounded-lg p-6" />
+   <Card.Root className="rounded-lg border p-6" />
    ```
 
 2. **Use spacing between card sections:**
@@ -269,16 +258,16 @@ All other styling is entirely up to you, giving complete freedom to match your d
 3. **Consider using a consistent approach to shadows:**
 
    ```tsx
-   <Card.Root className="shadow-sm hover:shadow-md transition-shadow duration-200" />
+   <Card.Root className="shadow-sm transition-shadow duration-200 hover:shadow-md" />
    ```
 
 4. **For clickable cards, remember accessibility:**
 
    ```tsx
    <Card.Root
-     as="button"
-     className="block w-full text-left cursor-pointer hover:bg-gray-50"
-     onClick={() => console.log('Card clicked')}
+   	as="button"
+   	className="block w-full cursor-pointer text-left hover:bg-gray-50"
+   	onClick={() => console.log("Card clicked")}
    />
    ```
 
@@ -293,34 +282,30 @@ When using Card components, consider these accessibility best practices:
 ## Example: Complete Card with Custom Styling
 
 ```tsx
-import { Card } from '@zayne-labs/ui-react/ui'
+import { Card } from "@zayne-labs/ui-react/ui";
 
 function ProductCard({ product }) {
-  return (
-    <Card.Root className="overflow-hidden border rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
-      <img
-        src={product.image}
-        alt={product.name}
-        className="w-full h-48 object-cover"
-      />
+	return (
+		<Card.Root className="overflow-hidden rounded-lg border shadow-sm transition-shadow duration-200 hover:shadow-md">
+			<img src={product.image} alt={product.name} className="h-48 w-full object-cover" />
 
-      <Card.Header className="p-4">
-        <Card.Title className="text-xl font-bold">{product.name}</Card.Title>
-        <Card.Description className="text-gray-600">{product.category}</Card.Description>
-      </Card.Header>
+			<Card.Header className="p-4">
+				<Card.Title className="text-xl font-bold">{product.name}</Card.Title>
+				<Card.Description className="text-gray-600">{product.category}</Card.Description>
+			</Card.Header>
 
-      <Card.Content className="px-4 pb-2">
-        <p>{product.description}</p>
-        <p className="font-bold text-lg mt-2">${product.price.toFixed(2)}</p>
-      </Card.Content>
+			<Card.Content className="px-4 pb-2">
+				<p>{product.description}</p>
+				<p className="mt-2 text-lg font-bold">${product.price.toFixed(2)}</p>
+			</Card.Content>
 
-      <Card.Footer className="p-4 bg-gray-50 flex justify-between items-center">
-        <button className="text-blue-500 hover:underline">Details</button>
-        <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-          Add to Cart
-        </button>
-      </Card.Footer>
-    </Card.Root>
-  )
+			<Card.Footer className="flex items-center justify-between bg-gray-50 p-4">
+				<button className="text-blue-500 hover:underline">Details</button>
+				<button className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600">
+					Add to Cart
+				</button>
+			</Card.Footer>
+		</Card.Root>
+	);
 }
 ```

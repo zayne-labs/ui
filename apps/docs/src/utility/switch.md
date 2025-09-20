@@ -28,24 +28,24 @@ Switch can be used in two ways:
 Like `switch(value)` in JavaScript - match a specific value against cases:
 
 ```tsx
-import { Switch } from '@zayne-labs/ui-react/common/switch';
+import { Switch } from "@zayne-labs/ui-react/common/switch";
 
 function UserRole({ role }) {
-  return (
-    <Switch.Root value={role}>
-      <Switch.Match when="admin">
-        <p>Admin Panel</p>
-      </Switch.Match>
+	return (
+		<Switch.Root value={role}>
+			<Switch.Match when="admin">
+				<p>Admin Panel</p>
+			</Switch.Match>
 
-      <Switch.Match when="moderator">
-        <p>Mod Tools</p>
-      </Switch.Match>
+			<Switch.Match when="moderator">
+				<p>Mod Tools</p>
+			</Switch.Match>
 
-      <Switch.Default>
-        <p>Welcome User</p>
-      </Switch.Default>
-    </Switch.Root>
-  );
+			<Switch.Default>
+				<p>Welcome User</p>
+			</Switch.Default>
+		</Switch.Root>
+	);
 }
 ```
 
@@ -54,24 +54,24 @@ function UserRole({ role }) {
 When no `value` prop is provided, Switch evaluates each `when` condition in order, similar to `switch(true)` in JavaScript:
 
 ```tsx
-import { Switch } from '@zayne-labs/ui-react/common/switch';
+import { Switch } from "@zayne-labs/ui-react/common/switch";
 
 function Counter({ count }) {
-  return (
-    <Switch.Root>
-      <Switch.Match when={count > 100}>
-        <p>Too many!</p>
-      </Switch.Match>
+	return (
+		<Switch.Root>
+			<Switch.Match when={count > 100}>
+				<p>Too many!</p>
+			</Switch.Match>
 
-      <Switch.Match when={count > 0}>
-        <p>{count} items</p>
-      </Switch.Match>
+			<Switch.Match when={count > 0}>
+				<p>{count} items</p>
+			</Switch.Match>
 
-      <Switch.Default>
-        <p>No items</p>
-      </Switch.Default>
-    </Switch.Root>
-  );
+			<Switch.Default>
+				<p>No items</p>
+			</Switch.Default>
+		</Switch.Root>
+	);
 }
 ```
 
@@ -98,19 +98,19 @@ In this mode, the first `when` condition that evaluates to `true` will be render
 ```tsx
 // Main Switch component props
 type SwitchProps = {
-  children: React.ReactElement<SwitchMatchProps> | React.ReactElement<SwitchMatchProps>[];
-  value?: unknown;
+	children: React.ReactElement<SwitchMatchProps> | React.ReactElement<SwitchMatchProps>[];
+	value?: unknown;
 };
 
 // Match component props
 type SwitchMatchProps<TWhen = unknown> = {
-  children: React.ReactNode | ((value: TWhen) => React.ReactNode);
-  when: TWhen | null | undefined | false;
+	children: React.ReactNode | ((value: TWhen) => React.ReactNode);
+	when: TWhen | null | undefined | false;
 };
 
 // Default component props
 type SwitchDefaultProps = {
-  children: React.ReactNode;
+	children: React.ReactNode;
 };
 ```
 
@@ -132,8 +132,8 @@ The Switch component:
 
 ## Alternatives
 
-| Method | Example | When to Use |
-|--------|---------|-------------|
-| If/Else | `if (x) return <A/>` | Simple conditions |
-| Ternary | `x ? <A/> : <B/>` | Single condition |
-| Switch | `<Switch><Match when={x}/>` | Multiple conditions |
+| Method  | Example                     | When to Use         |
+| ------- | --------------------------- | ------------------- |
+| If/Else | `if (x) return <A/>`        | Simple conditions   |
+| Ternary | `x ? <A/> : <B/>`           | Single condition    |
+| Switch  | `<Switch><Match when={x}/>` | Multiple conditions |

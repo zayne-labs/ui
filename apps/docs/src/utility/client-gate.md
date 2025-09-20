@@ -7,9 +7,13 @@ Render the children only after the JS has loaded client-side. Use an optional fa
 **Render a Chart component if JS loads, renders a simple FakeChart component server-side or if there is no JS. The FakeChart can have only the UI without the behavior or be a loading spinner or skeleton.**
 
 ```tsx
-import { ClientGate } from '@zayne-labs/ui-react/common/client-gate';
+import { ClientGate } from "@zayne-labs/ui-react/common/client-gate";
 
-return <ClientGate fallback={<FakeChart />}>{() => <Chart />}</ClientGate>;
+return (
+	<ClientGate fallback={<FakeChart />}>
+		<Chart />
+	</ClientGate>
+);
 ```
 
 ## API

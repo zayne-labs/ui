@@ -15,65 +15,65 @@ yarn add @zayne-labs/ui-react
 ### Basic Example
 
 ```tsx
-import { SuspenseWithBoundary } from '@zayne-labs/ui-react/common/suspense-with-boundary';
-import { lazy } from 'react';
+import { SuspenseWithBoundary } from "@zayne-labs/ui-react/common/suspense-with-boundary";
+import { lazy } from "react";
 
 // Lazy-loaded component
-const Chart = lazy(() => import('./Chart'));
+const Chart = lazy(() => import("./Chart"));
 
 function Dashboard() {
-  return (
-    <SuspenseWithBoundary
-      fallback={<div>Loading chart...</div>}
-      errorFallback={<div>Failed to load chart</div>}
-    >
-      <Chart data={data} />
-    </SuspenseWithBoundary>
-  );
+	return (
+		<SuspenseWithBoundary
+			fallback={<div>Loading chart...</div>}
+			errorFallback={<div>Failed to load chart</div>}
+		>
+			<Chart data={data} />
+		</SuspenseWithBoundary>
+	);
 }
 ```
 
 ### Data Fetching
 
 ```tsx
-import { SuspenseWithBoundary } from '@zayne-labs/ui-react/common/suspense-with-boundary';
-import { use } from 'react';
+import { SuspenseWithBoundary } from "@zayne-labs/ui-react/common/suspense-with-boundary";
+import { use } from "react";
 
 function UserProfile({ userId }: { userId: string }) {
-  const user = use(fetchUser(userId));
+	const user = use(fetchUser(userId));
 
-  return (
-    <div className="user-profile">
-      <h2>{user.name}</h2>
-      <p>{user.email}</p>
-    </div>
-  );
+	return (
+		<div className="user-profile">
+			<h2>{user.name}</h2>
+			<p>{user.email}</p>
+		</div>
+	);
 }
 
 function App() {
-  return (
-    <SuspenseWithBoundary
-      fallback={<div>Loading user...</div>}
-      errorFallback={({ error, reset }) => (
-        <div>
-          <p>Error: {error.message}</p>
-          <button onClick={reset}>Retry</button>
-        </div>
-      )}
-    >
-      <UserProfile userId="123" />
-    </SuspenseWithBoundary>
-  );
+	return (
+		<SuspenseWithBoundary
+			fallback={<div>Loading user...</div>}
+			errorFallback={({ error, reset }) => (
+				<div>
+					<p>Error: {error.message}</p>
+					<button onClick={reset}>Retry</button>
+				</div>
+			)}
+		>
+			<UserProfile userId="123" />
+		</SuspenseWithBoundary>
+	);
 }
 ```
 
 ## Props
 
-| Prop | Type | Description |
-|------|------|-------------|
-| `children` | `React.ReactNode` | Content that may suspend or throw errors |
-| `fallback` | `React.ReactNode` | UI to show while loading |
-| `errorFallback` | `React.ReactNode \| ((props: { error: Error; reset: () => void }) => React.ReactNode)` | UI to show on error |
+| Prop            | Type                                                                                   | Description                              |
+| --------------- | -------------------------------------------------------------------------------------- | ---------------------------------------- |
+| `children`      | `React.ReactNode`                                                                      | Content that may suspend or throw errors |
+| `fallback`      | `React.ReactNode`                                                                      | UI to show while loading                 |
+| `errorFallback` | `React.ReactNode \| ((props: { error: Error; reset: () => void }) => React.ReactNode)` | UI to show on error                      |
 
 ## Best Practices
 
