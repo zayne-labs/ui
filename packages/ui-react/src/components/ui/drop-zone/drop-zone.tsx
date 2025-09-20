@@ -30,7 +30,6 @@ import {
 	useDropZoneStoreContext,
 	useFileItemContext,
 } from "./drop-zone-context";
-import type { DropZoneStore } from "./drop-zone-store";
 import {
 	FileArchiveIcon,
 	FileAudioIcon,
@@ -40,7 +39,7 @@ import {
 	FileTextIcon,
 	FileVideoIcon,
 } from "./icons";
-import type { PartInputProps, UseDropZoneProps } from "./types";
+import type { DropZoneStore, PartInputProps, UseDropZoneProps } from "./types";
 import { useDropZone } from "./use-drop-zone";
 
 type DropZoneRootProps = UseDropZoneProps & { children: React.ReactNode };

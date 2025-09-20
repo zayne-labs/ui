@@ -25,31 +25,19 @@ pnpm add @zayne-labs/ui-react
 
 ## Usage
 
-Utilities can be imported from the main common module:
+Import utilities from their specific paths:
 
 ```tsx
-import {
- Await,
- Show,
- For,
- Switch,
- Slot,
- ErrorBoundary,
- SuspenseWithBoundary,
- Teleport,
- ClientGate,
- Presence,
-} from "@zayne-labs/ui-react";
-```
-
-Or import individual components:
-
-```tsx
-import { Await } from "@zayne-labs/ui-react";
-import { Show } from "@zayne-labs/ui-react";
-import { ClientGate } from "@zayne-labs/ui-react";
-import { Presence } from "@zayne-labs/ui-react";
-// etc.
+import { Await } from "@zayne-labs/ui-react/common/await";
+import { Show } from "@zayne-labs/ui-react/common/show";
+import { For } from "@zayne-labs/ui-react/common/for";
+import { Switch } from "@zayne-labs/ui-react/common/switch";
+import { Slot } from "@zayne-labs/ui-react/common/slot";
+import { ErrorBoundary } from "@zayne-labs/ui-react/common/error-boundary";
+import { SuspenseWithBoundary } from "@zayne-labs/ui-react/common/suspense-with-boundary";
+import { Teleport } from "@zayne-labs/ui-react/common/teleport";
+import { ClientGate } from "@zayne-labs/ui-react/common/client-gate";
+import { Presence } from "@zayne-labs/ui-react/common/presence";
 ```
 
 ## Documentation

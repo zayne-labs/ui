@@ -3,8 +3,8 @@ export {
 	CarouselCaption as Caption,
 	CarouselControls as Controls,
 	CarouselIndicator as Indicator,
-	CarouselIndicatorList as IndicatorGroup,
+	CarouselIndicatorList as IndicatorList,
 	CarouselItem as Item,
-	CarouselItemList as ItemGroup,
+	CarouselItemList as ItemList,
 	CarouselRoot as Root,
 } from "./carousel";

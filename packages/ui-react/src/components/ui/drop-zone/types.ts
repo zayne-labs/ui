@@ -32,8 +32,8 @@ export interface FileState {
 	id: string;
 	/**
 	 *  Preview URL for the file
-	 *  - Will be undefined if `disallowPreviewForNonImageFiles` is set to `true` and the file is not an image
-	 *  - Can also be undefined if `URL.createObjectURL` fails
+	 *  - Will be null if `disallowPreviewForNonImageFiles` is set to `true` and the file is not an image
+	 *  - Can also be null if `URL.createObjectURL` fails
 	 */
 	preview: string | undefined;
 	/**
@@ -145,6 +145,8 @@ export type DropZoneActions = {
 		) => void;
 	};
 };
+
+export type DropZoneStore = DropZoneActions & DropZoneState;
 
 export interface UseDropZoneResult
 	extends Pick<Required<UseDropZoneProps>, "disabled" | "disableInternalStateSubscription"> {

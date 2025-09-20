@@ -8,14 +8,14 @@ Manage component presence with animation support, handling mount/unmount states 
 import { Presence } from "@zayne-labs/ui-react/common/presence";
 
 function AnimatedDialog({ isOpen, onClose }) {
- return (
-  <Presence present={isOpen} onExitComplete={onClose}>
-   <div className="dialog animate-in fade-in">
-    <h2>Dialog Title</h2>
-    <p>Dialog content...</p>
-   </div>
-  </Presence>
- );
+	return (
+		<Presence present={isOpen} onExitComplete={onClose}>
+			<div className="dialog animate-in fade-in">
+				<h2>Dialog Title</h2>
+				<p>Dialog content...</p>
+			</div>
+		</Presence>
+	);
 }
 ```
 

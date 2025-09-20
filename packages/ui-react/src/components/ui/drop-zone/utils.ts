@@ -1,5 +1,5 @@
 import {
-	createFileUrl,
+	createFileURL,
 	type FileOrFileMeta,
 	type FileValidationErrorContextEach,
 	generateFileID as generateFileIDPrimitive,
@@ -15,7 +15,7 @@ export const createObjectURL = (
 ) => {
 	if (disallowPreviewForNonImageFiles && !file.type?.startsWith("image/")) return;
 
-	return createFileUrl(file);
+	return createFileURL(file);
 };
 
 export const clearObjectURL = (
@@ -79,11 +79,12 @@ export class DropZoneError extends Error {
 	constructor(
 		ctx: Pick<FileValidationErrorContextEach, "message"> & {
 			file?: FileValidationErrorContextEach["file"];
-		}
+		},
+		errorOptions?: ErrorOptions
 	) {
 		const { file, message } = ctx;
 
-		super(message);
+		super(message, errorOptions);
 
 		this.file = file;
 	}

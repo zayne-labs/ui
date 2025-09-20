@@ -25,11 +25,7 @@ import { DropZone } from "@zayne-labs/ui-react/ui/drop-zone";
 
 function FileUpload() {
 	return (
-		<DropZone.Root
-			allowedFileTypes={[".jpg", ".png", ".pdf"]}
-			maxFileSize={5} // MB
-			multiple={true}
-		>
+		<DropZone.Root allowedFileTypes={[".jpg", ".png", ".pdf"]} maxFileSize={{ mb: 5 }} multiple={true}>
 			<DropZone.Area className="rounded-lg border-2 border-dashed border-gray-300 p-8">
 				<p className="text-center text-gray-600">Drop files here or click to browse</p>
 			</DropZone.Area>
@@ -67,7 +63,7 @@ import { useDropZone } from "@zayne-labs/ui-react/ui/drop-zone";
 function CustomFileUpload() {
 	const { propGetters, storeApi } = useDropZone({
 		allowedFileTypes: [".jpg", ".png"],
-		maxFileSize: 5,
+		maxFileSize: { mb: 5 },
 		multiple: true,
 	});
 
@@ -109,13 +105,14 @@ function CustomFileUpload() {
 ## File Upload with Progress
 
 ```tsx
+import { useDropZone, type UseDropZoneProps, DropZoneError } from "@zayne-labs/ui-react/ui/drop-zone";
+
 function UploadWithProgress() {
-	const handleUpload = async ({ fileStateArray, onProgress, onSuccess, onError }) => {
+	const handleUpload: UseDropZoneProps["onUpload"] = async (ctx) => {
+		const { fileStateArray, onProgress, onSuccess, onError } = ctx;
+
 		for (const fileState of fileStateArray) {
 			try {
-				const formData = new FormData();
-				formData.append("file", fileState.file);
-
 				// Simulate upload progress
 				for (let progress = 0; progress <= 100; progress += 10) {
 					await new Promise((resolve) => setTimeout(resolve, 100));
@@ -125,8 +122,14 @@ function UploadWithProgress() {
 				onSuccess({ fileStateOrID: fileState.id });
 			} catch (error) {
 				onError({
-					fileStateOrID: fileState.id,
-					error: { message: "Upload failed" },
+					error: new DropZoneError(
+						{
+							file: fileState.file,
+							message: `File: ${fileState.file.name} upload did not finish successfully`,
+						},
+						{ cause: error }
+					),
+					fileStateOrID: fileState,
 				});
 			}
 		}

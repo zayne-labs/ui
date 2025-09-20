@@ -22,27 +22,27 @@ yarn add @zayne-labs/ui-react
 ## Basic Usage
 
 ```tsx
-import { Slot, Slottable } from '@zayne-labs/ui-react/common/slot';
+import { Slot } from "@zayne-labs/ui-react/common/slot";
 
 // Basic prop merging
 function Example() {
-  return (
-    <Slot className="parent-class">
-      <div className="child-class">Content</div>
-    </Slot>
-  );
+	return (
+		<Slot.Root className="parent-class">
+			<div className="child-class">Content</div>
+		</Slot.Root>
+	);
 }
 
 // Using Slottable for explicit slot designation
 function ComplexExample() {
-  return (
-    <Slot className="wrapper">
-      <Slottable>
-        <div className="target">This will receive merged props</div>
-      </Slottable>
-      <div>This is rendered normally</div>
-    </Slot>
-  );
+	return (
+		<Slot.Root className="wrapper">
+			<Slot.Slottable>
+				<div className="target">This will receive merged props</div>
+			</Slot.Slottable>
+			<div>This is rendered normally</div>
+		</Slot.Root>
+	);
 }
 ```
 
@@ -54,8 +54,8 @@ Accepts all valid HTML element props which will be merged with the child element
 
 ### Slottable Props
 
-| Prop | Type | Description |
-|------|------|-------------|
+| Prop       | Type              | Description                         |
+| ---------- | ----------------- | ----------------------------------- |
 | `children` | `React.ReactNode` | The element to receive merged props |
 
 ## Implementation Details

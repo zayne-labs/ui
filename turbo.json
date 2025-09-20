@@ -17,9 +17,6 @@
 		"knip": {
 			"cache": true
 		},
-		"lint:type-check": {
-			"outputs": [],
-			"cache": true
-		}
+		"lint:type-check": {}
 	}
 }

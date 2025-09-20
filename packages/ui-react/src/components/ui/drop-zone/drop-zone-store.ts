@@ -1,9 +1,6 @@
 import { createStore, handleFileValidationAsync, toArray } from "@zayne-labs/toolkit-core";
-import { isString } from "@zayne-labs/toolkit-type-helpers";
-import type { DropZoneActions, DropZoneState, UseDropZoneProps } from "./types";
+import type { DropZoneState, DropZoneStore, UseDropZoneProps } from "./types";
 import { clearObjectURL, createObjectURL, generateFileID, getErrorContext, isMatchingFile } from "./utils";
-
-export type DropZoneStore = DropZoneActions & DropZoneState;
 
 type RequiredUseDropZoneProps = {
 	[Key in keyof Required<UseDropZoneProps>]: UseDropZoneProps[Key] | undefined;
@@ -42,7 +39,7 @@ export const createDropZoneStore = (initStoreValues: InitStoreValues) => {
 	const initFileStateArray: DropZoneState["fileStateArray"] = initialFileArray.map((fileMeta) => ({
 		file: fileMeta,
 		id: fileMeta.id,
-		preview: isString(fileMeta.url) ? fileMeta.url : undefined,
+		preview: fileMeta.url,
 		progress: 0,
 		status: "idle",
 	}));

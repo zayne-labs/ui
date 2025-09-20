@@ -1,7 +1,6 @@
 import { createCustomContext } from "@zayne-labs/toolkit-react";
 import { createZustandContext } from "@zayne-labs/toolkit-react/zustand";
-import type { DropZoneStore } from "./drop-zone-store";
-import type { FileState, UseDropZoneResult } from "./types";
+import type { DropZoneStore, FileState, UseDropZoneResult } from "./types";
 
 const [DropZoneStoreContextProvider, useDropZoneStoreContext] = createZustandContext<DropZoneStore>({
 	hookName: "useDropZoneStoreContext",

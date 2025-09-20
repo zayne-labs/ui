@@ -28,20 +28,14 @@ pnpm add @zayne-labs/ui-react
 
 ## Usage
 
-Components can be imported from the main ui module:
+Import components from their specific paths:
 
 ```tsx
-import { Card, Carousel, DropZone, Form } from '@zayne-labs/ui-react/ui'
-import { useDragScroll } from '@zayne-labs/ui-react/ui'
-```
-
-Or import individual components:
-
-```tsx
-import { Card } from '@zayne-labs/ui-react/ui/card'
-import { Form } from '@zayne-labs/ui-react/ui/form'
-import { useDragScroll } from '@zayne-labs/ui-react/ui/drag-scroll'
-// etc.
+import { Card } from "@zayne-labs/ui-react/ui/card";
+import { Carousel } from "@zayne-labs/ui-react/ui/carousel";
+import { DropZone } from "@zayne-labs/ui-react/ui/drop-zone";
+import { Form } from "@zayne-labs/ui-react/ui/form";
+import { useDragScroll } from "@zayne-labs/ui-react/ui/drag-scroll";
 ```
 
 ## Documentation

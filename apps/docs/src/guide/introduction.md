@@ -67,40 +67,31 @@ yarn add @zayne-labs/ui-react
 Here's a drag-and-drop file uploader:
 
 ```tsx
-import { DropZone } from '@zayne-labs/ui-react/ui/drop-zone'
+import { DropZone } from "@zayne-labs/ui-react/ui/drop-zone";
 
 function ImageUploader() {
-  return (
-    <DropZone.Root
-      allowedFileTypes={['image/*']}
-      maxFileCount={4}
-      onUploadSuccess={(ctx) => console.log("Success", ctx.message)}
-      maxFileSize={5}
-    >
-      <DropZone.Area>
-        <div className="p-6 border rounded-lg bg-gray-50">
-          <p className="text-center text-gray-600">
-            Drop images or click to upload
-          </p>
-        </div>
-      </DropZone.Area>
+	return (
+		<DropZone.Root allowedFileTypes={["image/*"]} maxFileCount={4} maxFileSize={5}>
+			<DropZone.Area className="rounded-lg border bg-gray-50 p-6">
+				<p className="text-center text-gray-600">Drop images or click to upload</p>
+			</DropZone.Area>
 
-      <DropZone.FilePreview>
-        {(ctx) => (
-          <div className="mt-4 grid grid-cols-4 gap-2">
-            {ctx.fileStateArray.map((fileState) => (
-              <img
-                key={fileState.id}
-                src={fileState.preview}
-                alt={fileState.file.name}
-                className="rounded-lg aspect-square object-cover"
-              />
-            ))}
-          </div>
-        )}
-      </DropZone.FilePreview>
-    </DropZone.Root>
-  )
+			<DropZone.FileList>
+				{({ fileStateArray }) => (
+					<div className="mt-4 grid grid-cols-4 gap-2">
+						{fileStateArray.map((fileState) => (
+							<img
+								key={fileState.id}
+								src={fileState.preview}
+								alt={fileState.file.name}
+								className="aspect-square rounded-lg object-cover"
+							/>
+						))}
+					</div>
+				)}
+			</DropZone.FileList>
+		</DropZone.Root>
+	);
 }
 ```
 
@@ -109,27 +100,27 @@ function ImageUploader() {
 Handle different states with `Switch`:
 
 ```tsx
-import { Switch } from '@zayne-labs/ui-react/common'
+import { Switch } from "@zayne-labs/ui-react/common/switch";
 
-function StatusBadge({ status }: { status: 'active' | 'inactive' | 'pending' }) {
-  return (
-    <Switch.Root value={status}>
-      <Switch.Match when="active">
-        <span className="text-green-500">●</span>
-        <span>Active</span>
-      </Switch.Match>
+function StatusBadge({ status }: { status: "active" | "inactive" | "pending" }) {
+	return (
+		<Switch.Root value={status}>
+			<Switch.Match when="active">
+				<span className="text-green-500">●</span>
+				<span>Active</span>
+			</Switch.Match>
 
-      <Switch.Match when="inactive">
-        <span className="text-gray-500">○</span>
-        <span>Inactive</span>
-      </Switch.Match>
+			<Switch.Match when="inactive">
+				<span className="text-gray-500">○</span>
+				<span>Inactive</span>
+			</Switch.Match>
 
-      <Switch.Default>
-        <span className="text-yellow-500">◐</span>
-        <span>Pending</span>
-      </Switch.Default>
-    </Switch.Root>
-  )
+			<Switch.Default>
+				<span className="text-yellow-500">◐</span>
+				<span>Pending</span>
+			</Switch.Default>
+		</Switch.Root>
+	);
 }
 ```
 
