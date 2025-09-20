@@ -81,11 +81,11 @@ importers:
         specifier: ^1.10.3
         version: 1.10.3
       '@zayne-labs/toolkit-core':
-        specifier: 0.11.10
-        version: 0.11.10
+        specifier: 0.11.11
+        version: 0.11.11
       '@zayne-labs/toolkit-react':
-        specifier: 0.11.10
-        version: 0.11.10(@types/react@19.1.13)(react@19.1.1)(zustand@5.0.8(@types/react@19.1.13)(react@19.1.1))
+        specifier: 0.11.11
+        version: 0.11.11(@types/react@19.1.13)(react@19.1.1)(zustand@5.0.8(@types/react@19.1.13)(react@19.1.1))
       '@zayne-labs/ui-react':
         specifier: workspace:*
         version: link:../../packages/ui-react
@@ -161,14 +161,14 @@ importers:
   packages/ui-react:
     dependencies:
       '@zayne-labs/toolkit-core':
-        specifier: 0.11.10
-        version: 0.11.10
+        specifier: 0.11.11
+        version: 0.11.11
       '@zayne-labs/toolkit-react':
-        specifier: 0.11.10
-        version: 0.11.10(@types/react@19.1.13)(react@19.1.1)(zustand@5.0.8(@types/react@19.1.13)(react@19.1.1))
+        specifier: 0.11.11
+        version: 0.11.11(@types/react@19.1.13)(react@19.1.1)(zustand@5.0.8(@types/react@19.1.13)(react@19.1.1))
       '@zayne-labs/toolkit-type-helpers':
-        specifier: 0.11.10
-        version: 0.11.10
+        specifier: 0.11.11
+        version: 0.11.11
     devDependencies:
       '@arethetypeswrong/cli':
         specifier: 0.18.2
@@ -1813,12 +1813,12 @@ packages:
     resolution: {integrity: sha512-P88DxvSJ8CTQrPq00y/MpBUZ6iBlwV0BAd3QuKMLe5zTQeIdwdj9WL0P1cxF2bhdT88jjpjFqYsSHTdtD5eRuA==}
     engines: {node: '>=18.x'}
 
-  '@zayne-labs/toolkit-core@0.11.10':
-    resolution: {integrity: sha512-PU4KmnETx6Dx7CfOS2sYR95txmL1VZ4OOWY/q2CPNKtBlH/51DKDuo0/+NAOaU1JiPyNu8ZL+hZdPGZP3FKexg==}
+  '@zayne-labs/toolkit-core@0.11.11':
+    resolution: {integrity: sha512-uptNnuEsS2PyDHMT4y2fbbKw/DPqoRLlWYDpYWhIqvV+PvxYkgNdy5rHqgQPQ/hDbQdkL1XQxSACdqwsMmQzXA==}
     engines: {node: '>=18.x'}
 
-  '@zayne-labs/toolkit-react@0.11.10':
-    resolution: {integrity: sha512-fDSwz/+W7c91E6JUnbtc+dI2EPJwvIc2SY7p9BLlvBltlW78dAldRyfF8SQw/BaSPsDcEJ7ip6o69hjARxwGSw==}
+  '@zayne-labs/toolkit-react@0.11.11':
+    resolution: {integrity: sha512-rNz3lsTqUP1e6zYhI1fOJ2p0UBbIywRzcrRvQmnYfFRV8FJMxuo+wagZ8HJzKhgrr4U/9+pslU2QNOYBdrrubQ==}
     engines: {node: '>=18.x'}
     peerDependencies:
       '@types/react': '>=19.0.0'
@@ -1840,8 +1840,8 @@ packages:
     resolution: {integrity: sha512-g3lNLYH45XG5bXkkOC+zSCYYIAzTqLUr6AyYQizpjH20yBDzSkQ8J9FtCANP9h3Xa2jPAt2iYjfnqzJLr+YjmA==}
     engines: {node: '>=18.x'}
 
-  '@zayne-labs/toolkit-type-helpers@0.11.10':
-    resolution: {integrity: sha512-C+xzeuKxKcBMLH+N64HYCimvxxMqKFV8q8tGn7VDY22XoEYfVYHQnDMW+bEVtC0bNjOFV4wWH/w69lmzApdvDQ==}
+  '@zayne-labs/toolkit-type-helpers@0.11.11':
+    resolution: {integrity: sha512-yoeHowIN81Wgf2rdH3H4HIV8wMPemEIhX6Tx1DxS5qqc5S7GaD3k51ffvN1LUpbHmKdL21wckqUmzXIKh9Y7Lg==}
     engines: {node: '>=18.x'}
 
   '@zayne-labs/tsconfig@0.9.15':
@@ -5554,14 +5554,14 @@ snapshots:
     dependencies:
       '@zayne-labs/toolkit-type-helpers': 0.10.26
 
-  '@zayne-labs/toolkit-core@0.11.10':
+  '@zayne-labs/toolkit-core@0.11.11':
     dependencies:
-      '@zayne-labs/toolkit-type-helpers': 0.11.10
+      '@zayne-labs/toolkit-type-helpers': 0.11.11
 
-  '@zayne-labs/toolkit-react@0.11.10(@types/react@19.1.13)(react@19.1.1)(zustand@5.0.8(@types/react@19.1.13)(react@19.1.1))':
+  '@zayne-labs/toolkit-react@0.11.11(@types/react@19.1.13)(react@19.1.1)(zustand@5.0.8(@types/react@19.1.13)(react@19.1.1))':
     dependencies:
-      '@zayne-labs/toolkit-core': 0.11.10
-      '@zayne-labs/toolkit-type-helpers': 0.11.10
+      '@zayne-labs/toolkit-core': 0.11.11
+      '@zayne-labs/toolkit-type-helpers': 0.11.11
     optionalDependencies:
       '@types/react': 19.1.13
       react: 19.1.1
@@ -5571,7 +5571,7 @@ snapshots:
 
   '@zayne-labs/toolkit-type-helpers@0.10.26': {}
 
-  '@zayne-labs/toolkit-type-helpers@0.11.10': {}
+  '@zayne-labs/toolkit-type-helpers@0.11.11': {}
 
   '@zayne-labs/tsconfig@0.9.15': {}
 
