@@ -13,7 +13,7 @@ export function CardRoot<TElement extends React.ElementType = "article">(
 			data-scope="card"
 			data-part="root"
 			data-slot="card-root"
-			className={cnMerge("flex flex-col gap-6 rounded-xl border shadow-sm", className)}
+			className={cnMerge("flex flex-col rounded-xl border shadow-sm", className)}
 			{...restOfProps}
 		/>
 	);
