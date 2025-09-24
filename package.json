@@ -23,7 +23,7 @@
 		"lint:size": "turbo run --filter=./packages/* lint:size",
 		"lint:type-check": "turbo run --filter=./packages/* lint:type-check",
 		"prepare": "husky",
-		"release": "pnpm --filter \"./packages/*\" release",
+		"release": "pnpm --filter=./packages/* release",
 		"release:test": "pnpx pkg-pr-new publish ./packages/* --compact"
 	},
 	"devDependencies": {
