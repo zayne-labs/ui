@@ -6,14 +6,14 @@ import { cnMerge } from "@/lib/utils/cn";
 export function CardRoot<TElement extends React.ElementType = "article">(
 	props: PolymorphicProps<TElement>
 ) {
-	const { as: Element = "article", ...restOfProps } = props;
+	const { as: Element = "article", className, ...restOfProps } = props;
 
 	return (
 		<Element
 			data-scope="card"
 			data-part="root"
 			data-slot="card-root"
-			className="flex flex-col gap-6 rounded-xl border py-6 shadow-sm"
+			className={cnMerge("flex flex-col gap-6 rounded-xl border shadow-sm", className)}
 			{...restOfProps}
 		/>
 	);
@@ -30,7 +30,7 @@ export function CardHeader<TElement extends React.ElementType = "header">(
 			data-part="header"
 			data-slot="card-header"
 			className={cnMerge(
-				`grid auto-rows-min grid-rows-[auto_auto] items-start gap-1.5 px-3
+				`grid auto-rows-min grid-rows-[auto_auto] items-start gap-1.5
 				has-data-[slot=card-action]:grid-cols-[1fr_auto]`,
 				className
 			)}
@@ -79,7 +79,7 @@ export function CardContent<TElement extends React.ElementType = "div">(
 			data-scope="card"
 			data-part="content"
 			data-slot="card-content"
-			className={cnMerge("px-3", className)}
+			className={className}
 			{...restOfProps}
 		/>
 	);
@@ -111,7 +111,7 @@ export function CardFooter<TElement extends React.ElementType = "footer">(
 			data-scope="card"
 			data-part="footer"
 			data-slot="card-footer"
-			className={cnMerge("px-6", className)}
+			className={className}
 			{...restOfProps}
 		/>
 	);
