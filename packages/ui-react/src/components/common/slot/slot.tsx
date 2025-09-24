@@ -27,12 +27,12 @@ export function SlotRoot(props: SlotProps) {
 	// == The new element to render is the one passed as a child of `Slot.Slottable`
 	const newElement = slottable.props.children;
 
-	if (!isValidElement(newElement)) {
-		return null;
-	}
-
 	if (Children.count(newElement) > 1) {
 		return Children.only(null);
+	}
+
+	if (!isValidElement(newElement)) {
+		return null;
 	}
 
 	const newChildren = childrenArray.map((child) => {
@@ -70,25 +70,23 @@ type SlotCloneProps = {
 function SlotClone(props: SlotCloneProps) {
 	const { children, ref: forwardedRef, ...restOfSlotProps } = props;
 
-	const resolvedChild = children;
-
-	if (!isValidElement<UnknownObject>(resolvedChild)) {
-		return null;
-	}
-
-	if (Children.count(resolvedChild) > 1) {
+	if (Children.count(children) > 1) {
 		return Children.only(null);
 	}
 
-	const childRef = (resolvedChild.props.ref
-		?? (resolvedChild as unknown as UnknownObject).ref) as React.Ref<HTMLElement>;
+	if (!isValidElement<UnknownObject>(children)) {
+		return null;
+	}
+
+	const childRef = (children.props.ref
+		?? (children as unknown as UnknownObject).ref) as React.Ref<HTMLElement>;
 
 	const ref = forwardedRef ? composeRefs(forwardedRef, childRef) : childRef;
 
 	const clonedProps = {
-		...mergeProps(restOfSlotProps, resolvedChild.props),
-		...(resolvedChild.type !== ReactFragment && { ref }),
+		...mergeProps(restOfSlotProps, children.props),
+		...(children.type !== ReactFragment && { ref }),
 	};
 
-	return cloneElement(resolvedChild, clonedProps);
+	return cloneElement(children, clonedProps);
 }

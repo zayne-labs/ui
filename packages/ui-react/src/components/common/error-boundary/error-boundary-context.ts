@@ -6,9 +6,10 @@ export type ErrorBoundaryContextType = {
 	resetErrorBoundary: (...args: unknown[]) => void;
 };
 
-export const [ErrorBoundaryContext, useErrorBoundaryContext] =
-	createCustomContext<ErrorBoundaryContextType>({
-		hookName: "useErrorBoundaryContext",
-		name: "ErrorBoundaryContext",
-		providerName: "ErrorBoundaryContextProvider",
-	});
+const [ErrorBoundaryContext, useErrorBoundaryContext] = createCustomContext<ErrorBoundaryContextType>({
+	hookName: "useErrorBoundaryContext",
+	name: "ErrorBoundaryContext",
+	providerName: "ErrorBoundaryContextProvider",
+});
+
+export { ErrorBoundaryContext, useErrorBoundaryContext };
