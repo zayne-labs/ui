@@ -29,11 +29,7 @@ export function CardHeader<TElement extends React.ElementType = "header">(
 			data-scope="card"
 			data-part="header"
 			data-slot="card-header"
-			className={cnMerge(
-				`grid auto-rows-min grid-rows-[auto_auto] items-start gap-1.5
-				has-data-[slot=card-action]:grid-cols-[1fr_auto]`,
-				className
-			)}
+			className={className}
 			{...restOfProps}
 		/>
 	);
@@ -93,7 +89,7 @@ export function CardAction<TElement extends React.ElementType = "div">(props: Po
 			data-scope="card"
 			data-part="action"
 			data-slot="card-action"
-			className={cnMerge("col-start-2 row-span-2 row-start-1 self-start justify-self-end", className)}
+			className={className}
 			{...restOfProps}
 		/>
 	);
