@@ -319,7 +319,7 @@ type FormSelectPrimitiveProps<TFieldValues extends FieldValues = FieldValues> =
 		name?: FieldPath<TFieldValues>;
 	};
 
-const inputTypesWithoutFullWith = new Set<React.HTMLInputTypeAttribute>(["checkbox", "radio"]);
+const inputTypesWithoutFullWidth = new Set<React.HTMLInputTypeAttribute>(["checkbox", "radio"]);
 
 export function FormInputPrimitive<TFieldValues extends FieldValues>(
 	props: FormInputPrimitiveProps<TFieldValues> & { rules?: RegisterOptions }
@@ -382,10 +382,12 @@ export function FormInputPrimitive<TFieldValues extends FieldValues>(
 				name={name}
 				type={type === "password" && isPasswordVisible ? "text" : type}
 				className={cnMerge(
-					!inputTypesWithoutFullWith.has(type) && "flex w-full",
-					`bg-transparent text-sm file:border-0 file:bg-transparent
+					!inputTypesWithoutFullWidth.has(type) && "w-full min-w-0",
+					`bg-transparent text-sm outline-hidden transition-[color,box-shadow] selection:bg-zu-primary
+					selection:text-zu-primary-foreground file:inline-flex file:h-7 file:border-0
+					file:bg-transparent file:font-medium file:text-zu-foreground
 					placeholder:text-zu-muted-foreground focus-visible:outline-hidden
-					disabled:cursor-not-allowed disabled:opacity-50`,
+					disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50`,
 					className,
 					classNames?.input,
 					type !== "password" && isInvalid && classNames?.error
