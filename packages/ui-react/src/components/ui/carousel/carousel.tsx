@@ -162,11 +162,11 @@ export function CarouselControls(props: CarouselControlProps) {
 	);
 }
 
-export function CarouselItemList<TArrayItem>(props: CarouselWrapperProps<TArrayItem>) {
+export function CarouselItemList<TArray extends unknown[]>(props: CarouselWrapperProps<TArray[number]>) {
 	const { children, className, each } = props;
 
 	const currentSlide = useCarouselStoreContext((state) => state.currentSlide);
-	const images = useCarouselStoreContext((state) => each ?? (state.images as TArrayItem[]));
+	const images = useCarouselStoreContext((state) => each ?? (state.images as TArray));
 
 	return (
 		<ul
@@ -224,10 +224,12 @@ export function CarouselCaption<TElement extends React.ElementType = "div">(
 	);
 }
 
-export function CarouselIndicatorList<TArrayItem>(props: CarouselWrapperProps<TArrayItem>) {
+export function CarouselIndicatorList<TArray extends unknown[]>(
+	props: CarouselWrapperProps<TArray[number]>
+) {
 	const { children, className, each } = props;
 
-	const images = useCarouselStoreContext((state) => each ?? (state.images as TArrayItem[]));
+	const images = useCarouselStoreContext((state) => each ?? (state.images as TArray));
 
 	return (
 		<ul
