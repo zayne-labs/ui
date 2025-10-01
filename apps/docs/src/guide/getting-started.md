@@ -63,7 +63,7 @@ Components work great with Tailwind classes (as shown above). Import the base st
 ```css
 /* styles/globals.css */
 @import "tailwindcss";
-@import "@zayne-labs/ui-react/style.css";
+@import "@zayne-labs/ui-react/css/preset.css";
 ```
 
 ### Without Tailwind CSS
