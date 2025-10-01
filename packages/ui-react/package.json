@@ -1,7 +1,7 @@
 {
 	"name": "@zayne-labs/ui-react",
 	"type": "module",
-	"version": "0.10.27",
+	"version": "0.10.28",
 	"packageManager": "pnpm@9.15.4",
 	"description": "A composable UI/UI-utilities components library. ",
 	"author": "Ryan Zayne",
