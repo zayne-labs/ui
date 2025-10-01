@@ -61,9 +61,6 @@
 		},
 		"tailwindcss": {
 			"optional": true
-		},
-		"zustand": {
-			"optional": true
 		}
 	},
 	"dependencies": {
