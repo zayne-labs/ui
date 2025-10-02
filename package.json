@@ -14,7 +14,7 @@
 		"dev:react": "turbo run --filter=./packages/ui-react dev",
 		"inspect:eslint-config": "pnpx @eslint/config-inspector@latest",
 		"lint:attw": "turbo run --filter=./packages/* lint:attw",
-		"lint:eslint": "turbo run --filter=./packages/* lint:eslint",
+		"lint:eslint": "turbo run --filter=./packages/* --filter=./apps/* lint:eslint",
 		"lint:eslint:interactive": "turbo run --filter=./packages/* lint:eslint:interactive",
 		"lint:eslint:root": "eslint . --max-warnings 0",
 		"lint:eslint:root:interactive": "pnpx eslint-interactive@latest . --max-warnings 0 --fix",
