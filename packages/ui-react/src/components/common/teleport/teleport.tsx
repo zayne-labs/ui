@@ -2,7 +2,7 @@
 
 import { type AnyString, isString } from "@zayne-labs/toolkit-type-helpers";
 import * as React from "react";
-import { useEffect, useState } from "react";
+import { useEffectEvent, useInsertionEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
 type ValidHtmlTags = keyof HTMLElementTagNameMap;
@@ -18,19 +18,21 @@ function Teleport(props: PortalProps) {
 
 	const [portalContainer, setPortalContainer] = useState<HTMLElement | null>(null);
 
-	/* eslint-disable react-hooks-extra/no-direct-set-state-in-use-effect -- Allow */
+	const updatePortalContainer = useEffectEvent((destination: HTMLElement | null) => {
+		setPortalContainer(destination);
+	});
 
-	useEffect(() => {
+	useInsertionEffect(() => {
 		if (!to) return;
 
 		if (insertPosition) return;
 
 		const destination = isString(to) ? document.querySelector<HTMLElement>(to) : to;
 
-		destination && setPortalContainer(destination);
+		destination && updatePortalContainer(destination);
 	}, [to, insertPosition]);
 
-	useEffect(() => {
+	useInsertionEffect(() => {
 		if (!to) return;
 
 		if (!insertPosition) return;
@@ -42,14 +44,12 @@ function Teleport(props: PortalProps) {
 
 		destination?.insertAdjacentElement(insertPosition, tempWrapper);
 
-		setPortalContainer(tempWrapper);
+		updatePortalContainer(tempWrapper);
 
 		return () => {
 			tempWrapper.remove();
 		};
 	}, [to, insertPosition]);
-
-	/* eslint-enable react-hooks-extra/no-direct-set-state-in-use-effect -- Allow */
 
 	return portalContainer && createPortal(children, portalContainer);
 }

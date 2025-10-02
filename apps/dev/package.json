@@ -15,7 +15,7 @@
 		"@zayne-labs/callapi": "^1.10.6",
 		"@zayne-labs/toolkit-core": "0.11.21",
 		"@zayne-labs/toolkit-react": "0.11.21",
-		"@zayne-labs/ui-react": "^0.10.28",
+		"@zayne-labs/ui-react": "workspace:*",
 		"react": "19.2.0",
 		"react-dom": "19.2.0",
 		"react-hook-form": "^7.63.0",
@@ -24,7 +24,7 @@
 	},
 	"devDependencies": {
 		"@tailwindcss/vite": "^4.1.14",
-		"@types/node": "^24.6.1",
+		"@types/node": "^24.6.2",
 		"@types/react": "19.2.0",
 		"@types/react-dom": "19.2.0",
 		"@vitejs/plugin-react": "^5.0.4",
@@ -35,6 +35,6 @@
 		"tailwindcss": "^4.1.14",
 		"tsx": "^4.20.6",
 		"typescript": "5.9.3",
-		"vite": "npm:rolldown-vite@^7.1.14"
+		"vite": "npm:rolldown-vite@^7.1.15"
 	}
 }

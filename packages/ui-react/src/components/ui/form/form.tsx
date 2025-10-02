@@ -101,9 +101,9 @@ type FormFieldProps<TControl, TFieldValues extends FieldValues> = (TControl exte
 export function FormField<TControl, TFieldValues extends FieldValues = FieldValues>(
 	props: FormFieldProps<TControl, TFieldValues>
 ) {
-	const { children, className, name, withWrapper = true } = props;
+	const { children, className, control, name, withWrapper = true } = props;
 
-	const { isDisabled, isInvalid } = useLaxFormFieldState({ name });
+	const { isDisabled, isInvalid } = useLaxFormFieldState({ control, name });
 
 	const uniqueId = useId();
 
@@ -787,6 +787,7 @@ type FormErrorMessageProps<TControl, TFieldValues extends FieldValues> =
 			})
 	| {
 			className?: string;
+			// eslint-disable-next-line react-x/no-unused-props -- This is just for type inference
 			control?: never;
 			errorField: string;
 			type: "root";

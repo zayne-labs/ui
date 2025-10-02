@@ -1,5 +1,5 @@
-import { off, on } from "@zayne-labs/toolkit-core";
-import { useCallbackRef } from "@zayne-labs/toolkit-react";
+import { on } from "@zayne-labs/toolkit-core";
+import { useCallbackRef, useLazyRef } from "@zayne-labs/toolkit-react";
 import { composeRefs, type InferProps, mergeTwoProps } from "@zayne-labs/toolkit-react/utils";
 import { type RefCallback, useCallback, useMemo, useRef } from "react";
 import { cnMerge } from "@/lib/utils/cn";
@@ -37,6 +37,12 @@ const useDragScroll = <TElement extends HTMLElement, TItemElement extends HTMLEl
 
 	const positionRef = useRef({ left: 0, top: 0, x: 0, y: 0 });
 
+	const abortControllersRef = useLazyRef(() => ({
+		mouseLeave: new AbortController(),
+		mouseMove: new AbortController(),
+		mouseUp: new AbortController(),
+	}));
+
 	const handleMouseMove = useCallbackRef((event: MouseEvent) => {
 		if (!dragContainerRef.current) return;
 
@@ -60,11 +66,11 @@ const useDragScroll = <TElement extends HTMLElement, TItemElement extends HTMLEl
 	const handleMouseUpOrLeave = useCallbackRef(() => {
 		if (!dragContainerRef.current) return;
 
-		off("mousemove", dragContainerRef.current, handleMouseMove);
-		off("mouseup", dragContainerRef.current, handleMouseUpOrLeave);
-		off("mouseleave", dragContainerRef.current, handleMouseUpOrLeave);
-
 		resetCursor(dragContainerRef.current);
+
+		abortControllersRef.current.mouseMove.abort();
+		abortControllersRef.current.mouseUp.abort();
+		abortControllersRef.current.mouseLeave.abort();
 	});
 
 	const handleMouseDown = useCallbackRef((event: MouseEvent) => {
@@ -86,9 +92,15 @@ const useDragScroll = <TElement extends HTMLElement, TItemElement extends HTMLEl
 
 		updateCursor(dragContainerRef.current);
 
-		on("mousemove", dragContainerRef.current, handleMouseMove);
-		on("mouseup", dragContainerRef.current, handleMouseUpOrLeave);
-		on("mouseleave", dragContainerRef.current, handleMouseUpOrLeave);
+		on("mousemove", dragContainerRef.current, handleMouseMove, {
+			signal: abortControllersRef.current.mouseMove.signal,
+		});
+		on("mouseup", dragContainerRef.current, handleMouseUpOrLeave, {
+			signal: abortControllersRef.current.mouseUp.signal,
+		});
+		on("mouseleave", dragContainerRef.current, handleMouseUpOrLeave, {
+			signal: abortControllersRef.current.mouseLeave.signal,
+		});
 	});
 
 	const refCallBack: RefCallback<TElement> = useCallbackRef((node) => {
