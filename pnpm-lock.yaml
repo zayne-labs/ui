@@ -19,7 +19,7 @@ importers:
         version: 24.6.1
       '@zayne-labs/eslint-config':
         specifier: 0.10.4
-        version: 0.10.4(@eslint-react/eslint-plugin@2.0.5(eslint@9.36.0(jiti@2.6.1))(typescript@5.9.3))(@typescript-eslint/utils@8.45.0(eslint@9.36.0(jiti@2.6.1))(typescript@5.9.3))(eslint-plugin-better-tailwindcss@3.7.9(eslint@9.36.0(jiti@2.6.1))(tailwindcss@4.1.14))(eslint-plugin-react-hooks@6.1.0(eslint@9.36.0(jiti@2.6.1)))(eslint-plugin-react-refresh@0.4.23(eslint@9.36.0(jiti@2.6.1)))(eslint@9.36.0(jiti@2.6.1))(typescript@5.9.3)
+        version: 0.10.4(@eslint-react/eslint-plugin@2.0.5(eslint@9.36.0(jiti@2.6.1))(typescript@5.9.3))(@typescript-eslint/utils@8.45.0(eslint@9.36.0(jiti@2.6.1))(typescript@5.9.3))(eslint-plugin-better-tailwindcss@3.7.9(eslint@9.36.0(jiti@2.6.1))(tailwindcss@4.1.14))(eslint-plugin-react-hooks@6.1.0(eslint@9.36.0(jiti@2.6.1)))(eslint-plugin-react-refresh@0.4.23(eslint@9.36.0(jiti@2.6.1)))(eslint-plugin-react-you-might-not-need-an-effect@0.5.5(eslint@9.36.0(jiti@2.6.1)))(eslint@9.36.0(jiti@2.6.1))(typescript@5.9.3)
       '@zayne-labs/prettier-config':
         specifier: ^0.10.4
         version: 0.10.4
@@ -41,6 +41,9 @@ importers:
       eslint-plugin-react-refresh:
         specifier: ^0.4.23
         version: 0.4.23(eslint@9.36.0(jiti@2.6.1))
+      eslint-plugin-react-you-might-not-need-an-effect:
+        specifier: ^0.5.5
+        version: 0.5.5(eslint@9.36.0(jiti@2.6.1))
       husky:
         specifier: 9.1.7
         version: 9.1.7
@@ -122,7 +125,7 @@ importers:
         version: 5.0.4(rolldown-vite@7.1.14(@types/node@24.6.1)(esbuild@0.25.10)(jiti@2.6.1)(tsx@4.20.6)(yaml@2.8.1))
       '@zayne-labs/eslint-config':
         specifier: 0.10.4
-        version: 0.10.4(@eslint-react/eslint-plugin@2.0.5(eslint@9.36.0(jiti@2.6.1))(typescript@5.9.3))(@typescript-eslint/utils@8.45.0(eslint@9.36.0(jiti@2.6.1))(typescript@5.9.3))(eslint-plugin-better-tailwindcss@3.7.9(eslint@9.36.0(jiti@2.6.1))(tailwindcss@4.1.14))(eslint-plugin-react-hooks@6.1.0(eslint@9.36.0(jiti@2.6.1)))(eslint-plugin-react-refresh@0.4.23(eslint@9.36.0(jiti@2.6.1)))(eslint@9.36.0(jiti@2.6.1))(typescript@5.9.3)
+        version: 0.10.4(@eslint-react/eslint-plugin@2.0.5(eslint@9.36.0(jiti@2.6.1))(typescript@5.9.3))(@typescript-eslint/utils@8.45.0(eslint@9.36.0(jiti@2.6.1))(typescript@5.9.3))(eslint-plugin-better-tailwindcss@3.7.9(eslint@9.36.0(jiti@2.6.1))(tailwindcss@4.1.14))(eslint-plugin-react-hooks@6.1.0(eslint@9.36.0(jiti@2.6.1)))(eslint-plugin-react-refresh@0.4.23(eslint@9.36.0(jiti@2.6.1)))(eslint-plugin-react-you-might-not-need-an-effect@0.5.5(eslint@9.36.0(jiti@2.6.1)))(eslint@9.36.0(jiti@2.6.1))(typescript@5.9.3)
       '@zayne-labs/prettier-config':
         specifier: ^0.10.4
         version: 0.10.4
@@ -2434,6 +2437,12 @@ packages:
       eslint: ^9.36.0
       typescript: ^5.9.3
 
+  eslint-plugin-react-you-might-not-need-an-effect@0.5.5:
+    resolution: {integrity: sha512-Zmsqf7hk/fC5ThgEZTsNz9nHTJ+GFD2/lp/ESSL6oMwQdTlIduTm7xbu8iCZ902aH7HsGTKNw+vi+GVQ6RA8JQ==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      eslint: '>=8.40.0'
+
   eslint-plugin-security@3.0.1:
     resolution: {integrity: sha512-XjVGBhtDZJfyuhIxnQ/WMm385RbX3DBu7H1J7HNNhmB2tnGxMeqVSnYv79oAj992ayvIBZghsymwkYFS6cGH4Q==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
@@ -2459,6 +2468,16 @@ packages:
   eslint-scope@8.4.0:
     resolution: {integrity: sha512-sNXOfKCn74rt8RICKMvJS7XKV/Xk9kA7DyJr8mJik3S7Cwgy3qlkkmyS2uQB3jiJg6VNdZd/pDBJu0nvG2NlTg==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+
+  eslint-utils@3.0.0:
+    resolution: {integrity: sha512-uuQC43IGctw68pJA1RgbQS8/NP7rch6Cwd4j3ZBtgo4/8Flj4eGE7ZYSZRN3iq5pVUv6GPdW5Z1RFleo84uLDA==}
+    engines: {node: ^10.0.0 || ^12.0.0 || >= 14.0.0}
+    peerDependencies:
+      eslint: '>=5'
+
+  eslint-visitor-keys@2.1.0:
+    resolution: {integrity: sha512-0rSmRBzXgDzIsD6mGdJgevzgezI534Cer5L/vyMX0kHzT/jiB43jRhd9YUlMGYLQy2zprNmoT8qasCGtY+QaKw==}
+    engines: {node: '>=10'}
 
   eslint-visitor-keys@3.4.3:
     resolution: {integrity: sha512-wpc+LXeiyiisxPlEkUzU6svyS1frIO3Mgxj1fdy7Pm8Ygzguax2N3Fa/D/ag1WqbOprdI+uY6wMUl8/a2G+iag==}
@@ -5581,7 +5600,7 @@ snapshots:
 
   '@zayne-labs/callapi@1.10.6': {}
 
-  '@zayne-labs/eslint-config@0.10.4(@eslint-react/eslint-plugin@2.0.5(eslint@9.36.0(jiti@2.6.1))(typescript@5.9.3))(@typescript-eslint/utils@8.45.0(eslint@9.36.0(jiti@2.6.1))(typescript@5.9.3))(eslint-plugin-better-tailwindcss@3.7.9(eslint@9.36.0(jiti@2.6.1))(tailwindcss@4.1.14))(eslint-plugin-react-hooks@6.1.0(eslint@9.36.0(jiti@2.6.1)))(eslint-plugin-react-refresh@0.4.23(eslint@9.36.0(jiti@2.6.1)))(eslint@9.36.0(jiti@2.6.1))(typescript@5.9.3)':
+  '@zayne-labs/eslint-config@0.10.4(@eslint-react/eslint-plugin@2.0.5(eslint@9.36.0(jiti@2.6.1))(typescript@5.9.3))(@typescript-eslint/utils@8.45.0(eslint@9.36.0(jiti@2.6.1))(typescript@5.9.3))(eslint-plugin-better-tailwindcss@3.7.9(eslint@9.36.0(jiti@2.6.1))(tailwindcss@4.1.14))(eslint-plugin-react-hooks@6.1.0(eslint@9.36.0(jiti@2.6.1)))(eslint-plugin-react-refresh@0.4.23(eslint@9.36.0(jiti@2.6.1)))(eslint-plugin-react-you-might-not-need-an-effect@0.5.5(eslint@9.36.0(jiti@2.6.1)))(eslint@9.36.0(jiti@2.6.1))(typescript@5.9.3)':
     dependencies:
       '@antfu/install-pkg': 1.1.0
       '@clack/prompts': 0.11.0
@@ -5618,6 +5637,7 @@ snapshots:
       eslint-plugin-better-tailwindcss: 3.7.9(eslint@9.36.0(jiti@2.6.1))(tailwindcss@4.1.14)
       eslint-plugin-react-hooks: 6.1.0(eslint@9.36.0(jiti@2.6.1))
       eslint-plugin-react-refresh: 0.4.23(eslint@9.36.0(jiti@2.6.1))
+      eslint-plugin-react-you-might-not-need-an-effect: 0.5.5(eslint@9.36.0(jiti@2.6.1))
     transitivePeerDependencies:
       - '@eslint/json'
       - '@typescript-eslint/utils'
@@ -6358,6 +6378,12 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  eslint-plugin-react-you-might-not-need-an-effect@0.5.5(eslint@9.36.0(jiti@2.6.1)):
+    dependencies:
+      eslint: 9.36.0(jiti@2.6.1)
+      eslint-utils: 3.0.0(eslint@9.36.0(jiti@2.6.1))
+      globals: 16.4.0
+
   eslint-plugin-security@3.0.1:
     dependencies:
       safe-regex: 2.1.1
@@ -6409,6 +6435,13 @@ snapshots:
     dependencies:
       esrecurse: 4.3.0
       estraverse: 5.3.0
+
+  eslint-utils@3.0.0(eslint@9.36.0(jiti@2.6.1)):
+    dependencies:
+      eslint: 9.36.0(jiti@2.6.1)
+      eslint-visitor-keys: 2.1.0
+
+  eslint-visitor-keys@2.1.0: {}
 
   eslint-visitor-keys@3.4.3: {}
 
