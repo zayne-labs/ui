@@ -47,23 +47,26 @@
 	--color-sonner-error-text: hsl(358, 100%, 81%);
 	--color-sonner-error-border: hsl(357, 89%, 16%);
 
-	--animate-accordion-down: accordion-down 0.2s ease-out;
-	--animate-accordion-up: accordion-up 0.2s ease-out;
+	--nav-width: 82%;
 
-	@keyframes accordion-down {
+	--animate-nav-show: nav-show 350ms ease;
+	--animate-nav-close: nav-close 500ms ease;
+
+	@keyframes nav-show {
 		from {
-			height: 0;
+			width: 0;
 		}
 		to {
-			height: var(--radix-accordion-content-height);
+			width: var(--nav-width);
 		}
 	}
-	@keyframes accordion-up {
+
+	@keyframes nav-close {
 		from {
-			height: var(--radix-accordion-content-height);
+			width: var(--nav-width);
 		}
 		to {
-			height: 0;
+			width: 0;
 		}
 	}
 }

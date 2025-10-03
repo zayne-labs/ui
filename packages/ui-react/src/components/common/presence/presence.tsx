@@ -11,30 +11,38 @@ type RefProp = { ref?: React.Ref<HTMLElement> };
 type PresenceProps = UsePresenceOptions & {
 	children?:
 		| React.ReactElement<RefProp>
-		| ((props: { isPresent: boolean }) => React.ReactElement<RefProp>);
+		| ((props: Omit<ReturnType<typeof usePresence>, "ref">) => React.ReactElement<RefProp>);
 	forceMount?: boolean;
 };
 
 function Presence(props: PresenceProps) {
-	const { children, forceMount = false, onExitComplete, present } = props;
+	const { children, forceMount = false, onExitComplete, present, variant } = props;
 
-	const presence = usePresence({ onExitComplete, present });
+	const {
+		isPresent,
+		isPresentOrIsTransitionComplete,
+		ref: presenceRef,
+		shouldStartTransition,
+	} = usePresence({ onExitComplete, present, variant });
 
 	const resolvedChild =
-		isFunction(children) ? children({ isPresent: presence.isPresent }) : Children.only(children);
+		isFunction(children) ?
+			children({ isPresent, isPresentOrIsTransitionComplete, shouldStartTransition })
+		:	Children.only(children);
 
 	const childRef = (resolvedChild?.props.ref
 		?? (resolvedChild as unknown as UnknownObject).ref) as React.Ref<HTMLElement>;
 
-	const ref = useComposeRefs(presence.ref, childRef);
+	const combinedRefs = useComposeRefs(presenceRef, childRef);
 
-	const shouldRender = forceMount || presence.isPresent;
+	const shouldRender =
+		forceMount || (variant === "transition" ? isPresentOrIsTransitionComplete : isPresent);
 
 	if (!shouldRender) {
 		return null;
 	}
 
-	return resolvedChild && cloneElement(resolvedChild, { ref });
+	return resolvedChild && cloneElement(resolvedChild, { ref: combinedRefs });
 }
 
 export { Presence };

@@ -3,7 +3,7 @@ import { defineConfig, type Options } from "tsdown";
 const isDevMode = process.env.NODE_ENV === "development";
 
 const sharedOptions = {
-	clean: !isDevMode, // clean up dist folder,
+	clean: true, // clean up dist folder,
 	dts: { newContext: true },
 	entry: [
 		// UI components

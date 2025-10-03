@@ -18,8 +18,8 @@
 	"sideEffects": false,
 	"exports": {
 		".": null,
-		"./ui/*": "./dist/esm/ui/*/index.js",
-		"./common/*": "./dist/esm/common/*/index.js",
+		"./ui/*": "./src/components/ui/*/index.ts",
+		"./common/*": "./src/components/common/*/index.ts",
 		"./css/*": "./css/*",
 		"./style.css": "./dist/style.css"
 	},
@@ -93,7 +93,14 @@
 	"publishConfig": {
 		"access": "public",
 		"registry": "https://registry.npmjs.org/",
-		"provenance": true
+		"provenance": true,
+		"exports": {
+			".": null,
+			"./ui/*": "./dist/esm/ui/*/index.js",
+			"./common/*": "./dist/esm/common/*/index.js",
+			"./css/*": "./css/*",
+			"./style.css": "./dist/style.css"
+		}
 	},
 	"size-limit": [
 		{

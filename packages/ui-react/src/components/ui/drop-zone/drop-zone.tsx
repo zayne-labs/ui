@@ -433,7 +433,9 @@ type RenderPreview = RenderPreviewFn | RenderPreviewObject;
 type DropZoneFileItemPreviewProps = Omit<PartInputProps["fileItemPreview"], "children">
 	& Partial<Pick<FileItemContextType, "fileState">> & {
 		asChild?: boolean;
-		children?: React.ReactNode | ((context: RenderPropContext) => React.ReactNode);
+		children?:
+			| React.ReactNode
+			| ((context: RenderPropContext & { fallbackPreview: () => React.ReactNode }) => React.ReactNode);
 		renderPreview?: boolean | RenderPreview;
 	};
 
@@ -465,12 +467,15 @@ export function DropZoneFileItemPreview<TElement extends React.ElementType>(
 
 	const Component = asChild ? Slot.Root : Element;
 
+	const fallbackPreview = () =>
+		getFilePreviewOrIcon({ fileExtension, fileState, fileType, renderPreview });
+
 	const resolvedChildren =
-		isFunction(children) ? children({ fileExtension, fileState, fileType }) : children;
+		isFunction(children) ? children({ fallbackPreview, fileExtension, fileState, fileType }) : children;
 
 	return (
 		<Component {...propGetters.getFileItemPreviewProps(restOfProps)}>
-			{renderPreview && getFilePreviewOrIcon({ fileExtension, fileState, fileType, renderPreview })}
+			{renderPreview && fallbackPreview()}
 			{resolvedChildren}
 		</Component>
 	);

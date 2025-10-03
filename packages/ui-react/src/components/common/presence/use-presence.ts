@@ -1,5 +1,5 @@
 import { on } from "@zayne-labs/toolkit-core";
-import { useCallbackRef } from "@zayne-labs/toolkit-react";
+import { useCallbackRef, useToggle } from "@zayne-labs/toolkit-react";
 import { useEffect, useLayoutEffect, useReducer, useRef, useState } from "react";
 
 type StateMachineConfig<TState extends string, TEvent extends string> = {
@@ -24,6 +24,10 @@ const getAnimationName = (styles: CSSStyleDeclaration | null) => styles?.animati
 export type UsePresenceOptions = {
 	onExitComplete?: () => void;
 	present: boolean;
+	/**
+	 * @default "animation"
+	 */
+	variant?: "animation" | "transition";
 };
 
 /**
@@ -32,18 +36,25 @@ export type UsePresenceOptions = {
  */
 
 const usePresence = (options: UsePresenceOptions) => {
-	const { onExitComplete, present } = options;
+	const { onExitComplete, present: presentProp, variant = "animation" } = options;
 
-	const saveOnExitComplete = useCallbackRef(onExitComplete);
+	const stableOnExitComplete = useCallbackRef(onExitComplete);
 
 	const [node, setNode] = useState<HTMLElement | null>(null);
 
+	const [hasTransitioned, toggleHasTransitioned] = useToggle(false);
+
 	const stylesRef = useRef<CSSStyleDeclaration | null>(null);
 
-	const prevPresentRef = useRef(present);
-	const prevAnimationNameRef = useRef<string>("none");
+	const prevNodeStateRef = useRef<{
+		prevAnimationName: string;
+		prevPresent: boolean;
+	}>({
+		prevAnimationName: "none",
+		prevPresent: presentProp,
+	});
 
-	const initialState = present ? "mounted" : "unmounted";
+	const initialState = presentProp ? "mounted" : "unmounted";
 
 	const [state, send] = useStateMachine({
 		initial: initialState,
@@ -64,53 +75,45 @@ const usePresence = (options: UsePresenceOptions) => {
 
 	useEffect(() => {
 		const currentAnimationName = getAnimationName(stylesRef.current);
-		prevAnimationNameRef.current = state === "mounted" ? currentAnimationName : "none";
+
+		prevNodeStateRef.current.prevAnimationName = state === "mounted" ? currentAnimationName : "none";
 	}, [state]);
 
 	useLayoutEffect(() => {
 		const styles = stylesRef.current;
-		const wasPresent = prevPresentRef.current;
-		const hasPresentChanged = wasPresent !== present;
+		const wasPresent = prevNodeStateRef.current.prevPresent;
+		const hasPresentChanged = wasPresent !== presentProp;
 
 		if (!hasPresentChanged) return;
 
-		const prevAnimationName = prevAnimationNameRef.current;
+		const prevAnimationName = prevNodeStateRef.current.prevAnimationName;
 		const currentAnimationName = getAnimationName(styles);
 
 		switch (true) {
-			case present: {
+			case presentProp: {
 				send("MOUNT");
+
+				if (variant === "transition") {
+					requestAnimationFrame(() => toggleHasTransitioned(true));
+				}
 				break;
 			}
 
-			case Boolean(node): {
-				const hasAnimation =
-					(currentAnimationName !== "none" && styles?.display !== "none")
-					|| (styles?.transitionProperty !== "none" && Number(styles?.transitionDuration) > 0);
-
-				/* If there is no exit animation or the element is hidden, animations won't run, so we unmount instantly */
-				if (!hasAnimation) {
-					send("UNMOUNT");
-					break;
-				}
+			case Boolean(node) && variant === "animation": {
+				const hasAnimation = currentAnimationName !== "none" && styles?.display !== "none";
 
 				/**
 				 * When `present` changes to `false`, we check changes to animation-name to
 				 * determine whether an animation has started. We chose this approach (reading
-				 * computed styles) because there is no `animationrun` event and `animationstart`
+				 * computed styles) because there is no `animationrun` event (like the `transitionrun` event) and `animationstart`
 				 * fires after `animation-delay` has expired which would be too late.
 				 */
 
-				const isAnimating = prevAnimationName !== currentAnimationName;
+				const isAnimationStarted = hasAnimation && prevAnimationName !== currentAnimationName;
 
-				const isAnimatingOut = wasPresent && isAnimating;
+				const isAnimatingOut = wasPresent && isAnimationStarted;
 
-				if (!isAnimatingOut) {
-					send("UNMOUNT");
-					break;
-				}
-
-				send("ANIMATION_OUT");
+				send(isAnimatingOut ? "ANIMATION_OUT" : "UNMOUNT");
 				break;
 			}
 
@@ -120,8 +123,8 @@ const usePresence = (options: UsePresenceOptions) => {
 			}
 		}
 
-		prevPresentRef.current = present;
-	}, [present, node, send]);
+		prevNodeStateRef.current.prevPresent = presentProp;
+	}, [presentProp, node, send, variant, toggleHasTransitioned]);
 
 	useLayoutEffect(() => {
 		if (!node) {
@@ -134,6 +137,14 @@ const usePresence = (options: UsePresenceOptions) => {
 		let timeoutId: number;
 
 		const ownerWindow = node.ownerDocument.defaultView ?? globalThis;
+
+		const handleAnimationStart = (event: AnimationEvent) => {
+			const isTargetAnimatingNode = event.target === node;
+
+			if (!isTargetAnimatingNode) return;
+
+			prevNodeStateRef.current.prevAnimationName = getAnimationName(stylesRef.current);
+		};
 
 		/**
 		 * @description Triggering an ANIMATION_OUT during an ANIMATION_IN will fire an `animationcancel`
@@ -162,7 +173,7 @@ const usePresence = (options: UsePresenceOptions) => {
 			// https://github.com/radix-ui/primitives/pull/1849
 			send("ANIMATION_END");
 
-			if (!prevPresentRef.current) {
+			if (!prevNodeStateRef.current.prevPresent) {
 				const currentFillMode = node.style.animationFillMode;
 				node.style.animationFillMode = "forwards";
 
@@ -178,25 +189,27 @@ const usePresence = (options: UsePresenceOptions) => {
 			}
 		};
 
+		const handleTransitionRun = (event: TransitionEvent) => {
+			const isTargetTransitioningNode = event.target === node;
+
+			if (!isTargetTransitioningNode) return;
+
+			send("ANIMATION_OUT");
+		};
+
 		const handleTransitionEnd = (event: TransitionEvent) => {
-			const isTargetTransitioningNode = event.target === node && !prevPresentRef.current;
+			const isTargetTransitioningNode = event.target === node && !prevNodeStateRef.current.prevPresent;
 
 			if (!isTargetTransitioningNode) return;
 
 			send("ANIMATION_END");
 		};
 
-		const handleAnimationStart = (event: AnimationEvent) => {
-			const isTargetAnimatingNode = event.target === node;
-
-			if (!isTargetAnimatingNode) return;
-
-			prevAnimationNameRef.current = getAnimationName(stylesRef.current);
-		};
-
 		const onAnimationStartCleanup = on("animationstart", node, handleAnimationStart);
 		const onAnimationEndCleanup = on("animationend", node, handleAnimationEnd);
 		const onAnimationCancelCleanup = on("animationcancel", node, handleAnimationEnd);
+
+		const onTransitionRunCleanup = on("transitionrun", node, handleTransitionRun);
 		const onTransitionEndCleanup = on("transitionend", node, handleTransitionEnd);
 		const onTransitionCancelCleanup = on("transitioncancel", node, handleTransitionEnd);
 
@@ -205,29 +218,38 @@ const usePresence = (options: UsePresenceOptions) => {
 			onAnimationStartCleanup();
 			onAnimationEndCleanup();
 			onAnimationCancelCleanup();
+
+			onTransitionRunCleanup();
 			onTransitionEndCleanup();
 			onTransitionCancelCleanup();
 		};
 	}, [node, send]);
 
 	useEffect(() => {
-		const isExitCompleted = state === "unmounted" && !present;
+		const isExitCompleted = state === "unmounted" && !presentProp;
 
-		if (!isExitCompleted) return;
-
-		saveOnExitComplete();
-	}, [state, present, saveOnExitComplete]);
-
-	const isPresent = (["mounted", "unmountSuspended"] satisfies Array<typeof state>).includes(state);
+		if (isExitCompleted) {
+			toggleHasTransitioned(false);
+			stableOnExitComplete();
+		}
+	}, [state, presentProp, stableOnExitComplete, toggleHasTransitioned]);
 
 	const ref = useCallbackRef((refNode: HTMLElement | null) => {
-		refNode && (stylesRef.current = getComputedStyle(refNode));
 		setNode(refNode);
+
+		if (refNode) {
+			stylesRef.current = getComputedStyle(refNode);
+		}
 	});
+
+	const MOUNTED_STATES = ["mounted", "unmountSuspended"] satisfies Array<typeof state>;
+	const isPresent = MOUNTED_STATES.includes(state);
 
 	return {
 		isPresent,
+		isPresentOrIsTransitionComplete: isPresent || hasTransitioned,
 		ref,
+		shouldStartTransition: presentProp && hasTransitioned,
 	};
 };
 

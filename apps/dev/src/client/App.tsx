@@ -1,4 +1,5 @@
 import { Switch } from "@zayne-labs/ui-react/common/switch";
+import AppFive from "./AppFive";
 import AppFour from "./AppFour";
 import AppOne from "./AppOne";
 import AppThree from "./AppThree";
@@ -9,6 +10,10 @@ function App() {
 
 	return (
 		<Switch.Root value={pathname}>
+			<Switch.Match when="/five">
+				<AppFive />
+			</Switch.Match>
+
 			<Switch.Match when="/four">
 				<AppFour />
 			</Switch.Match>
