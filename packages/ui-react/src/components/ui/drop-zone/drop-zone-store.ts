@@ -268,10 +268,7 @@ export const createDropZoneStore = (initStoreValues: InitStoreValues) => {
 				const updatedFileStateArray: DropZoneState["fileStateArray"] = fileStateArray.map(
 					(fileState) => {
 						if (isMatchingFile({ fileState, fileStateOrID })) {
-							return {
-								...fileState,
-								...updatedFileState,
-							};
+							return { ...fileState, ...updatedFileState };
 						}
 
 						return fileState;

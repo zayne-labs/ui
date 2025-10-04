@@ -34,11 +34,12 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 
 	const inputRef = useRef<HTMLInputElement>(null);
 
-	const savedOnFilesChange = useCallbackRef(onFilesChange);
-	const savedOnUpload = useCallbackRef(onUpload);
-	const savedOnUploadError = useCallbackRef(onValidationError);
-	const savedOnUploadSuccess = useCallbackRef(onValidationSuccess);
-	const savedValidator = useCallbackRef(validator);
+	const isOnUploadFnProvided = onUpload !== undefined;
+	const stableOnFilesChange = useCallbackRef(onFilesChange);
+	const stableOnUpload = useCallbackRef(onUpload);
+	const stableOnUploadError = useCallbackRef(onValidationError);
+	const stableOnUploadSuccess = useCallbackRef(onValidationSuccess);
+	const stableValidator = useCallbackRef(validator);
 
 	const constantInitialFiles = useConstant(() => initialFiles);
 	const shallowComparedMaxFileSize = useShallowCompValue(maxFileSize);
@@ -53,12 +54,12 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 			maxFileCount,
 			maxFileSize: shallowComparedMaxFileSize,
 			multiple,
-			onFilesChange: savedOnFilesChange,
-			onUpload: savedOnUpload,
-			onValidationError: savedOnUploadError,
-			onValidationSuccess: savedOnUploadSuccess,
+			onFilesChange: stableOnFilesChange,
+			onUpload: isOnUploadFnProvided ? stableOnUpload : undefined,
+			onValidationError: stableOnUploadError,
+			onValidationSuccess: stableOnUploadSuccess,
 			rejectDuplicateFiles,
-			validator: savedValidator,
+			validator: stableValidator,
 		});
 	}, [
 		shallowComparedAllowedFileTypes,
@@ -67,12 +68,13 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 		maxFileCount,
 		shallowComparedMaxFileSize,
 		multiple,
-		savedOnFilesChange,
-		savedOnUpload,
-		savedOnUploadError,
-		savedOnUploadSuccess,
+		stableOnFilesChange,
+		isOnUploadFnProvided,
+		stableOnUpload,
+		stableOnUploadError,
+		stableOnUploadSuccess,
 		rejectDuplicateFiles,
-		savedValidator,
+		stableValidator,
 	]);
 
 	const actions = storeApi.getState().actions;
