@@ -103,7 +103,8 @@ function MainForm() {
 									});
 
 									await Promise.all(uploadPromises);
-
+								}}
+								onFilesChange={(ctx) => {
 									field.onChange(ctx.fileStateArray[0]?.file);
 								}}
 								onValidationError={(ctx) => console.error(ctx.message)}

@@ -93,11 +93,15 @@ export const createDropZoneStore = (initStoreValues: InitStoreValues) => {
 					status: "idle",
 				}));
 
-				set({
-					errors,
-					fileStateArray: !multiple ? newFileStateArray : [...fileStateArray, ...newFileStateArray],
-					isDraggingOver: false,
-				});
+				set(
+					{
+						errors,
+						fileStateArray:
+							!multiple ? newFileStateArray : [...fileStateArray, ...newFileStateArray],
+						isDraggingOver: false,
+					},
+					{ shouldNotifyImmediately: true }
+				);
 
 				await actions.handleFileUpload({ newFileStateArray });
 			},
@@ -280,7 +284,7 @@ export const createDropZoneStore = (initStoreValues: InitStoreValues) => {
 				// 		{ errors: [...errors, updatedFileState.error] satisfies DropZoneState["errors"] }
 				// 	:	null;
 
-				set({ fileStateArray: updatedFileStateArray });
+				set({ fileStateArray: updatedFileStateArray }, { shouldNotifyImmediately: true });
 			},
 		},
 	}));
@@ -298,16 +302,9 @@ export const createDropZoneStore = (initStoreValues: InitStoreValues) => {
 			if (errors.length === 0) return;
 
 			store.setState({ isInvalid: true });
-		}
-	);
 
-	// == Update `isInvalid` to false after 1.5 seconds
-	store.subscribe.withSelector(
-		(state) => state.isInvalid,
-		(isInvalid) => {
-			if (!isInvalid) return;
-
-			setTimeout(() => store.setState({ isInvalid: !isInvalid }), 1500);
+			// == Reset to false after 1.5 seconds
+			setTimeout(() => store.setState({ isInvalid: false }), 1500);
 		}
 	);
 
