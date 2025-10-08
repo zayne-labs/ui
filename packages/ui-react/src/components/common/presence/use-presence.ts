@@ -1,6 +1,7 @@
-import { on } from "@zayne-labs/toolkit-core";
+import { dataAttr, on } from "@zayne-labs/toolkit-core";
 import { useCallbackRef, useToggle } from "@zayne-labs/toolkit-react";
-import { useEffect, useLayoutEffect, useReducer, useRef, useState } from "react";
+import type { InferProps } from "@zayne-labs/toolkit-react/utils";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useReducer, useRef, useState } from "react";
 
 type StateMachineConfig<TState extends string, TEvent extends string> = {
 	initial: TState;
@@ -30,12 +31,22 @@ export type UsePresenceOptions = {
 	variant?: "animation" | "transition";
 };
 
+export type UsePresenceResult = {
+	isPresent: boolean;
+	isPresentOrIsTransitionComplete: boolean;
+	propGetters: {
+		getPresenceProps: (innerProps: InferProps<HTMLElement>) => InferProps<HTMLElement>;
+	};
+	ref: React.Ref<HTMLElement>;
+	shouldStartTransition: boolean;
+};
+
 /**
  * React hook that provides the ability to animate the mount/unmount of a component.
  * @see https://github.com/radix-ui/primitives/blob/main/packages/react/presence/src/presence.tsx
  */
 
-const usePresence = (options: UsePresenceOptions) => {
+const usePresence = (options: UsePresenceOptions): UsePresenceResult => {
 	const { onExitComplete, present: presentProp, variant = "animation" } = options;
 
 	const stableOnExitComplete = useCallbackRef(onExitComplete);
@@ -244,13 +255,40 @@ const usePresence = (options: UsePresenceOptions) => {
 
 	const MOUNTED_STATES = ["mounted", "unmountSuspended"] satisfies Array<typeof state>;
 	const isPresent = MOUNTED_STATES.includes(state);
+	const isPresentOrIsTransitionComplete = isPresent || hasTransitioned;
+	const shouldStartTransition = presentProp && hasTransitioned;
 
-	return {
-		isPresent,
-		isPresentOrIsTransitionComplete: isPresent || hasTransitioned,
-		ref,
-		shouldStartTransition: presentProp && hasTransitioned,
-	};
+	const getPresenceProps: UsePresenceResult["propGetters"]["getPresenceProps"] = useCallback(
+		(innerProps) => {
+			const transitionState = shouldStartTransition ? "active" : "inactive";
+
+			return {
+				"data-present": dataAttr(isPresent),
+				"data-present-or-transition-complete": dataAttr(isPresentOrIsTransitionComplete),
+				"data-state": state,
+				...(variant === "transition" && { "data-transition": transitionState }),
+				...innerProps,
+				className: innerProps.className,
+			};
+		},
+		[isPresent, isPresentOrIsTransitionComplete, shouldStartTransition, state, variant]
+	);
+
+	const propGetters = useMemo(() => ({ getPresenceProps }), [getPresenceProps]);
+
+	const result = useMemo<UsePresenceResult>(
+		() =>
+			({
+				isPresent,
+				isPresentOrIsTransitionComplete,
+				propGetters,
+				ref,
+				shouldStartTransition,
+			}) satisfies UsePresenceResult,
+		[isPresent, isPresentOrIsTransitionComplete, propGetters, ref, shouldStartTransition]
+	);
+
+	return result;
 };
 
 export { usePresence };

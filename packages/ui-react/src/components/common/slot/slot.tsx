@@ -3,7 +3,7 @@ import { isArray, type UnknownObject } from "@zayne-labs/toolkit-type-helpers";
 import * as React from "react";
 import { Children, cloneElement, isValidElement, Fragment as ReactFragment } from "react";
 
-type SlotProps = InferProps<HTMLElement>;
+type SlotProps = InferProps<HTMLElement> & { ref?: React.Ref<HTMLElement> };
 
 /* -------------------------------------------------------------------------------------------------
  * Slot
@@ -68,10 +68,7 @@ const isSlottable = (child: React.ReactNode): child is React.ReactElement => {
 /* -------------------------------------------------------------------------------------------------
  * SlotClone
  * ----------------------------------------------------------------------------------------------- */
-type SlotCloneProps = {
-	children: React.ReactNode;
-	ref?: React.RefObject<HTMLElement>;
-};
+type SlotCloneProps = Pick<SlotProps, "children" | "ref">;
 
 function SlotClone(props: SlotCloneProps) {
 	const { children, ref: forwardedRef, ...restOfSlotProps } = props;

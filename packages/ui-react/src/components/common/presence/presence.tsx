@@ -3,37 +3,42 @@
 import { useComposeRefs } from "@zayne-labs/toolkit-react";
 import { isFunction, type UnknownObject } from "@zayne-labs/toolkit-type-helpers";
 import * as React from "react";
-import { Children, cloneElement } from "react";
-import { type UsePresenceOptions, usePresence } from "./use-presence";
+import { Slot } from "../slot";
+import { type UsePresenceOptions, type UsePresenceResult, usePresence } from "./use-presence";
 
 type RefProp = { ref?: React.Ref<HTMLElement> };
 
+type RenderPropContext = Omit<UsePresenceResult, "propGetters" | "ref">;
+
 type PresenceProps = UsePresenceOptions & {
-	children?:
-		| React.ReactElement<RefProp>
-		| ((props: Omit<ReturnType<typeof usePresence>, "ref">) => React.ReactElement<RefProp>);
+	children?: React.ReactElement<RefProp> | ((props: RenderPropContext) => React.ReactElement<RefProp>);
+	className?: string;
 	forceMount?: boolean;
 };
 
 function Presence(props: PresenceProps) {
-	const { children, forceMount = false, onExitComplete, present, variant } = props;
+	const { children, className, forceMount = false, onExitComplete, present, variant } = props;
 
 	const {
 		isPresent,
 		isPresentOrIsTransitionComplete,
+		propGetters,
 		ref: presenceRef,
 		shouldStartTransition,
 	} = usePresence({ onExitComplete, present, variant });
 
-	const resolvedChild =
-		isFunction(children) ?
-			children({ isPresent, isPresentOrIsTransitionComplete, shouldStartTransition })
-		:	Children.only(children);
+	const context = {
+		isPresent,
+		isPresentOrIsTransitionComplete,
+		shouldStartTransition,
+	} satisfies RenderPropContext;
+
+	const resolvedChild = isFunction(children) ? children(context) : children;
 
 	const childRef = (resolvedChild?.props.ref
 		?? (resolvedChild as unknown as UnknownObject).ref) as React.Ref<HTMLElement>;
 
-	const combinedRefs = useComposeRefs(presenceRef, childRef);
+	const ref = useComposeRefs(presenceRef, childRef);
 
 	const shouldRender =
 		forceMount || (variant === "transition" ? isPresentOrIsTransitionComplete : isPresent);
@@ -42,7 +47,11 @@ function Presence(props: PresenceProps) {
 		return null;
 	}
 
-	return resolvedChild && cloneElement(resolvedChild, { ref: combinedRefs });
+	return (
+		<Slot.Root ref={ref} {...propGetters.getPresenceProps({ className })}>
+			{resolvedChild}
+		</Slot.Root>
+	);
 }
 
 export { Presence };
