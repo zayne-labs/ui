@@ -89,7 +89,7 @@ function SlotClone(props: SlotCloneProps) {
 	const childRef = (resolvedChildren.props.ref
 		?? (resolvedChildren as unknown as UnknownObject).ref) as React.Ref<HTMLElement>;
 
-	const ref = forwardedRef ? composeRefs(forwardedRef, childRef) : childRef;
+	const ref = composeRefs(forwardedRef, childRef);
 
 	const clonedProps = {
 		...mergeProps(restOfSlotProps, resolvedChildren.props),

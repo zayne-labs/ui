@@ -63,9 +63,9 @@
 		}
 	},
 	"dependencies": {
-		"@zayne-labs/toolkit-core": "0.12.1",
-		"@zayne-labs/toolkit-react": "0.12.1",
-		"@zayne-labs/toolkit-type-helpers": "0.12.1"
+		"@zayne-labs/toolkit-core": "0.12.2",
+		"@zayne-labs/toolkit-react": "0.12.2",
+		"@zayne-labs/toolkit-type-helpers": "0.12.2"
 	},
 	"devDependencies": {
 		"@arethetypeswrong/cli": "0.18.2",
@@ -73,12 +73,12 @@
 		"@size-limit/preset-small-lib": "11.2.0",
 		"@tailwindcss/cli": "^4.1.14",
 		"@total-typescript/ts-reset": "0.6.1",
-		"@types/react": "19.2.0",
-		"@types/react-dom": "19.2.0",
+		"@types/react": "19.2.2",
+		"@types/react-dom": "19.2.1",
 		"@zayne-labs/tsconfig": "0.10.4",
 		"concurrently": "9.2.1",
 		"cross-env": "10.1.0",
-		"publint": "0.3.13",
+		"publint": "0.3.14",
 		"publish": "^0.6.0",
 		"react": "19.2.0",
 		"react-dom": "19.2.0",

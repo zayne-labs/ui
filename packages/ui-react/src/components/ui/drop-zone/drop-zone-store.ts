@@ -100,7 +100,7 @@ export const createDropZoneStore = (initStoreValues: InitStoreValues) => {
 							!multiple ? newFileStateArray : [...fileStateArray, ...newFileStateArray],
 						isDraggingOver: false,
 					},
-					{ shouldNotifyImmediately: true }
+					{ shouldNotifySync: true }
 				);
 
 				await actions.handleFileUpload({ newFileStateArray });
@@ -284,7 +284,7 @@ export const createDropZoneStore = (initStoreValues: InitStoreValues) => {
 				// 		{ errors: [...errors, updatedFileState.error] satisfies DropZoneState["errors"] }
 				// 	:	null;
 
-				set({ fileStateArray: updatedFileStateArray }, { shouldNotifyImmediately: true });
+				set({ fileStateArray: updatedFileStateArray }, { shouldNotifySync: true });
 			},
 		},
 	}));
