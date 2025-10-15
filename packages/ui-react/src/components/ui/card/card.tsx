@@ -82,13 +82,14 @@ export function CardContent<TElement extends React.ElementType = "div">(
 }
 
 export function CardAction<TElement extends React.ElementType = "div">(props: PolymorphicProps<TElement>) {
-	const { as: Element = "div", className, ...restOfProps } = props;
+	const { as: Element = "button", className, ...restOfProps } = props;
 
 	return (
 		<Element
 			data-scope="card"
 			data-part="action"
 			data-slot="card-action"
+			type="button"
 			className={className}
 			{...restOfProps}
 		/>
