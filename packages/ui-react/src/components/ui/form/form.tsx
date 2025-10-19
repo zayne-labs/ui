@@ -847,22 +847,21 @@ type GetFieldValue<TFieldPathOrPaths, TFieldValues extends FieldValues> =
 	: TFieldPathOrPaths extends FieldPath<TFieldValues> ? FieldPathValue<TFieldValues, TFieldPathOrPaths>
 	: unknown;
 
-type FormSubscribeToFieldValueRenderFn<TFieldValues extends FieldValues, TFieldPathOrPaths> = (props: {
+type FormWatchRenderFn<TFieldValues extends FieldValues, TFieldPathOrPaths> = (props: {
 	value: GetFieldValue<TFieldPathOrPaths, TFieldValues>;
 }) => React.ReactNode;
 
-type FormSubscribeToFieldValueProps<
-	TFieldValues extends FieldValues,
-	TFieldPathOrPaths,
-> = DiscriminatedRenderProps<FormSubscribeToFieldValueRenderFn<TFieldValues, TFieldPathOrPaths>> & {
+type FormWatchProps<TFieldValues extends FieldValues, TFieldPathOrPaths> = DiscriminatedRenderProps<
+	FormWatchRenderFn<TFieldValues, TFieldPathOrPaths>
+> & {
 	control: Control<TFieldValues>;
 	name?: TFieldPathOrPaths;
 };
 
-export function FormSubscribeToFieldValue<
+export function FormWatch<
 	TFieldValues extends FieldValues,
 	const TFieldPathOrPaths extends Array<FieldPath<TFieldValues>> | FieldPath<TFieldValues>,
->(props: FormSubscribeToFieldValueProps<TFieldValues, TFieldPathOrPaths>) {
+>(props: FormWatchProps<TFieldValues, TFieldPathOrPaths>) {
 	const fieldContextValues = useLaxFormFieldContext();
 
 	const { children, name = fieldContextValues?.name, render } = props;
@@ -880,19 +879,19 @@ export function FormSubscribeToFieldValue<
 	return resolvedChildren;
 }
 
-type FormSubscribeToFormStateRenderFn<TFieldValues extends FieldValues> = (
+type FormWatchFormStateRenderFn<TFieldValues extends FieldValues> = (
 	props: UseFormStateReturn<TFieldValues>
 ) => React.ReactNode;
 
-type FormSubscribeToFormStateProps<TFieldValues extends FieldValues> = DiscriminatedRenderProps<
-	FormSubscribeToFormStateRenderFn<TFieldValues>
+type FormWatchFormStateProps<TFieldValues extends FieldValues> = DiscriminatedRenderProps<
+	FormWatchFormStateRenderFn<TFieldValues>
 > & {
 	control?: Control<TFieldValues>;
 	name?: Array<FieldPath<TFieldValues>> | FieldPath<TFieldValues>;
 };
 
-export function FormSubscribeToFormState<TFieldValues extends FieldValues = FieldValues>(
-	props: FormSubscribeToFormStateProps<TFieldValues>
+export function FormWatchFormState<TFieldValues extends FieldValues = FieldValues>(
+	props: FormWatchFormStateProps<TFieldValues>
 ) {
 	const fieldContextValues = useLaxFormFieldContext();
 

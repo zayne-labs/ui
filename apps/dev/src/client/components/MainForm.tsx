@@ -258,12 +258,12 @@ function MainForm() {
 					</div>
 				</div>
 
-				<Form.SubscribeToFormState
+				<Form.WatchFormState
 					control={methods.control}
-					render={({ isSubmitting }) => {
+					render={(formState) => {
 						return (
 							<Form.Submit
-								disabled={isSubmitting}
+								disabled={formState.isSubmitting}
 								className="w-full rounded-lg bg-blue-600 px-5 py-3 text-sm font-semibold text-white
 									transition-colors hover:bg-blue-700 focus:ring-2 focus:ring-blue-500
 									focus:ring-offset-2 focus:outline-none disabled:opacity-50"
@@ -280,7 +280,7 @@ function MainForm() {
 				<h3 className="text-sm font-medium text-gray-900">Debug Information</h3>
 
 				<div className="space-y-2 text-sm text-gray-600">
-					<Form.SubscribeToFieldValue
+					<Form.Watch
 						control={methods.control}
 						name={["password", "username"]}
 						render={(field) => {
