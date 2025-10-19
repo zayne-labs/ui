@@ -1,39 +1,47 @@
 # @zayne-labs/ui
 
-A collection of multi-framework UI utilities and unstyled components. Currently focused on React implementation, with plans to support other frameworks like Vue, Svelte, and Solid in the future.
+Composable, headless UI components and utilities built for flexibility and great developer experience. Currently supports React, with more frameworks coming soon.
 
 ## Features
 
-- 🚀 Framework agnostic design (React support available now, more coming soon!)
-- 🎨 Zero-styling approach - full control over your UI design
-- 🔧 Highly customizable hooks and components
-- 📦 Tree-shakeable modules
-- 🌐 Multi-framework support (coming soon)
+- Headless components - bring your own styles
+- Composable API design
+- Tree-shakeable ESM modules
+- TypeScript-first with full type safety
+- Built on top of [@zayne-labs/toolkit](https://github.com/zayne-labs/toolkit)
+
+## Packages
+
+### @zayne-labs/ui-react
+
+React implementation of the UI library. More framework adapters coming in the future.
 
 ## Components
 
 ### UI Components
 
-@zayne-labs/ui provides a set of headless UI components and hooks:
+Headless UI components for common interface patterns:
 
-- **Form** - Flexible form handling with field subscriptions and validation, convenience wrapper around react-hook-form
-- **DropZone** - File upload zone with drag-and-drop support
 - **Card** - Composable card layouts
-- **Carousel** - Customizable slideshow for cycling through elements
-- **DragScroll** - Add drag-to-scroll behavior to any container
+- **Carousel** - Customizable slideshow component
+- **DragScroll** - Add drag-to-scroll behavior to containers
+- **DropZone** - File upload with drag-and-drop support
+- **Form** - Form handling with validation (wrapper around react-hook-form)
 
-### Utility Components
+### Common Components
 
-@zayne-labs/ui provides several utility components to handle common UI patterns:
+Utility components for declarative UI patterns:
 
-- **Switch** - Conditional rendering with pattern matching
-- **Show** - Simplified conditional rendering
-- **For** - Iterative rendering with built-in empty states
+- **Await** - Handle async states declaratively
+- **ClientGate** - Client-side only rendering guard
 - **ErrorBoundary** - Graceful error handling
-- **Await** - Handle async states elegantly
-- **Teleport** - Teleport content to a different part of the DOM via react portals
-- **Slot** - Component composition with named slots
+- **For** - List rendering with empty states
+- **Presence** - Animation presence detection
+- **Show** - Conditional rendering
+- **Slot** - Component composition with slots
 - **SuspenseWithBoundary** - Combined Suspense and ErrorBoundary
+- **Switch** - Pattern matching for conditional rendering
+- **Teleport** - Portal-based content teleportation
 
 ## Installation
 
@@ -48,7 +56,7 @@ npm install @zayne-labs/ui-react
 yarn add @zayne-labs/ui-react
 ```
 
-## Quick Start
+## Usage
 
 ```tsx
 import { Switch } from '@zayne-labs/ui-react/common/switch'
@@ -59,17 +67,29 @@ function App() {
   return (
     <Switch.Root value={status}>
       <Switch.Match when="loading">
-        <div>Loading your content...</div>
+        <div>Loading...</div>
       </Switch.Match>
 
       <Switch.Match when="error">
-        <div>Oops! Something went wrong</div>
+        <div>Something went wrong</div>
       </Switch.Match>
 
       <Switch.Default>
-        <div>Content loaded successfully!</div>
+        <div>Content loaded!</div>
       </Switch.Default>
     </Switch.Root>
+  )
+}
+```
+
+```tsx
+import { For } from '@zayne-labs/ui-react/common/for'
+
+function UserList({ users }) {
+  return (
+    <For each={users} fallback={<p>No users found</p>}>
+      {(user) => <div key={user.id}>{user.name}</div>}
+    </For>
   )
 }
 ```
@@ -80,7 +100,7 @@ Visit our [documentation site](https://zayne-labs-ui.netlify.app) for detailed u
 
 ## Development
 
-This project uses pnpm as the package manager. To get started with development:
+This is a monorepo managed with pnpm and Turborepo.
 
 ```bash
 # Install dependencies
@@ -89,38 +109,30 @@ pnpm install
 # Build all packages
 pnpm build
 
-# Run development build
-pnpm build:dev
+# Run development mode
+pnpm dev:react
 
-# Run tests
-pnpm build:test
+# Run docs site
+pnpm dev:docs
 
-# Lint code
+# Run dev playground
+pnpm dev:dev
+
+# Lint
 pnpm lint:eslint
+
+# Type check
+pnpm lint:type-check
 
 # Format code
 pnpm lint:format
 ```
 
-## Project Structure
-
-```tree
-ui/
-├── packages/
-│   └── ui-react/        # React UI components (More frameworks coming soon!)
-├── apps/
-│   ├── docs/           # Documentation site
-│   └── dev/            # Development playground
-├── .changeset/         # Changesets for versioning
-└── package.json        # Root package.json
-```
 
 ## Contributing
 
-We welcome contributions! Please see our [contributing guidelines](https://github.com/zayne-labs/contribute.git) for details.
+Contributions are welcome! Check out the [contributing guidelines](https://github.com/zayne-labs/contribute.git) to get started.
 
 ## License
 
-MIT © [Zayne Labs]
-
----
+MIT © Ryan Zayne
