@@ -2,7 +2,7 @@
 
 import { type AnyString, isString } from "@zayne-labs/toolkit-type-helpers";
 import * as React from "react";
-import { useEffectEvent, useInsertionEffect, useState } from "react";
+import { useEffectEvent, useLayoutEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
 type ValidHtmlTags = keyof HTMLElementTagNameMap;
@@ -22,7 +22,7 @@ function Teleport(props: PortalProps) {
 		setPortalContainer(destination);
 	});
 
-	useInsertionEffect(() => {
+	useLayoutEffect(() => {
 		if (!to) return;
 
 		if (insertPosition) return;
@@ -32,7 +32,7 @@ function Teleport(props: PortalProps) {
 		destination && updatePortalContainer(destination);
 	}, [to, insertPosition]);
 
-	useInsertionEffect(() => {
+	useLayoutEffect(() => {
 		if (!to) return;
 
 		if (!insertPosition) return;

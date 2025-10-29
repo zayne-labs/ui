@@ -13,9 +13,9 @@
 	"dependencies": {
 		"@hookform/resolvers": "5.2.2",
 		"@iconify/react": "6.0.2",
-		"@zayne-labs/callapi": "1.11.3",
-		"@zayne-labs/toolkit-core": "0.12.4",
-		"@zayne-labs/toolkit-react": "0.12.4",
+		"@zayne-labs/callapi": "1.11.11",
+		"@zayne-labs/toolkit-core": "0.12.8",
+		"@zayne-labs/toolkit-react": "0.12.8",
 		"@zayne-labs/ui-react": "workspace:*",
 		"react": "19.2.0",
 		"react-dom": "19.2.0",
@@ -25,19 +25,19 @@
 		"zod": "4.1.12"
 	},
 	"devDependencies": {
-		"@tailwindcss/vite": "4.1.14",
-		"@types/node": "24.8.1",
+		"@tailwindcss/vite": "4.1.16",
+		"@types/node": "24.9.2",
 		"@types/react": "19.2.2",
 		"@types/react-dom": "19.2.2",
-		"@vitejs/plugin-react": "5.0.4",
-		"@zayne-labs/eslint-config": "0.10.10",
-		"@zayne-labs/prettier-config": "0.10.10",
-		"@zayne-labs/tsconfig": "0.10.10",
+		"@vitejs/plugin-react": "5.1.0",
+		"@zayne-labs/eslint-config": "0.11.4",
+		"@zayne-labs/prettier-config": "0.11.4",
+		"@zayne-labs/tsconfig": "0.11.4",
 		"publish": "0.6.0",
-		"tailwindcss": "4.1.14",
+		"tailwindcss": "4.1.16",
 		"tsx": "4.20.6",
 		"typescript": "5.9.3",
-		"vite": "npm:rolldown-vite@^7.1.17",
+		"vite": "npm:rolldown-vite@7.1.20",
 		"vite-tsconfig-paths": "5.1.4"
 	}
 }
