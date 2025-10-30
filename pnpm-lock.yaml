@@ -19,7 +19,7 @@ importers:
         version: 24.9.2
       '@zayne-labs/eslint-config':
         specifier: 0.11.4
-        version: 0.11.4(@eslint-react/eslint-plugin@2.2.4(eslint@9.38.0(jiti@2.6.1))(typescript@5.9.3))(@typescript-eslint/utils@8.46.2(eslint@9.38.0(jiti@2.6.1))(typescript@5.9.3))(eslint-plugin-better-tailwindcss@3.7.10(eslint@9.38.0(jiti@2.6.1))(tailwindcss@4.1.16))(eslint-plugin-react-hooks@7.0.1(eslint@9.38.0(jiti@2.6.1)))(eslint-plugin-react-refresh@0.4.24(eslint@9.38.0(jiti@2.6.1)))(eslint-plugin-react-you-might-not-need-an-effect@0.6.1(eslint@9.38.0(jiti@2.6.1)))(eslint@9.38.0(jiti@2.6.1))(typescript@5.9.3)
+        version: 0.11.4(@eslint-react/eslint-plugin@2.2.4(eslint@9.38.0(jiti@2.6.1))(typescript@5.9.3))(@typescript-eslint/utils@8.46.2(eslint@9.38.0(jiti@2.6.1))(typescript@5.9.3))(eslint-plugin-better-tailwindcss@3.7.10(eslint@9.38.0(jiti@2.6.1))(tailwindcss@4.1.16))(eslint-plugin-react-hooks@7.0.1(eslint@9.38.0(jiti@2.6.1)))(eslint-plugin-react-refresh@0.4.24(eslint@9.38.0(jiti@2.6.1)))(eslint-plugin-react-you-might-not-need-an-effect@0.7.0(eslint@9.38.0(jiti@2.6.1)))(eslint@9.38.0(jiti@2.6.1))(typescript@5.9.3)
       '@zayne-labs/prettier-config':
         specifier: 0.11.4
         version: 0.11.4
@@ -42,8 +42,8 @@ importers:
         specifier: 0.4.24
         version: 0.4.24(eslint@9.38.0(jiti@2.6.1))
       eslint-plugin-react-you-might-not-need-an-effect:
-        specifier: 0.6.1
-        version: 0.6.1(eslint@9.38.0(jiti@2.6.1))
+        specifier: 0.7.0
+        version: 0.7.0(eslint@9.38.0(jiti@2.6.1))
       husky:
         specifier: 9.1.7
         version: 9.1.7
@@ -84,11 +84,11 @@ importers:
         specifier: 1.11.11
         version: 1.11.11
       '@zayne-labs/toolkit-core':
-        specifier: 0.12.8
-        version: 0.12.8
+        specifier: 0.12.12
+        version: 0.12.12
       '@zayne-labs/toolkit-react':
-        specifier: 0.12.8
-        version: 0.12.8(@types/react@19.2.2)(react@19.2.0)(tailwind-merge@3.3.1)
+        specifier: 0.12.12
+        version: 0.12.12(@types/react@19.2.2)(react@19.2.0)(tailwind-merge@3.3.1)
       '@zayne-labs/ui-react':
         specifier: workspace:*
         version: link:../../packages/ui-react
@@ -128,7 +128,7 @@ importers:
         version: 5.1.0(rolldown-vite@7.1.20(@types/node@24.9.2)(esbuild@0.25.10)(jiti@2.6.1)(tsx@4.20.6)(yaml@2.8.1))
       '@zayne-labs/eslint-config':
         specifier: 0.11.4
-        version: 0.11.4(@eslint-react/eslint-plugin@2.2.4(eslint@9.38.0(jiti@2.6.1))(typescript@5.9.3))(@typescript-eslint/utils@8.46.2(eslint@9.38.0(jiti@2.6.1))(typescript@5.9.3))(eslint-plugin-better-tailwindcss@3.7.10(eslint@9.38.0(jiti@2.6.1))(tailwindcss@4.1.16))(eslint-plugin-react-hooks@7.0.1(eslint@9.38.0(jiti@2.6.1)))(eslint-plugin-react-refresh@0.4.24(eslint@9.38.0(jiti@2.6.1)))(eslint-plugin-react-you-might-not-need-an-effect@0.6.1(eslint@9.38.0(jiti@2.6.1)))(eslint@9.38.0(jiti@2.6.1))(typescript@5.9.3)
+        version: 0.11.4(@eslint-react/eslint-plugin@2.2.4(eslint@9.38.0(jiti@2.6.1))(typescript@5.9.3))(@typescript-eslint/utils@8.46.2(eslint@9.38.0(jiti@2.6.1))(typescript@5.9.3))(eslint-plugin-better-tailwindcss@3.7.10(eslint@9.38.0(jiti@2.6.1))(tailwindcss@4.1.16))(eslint-plugin-react-hooks@7.0.1(eslint@9.38.0(jiti@2.6.1)))(eslint-plugin-react-refresh@0.4.24(eslint@9.38.0(jiti@2.6.1)))(eslint-plugin-react-you-might-not-need-an-effect@0.7.0(eslint@9.38.0(jiti@2.6.1)))(eslint@9.38.0(jiti@2.6.1))(typescript@5.9.3)
       '@zayne-labs/prettier-config':
         specifier: 0.11.4
         version: 0.11.4
@@ -170,14 +170,14 @@ importers:
   packages/ui-react:
     dependencies:
       '@zayne-labs/toolkit-core':
-        specifier: 0.12.8
-        version: 0.12.8
+        specifier: 0.12.12
+        version: 0.12.12
       '@zayne-labs/toolkit-react':
-        specifier: 0.12.8
-        version: 0.12.8(@types/react@19.2.2)(react@19.2.0)(tailwind-merge@3.3.1)
+        specifier: 0.12.12
+        version: 0.12.12(@types/react@19.2.2)(react@19.2.0)(tailwind-merge@3.3.1)
       '@zayne-labs/toolkit-type-helpers':
-        specifier: 0.12.8
-        version: 0.12.8
+        specifier: 0.12.12
+        version: 0.12.12
     devDependencies:
       '@arethetypeswrong/cli':
         specifier: 0.18.2
@@ -234,8 +234,8 @@ importers:
         specifier: 4.1.16
         version: 4.1.16
       tsdown:
-        specifier: 0.15.11
-        version: 0.15.11(@arethetypeswrong/core@0.18.2)(publint@0.3.15)(typescript@5.9.3)
+        specifier: 0.15.12
+        version: 0.15.12(@arethetypeswrong/core@0.18.2)(publint@0.3.15)(typescript@5.9.3)(unrun@0.2.1)
       tw-animate-css:
         specifier: 1.4.0
         version: 1.4.0
@@ -1816,12 +1816,12 @@ packages:
     resolution: {integrity: sha512-Z4k78jwBIFDty8LcPQksGYXCb2XsIDkRGDrJO8kD4LuR9Lp51M5GmH4wP/SAds9j3ETOokG1JeoiYIQoNxXiSA==}
     engines: {node: '>=18.x'}
 
-  '@zayne-labs/toolkit-core@0.12.8':
-    resolution: {integrity: sha512-u3RJzng182geygqhBSxRBK/DOwu8KJjXH2aaGsoXD9gcoMtlcD8vjrViC+8DNoGiOsfgmCEHPievcZaQThP3wQ==}
+  '@zayne-labs/toolkit-core@0.12.12':
+    resolution: {integrity: sha512-MjRiGUZNgp6w+I8tE8ora1fCuhIrlxQChE6m6r0g//Rg9UmgPpr9OwP95CQjM63fbRe1RsyYjpBYDS/yqU7tQw==}
     engines: {node: '>=18.x'}
 
-  '@zayne-labs/toolkit-react@0.12.8':
-    resolution: {integrity: sha512-/RJq/x9kDiG2LZydc28JDRZN/juLbx3MOD4gQSRLc3V5ZVLEWMjxcD5lwcTxWzo8KVaUUmBi80GplEp1xBk+Iw==}
+  '@zayne-labs/toolkit-react@0.12.12':
+    resolution: {integrity: sha512-xVMqjXs4lxnAUKcd2FQmYBBpmAx+hlxSTBdMwMznUYABkwuCwxHAGktr7mObq31CNjp/UGugR760l67bcRY88A==}
     engines: {node: '>=18.x'}
     peerDependencies:
       '@types/react': '>=19.0.0'
@@ -1835,6 +1835,10 @@ packages:
         optional: true
       zustand:
         optional: true
+
+  '@zayne-labs/toolkit-type-helpers@0.12.12':
+    resolution: {integrity: sha512-kCw2jGqjvKfTam51Q+0pr6eg/zwa54h9xsjXCWu3oRHO1CYG5HYJJ22q5KHOB2C/KvErGM980Dc5hzjXhr5LNg==}
+    engines: {node: '>=18.x'}
 
   '@zayne-labs/toolkit-type-helpers@0.12.4':
     resolution: {integrity: sha512-S7PpGDbLfbKTt9AgC9vQYbTrQO33JclcU3fQfZs+O5rqNwVV/Et+3XqDdlfKp9LN/z6RiXCOHC29lvX8Nb9r6g==}
@@ -2416,8 +2420,8 @@ packages:
       eslint: ^9.38.0
       typescript: ^5.9.3
 
-  eslint-plugin-react-you-might-not-need-an-effect@0.6.1:
-    resolution: {integrity: sha512-DKkhNJyhCfdtkzgXj4pP0Oa8K6PBS+h1FlNNT/vNwyRiXgKVB70HbfFxSSLLB3yr6Q5kzlNTdTLqt9cc7tGT0w==}
+  eslint-plugin-react-you-might-not-need-an-effect@0.7.0:
+    resolution: {integrity: sha512-oTUAcLqUeKZNbQoiD7Aep7qY5BynYMZbzX8TmXRwZ4/k3BSmFzfnZbnrV7mwDk8DAJW69OPQix4djoPVGdyTnQ==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       eslint: '>=8.40.0'
@@ -3587,8 +3591,8 @@ packages:
   rfdc@1.4.1:
     resolution: {integrity: sha512-q1b3N5QkRUWUl7iyylaaj3kOpIT0N2i9MqIEQXP73GVsN9cw3fdx8X63cEmWhJGi2PPCF23Ijp7ktmd39rawIA==}
 
-  rolldown-plugin-dts@0.17.2:
-    resolution: {integrity: sha512-tbLm7FoDvZAhAY33wJbq0ACw+srToKZ5xFqwn/K4tayGloZPXQHyOEPEYi7whEfTCaMndZWaho9+oiQTlwIe6Q==}
+  rolldown-plugin-dts@0.17.3:
+    resolution: {integrity: sha512-8mGnNUVNrqEdTnrlcaDxs4sAZg0No6njO+FuhQd4L56nUbJO1tHxOoKDH3mmMJg7f/BhEj/1KjU5W9kZ9zM/kQ==}
     engines: {node: '>=20.18.0'}
     peerDependencies:
       '@ts-macro/tsc': ^0.3.6
@@ -3915,8 +3919,8 @@ packages:
     resolution: {integrity: sha512-NoZ4roiN7LnbKn9QqE1amc9DJfzvZXxF4xDavcOWt1BPkdx+m+0gJuPM+S0vCe7zTJMYUP0R8pO2XMr+Y8oLIg==}
     engines: {node: '>=6'}
 
-  tsdown@0.15.11:
-    resolution: {integrity: sha512-7k2OglWWt6LzvJKwEf1izbGvETvVfPYRBr9JgEYVRnz/R9LeJSp+B51FUMO46wUeEGtZ1jA3E3PtWWLlq3iygA==}
+  tsdown@0.15.12:
+    resolution: {integrity: sha512-c8VLlQm8/lFrOAg5VMVeN4NAbejZyVQkzd+ErjuaQgJFI/9MhR9ivr0H/CM7UlOF1+ELlF6YaI7sU/4itgGQ8w==}
     engines: {node: '>=20.19.0'}
     hasBin: true
     peerDependencies:
@@ -3925,6 +3929,7 @@ packages:
       typescript: ^5.0.0
       unplugin-lightningcss: ^0.4.0
       unplugin-unused: ^0.5.0
+      unrun: ^0.2.1
     peerDependenciesMeta:
       '@arethetypeswrong/core':
         optional: true
@@ -3935,6 +3940,8 @@ packages:
       unplugin-lightningcss:
         optional: true
       unplugin-unused:
+        optional: true
+      unrun:
         optional: true
 
   tslib@2.8.1:
@@ -5614,7 +5621,7 @@ snapshots:
 
   '@zayne-labs/callapi@1.11.11': {}
 
-  '@zayne-labs/eslint-config@0.11.4(@eslint-react/eslint-plugin@2.2.4(eslint@9.38.0(jiti@2.6.1))(typescript@5.9.3))(@typescript-eslint/utils@8.46.2(eslint@9.38.0(jiti@2.6.1))(typescript@5.9.3))(eslint-plugin-better-tailwindcss@3.7.10(eslint@9.38.0(jiti@2.6.1))(tailwindcss@4.1.16))(eslint-plugin-react-hooks@7.0.1(eslint@9.38.0(jiti@2.6.1)))(eslint-plugin-react-refresh@0.4.24(eslint@9.38.0(jiti@2.6.1)))(eslint-plugin-react-you-might-not-need-an-effect@0.6.1(eslint@9.38.0(jiti@2.6.1)))(eslint@9.38.0(jiti@2.6.1))(typescript@5.9.3)':
+  '@zayne-labs/eslint-config@0.11.4(@eslint-react/eslint-plugin@2.2.4(eslint@9.38.0(jiti@2.6.1))(typescript@5.9.3))(@typescript-eslint/utils@8.46.2(eslint@9.38.0(jiti@2.6.1))(typescript@5.9.3))(eslint-plugin-better-tailwindcss@3.7.10(eslint@9.38.0(jiti@2.6.1))(tailwindcss@4.1.16))(eslint-plugin-react-hooks@7.0.1(eslint@9.38.0(jiti@2.6.1)))(eslint-plugin-react-refresh@0.4.24(eslint@9.38.0(jiti@2.6.1)))(eslint-plugin-react-you-might-not-need-an-effect@0.7.0(eslint@9.38.0(jiti@2.6.1)))(eslint@9.38.0(jiti@2.6.1))(typescript@5.9.3)':
     dependencies:
       '@antfu/install-pkg': 1.1.0
       '@clack/prompts': 0.11.0
@@ -5652,7 +5659,7 @@ snapshots:
       eslint-plugin-better-tailwindcss: 3.7.10(eslint@9.38.0(jiti@2.6.1))(tailwindcss@4.1.16)
       eslint-plugin-react-hooks: 7.0.1(eslint@9.38.0(jiti@2.6.1))
       eslint-plugin-react-refresh: 0.4.24(eslint@9.38.0(jiti@2.6.1))
-      eslint-plugin-react-you-might-not-need-an-effect: 0.6.1(eslint@9.38.0(jiti@2.6.1))
+      eslint-plugin-react-you-might-not-need-an-effect: 0.7.0(eslint@9.38.0(jiti@2.6.1))
     transitivePeerDependencies:
       - '@eslint/json'
       - '@typescript-eslint/utils'
@@ -5665,18 +5672,20 @@ snapshots:
     dependencies:
       '@zayne-labs/toolkit-type-helpers': 0.12.8
 
-  '@zayne-labs/toolkit-core@0.12.8':
+  '@zayne-labs/toolkit-core@0.12.12':
     dependencies:
-      '@zayne-labs/toolkit-type-helpers': 0.12.8
+      '@zayne-labs/toolkit-type-helpers': 0.12.12
 
-  '@zayne-labs/toolkit-react@0.12.8(@types/react@19.2.2)(react@19.2.0)(tailwind-merge@3.3.1)':
+  '@zayne-labs/toolkit-react@0.12.12(@types/react@19.2.2)(react@19.2.0)(tailwind-merge@3.3.1)':
     dependencies:
-      '@zayne-labs/toolkit-core': 0.12.8
-      '@zayne-labs/toolkit-type-helpers': 0.12.8
+      '@zayne-labs/toolkit-core': 0.12.12
+      '@zayne-labs/toolkit-type-helpers': 0.12.12
       tailwind-merge: 3.3.1
     optionalDependencies:
       '@types/react': 19.2.2
       react: 19.2.0
+
+  '@zayne-labs/toolkit-type-helpers@0.12.12': {}
 
   '@zayne-labs/toolkit-type-helpers@0.12.4': {}
 
@@ -6348,7 +6357,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-react-you-might-not-need-an-effect@0.6.1(eslint@9.38.0(jiti@2.6.1)):
+  eslint-plugin-react-you-might-not-need-an-effect@0.7.0(eslint@9.38.0(jiti@2.6.1)):
     dependencies:
       eslint: 9.38.0(jiti@2.6.1)
       eslint-utils: 3.0.0(eslint@9.38.0(jiti@2.6.1))
@@ -7543,7 +7552,7 @@ snapshots:
 
   rfdc@1.4.1: {}
 
-  rolldown-plugin-dts@0.17.2(rolldown@1.0.0-beta.45)(typescript@5.9.3):
+  rolldown-plugin-dts@0.17.3(rolldown@1.0.0-beta.45)(typescript@5.9.3):
     dependencies:
       '@babel/generator': 7.28.5
       '@babel/parser': 7.28.5
@@ -7858,7 +7867,7 @@ snapshots:
       minimist: 1.2.8
       strip-bom: 3.0.0
 
-  tsdown@0.15.11(@arethetypeswrong/core@0.18.2)(publint@0.3.15)(typescript@5.9.3):
+  tsdown@0.15.12(@arethetypeswrong/core@0.18.2)(publint@0.3.15)(typescript@5.9.3)(unrun@0.2.1):
     dependencies:
       ansis: 4.2.0
       cac: 6.7.14
@@ -7868,17 +7877,17 @@ snapshots:
       empathic: 2.0.0
       hookable: 5.5.3
       rolldown: 1.0.0-beta.45
-      rolldown-plugin-dts: 0.17.2(rolldown@1.0.0-beta.45)(typescript@5.9.3)
+      rolldown-plugin-dts: 0.17.3(rolldown@1.0.0-beta.45)(typescript@5.9.3)
       semver: 7.7.3
       tinyexec: 1.0.1
       tinyglobby: 0.2.15
       tree-kill: 1.2.2
       unconfig: 7.3.3
-      unrun: 0.2.1
     optionalDependencies:
       '@arethetypeswrong/core': 0.18.2
       publint: 0.3.15
       typescript: 5.9.3
+      unrun: 0.2.1
     transitivePeerDependencies:
       - '@ts-macro/tsc'
       - '@typescript/native-preview'
@@ -8017,6 +8026,7 @@ snapshots:
       '@oxc-project/runtime': 0.95.0
       rolldown: 1.0.0-beta.45
       synckit: 0.11.11
+    optional: true
 
   update-browserslist-db@1.1.4(browserslist@4.27.0):
     dependencies:

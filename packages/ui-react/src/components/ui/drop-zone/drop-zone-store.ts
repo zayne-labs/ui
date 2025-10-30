@@ -251,14 +251,14 @@ export const createDropZoneStore = (initStoreValues: InitStoreValues) => {
 
 				const { fileStateArray } = get();
 
-				const updatedFileStateArray = fileStateArray.flatMap((fileState) => {
-					if (isMatchingFile({ fileState, fileStateOrID })) {
-						clearObjectURL(fileState, disablePreviewGenForNonImageFiles);
-
-						return [];
+				const updatedFileStateArray = fileStateArray.filter((fileState) => {
+					if (!isMatchingFile({ fileState, fileStateOrID })) {
+						return true;
 					}
 
-					return fileState;
+					clearObjectURL(fileState, disablePreviewGenForNonImageFiles);
+
+					return false;
 				});
 
 				set({ errors: [], fileStateArray: updatedFileStateArray });

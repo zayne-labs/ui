@@ -1,11 +1,11 @@
 import { createStore } from "@zayne-labs/toolkit-core";
 import { useCallbackRef, useStore } from "@zayne-labs/toolkit-react";
-import { createZustandContext } from "@zayne-labs/toolkit-react/zustand";
+import { createReactStoreContext } from "@zayne-labs/toolkit-react/zustand";
 import type { PrettyOmit } from "@zayne-labs/toolkit-type-helpers";
 import { useMemo } from "react";
 import type { CarouselRootProps, CarouselStore, ImagesType } from "./types";
 
-const [CarouselStoreContextProvider, useCarouselStoreContext] = createZustandContext<CarouselStore>({
+const [CarouselStoreContextProvider, useCarouselStoreContext] = createReactStoreContext<CarouselStore>({
 	hookName: "useCarouselStore",
 	name: "CarouselStoreContext",
 	providerName: "CarouselRoot",
