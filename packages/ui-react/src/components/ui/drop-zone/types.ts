@@ -148,8 +148,10 @@ export type DropZoneActions = {
 
 export type DropZoneStore = DropZoneActions & DropZoneState;
 
-export interface UseDropZoneResult
-	extends Pick<Required<UseDropZoneProps>, "disabled" | "disableInternalStateSubscription"> {
+export interface UseDropZoneResult extends Pick<
+	Required<UseDropZoneProps>,
+	"disabled" | "disableInternalStateSubscription"
+> {
 	inputRef: React.RefObject<HTMLInputElement | null>;
 	propGetters: DropZonePropGetters;
 	storeApi: ReturnType<typeof createDropZoneStore>;
