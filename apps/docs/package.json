@@ -12,10 +12,10 @@
 		"preview": "vitepress preview"
 	},
 	"dependencies": {
-		"vue": "3.5.22"
+		"vue": "3.5.25"
 	},
 	"devDependencies": {
-		"@zayne-labs/tsconfig": "0.11.4",
+		"@zayne-labs/tsconfig": "0.11.5",
 		"vitepress": "1.6.4"
 	}
 }

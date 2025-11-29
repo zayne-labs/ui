@@ -61,7 +61,7 @@ yarn add @zayne-labs/ui-react
 ```tsx
 import { Switch } from '@zayne-labs/ui-react/common/switch'
 
-function App() {
+export default function App() {
   const status = "loading"
 
   return (
@@ -85,7 +85,7 @@ function App() {
 ```tsx
 import { For } from '@zayne-labs/ui-react/common/for'
 
-function UserList({ users }) {
+export function UserList({ users }) {
   return (
     <For each={users} fallback={<p>No users found</p>}>
       {(user) => <div key={user.id}>{user.name}</div>}
@@ -127,7 +127,6 @@ pnpm lint:type-check
 # Format code
 pnpm lint:format
 ```
-
 
 ## Contributing
 
