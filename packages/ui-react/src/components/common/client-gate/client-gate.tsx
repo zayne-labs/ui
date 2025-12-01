@@ -2,7 +2,6 @@
 
 import { useIsHydrated } from "@zayne-labs/toolkit-react";
 import { isFunction } from "@zayne-labs/toolkit-type-helpers";
-import * as React from "react";
 
 type ClientGateProps = {
 	/**

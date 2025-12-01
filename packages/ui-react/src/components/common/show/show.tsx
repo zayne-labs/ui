@@ -3,7 +3,6 @@
 import { toArray } from "@zayne-labs/toolkit-core";
 import { getMultipleSlots, getSingleSlot } from "@zayne-labs/toolkit-react/utils";
 import { assert, isFunction } from "@zayne-labs/toolkit-type-helpers";
-import * as React from "react";
 
 type ShowProps<TWhen> =
 	| {
@@ -71,7 +70,6 @@ export function ShowContent<TWhen>(props: ShowContentProps<TWhen>) {
 
 	return resolvedChildren;
 }
-
 ShowContent.slotSymbol = Symbol("show-content");
 
 export function ShowFallback(props: { children: React.ReactNode }) {

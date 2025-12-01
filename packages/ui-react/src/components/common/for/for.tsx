@@ -3,7 +3,6 @@ import type {
 	PolymorphicPropsStrict,
 } from "@zayne-labs/toolkit-react/utils";
 import { isArray, isNumber, type Prettify } from "@zayne-labs/toolkit-type-helpers";
-import * as React from "react";
 
 type ArrayOrNumber = number | readonly unknown[];
 

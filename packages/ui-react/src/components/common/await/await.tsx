@@ -6,7 +6,7 @@ import {
 	withSlotNameAndSymbol,
 } from "@zayne-labs/toolkit-react/utils";
 import { isFunction } from "@zayne-labs/toolkit-type-helpers";
-import * as React from "react";
+
 import { Fragment as ReactFragment, Suspense, use, useMemo } from "react";
 import { ErrorBoundary, type ErrorBoundaryProps, useErrorBoundaryContext } from "../error-boundary";
 import { Slot } from "../slot";

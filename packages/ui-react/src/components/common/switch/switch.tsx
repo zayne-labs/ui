@@ -2,7 +2,6 @@
 
 import { getRegularChildren, getSingleSlot } from "@zayne-labs/toolkit-react/utils";
 import { isFunction } from "@zayne-labs/toolkit-type-helpers";
-import * as React from "react";
 
 type ValidSwitchComponentType = React.ReactElement<SwitchMatchProps<unknown>>;
 

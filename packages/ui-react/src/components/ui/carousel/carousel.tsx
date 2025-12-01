@@ -2,7 +2,7 @@
 
 import type { CssWithCustomProperties, PolymorphicPropsStrict } from "@zayne-labs/toolkit-react/utils";
 import { isFunction } from "@zayne-labs/toolkit-type-helpers";
-import * as React from "react";
+
 import { For } from "@/components/common/for";
 import { Show } from "@/components/common/show";
 import { cnMerge } from "@/lib/utils/cn";
@@ -237,7 +237,7 @@ export function CarouselIndicatorList<TArray extends unknown[]>(
 			data-part="indicator-list"
 			data-slot="carousel-indicator-list"
 			className={cnMerge(
-				"absolute bottom-[25px] z-[2] flex w-full items-center justify-center gap-[15px]",
+				"absolute bottom-[25px] z-2 flex w-full items-center justify-center gap-[15px]",
 				className
 			)}
 		>
@@ -267,7 +267,7 @@ export function CarouselIndicator(props: CarouselIndicatorProps) {
 				type="button"
 				onClick={() => goToSlide(currentIndex)}
 				className={cnMerge(
-					"size-[6px] rounded-[50%]",
+					"size-1.5 rounded-[50%]",
 					classNames?.base,
 					currentIndex === currentSlide && ["w-[35px] rounded-[5px]", classNames?.isActive]
 				)}

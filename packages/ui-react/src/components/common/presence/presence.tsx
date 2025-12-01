@@ -2,9 +2,9 @@
 
 import { useComposeRefs } from "@zayne-labs/toolkit-react";
 import { isFunction, type UnknownObject } from "@zayne-labs/toolkit-type-helpers";
-import * as React from "react";
+
 import { Slot } from "../slot";
-import { type UsePresenceOptions, type UsePresenceResult, usePresence } from "./use-presence";
+import { usePresence, type UsePresenceOptions, type UsePresenceResult } from "./use-presence";
 
 type RefProp = { ref?: React.Ref<HTMLElement> };
 
