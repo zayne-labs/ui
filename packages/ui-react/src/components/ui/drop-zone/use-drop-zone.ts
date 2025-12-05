@@ -1,3 +1,4 @@
+import { cnMerge } from "@/lib/utils/cn";
 import { dataAttr } from "@zayne-labs/toolkit-core";
 import {
 	useCallbackRef,
@@ -8,7 +9,6 @@ import {
 } from "@zayne-labs/toolkit-react";
 import { composeRefs, composeTwoEventHandlers } from "@zayne-labs/toolkit-react/utils";
 import { useCallback, useMemo, useRef } from "react";
-import { cnMerge } from "@/lib/utils/cn";
 import { createDropZoneStore } from "./drop-zone-store";
 import type { DropZonePropGetters, UseDropZoneProps, UseDropZoneResult } from "./types";
 import { getScopeAttrs } from "./utils";
@@ -34,7 +34,6 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 
 	const inputRef = useRef<HTMLInputElement>(null);
 
-	const isOnUploadFnProvided = onUpload !== undefined;
 	const stableOnFilesChange = useCallbackRef(onFilesChange);
 	const stableOnUpload = useCallbackRef(onUpload);
 	const stableOnUploadError = useCallbackRef(onValidationError);
@@ -55,7 +54,7 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 			maxFileSize: shallowComparedMaxFileSize,
 			multiple,
 			onFilesChange: stableOnFilesChange,
-			onUpload: isOnUploadFnProvided ? stableOnUpload : undefined,
+			onUpload: stableOnUpload,
 			onValidationError: stableOnUploadError,
 			onValidationSuccess: stableOnUploadSuccess,
 			rejectDuplicateFiles,
@@ -69,7 +68,6 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 		shallowComparedMaxFileSize,
 		multiple,
 		stableOnFilesChange,
-		isOnUploadFnProvided,
 		stableOnUpload,
 		stableOnUploadError,
 		stableOnUploadSuccess,
@@ -122,8 +120,8 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 					`relative flex flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed
 					p-6 transition-colors duration-250 ease-out outline-none select-none
 					focus-visible:border-zu-ring/50`,
-					`data-[disabled]:pointer-events-none data-[drag-over]:opacity-60
-					data-[invalid]:border-zu-destructive data-[invalid]:ring-zu-destructive/20`,
+					`data-disabled:pointer-events-none data-drag-over:opacity-60
+					data-invalid:border-zu-destructive data-invalid:ring-zu-destructive/20`,
 					innerProps.className
 				),
 				"data-disabled": dataAttr(isDisabled),

@@ -241,7 +241,7 @@ const usePresence = (options: UsePresenceOptions): UsePresenceResult => {
 
 		if (isExitCompleted) {
 			toggleHasTransitioned(false);
-			stableOnExitComplete();
+			stableOnExitComplete?.();
 		}
 	}, [state, presentProp, stableOnExitComplete, toggleHasTransitioned]);
 
