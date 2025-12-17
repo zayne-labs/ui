@@ -35,8 +35,8 @@ The Form component consists of several composable parts:
 
 - **Form.Root** - The container for the form, manages form state
 - **Form.Field** - Container for individual form fields
-- **Form.FieldController** - Render prop component for custom field rendering within Form.Field
-- **Form.ControlledField** - Standalone controlled field component that creates its own context
+- **Form.FieldBoundController** - Render prop component for custom field rendering within Form.Field
+- **Form.FieldWithController** - Standalone controlled field component that creates its own context
 - **Form.Label** - Label for form inputs
 - **Form.Input** - Input field with automatic registration
 - **Form.TextArea** - Multi-line text input
@@ -47,8 +47,8 @@ The Form component consists of several composable parts:
 - **Form.InputLeftItem** - Element to prepend to an input
 - **Form.InputRightItem** - Element to append to an input
 - **Form.Submit** - Submit button for the form
-- **Form.SubscribeToFieldValue** - Component to subscribe to field value changes
-- **Form.SubscribeToFormState** - Component to subscribe to form state changes
+- **Form.Watch** - Component to subscribe to field value changes
+- **Form.StateSubscribe** - Component to subscribe to form state changes
 
 ## Basic Usage
 
@@ -118,7 +118,7 @@ function SignupForm() {
 	});
 
 	return (
-		<Form.Root methods={methods} onSubmit={onSubmit}>
+		<Form.Root form={methods} onSubmit={onSubmit}>
 			<Form.Field name="username">
 				<Form.Label>Username</Form.Label>
 				<Form.Input />
@@ -139,13 +139,13 @@ function SignupForm() {
 				<Form.ErrorMessage />
 			</Form.Field>
 
-			<Form.SubscribeToFormState>
+			<Form.StateSubscribe>
 				{({ isSubmitting, isValid }) => (
 					<Form.Submit disabled={isSubmitting || !isValid}>
 						{isSubmitting ? "Submitting..." : "Sign up"}
 					</Form.Submit>
 				)}
-			</Form.SubscribeToFormState>
+			</Form.StateSubscribe>
 		</Form.Root>
 	);
 }
@@ -160,7 +160,7 @@ function PasswordForm() {
 	const methods = useForm();
 
 	return (
-		<Form.Root methods={methods}>
+		<Form.Root form={methods}>
 			<Form.Field name="password">
 				<Form.Label>Password</Form.Label>
 				{/* Eye icon is included by default */}
@@ -188,7 +188,7 @@ function ProfileForm() {
 	const methods = useForm();
 
 	return (
-		<Form.Root methods={methods}>
+		<Form.Root form={methods}>
 			<Form.Field name="website">
 				<Form.Label>Website</Form.Label>
 				<Form.InputGroup>
@@ -221,11 +221,11 @@ function CustomFieldForm() {
 	const methods = useForm();
 
 	return (
-		<Form.Root methods={methods}>
+		<Form.Root form={methods}>
 			<Form.Field name="rating">
 				<Form.Label>Rating</Form.Label>
 
-				<Form.FieldController
+				<Form.FieldBoundController
 					render={({ field, fieldState }) => (
 						<StarRating
 							value={field.value}
@@ -256,13 +256,11 @@ function SubscriptionExample() {
 	});
 
 	return (
-		<Form.Root methods={methods}>
+		<Form.Root form={methods}>
 			<Form.Field name="firstName">
 				<Form.Label>First Name</Form.Label>
 				<Form.Input />
-				<Form.SubscribeToFieldValue>
-					{({ value }) => value && <p>Hello, {value}!</p>}
-				</Form.SubscribeToFieldValue>
+				<Form.Watch>{({ value }) => value && <p>Hello, {value}!</p>}</Form.Watch>
 			</Form.Field>
 
 			<Form.Field name="lastName">
@@ -270,9 +268,9 @@ function SubscriptionExample() {
 				<Form.Input />
 			</Form.Field>
 
-			<Form.SubscribeToFormState>
+			<Form.StateSubscribe>
 				{({ isDirty, isValid }) => <Form.Submit disabled={!isDirty || !isValid}>Submit</Form.Submit>}
-			</Form.SubscribeToFormState>
+			</Form.StateSubscribe>
 		</Form.Root>
 	);
 }
@@ -286,7 +284,7 @@ The main container for the form.
 
 **Props:**
 
-- `methods: UseFormReturn<TFieldValues>` - Form methods from react-hook-form's `useForm`
+- `form: UseFormReturn<TFieldValues>` - Form methods from react-hook-form's `useForm` (replaces `methods` prop)
 - `withEyeIcon?: boolean` - Control eye icon visibility globally (default: true)
 - `children: React.ReactNode` - Form content
 - `...props` - All other properties are passed to the underlying `<form>` element
@@ -302,7 +300,7 @@ Container for form field components.
 - `className?: string` - Optional CSS class for the wrapper
 - `children: React.ReactNode` - Field content
 
-### Form.FieldController
+### Form.FieldBoundController
 
 Render prop component for custom field rendering within Form.Field context.
 
@@ -316,7 +314,7 @@ Render prop component for custom field rendering within Form.Field context.
 ```tsx
 <Form.Field name="rating">
 	<Form.Label>Rating</Form.Label>
-	<Form.FieldController
+	<Form.FieldBoundController
 		render={({ field, fieldState }) => (
 			<StarRating
 				value={field.value}
@@ -330,7 +328,7 @@ Render prop component for custom field rendering within Form.Field context.
 </Form.Field>
 ```
 
-### Form.ControlledField
+### Form.FieldWithController
 
 Standalone controlled field component that creates its own field context.
 
@@ -345,7 +343,7 @@ Standalone controlled field component that creates its own field context.
 **Usage:**
 
 ```tsx
-<Form.ControlledField
+<Form.FieldWithController
 	name="customField"
 	render={({ field, fieldState }) => (
 		<div>
@@ -360,6 +358,8 @@ Standalone controlled field component that creates its own field context.
 	)}
 />
 ```
+
+### Form.Input
 
 ### Form.Input
 
@@ -392,7 +392,7 @@ Displays validation errors.
 - `type?: "regular" | "root"` - Error type (default: "regular")
 - `errorField?: string` - Field name to display errors for
 
-### Form.SubscribeToFieldValue
+### Form.Watch
 
 Subscribe to field value changes.
 
@@ -401,7 +401,7 @@ Subscribe to field value changes.
 - `name?: string` - Field name to subscribe to
 - `children: ({ value }) => React.ReactNode` - Render function
 
-### Form.SubscribeToFormState
+### Form.StateSubscribe
 
 Subscribe to form state changes.
 
