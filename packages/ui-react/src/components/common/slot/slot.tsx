@@ -77,21 +77,21 @@ function SlotClone(props: SlotCloneProps) {
 		return Children.only(null);
 	}
 
-	const resolvedChildren = isArray(children) ? children[0] : children;
+	const resolvedChild = isArray(children) ? children[0] : children;
 
-	if (!isValidElement<UnknownObject>(resolvedChildren)) {
+	if (!isValidElement<UnknownObject>(resolvedChild)) {
 		return null;
 	}
 
-	const childRef = (resolvedChildren.props.ref
-		?? (resolvedChildren as unknown as UnknownObject).ref) as React.Ref<HTMLElement>;
+	const childRef = (resolvedChild.props.ref
+		?? (resolvedChild as unknown as UnknownObject).ref) as React.Ref<HTMLElement>;
 
 	const ref = composeRefs(forwardedRef, childRef);
 
 	const clonedProps = {
-		...mergeProps(restOfSlotProps, resolvedChildren.props),
-		...(resolvedChildren.type !== ReactFragment && { ref }),
+		...mergeProps(restOfSlotProps, resolvedChild.props),
+		...(resolvedChild.type !== ReactFragment && { ref }),
 	};
 
-	return cloneElement(resolvedChildren, clonedProps);
+	return cloneElement(resolvedChild, clonedProps);
 }

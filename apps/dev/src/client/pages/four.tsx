@@ -1,9 +1,9 @@
 import { Card } from "@zayne-labs/ui-react/ui/card";
 
-function AppFour() {
+function PageFour() {
 	return (
 		<div
-			className="relative grid min-h-screen place-items-center bg-gradient-to-br from-sky-400
+			className="relative grid min-h-screen place-items-center bg-linear-to-br from-sky-400
 				via-indigo-500 to-purple-700 p-8"
 		>
 			<Card.Root
@@ -67,4 +67,4 @@ function AppFour() {
 	);
 }
 
-export default AppFour;
+export { PageFour };

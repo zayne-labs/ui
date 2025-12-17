@@ -3,15 +3,15 @@ import { css } from "@zayne-labs/toolkit-core";
 import {
 	composeEventHandlers,
 	createSlotComponent,
-	type GetSlotComponentProps,
 	getMultipleSlots,
 	getSlotMap,
+	type GetSlotComponentProps,
 } from "@zayne-labs/toolkit-react/utils";
 import { Show } from "@zayne-labs/ui-react/common/show";
 
 const onClick = composeEventHandlers();
 
-function AppTwo() {
+function PageTwo() {
 	return (
 		<main>
 			<style>{scopedCss}</style>
@@ -53,7 +53,7 @@ function AppTwo() {
 	);
 }
 
-export default AppTwo;
+export { PageTwo };
 
 type SlotComponentProps =
 	| GetSlotComponentProps<"content">

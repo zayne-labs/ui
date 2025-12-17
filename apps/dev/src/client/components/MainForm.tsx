@@ -15,17 +15,17 @@ const zodSchema = z.object({
 });
 
 function MainForm() {
-	const methods = useForm({
+	const form = useForm({
 		defaultValues: { notifications: [], password: "", username: "" },
 		mode: "onChange",
 		resolver: zodResolver(zodSchema),
 	});
 
-	const onSubmit = methods.handleSubmit((data) => console.info({ formData: data }));
+	const onSubmit = form.handleSubmit((data) => console.info({ formData: data }));
 
 	return (
 		<Form.Root
-			methods={methods}
+			form={form}
 			onSubmit={(event) => void onSubmit(event)}
 			className="w-full max-w-md gap-8 rounded-xl bg-white p-8 shadow-lg"
 		>
@@ -35,7 +35,7 @@ function MainForm() {
 			</div>
 
 			<section className="flex flex-col gap-6">
-				<Form.Field control={methods.control} name="username" className="gap-2">
+				<Form.Field control={form.control} name="username" className="gap-2">
 					<Form.Label className="text-sm font-medium text-gray-900">Username</Form.Label>
 					<Form.Input
 						className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900
@@ -47,7 +47,7 @@ function MainForm() {
 					<Form.ErrorMessage />
 				</Form.Field>
 
-				<Form.Field control={methods.control} name="password" className="gap-2">
+				<Form.Field control={form.control} name="password" className="gap-2">
 					<Form.Label className="text-sm font-medium text-gray-900">Password</Form.Label>
 					<Form.Input
 						type="password"
@@ -62,9 +62,9 @@ function MainForm() {
 					<Form.ErrorMessage />
 				</Form.Field>
 
-				<Form.Field control={methods.control} name="files" className="gap-2">
+				<Form.Field control={form.control} name="files" className="gap-2">
 					<Form.Label className="text-sm font-medium text-gray-900">Files</Form.Label>
-					<Form.FieldController
+					<Form.FieldBoundController
 						render={({ field }) => (
 							<DropZone.Root
 								// disabled={true}
@@ -204,7 +204,7 @@ function MainForm() {
 
 					<div className="space-y-4">
 						<Form.Field
-							control={methods.control}
+							control={form.control}
 							name="notifications.0"
 							className="group flex-row items-start gap-4 rounded-md p-2"
 						>
@@ -223,7 +223,7 @@ function MainForm() {
 						</Form.Field>
 
 						<Form.Field
-							control={methods.control}
+							control={form.control}
 							name="notifications.1"
 							className="group flex-row items-start gap-4 rounded-md p-2"
 						>
@@ -238,7 +238,7 @@ function MainForm() {
 						</Form.Field>
 
 						<Form.Field
-							control={methods.control}
+							control={form.control}
 							name="notifications.2"
 							className="group flex flex-row items-start gap-4 rounded-md p-2"
 						>
@@ -258,8 +258,8 @@ function MainForm() {
 					</div>
 				</div>
 
-				<Form.WatchFormState
-					control={methods.control}
+				<Form.StateSubscribe
+					control={form.control}
 					render={(formState) => {
 						return (
 							<Form.Submit
@@ -281,16 +281,16 @@ function MainForm() {
 
 				<div className="space-y-2 text-sm text-gray-600">
 					<Form.Watch
-						control={methods.control}
+						control={form.control}
 						name={["password", "username"]}
-						render={(field) => {
+						render={(value) => {
 							return (
 								<>
 									<p>
-										<span className="font-medium">Password:</span> {field.value[0]}
+										<span className="font-medium">Password:</span> {value[0]}
 									</p>
 									<p>
-										<span className="font-medium">Username:</span> {field.value[1]}
+										<span className="font-medium">Username:</span> {value[1]}
 									</p>
 								</>
 							);

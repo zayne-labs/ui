@@ -26,8 +26,8 @@ const fetchRepos = cache(() => {
 	});
 });
 
-function AppThree() {
-	const promise = useConstant(fetchRepos);
+function PageThree() {
+	const promise = useConstant(() => fetchRepos());
 
 	return (
 		<main className="min-h-screen bg-gray-50 py-8">
@@ -61,7 +61,7 @@ function AppThree() {
 	);
 }
 
-export default AppThree;
+export { PageThree };
 
 type ButtonProps = Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "type"> & {
 	children: React.ReactNode;

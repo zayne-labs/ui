@@ -1,5 +1,8 @@
 "use client";
 
+import { ForWithWrapper } from "@/components/common/for";
+import { Slot } from "@/components/common/slot";
+import { cnMerge } from "@/lib/utils/cn";
 import { dataAttr, on, toArray } from "@zayne-labs/toolkit-core";
 import { useCallbackRef, useToggle } from "@zayne-labs/toolkit-react";
 import {
@@ -12,25 +15,17 @@ import {
 	type PolymorphicPropsStrict,
 } from "@zayne-labs/toolkit-react/utils";
 import { type AnyString, defineEnum } from "@zayne-labs/toolkit-type-helpers";
-
-import { ForWithWrapper } from "@/components/common/for";
-import { Slot } from "@/components/common/slot";
-import { cnMerge } from "@/lib/utils/cn";
 import { Fragment as ReactFragment, useEffect, useId, useMemo, useRef } from "react";
 import {
 	type Control,
 	Controller,
-	type ControllerFieldState,
 	type ControllerProps,
-	type ControllerRenderProps,
 	type FieldPath,
-	type FieldPathValue,
-	type FieldPathValues,
+	type FormStateSubscribeProps,
 	FormProvider as HookFormProvider,
 	type RegisterOptions,
 	type UseFormReturn,
 	useFormState,
-	type UseFormStateReturn,
 	useWatch,
 } from "react-hook-form";
 import {
@@ -47,24 +42,27 @@ import {
 	useLaxFormRootContext,
 	useStrictFormFieldContext,
 } from "./form-context";
+import type { WatchProps } from "./types";
 import { getEyeIcon, getFieldErrorMessage } from "./utils";
 
 // eslint-disable-next-line ts-eslint/no-explicit-any -- Necessary so that arrays can also be accepted
 export type FieldValues = Record<string, any>;
 
-type FormRootProps<TFieldValues extends FieldValues> = InferProps<"form">
+type FormRootProps<TFieldValues extends FieldValues, TTransformedValues> = InferProps<"form">
 	& Partial<FormRootContext> & {
 		children: React.ReactNode;
-		methods: UseFormReturn<TFieldValues>;
+		form: UseFormReturn<TFieldValues, unknown, TTransformedValues>;
 	};
 
-export function FormRoot<TValues extends FieldValues>(props: FormRootProps<TValues>) {
-	const { children, className, methods, withEyeIcon, ...restOfProps } = props;
+export function FormRoot<TFieldValues extends FieldValues, TTransformedValues = TFieldValues>(
+	props: FormRootProps<TFieldValues, TTransformedValues>
+) {
+	const { children, className, form, withEyeIcon, ...restOfProps } = props;
 
 	const formContextValue = useMemo(() => ({ withEyeIcon }), [withEyeIcon]);
 
 	return (
-		<HookFormProvider {...methods}>
+		<HookFormProvider {...form}>
 			<LaxFormRootProvider value={formContextValue}>
 				<form
 					className={cnMerge("flex flex-col", className)}
@@ -80,7 +78,7 @@ export function FormRoot<TValues extends FieldValues>(props: FormRootProps<TValu
 	);
 }
 
-type FormFieldProps<TControl, TFieldValues extends FieldValues> = (TControl extends (
+type FormFieldProps<TControl, TFieldValues extends FieldValues, TTransformedValues> = (TControl extends (
 	Control<infer TValues>
 ) ?
 	{
@@ -88,18 +86,16 @@ type FormFieldProps<TControl, TFieldValues extends FieldValues> = (TControl exte
 		name: FieldPath<TValues>;
 	}
 :	{
-		control?: Control<TFieldValues>;
+		control?: Control<TFieldValues, unknown, TTransformedValues>;
 		name: FieldPath<TFieldValues>;
 	})
 	& (
-		| (InferProps<"div"> & {
-				withWrapper?: true;
-		  })
+		| (InferProps<"div"> & { withWrapper?: true })
 		| { children: React.ReactNode; className?: never; withWrapper: false }
 	);
 
-export function FormField<TControl, TFieldValues extends FieldValues = FieldValues>(
-	props: FormFieldProps<TControl, TFieldValues>
+export function FormField<TControl, TFieldValues extends FieldValues, TTransformedValues>(
+	props: FormFieldProps<TControl, TFieldValues, TTransformedValues>
 ) {
 	const { children, className, control, name, withWrapper = true } = props;
 
@@ -139,33 +135,27 @@ export function FormField<TControl, TFieldValues extends FieldValues = FieldValu
 	);
 }
 
-type FormFieldControllerRenderFn = (props: {
-	field: Omit<ControllerRenderProps, "value"> & {
-		value: never;
-	};
-	fieldState: ControllerFieldState;
-	formState: UseFormStateReturn<never>;
-}) => React.ReactElement;
+type FormFieldControlledFieldProps<
+	TControl,
+	TFieldValues extends FieldValues,
+	TName extends FieldPath<TFieldValues>,
+	TTransformedValues = TFieldValues,
+> =
+	TControl extends Control<infer TValues> ?
+		Omit<ControllerProps<TValues, FieldPath<TValues>, TTransformedValues>, "control"> & {
+			control?: never;
+		}
+	:	ControllerProps<TFieldValues, TName, TTransformedValues>;
 
-type FormFieldControllerProps = Omit<
-	ControllerProps<FieldValues, FieldPath<FieldValues>>,
-	"control" | "name" | "render"
-> & {
-	render: FormFieldControllerRenderFn;
-};
+export function FormFieldWithController<
+	TControl,
+	TFieldValues extends FieldValues,
+	TName extends FieldPath<TFieldValues>,
+	TTransformedValues = TFieldValues,
+>(props: FormFieldControlledFieldProps<TControl, TFieldValues, TName, TTransformedValues>) {
+	const formMethods = useFormMethodsContext({ strict: false });
 
-export function FormFieldController(props: FormFieldControllerProps) {
-	const { control } = useFormMethodsContext();
-	const { name } = useStrictFormFieldContext();
-	const { render, ...restOfProps } = props;
-
-	return <Controller name={name} control={control} render={render as never} {...restOfProps} />;
-}
-
-export function FormFieldControlledField<TFieldValues extends FieldValues>(
-	props: ControllerProps<TFieldValues>
-) {
-	const { name } = props;
+	const { control = formMethods?.control, name, render, ...restOfProps } = props;
 
 	const uniqueId = useId();
 
@@ -183,9 +173,32 @@ export function FormFieldControlledField<TFieldValues extends FieldValues>(
 	return (
 		<StrictFormFieldProvider value={fieldContextValue}>
 			<LaxFormFieldProvider value={fieldContextValue}>
-				<Controller {...props} />
+				<Controller
+					control={control as never}
+					name={name}
+					render={render as never}
+					{...(restOfProps as object)}
+				/>
 			</LaxFormFieldProvider>
 		</StrictFormFieldProvider>
+	);
+}
+
+type FormFieldBoundControllerProps<TFieldValues extends FieldValues, TTransformedValues> = Omit<
+	ControllerProps<TFieldValues, never, TTransformedValues>,
+	"control" | "name"
+>;
+
+export function FormFieldBoundController<
+	TFieldValues extends FieldValues = Record<string, never>,
+	TTransformedValues = TFieldValues,
+>(props: FormFieldBoundControllerProps<TFieldValues, TTransformedValues>) {
+	const { control } = useFormMethodsContext();
+	const { name } = useStrictFormFieldContext();
+	const { render, ...restOfProps } = props;
+
+	return (
+		<Controller name={name} control={control} render={render as never} {...(restOfProps as object)} />
 	);
 }
 
@@ -292,7 +305,7 @@ export function FormInputRightItem<TElement extends React.ElementType = "span">(
 }
 FormInputRightItem.slotSymbol = Symbol("input-right-item");
 
-type FormInputPrimitiveProps<TFieldValues extends FieldValues = FieldValues> = Omit<
+type FormInputPrimitiveProps<TFieldValues extends FieldValues> = Omit<
 	React.ComponentPropsWithRef<"input">,
 	"children"
 > & {
@@ -303,7 +316,7 @@ type FormInputPrimitiveProps<TFieldValues extends FieldValues = FieldValues> = O
 	withEyeIcon?: FormRootContext["withEyeIcon"];
 };
 
-type FormTextAreaPrimitiveProps<TFieldValues extends FieldValues = FieldValues> =
+type FormTextAreaPrimitiveProps<TFieldValues extends FieldValues> =
 	React.ComponentPropsWithRef<"textarea"> & {
 		classNames?: { base?: string; error?: string };
 		control?: Control<TFieldValues>;
@@ -311,13 +324,12 @@ type FormTextAreaPrimitiveProps<TFieldValues extends FieldValues = FieldValues> 
 		name?: FieldPath<TFieldValues>;
 	};
 
-type FormSelectPrimitiveProps<TFieldValues extends FieldValues = FieldValues> =
-	React.ComponentPropsWithRef<"select"> & {
-		classNames?: { base?: string; error?: string };
-		control?: Control<TFieldValues>;
-		fieldState?: FieldState;
-		name?: FieldPath<TFieldValues>;
-	};
+type FormSelectPrimitiveProps<TFieldValues extends FieldValues> = React.ComponentPropsWithRef<"select"> & {
+	classNames?: { base?: string; error?: string };
+	control?: Control<TFieldValues>;
+	fieldState?: FieldState;
+	name?: FieldPath<TFieldValues>;
+};
 
 const inputTypesWithoutFullWidth = new Set<React.HTMLInputTypeAttribute>(["checkbox", "radio"]);
 
@@ -512,15 +524,15 @@ export function FormSelectPrimitive<TFieldValues extends FieldValues>(
 
 type PrimitivePropsToOmit = "control" | "formState" | "name";
 
-export type FormInputProps = Omit<FormInputPrimitiveProps, PrimitivePropsToOmit> & {
+export type FormInputProps = Omit<FormInputPrimitiveProps<FieldValues>, PrimitivePropsToOmit> & {
 	rules?: RegisterOptions;
 };
 
-export type FormTextAreaProps = Omit<FormTextAreaPrimitiveProps, PrimitivePropsToOmit> & {
+export type FormTextAreaProps = Omit<FormTextAreaPrimitiveProps<FieldValues>, PrimitivePropsToOmit> & {
 	rules?: RegisterOptions;
 };
 
-export type FormSelectProps = Omit<FormSelectPrimitiveProps, PrimitivePropsToOmit> & {
+export type FormSelectProps = Omit<FormSelectPrimitiveProps<FieldValues>, PrimitivePropsToOmit> & {
 	rules?: RegisterOptions;
 };
 
@@ -771,7 +783,7 @@ export const FormErrorMessagePrimitive: FormErrorMessagePrimitiveType = (props) 
 	);
 };
 
-type FormErrorMessageProps<TControl, TFieldValues extends FieldValues> =
+type FormErrorMessageProps<TControl, TFieldValues extends FieldValues, TTransformedValues> =
 	| (TControl extends Control<infer TValues> ?
 			{
 				className?: string;
@@ -781,21 +793,21 @@ type FormErrorMessageProps<TControl, TFieldValues extends FieldValues> =
 			}
 	  :	{
 				className?: string;
-				control?: Control<TFieldValues>; // == Here for type inference of errorField prop
+				control?: Control<TFieldValues, unknown, TTransformedValues>; // == Here for type inference of errorField prop
 				errorField?: FieldPath<TFieldValues>;
 				type?: "regular";
 			})
 	| {
 			className?: string;
-			// eslint-disable-next-line react-x/no-unused-props -- This is just for type inference
-			control?: never;
 			errorField: string;
 			type: "root";
 	  };
 
-export function FormErrorMessage<TControl, TFieldValues extends FieldValues = FieldValues>(
-	props: FormErrorMessageProps<TControl, TFieldValues>
-) {
+export function FormErrorMessage<
+	TControl,
+	TFieldValues extends FieldValues = FieldValues,
+	TTransformedValues = TFieldValues,
+>(props: FormErrorMessageProps<TControl, TFieldValues, TTransformedValues>) {
 	const fieldContextValues = useLaxFormFieldContext();
 
 	const { className, errorField = fieldContextValues?.name, type = "regular" } = props;
@@ -841,27 +853,34 @@ export function FormSubmit<TElement extends React.ElementType = "button">(
 	);
 }
 
-type GetFieldValue<TFieldPathOrPaths, TFieldValues extends FieldValues> =
-	TFieldPathOrPaths extends Array<FieldPath<TFieldValues>> ?
-		FieldPathValues<TFieldValues, TFieldPathOrPaths>
-	: TFieldPathOrPaths extends FieldPath<TFieldValues> ? FieldPathValue<TFieldValues, TFieldPathOrPaths>
-	: unknown;
-
-type FormWatchRenderFn<TFieldValues extends FieldValues, TFieldPathOrPaths> = (props: {
-	value: GetFieldValue<TFieldPathOrPaths, TFieldValues>;
-}) => React.ReactNode;
-
-type FormWatchProps<TFieldValues extends FieldValues, TFieldPathOrPaths> = DiscriminatedRenderProps<
-	FormWatchRenderFn<TFieldValues, TFieldPathOrPaths>
-> & {
-	control: Control<TFieldValues>;
-	name?: TFieldPathOrPaths;
-};
+type FormWatchProps<
+	TFieldValues extends FieldValues,
+	TFieldName extends
+		| Array<FieldPath<TFieldValues>>
+		| FieldPath<TFieldValues>
+		| ReadonlyArray<FieldPath<TFieldValues>>
+		| undefined,
+	TTransformedValues,
+	TComputeValue,
+	TComputedProps extends WatchProps<
+		TFieldName,
+		TFieldValues,
+		unknown,
+		TTransformedValues,
+		TComputeValue
+	> = WatchProps<TFieldName, TFieldValues, unknown, TTransformedValues, TComputeValue>,
+> = DiscriminatedRenderProps<TComputedProps["render"]> & Omit<TComputedProps, "render">;
 
 export function FormWatch<
-	TFieldValues extends FieldValues,
-	const TFieldPathOrPaths extends Array<FieldPath<TFieldValues>> | FieldPath<TFieldValues>,
->(props: FormWatchProps<TFieldValues, TFieldPathOrPaths>) {
+	TFieldValues extends FieldValues = FieldValues,
+	const TFieldName extends
+		| Array<FieldPath<TFieldValues>>
+		| FieldPath<TFieldValues>
+		| ReadonlyArray<FieldPath<TFieldValues>>
+		| undefined = undefined,
+	TTransformedValues = TFieldValues,
+	TComputeValue = undefined,
+>(props: FormWatchProps<TFieldValues, TFieldName, TTransformedValues, TComputeValue>) {
 	const fieldContextValues = useLaxFormFieldContext();
 
 	const { children, name = fieldContextValues?.name, render } = props;
@@ -872,32 +891,26 @@ export function FormWatch<
 
 	const selectedChildren = typeof children === "function" ? children : render;
 
-	const fieldProps = { value: formValue };
-
-	const resolvedChildren = selectedChildren(fieldProps as never);
+	const resolvedChildren = selectedChildren(formValue as never);
 
 	return resolvedChildren;
 }
 
-type FormWatchFormStateRenderFn<TFieldValues extends FieldValues> = (
-	props: UseFormStateReturn<TFieldValues>
-) => React.ReactNode;
+type FormWatchFormStateProps<
+	TFieldValues extends FieldValues,
+	TTransformedValues,
+	TComputedProps extends FormStateSubscribeProps<TFieldValues, TTransformedValues> =
+		FormStateSubscribeProps<TFieldValues, TTransformedValues>,
+> = DiscriminatedRenderProps<TComputedProps["render"]> & Omit<TComputedProps, "render">;
 
-type FormWatchFormStateProps<TFieldValues extends FieldValues> = DiscriminatedRenderProps<
-	FormWatchFormStateRenderFn<TFieldValues>
-> & {
-	control?: Control<TFieldValues>;
-	name?: Array<FieldPath<TFieldValues>> | FieldPath<TFieldValues>;
-};
-
-export function FormWatchFormState<TFieldValues extends FieldValues = FieldValues>(
-	props: FormWatchFormStateProps<TFieldValues>
+export function FormStateSubscribe<TFieldValues extends FieldValues, TTransformedValues = TFieldValues>(
+	props: FormWatchFormStateProps<TFieldValues, TTransformedValues>
 ) {
 	const fieldContextValues = useLaxFormFieldContext();
 
-	const { children, control, name = fieldContextValues?.name, render } = props;
+	const { children, control, disabled, exact, name = fieldContextValues?.name, render } = props;
 
-	const formState = useFormState({ control, name: name as FieldPath<TFieldValues> });
+	const formState = useFormState({ control, disabled, exact, name: name as never });
 
 	const selectedChildren = typeof children === "function" ? children : render;
 

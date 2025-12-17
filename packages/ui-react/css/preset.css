@@ -2,4 +2,4 @@
 @import "./animation.css";
 @import "./utilities.css";
 
-@source "../dist/esm/**/*.js";
+@source "../dist/**/*.js";
