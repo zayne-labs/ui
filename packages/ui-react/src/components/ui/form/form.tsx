@@ -21,12 +21,13 @@ import {
 	Controller,
 	type ControllerProps,
 	type FieldPath,
-	type FormStateSubscribeProps,
 	FormProvider as HookFormProvider,
 	type RegisterOptions,
+	type FormStateSubscribeProps as StateSubscribeProps,
 	type UseFormReturn,
 	useFormState,
 	useWatch,
+	type WatchProps,
 } from "react-hook-form";
 import {
 	type FieldContextValue,
@@ -42,7 +43,6 @@ import {
 	useLaxFormRootContext,
 	useStrictFormFieldContext,
 } from "./form-context";
-import type { WatchProps } from "./types";
 import { getEyeIcon, getFieldErrorMessage } from "./utils";
 
 // eslint-disable-next-line ts-eslint/no-explicit-any -- Necessary so that arrays can also be accepted
@@ -862,13 +862,10 @@ type FormWatchProps<
 		| undefined,
 	TTransformedValues,
 	TComputeValue,
-	TComputedProps extends WatchProps<
-		TFieldName,
-		TFieldValues,
-		unknown,
-		TTransformedValues,
-		TComputeValue
-	> = WatchProps<TFieldName, TFieldValues, unknown, TTransformedValues, TComputeValue>,
+	TComputedProps extends Omit<
+		WatchProps<TFieldName, TFieldValues, unknown, TTransformedValues, TComputeValue>,
+		"names"
+	> = Omit<WatchProps<TFieldName, TFieldValues, unknown, TTransformedValues, TComputeValue>, "names">,
 > = DiscriminatedRenderProps<TComputedProps["render"]> & Omit<TComputedProps, "render">;
 
 export function FormWatch<
@@ -883,11 +880,17 @@ export function FormWatch<
 >(props: FormWatchProps<TFieldValues, TFieldName, TTransformedValues, TComputeValue>) {
 	const fieldContextValues = useLaxFormFieldContext();
 
-	const { children, name = fieldContextValues?.name, render } = props;
+	const { children, compute, disabled, exact, name = fieldContextValues?.name, render } = props;
 
 	const { control } = useFormMethodsContext();
 
-	const formValue = useWatch({ control, name: name as string }) as unknown;
+	const formValue = useWatch({
+		compute: compute as never,
+		control,
+		disabled,
+		exact,
+		name: name as string,
+	}) as unknown;
 
 	const selectedChildren = typeof children === "function" ? children : render;
 
@@ -896,15 +899,17 @@ export function FormWatch<
 	return resolvedChildren;
 }
 
-type FormWatchFormStateProps<
+type FormStateSubscribeProps<
 	TFieldValues extends FieldValues,
 	TTransformedValues,
-	TComputedProps extends FormStateSubscribeProps<TFieldValues, TTransformedValues> =
-		FormStateSubscribeProps<TFieldValues, TTransformedValues>,
+	TComputedProps extends StateSubscribeProps<TFieldValues, TTransformedValues> = StateSubscribeProps<
+		TFieldValues,
+		TTransformedValues
+	>,
 > = DiscriminatedRenderProps<TComputedProps["render"]> & Omit<TComputedProps, "render">;
 
 export function FormStateSubscribe<TFieldValues extends FieldValues, TTransformedValues = TFieldValues>(
-	props: FormWatchFormStateProps<TFieldValues, TTransformedValues>
+	props: FormStateSubscribeProps<TFieldValues, TTransformedValues>
 ) {
 	const fieldContextValues = useLaxFormFieldContext();
 
