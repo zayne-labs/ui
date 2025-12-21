@@ -94,9 +94,11 @@ type FormFieldProps<TControl, TFieldValues extends FieldValues, TTransformedValu
 		| { children: React.ReactNode; className?: never; withWrapper: false }
 	);
 
-export function FormField<TControl, TFieldValues extends FieldValues, TTransformedValues>(
-	props: FormFieldProps<TControl, TFieldValues, TTransformedValues>
-) {
+export function FormField<
+	TControl,
+	TFieldValues extends FieldValues = FieldValues,
+	TTransformedValues = TFieldValues,
+>(props: FormFieldProps<TControl, TFieldValues, TTransformedValues>) {
 	const { children, className, control, name, withWrapper = true } = props;
 
 	const { isDisabled, isInvalid } = useLaxFormFieldState({ control, name });
@@ -136,23 +138,16 @@ export function FormField<TControl, TFieldValues extends FieldValues, TTransform
 }
 
 type FormFieldControlledFieldProps<
-	TControl,
 	TFieldValues extends FieldValues,
 	TName extends FieldPath<TFieldValues>,
 	TTransformedValues = TFieldValues,
-> =
-	TControl extends Control<infer TValues> ?
-		Omit<ControllerProps<TValues, FieldPath<TValues>, TTransformedValues>, "control"> & {
-			control?: never;
-		}
-	:	ControllerProps<TFieldValues, TName, TTransformedValues>;
+> = ControllerProps<TFieldValues, TName, TTransformedValues>;
 
 export function FormFieldWithController<
-	TControl,
 	TFieldValues extends FieldValues,
 	TName extends FieldPath<TFieldValues>,
 	TTransformedValues = TFieldValues,
->(props: FormFieldControlledFieldProps<TControl, TFieldValues, TName, TTransformedValues>) {
+>(props: FormFieldControlledFieldProps<TFieldValues, TName, TTransformedValues>) {
 	const formMethods = useFormMethodsContext({ strict: false });
 
 	const { control = formMethods?.control, name, render, ...restOfProps } = props;
