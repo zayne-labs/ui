@@ -4,6 +4,7 @@ import { useCallbackRef } from "@zayne-labs/toolkit-react";
 import { type AnyString, isString } from "@zayne-labs/toolkit-type-helpers";
 import { useLayoutEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import { ClientGate } from "../client-gate";
 
 type ValidHtmlTags = keyof HTMLElementTagNameMap;
 
@@ -56,7 +57,7 @@ function Teleport(props: PortalProps) {
 		return null;
 	}
 
-	return createPortal(children, portalContainer, TELEPORT_KEY);
+	return <ClientGate>{() => createPortal(children, portalContainer, TELEPORT_KEY)}</ClientGate>;
 }
 
 export { Teleport };
