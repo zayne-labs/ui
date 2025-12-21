@@ -53,11 +53,11 @@ function Teleport(props: PortalProps) {
 		};
 	}, [to, insertPosition, stableUpdatePortalContainer]);
 
-	if (!portalContainer) {
-		return null;
-	}
-
-	return <ClientGate>{() => createPortal(children, portalContainer, TELEPORT_KEY)}</ClientGate>;
+	return (
+		<ClientGate>
+			{() => portalContainer && createPortal(children, portalContainer, TELEPORT_KEY)}
+		</ClientGate>
+	);
 }
 
 export { Teleport };
