@@ -340,8 +340,8 @@ export function FormInputPrimitive<TFieldValues extends FieldValues>(
 		classNames,
 		control,
 		fieldState,
-		id = fieldContextValues?.formItemId,
-		name = fieldContextValues?.name,
+		id,
+		name,
 		rules,
 		type = "text",
 		withEyeIcon = formRootContextValues?.withEyeIcon ?? true,
@@ -385,8 +385,8 @@ export function FormInputPrimitive<TFieldValues extends FieldValues>(
 				aria-invalid={dataAttr(isInvalid)}
 				data-invalid={dataAttr(isInvalid)}
 				data-disabled={dataAttr(isDisabled)}
-				id={id}
-				name={name}
+				id={Object.hasOwn(props, "id") ? id : fieldContextValues?.formItemId}
+				name={Object.hasOwn(props, "name") ? name : fieldContextValues?.name}
 				type={type === "password" && isPasswordVisible ? "text" : type}
 				className={cnMerge(
 					!inputTypesWithoutFullWidth.has(type) && "w-full min-w-0",
@@ -422,16 +422,7 @@ export function FormTextAreaPrimitive<TFieldValues extends FieldValues>(
 ) {
 	const fieldContextValues = useLaxFormFieldContext();
 
-	const {
-		className,
-		classNames,
-		control,
-		fieldState,
-		id = fieldContextValues?.formItemId,
-		name = fieldContextValues?.name,
-		rules,
-		...restOfProps
-	} = props;
+	const { className, classNames, control, fieldState, id, name, rules, ...restOfProps } = props;
 
 	const fieldStateFromLaxFormField = useLaxFormFieldState({ control, name });
 
@@ -452,8 +443,8 @@ export function FormTextAreaPrimitive<TFieldValues extends FieldValues>(
 			aria-invalid={dataAttr(isInvalid)}
 			data-disabled={dataAttr(isDisabled)}
 			data-invalid={dataAttr(isInvalid)}
-			id={id}
-			name={name}
+			id={Object.hasOwn(props, "id") ? id : fieldContextValues?.formItemId}
+			name={Object.hasOwn(props, "name") ? name : fieldContextValues?.name}
 			className={cnMerge(
 				`w-full bg-transparent text-sm placeholder:text-zu-muted-foreground
 				focus-visible:outline-hidden disabled:cursor-not-allowed disabled:opacity-50`,
