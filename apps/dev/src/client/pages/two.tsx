@@ -1,4 +1,3 @@
-/* eslint-disable tailwindcss-better/no-unregistered-classes */
 import { css } from "@zayne-labs/toolkit-core";
 import {
 	composeEventHandlers,
@@ -16,6 +15,7 @@ function PageTwo() {
 		<main>
 			<style>{scopedCss}</style>
 
+			{/* eslint-disable-next-line tailwindcss-better/no-unknown-classes */}
 			<section className="wrapper-section">
 				<ParentOne>
 					<ParentOne.Slot name="header">ParentOne Header</ParentOne.Slot>
@@ -66,6 +66,7 @@ function ParentOne(props: { children: React.ReactNode }) {
 	const slots = getSlotMap<SlotComponentProps>(children);
 
 	return (
+		// eslint-disable-next-line tailwindcss-better/no-unknown-classes
 		<section className="slot-container">
 			<h2>Parent One</h2>
 
@@ -89,6 +90,7 @@ function ParentTwo(props: { children: React.ReactNode }) {
 	} = getMultipleSlots(children, [ParentTwoHeader, ParentTwoContent, ParentTwoFooter]);
 
 	return (
+		// eslint-disable-next-line tailwindcss-better/no-unknown-classes
 		<section className="slot-container">
 			<h2>Parent Two</h2>
 

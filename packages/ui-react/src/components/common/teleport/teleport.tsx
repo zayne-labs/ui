@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallbackRef } from "@zayne-labs/toolkit-react";
-import { type AnyString, isString } from "@zayne-labs/toolkit-type-helpers";
+import { isString, type AnyString } from "@zayne-labs/toolkit-type-helpers";
 import { useLayoutEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { ClientGate } from "../client-gate";
@@ -11,10 +11,22 @@ type ValidHtmlTags = keyof HTMLElementTagNameMap;
 type PortalProps = {
 	children: React.ReactNode;
 	insertPosition?: InsertPosition;
-	to: AnyString | HTMLElement | ValidHtmlTags | null;
+	to: AnyString | HTMLElement | React.RefObject<HTMLElement> | ValidHtmlTags | null;
 };
 
 const TELEPORT_KEY = "teleport-wrapper";
+
+const getDestination = (to: NonNullable<PortalProps["to"]>) => {
+	if (isString(to)) {
+		return document.querySelector<HTMLElement>(to);
+	}
+
+	if (to instanceof HTMLElement) {
+		return to;
+	}
+
+	return to.current;
+};
 
 function Teleport(props: PortalProps) {
 	const { children, insertPosition, to } = props;
@@ -28,7 +40,7 @@ function Teleport(props: PortalProps) {
 	useLayoutEffect(() => {
 		if (!to) return;
 
-		const destination = isString(to) ? document.querySelector<HTMLElement>(to) : to;
+		const destination = getDestination(to);
 
 		if (!insertPosition) {
 			destination && stableUpdatePortalContainer(destination);

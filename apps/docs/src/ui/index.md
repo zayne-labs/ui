@@ -33,9 +33,9 @@ Import components from their specific paths:
 ```tsx
 import { Card } from "@zayne-labs/ui-react/ui/card";
 import { Carousel } from "@zayne-labs/ui-react/ui/carousel";
+import { useDragScroll } from "@zayne-labs/ui-react/ui/drag-scroll";
 import { DropZone } from "@zayne-labs/ui-react/ui/drop-zone";
 import { Form } from "@zayne-labs/ui-react/ui/form";
-import { useDragScroll } from "@zayne-labs/ui-react/ui/drag-scroll";
 ```
 
 ## Documentation

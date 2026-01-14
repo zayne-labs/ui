@@ -69,7 +69,7 @@ Here's a drag-and-drop file uploader and preview:
 ```tsx
 import { DropZone } from "@zayne-labs/ui-react/ui/drop-zone";
 
-function ImageUploader() {
+export function ImageUploader() {
 	return (
 		<DropZone.Root allowedFileTypes={["image/*"]} maxFileSize={{ mb: 5 }} maxFileCount={4}>
 			<DropZone.Area className="rounded-lg border-2 border-dashed border-gray-300 p-6 text-center">
@@ -84,7 +84,7 @@ function ImageUploader() {
 						className="mt-4 flex flex-col gap-2 rounded-lg border p-3"
 					>
 						<div className="flex items-center gap-3">
-							<DropZone.FileItemPreview className="size-12 rounded object-cover" />
+							<DropZone.FileItemPreview className="size-12 rounded-sm object-cover" />
 							<DropZone.FileItemMetadata className="flex-1" />
 							<DropZone.FileItemDelete className="text-red-500 hover:text-red-700">
 								✕
@@ -106,7 +106,7 @@ Handle different states with `Switch`:
 ```tsx
 import { Switch } from "@zayne-labs/ui-react/common/switch";
 
-function StatusBadge({ status }: { status: "active" | "inactive" | "pending" }) {
+export function StatusBadge({ status }: { status: "active" | "inactive" | "pending" }) {
 	return (
 		<Switch.Root value={status}>
 			<Switch.Match when="active">

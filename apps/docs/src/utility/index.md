@@ -29,15 +29,15 @@ Import utilities from their specific paths:
 
 ```tsx
 import { Await } from "@zayne-labs/ui-react/common/await";
-import { Show } from "@zayne-labs/ui-react/common/show";
-import { For } from "@zayne-labs/ui-react/common/for";
-import { Switch } from "@zayne-labs/ui-react/common/switch";
-import { Slot } from "@zayne-labs/ui-react/common/slot";
-import { ErrorBoundary } from "@zayne-labs/ui-react/common/error-boundary";
-import { SuspenseWithBoundary } from "@zayne-labs/ui-react/common/suspense-with-boundary";
-import { Teleport } from "@zayne-labs/ui-react/common/teleport";
 import { ClientGate } from "@zayne-labs/ui-react/common/client-gate";
+import { ErrorBoundary } from "@zayne-labs/ui-react/common/error-boundary";
+import { For } from "@zayne-labs/ui-react/common/for";
 import { Presence } from "@zayne-labs/ui-react/common/presence";
+import { Show } from "@zayne-labs/ui-react/common/show";
+import { Slot } from "@zayne-labs/ui-react/common/slot";
+import { SuspenseWithBoundary } from "@zayne-labs/ui-react/common/suspense-with-boundary";
+import { Switch } from "@zayne-labs/ui-react/common/switch";
+import { Teleport } from "@zayne-labs/ui-react/common/teleport";
 ```
 
 ## Documentation

@@ -1,6 +1,6 @@
+import type { PolymorphicProps } from "@zayne-labs/toolkit-react/utils";
 import { Slot } from "@/components/common/slot";
 import { cnMerge } from "@/lib/utils/cn";
-import type { PolymorphicProps } from "@zayne-labs/toolkit-react/utils";
 
 export function CardRoot<TElement extends React.ElementType = "article">(
 	props: PolymorphicProps<TElement>

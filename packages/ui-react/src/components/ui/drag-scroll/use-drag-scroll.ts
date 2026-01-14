@@ -1,164 +1,173 @@
-import { on } from "@zayne-labs/toolkit-core";
-import { useCallbackRef, useLazyRef } from "@zayne-labs/toolkit-react";
-import { composeRefs, type InferProps, mergeTwoProps } from "@zayne-labs/toolkit-react/utils";
-import { type RefCallback, useCallback, useMemo, useRef } from "react";
+import { dataAttr, on } from "@zayne-labs/toolkit-core";
+import { useCallbackRef, useStore } from "@zayne-labs/toolkit-react";
+import { composeRefs, composeTwoEventHandlers } from "@zayne-labs/toolkit-react/utils";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { cnMerge } from "@/lib/utils/cn";
-import { handleScrollSnap, resetCursor, updateCursor } from "./utils";
+import { createDragScrollStore } from "./drag-scroll-store";
+import type { DragScrollPropGetters, UseDragScrollProps, UseDragScrollResult } from "./types";
 
-type ItemProps<TItemElement extends HTMLElement> = Omit<InferProps<TItemElement>, "children">;
+const getScopeAttrs = (part: string) =>
+	({
+		"data-part": part,
+		"data-scope": "drag-scroll",
+		"data-slot": `drag-scroll-${part}`,
+	}) as const;
 
-type RootProps<TElement extends HTMLElement> = Omit<InferProps<TElement>, "children">;
-
-type DragScrollProps<TElement extends HTMLElement, TItemElement extends HTMLElement> = {
-	classNames?: { base?: string; item?: string };
-	extraItemProps?: ItemProps<TItemElement>;
-	extraRootProps?: InferProps<TElement>;
-	orientation?: "both" | "horizontal" | "vertical";
-	usage?: "allScreens" | "desktopOnly" | "mobileAndTabletOnly";
-};
-
-type DragScrollResult<TElement extends HTMLElement, TItemElement extends HTMLElement> = {
-	getItemProps: (itemProps?: ItemProps<TItemElement>) => ItemProps<TItemElement>;
-	getRootProps: (rootProps?: RootProps<TElement>) => RootProps<TElement>;
-};
-
-const useDragScroll = <TElement extends HTMLElement, TItemElement extends HTMLElement = HTMLElement>(
-	props?: DragScrollProps<TElement, TItemElement>
-): DragScrollResult<TElement, TItemElement> => {
+export const useDragScroll = <TElement extends HTMLElement>(
+	props?: UseDragScrollProps
+): UseDragScrollResult<TElement> => {
 	const {
 		classNames,
-		extraItemProps,
-		extraRootProps,
+		disableInternalStateSubscription = false,
 		orientation = "horizontal",
+		scrollAmount = "item",
 		usage = "allScreens",
 	} = props ?? {};
 
-	const dragContainerRef = useRef<TElement>(null);
+	const containerRef = useRef<TElement>(null);
 
-	const positionRef = useRef({ left: 0, top: 0, x: 0, y: 0 });
+	const storeApi = useMemo(() => {
+		return createDragScrollStore<TElement>({ orientation, scrollAmount, usage });
+	}, [orientation, scrollAmount, usage]);
 
-	const abortControllersRef = useLazyRef(() => ({
-		mouseLeave: new AbortController(),
-		mouseMove: new AbortController(),
-		mouseUp: new AbortController(),
-	}));
+	const actions = storeApi.getState().actions;
 
-	const handleMouseMove = useCallbackRef((event: MouseEvent) => {
-		if (!dragContainerRef.current) return;
+	/* eslint-disable react-hooks/hooks -- ignore */
+	const useDragScrollStore: UseDragScrollResult<TElement>["useDragScrollStore"] = (selector) => {
+		return useStore(storeApi as never, selector);
+	};
 
-		if (orientation === "horizontal" || orientation === "both") {
-			// == calculate the current change in the horizontal scroll position based on the difference between the previous mouse position and the new mouse position
-			const dx = event.clientX - positionRef.current.x;
+	const canGoToPrev = useDragScrollStore((state) =>
+		!disableInternalStateSubscription ? state.canGoToPrev : null
+	);
 
-			// == Assign the scrollLeft of the container to the difference between its previous horizontal scroll position and the change in the mouse position
-			dragContainerRef.current.scrollLeft = positionRef.current.left - dx;
-		}
+	const canGoToNext = useDragScrollStore((state) =>
+		!disableInternalStateSubscription ? state.canGoToNext : null
+	);
 
-		if (orientation === "vertical" || orientation === "both") {
-			// == calculate the current change in the vertical scroll position based on the difference between the previous mouse position and the new mouse position
-			const dy = event.clientY - positionRef.current.y;
+	const isDragging = useDragScrollStore((state) =>
+		!disableInternalStateSubscription ? state.isDragging : null
+	);
+	/* eslint-enable react-hooks/hooks -- ignore */
 
-			// == Assign the scrollTop of the container to the difference between its previous vertical scroll position and the change in the mouse position
-			dragContainerRef.current.scrollTop = positionRef.current.top - dy;
-		}
+	const refCallback: React.RefCallback<TElement> = useCallbackRef((node) => {
+		containerRef.current = node;
+		actions.setContainerRef(node);
+
+		if (!node) return;
+
+		const cleanupMouseDown = on("mousedown", node, actions.handleMouseDown);
+		const cleanupScroll = on("scroll", node as never, actions.handleScroll as never, {
+			passive: true,
+		});
+
+		return () => {
+			cleanupMouseDown();
+			cleanupScroll();
+		};
 	});
 
-	const handleMouseUpOrLeave = useCallbackRef(() => {
-		if (!dragContainerRef.current) return;
-
-		resetCursor(dragContainerRef.current);
-
-		abortControllersRef.current.mouseMove.abort();
-		abortControllersRef.current.mouseUp.abort();
-		abortControllersRef.current.mouseLeave.abort();
-	});
-
-	const handleMouseDown = useCallbackRef((event: MouseEvent) => {
-		if (usage === "mobileAndTabletOnly" && window.innerWidth >= 768) return;
-		if (usage === "desktopOnly" && window.innerWidth < 768) return;
-
-		if (!dragContainerRef.current) return;
-
-		// == Update all initial position properties stored in the positionRef
-		if (orientation === "horizontal" || orientation === "both") {
-			positionRef.current.x = event.clientX;
-			positionRef.current.left = dragContainerRef.current.scrollLeft;
-		}
-
-		if (orientation === "vertical" || orientation === "both") {
-			positionRef.current.y = event.clientY;
-			positionRef.current.top = dragContainerRef.current.scrollTop;
-		}
-
-		updateCursor(dragContainerRef.current);
-
-		on("mousemove", dragContainerRef.current, handleMouseMove, {
-			signal: abortControllersRef.current.mouseMove.signal,
-		});
-		on("mouseup", dragContainerRef.current, handleMouseUpOrLeave, {
-			signal: abortControllersRef.current.mouseUp.signal,
-		});
-		on("mouseleave", dragContainerRef.current, handleMouseUpOrLeave, {
-			signal: abortControllersRef.current.mouseLeave.signal,
-		});
-	});
-
-	const refCallBack: RefCallback<TElement> = useCallbackRef((node) => {
-		dragContainerRef.current = node;
-
-		node && handleScrollSnap(node);
-
-		const cleanup = on("mousedown", dragContainerRef.current, handleMouseDown);
+	// == Update scroll state when children might change (e.g., async loaded content)
+	useEffect(() => {
+		const cleanup = actions.initializeResizeObserver();
 
 		return cleanup;
-	});
+	}, [actions]);
 
-	const getRootProps: DragScrollResult<TElement, TItemElement>["getRootProps"] = useCallback(
-		(rootProps) => {
-			const mergedRootProps = mergeTwoProps(extraRootProps, rootProps);
-
+	const getRootProps: DragScrollPropGetters<TElement>["getRootProps"] = useCallback(
+		(innerProps) => {
 			return {
-				...mergedRootProps,
+				...getScopeAttrs("root"),
+				...(!disableInternalStateSubscription && {
+					"data-dragging": dataAttr(isDragging),
+				}),
+				...innerProps,
 				className: cnMerge(
-					`scrollbar-hidden flex w-full cursor-grab snap-x snap-mandatory overflow-x-scroll
-					overflow-y-hidden`,
+					`scrollbar-hidden flex w-full cursor-grab snap-x snap-mandatory overflow-x-scroll overflow-y-hidden`,
 					orientation === "horizontal" && "flex-row",
 					orientation === "vertical" && "flex-col",
 					usage === "mobileAndTabletOnly" && "md:cursor-default md:flex-col",
 					usage === "desktopOnly" && "max-md:cursor-default max-md:flex-col",
 					classNames?.base,
-					mergedRootProps.className
+					innerProps?.className
 				),
-				"data-part": "root",
-				"data-scope": "drag-scroll",
-				"data-slot": "drag-scroll-root",
-				ref: composeRefs(
-					refCallBack,
-					(mergedRootProps as { ref?: React.Ref<TElement> } | undefined)?.ref
-				),
-			};
+				ref: composeRefs(refCallback, innerProps?.ref),
+			} as never;
 		},
-		[extraRootProps, classNames?.base, orientation, refCallBack, usage]
+		[classNames?.base, disableInternalStateSubscription, isDragging, orientation, refCallback, usage]
 	);
 
-	const getItemProps: DragScrollResult<TElement, TItemElement>["getItemProps"] = useCallback(
-		(itemProps) => {
-			const mergedItemProps = mergeTwoProps(extraItemProps, itemProps);
+	const getItemProps: DragScrollPropGetters<TElement>["getItemProps"] = useCallback(
+		(innerProps) => {
+			return {
+				...getScopeAttrs("item"),
+				...innerProps,
+				className: cnMerge("snap-center snap-always", classNames?.item, innerProps?.className),
+			};
+		},
+		[classNames?.item]
+	);
+
+	const getBackButtonProps: DragScrollPropGetters<TElement>["getBackButtonProps"] = useCallback(
+		(innerProps) => {
+			const isDisabled = innerProps?.disabled ?? !canGoToPrev;
 
 			return {
-				...mergedItemProps,
-				className: cnMerge("snap-center snap-always", classNames?.item, mergedItemProps.className),
-				"data-part": "item",
-				"data-scope": "drag-scroll",
-				"data-slot": "drag-scroll-item",
+				...getScopeAttrs("back-button"),
+				type: "button",
+				...innerProps,
+				"aria-disabled": dataAttr(isDisabled),
+				"aria-label": innerProps?.["aria-label"] ?? "Scroll back",
+				"data-disabled": dataAttr(isDisabled),
+				disabled: isDisabled,
+				onClick: composeTwoEventHandlers(actions.goToPrev, innerProps?.onClick),
 			};
 		},
-		[extraItemProps, classNames?.item]
+		[actions.goToPrev, canGoToPrev]
 	);
 
-	const result = useMemo(() => ({ getItemProps, getRootProps }), [getItemProps, getRootProps]);
+	const getNextButtonProps: DragScrollPropGetters<TElement>["getNextButtonProps"] = useCallback(
+		(innerProps) => {
+			const isDisabled = innerProps?.disabled ?? !canGoToNext;
+
+			return {
+				...getScopeAttrs("next-button"),
+				type: "button",
+				...innerProps,
+				"aria-disabled": dataAttr(isDisabled),
+				"aria-label": innerProps?.["aria-label"] ?? "Scroll forward",
+				"data-disabled": dataAttr(isDisabled),
+				disabled: isDisabled,
+				onClick: composeTwoEventHandlers(actions.goToNext, innerProps?.onClick),
+			};
+		},
+		[actions.goToNext, canGoToNext]
+	);
+
+	const propGetters = useMemo<DragScrollPropGetters<TElement>>(
+		() =>
+			({
+				getBackButtonProps,
+				getItemProps,
+				getNextButtonProps,
+				getRootProps,
+			}) satisfies DragScrollPropGetters<TElement>,
+		[getBackButtonProps, getItemProps, getNextButtonProps, getRootProps]
+	);
+
+	const stableUseDragScrollStore = useCallbackRef(useDragScrollStore);
+
+	const result = useMemo<UseDragScrollResult<TElement>>(
+		() =>
+			({
+				containerRef,
+				disableInternalStateSubscription,
+				propGetters,
+				storeApi,
+				useDragScrollStore: stableUseDragScrollStore,
+			}) satisfies UseDragScrollResult<TElement>,
+		[propGetters, disableInternalStateSubscription, storeApi, stableUseDragScrollStore]
+	);
 
 	return result;
 };
-
-export { useDragScroll };

@@ -1,10 +1,10 @@
-import { zayne } from "@zayne-labs/eslint-config";
+import { GLOB_MARKDOWN_CODE, zayne } from "@zayne-labs/eslint-config";
 
 export default zayne(
 	{
 		react: true,
 		tailwindcssBetter: {
-			settings: { entryPoint: "packages/ui-react/tailwind.css" },
+			settings: { entryPoint: "apps/dev/tailwind.css" },
 		},
 		type: "lib",
 		typescript: {
@@ -12,7 +12,15 @@ export default zayne(
 		},
 	},
 	{
-		files: ["apps/docs/**/*"],
+		files: [`apps/docs/src/${GLOB_MARKDOWN_CODE}`],
+		rules: {
+			"no-await-in-loop": "off",
+			"react-hooks/hooks": "off",
+			"react-hooks/rules-of-hooks": "off",
+		},
+	},
+	{
+		files: ["apps/**/*"],
 		rules: {
 			"eslint-comments/require-description": "off",
 		},

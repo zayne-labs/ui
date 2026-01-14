@@ -16,19 +16,6 @@ The Form component provides a powerful, type-safe way to build forms in React. I
 - **Field Subscription** - Subscribe to field values and form state changes
 - **TypeScript Support** - Full type inference for form values and validation rules
 
-## Installation
-
-```bash
-# Using pnpm (recommended)
-pnpm add @zayne-labs/ui-react react-hook-form
-
-# Using npm
-npm install @zayne-labs/ui-react react-hook-form
-
-# Using yarn
-yarn add @zayne-labs/ui-react react-hook-form
-```
-
 ## Component Structure
 
 The Form component consists of several composable parts:
@@ -53,10 +40,10 @@ The Form component consists of several composable parts:
 ## Basic Usage
 
 ```tsx
-import { useForm } from "react-hook-form";
 import { Form } from "@zayne-labs/ui-react/ui/form";
+import { useForm } from "react-hook-form";
 
-function LoginForm() {
+export function LoginForm() {
 	const form = useForm({
 		defaultValues: {
 			email: "",
@@ -91,10 +78,10 @@ function LoginForm() {
 ## Form Validation Example
 
 ```tsx
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { Form } from "@zayne-labs/ui-react/ui/form";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
 
 // Define validation schema
 const formSchema = z.object({
@@ -103,7 +90,7 @@ const formSchema = z.object({
 	password: z.string().min(8, "Password must be at least 8 characters"),
 });
 
-function SignupForm() {
+export function SignupForm() {
 	const methods = useForm({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
@@ -156,7 +143,7 @@ function SignupForm() {
 Password inputs automatically include an eye icon for toggling visibility:
 
 ```tsx
-function PasswordForm() {
+export function PasswordForm() {
 	const methods = useForm();
 
 	return (
@@ -184,7 +171,7 @@ function PasswordForm() {
 Use input groups to add elements before or after inputs:
 
 ```tsx
-function ProfileForm() {
+export function ProfileForm() {
 	const methods = useForm();
 
 	return (
@@ -217,7 +204,7 @@ function ProfileForm() {
 For custom components or third-party integrations:
 
 ```tsx
-function CustomFieldForm() {
+export function CustomFieldForm() {
 	const methods = useForm();
 
 	return (
@@ -247,7 +234,7 @@ function CustomFieldForm() {
 Subscribe to field values and form state:
 
 ```tsx
-function SubscriptionExample() {
+export function SubscriptionExample() {
 	const methods = useForm({
 		defaultValues: {
 			firstName: "",
@@ -358,8 +345,6 @@ Standalone controlled field component that creates its own field context.
 	)}
 />
 ```
-
-### Form.Input
 
 ### Form.Input
 

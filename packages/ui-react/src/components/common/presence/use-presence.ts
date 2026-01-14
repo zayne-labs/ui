@@ -110,6 +110,7 @@ const usePresence = (options: UsePresenceOptions): UsePresenceResult => {
 				break;
 			}
 
+			// eslint-disable-next-line react-hooks/todo -- Ignore
 			case Boolean(node) && variant === "animation": {
 				const hasAnimation = currentAnimationName !== "none" && styles?.display !== "none";
 

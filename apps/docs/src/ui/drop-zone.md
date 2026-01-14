@@ -12,18 +12,12 @@ A comprehensive file upload component with drag-and-drop support, validation, an
 - 🎛️ **Flexible API** - Use as components or hook
 - 🔒 **Type-Safe** - Full TypeScript support
 
-## Installation
-
-```bash
-pnpm add @zayne-labs/ui-react
-```
-
 ## Basic Usage
 
 ```tsx
 import { DropZone } from "@zayne-labs/ui-react/ui/drop-zone";
 
-function FileUpload() {
+export function FileUpload() {
 	return (
 		<DropZone.Root allowedFileTypes={[".jpg", ".png", ".pdf"]} maxFileSize={{ mb: 5 }} multiple={true}>
 			<DropZone.Area className="rounded-lg border-2 border-dashed border-gray-300 p-8">
@@ -35,9 +29,9 @@ function FileUpload() {
 					<DropZone.FileItem
 						key={ctx.fileState.id}
 						fileState={ctx.fileState}
-						className="flex items-center gap-4 rounded border p-3"
+						className="flex items-center gap-4 rounded-sm border p-3"
 					>
-						<DropZone.FileItemPreview className="h-12 w-12" />
+						<DropZone.FileItemPreview className="size-12" />
 						<DropZone.FileItemMetadata className="flex-1" />
 						<DropZone.FileItemProgress className="w-20" />
 						<DropZone.FileItemDelete className="text-red-500 hover:text-red-700">
@@ -58,7 +52,7 @@ For more control, use the hook directly:
 ```tsx
 import { useDropZone } from "@zayne-labs/ui-react/ui/drop-zone";
 
-function CustomFileUpload() {
+export function CustomFileUpload() {
 	const { propGetters, useDropZoneStore } = useDropZone({
 		allowedFileTypes: [".jpg", ".png"],
 		maxFileSize: { mb: 5 },
@@ -85,11 +79,11 @@ function CustomFileUpload() {
 						<img
 							src={fileState.preview}
 							alt={fileState.file.name}
-							className="aspect-square w-full rounded object-cover"
+							className="aspect-square w-full rounded-sm object-cover"
 						/>
 						<button
 							onClick={() => storeActions.removeFile({ fileStateOrID: fileState })}
-							className="absolute right-2 top-2 h-6 w-6 rounded-full bg-red-500 text-white"
+							className="absolute top-2 right-2 size-6 rounded-full bg-red-500 text-white"
 						>
 							✕
 						</button>
@@ -104,36 +98,39 @@ function CustomFileUpload() {
 ## File Upload with Progress
 
 ```tsx
-import { useDropZone, type UseDropZoneProps, DropZoneError } from "@zayne-labs/ui-react/ui/drop-zone";
+import { DropZoneError, useDropZone, type UseDropZoneProps } from "@zayne-labs/ui-react/ui/drop-zone";
 
-function UploadWithProgress() {
-	const handleUpload: UseDropZoneProps["onUpload"] = async (ctx) => {
-		const { fileStateArray, onProgress, onSuccess, onError } = ctx;
+const handleUpload: UseDropZoneProps["onUpload"] = async (ctx) => {
+	const { fileStateArray, onProgress, onSuccess, onError } = ctx;
 
-		for (const fileState of fileStateArray) {
-			try {
-				// Simulate upload progress
-				for (let progress = 0; progress <= 100; progress += 10) {
-					await new Promise((resolve) => setTimeout(resolve, 100));
-					onProgress({ fileStateOrID: fileState.id, progress });
-				}
+	const simulateUploadProgress = async (fileState: FileState) => {
+		for (let progress = 0; progress <= 100; progress += 10) {
+			await new Promise((resolve) => setTimeout(resolve, 100));
 
-				onSuccess({ fileStateOrID: fileState.id });
-			} catch (error) {
-				onError({
-					error: new DropZoneError(
-						{
-							file: fileState.file,
-							message: `File: ${fileState.file.name} upload did not finish successfully`,
-						},
-						{ cause: error }
-					),
-					fileStateOrID: fileState,
-				});
-			}
+			onProgress({ fileStateOrID: fileState.id, progress });
 		}
 	};
 
+	for (const fileState of fileStateArray) {
+		try {
+			await simulateUploadProgress(fileState);
+			onSuccess({ fileStateOrID: fileState.id });
+		} catch (error) {
+			onError({
+				error: new DropZoneError(
+					{
+						file: fileState.file,
+						message: `File: ${fileState.file.name} upload did not finish successfully`,
+					},
+					{ cause: error }
+				),
+				fileStateOrID: fileState,
+			});
+		}
+	}
+};
+
+export function UploadWithProgress() {
 	return (
 		<DropZone.Root allowedFileTypes={[".jpg", ".png", ".pdf"]} maxFileSize={10} onUpload={handleUpload}>
 			<DropZone.Area>
@@ -160,7 +157,7 @@ function UploadWithProgress() {
 ## Custom File Previews
 
 ```tsx
-function CustomPreviews() {
+export function CustomPreviews() {
 	return (
 		<DropZone.Root allowedFileTypes={[".jpg", ".png", ".pdf"]}>
 			<DropZone.Area>
@@ -176,9 +173,9 @@ function CustomPreviews() {
 									<img
 										src={fileState.preview}
 										alt={fileState.file.name}
-										className="h-full w-full rounded object-cover"
+										className="size-full rounded-sm object-cover"
 									/>
-								:	<div className="flex h-full w-full items-center justify-center rounded bg-gray-100">
+								:	<div className="flex size-full items-center justify-center rounded-sm bg-gray-100">
 										📄 {fileExtension.toUpperCase()}
 									</div>
 							}
@@ -221,7 +218,7 @@ The custom validation can be either sync or async. The context object contains t
 Example: Custom validation file with server API
 
 ```tsx
-function CustomValidation() {
+export function CustomValidation() {
 	return (
 		<DropZone.Root
 			allowedFileTypes={[".jpg", ".png"]}
@@ -381,7 +378,7 @@ Use the context hook for advanced usage:
 ```tsx
 import { useDropZoneStoreContext } from "@zayne-labs/ui-react/ui/drop-zone";
 
-function CustomComponent() {
+export function CustomComponent() {
 	const fileStateArray = useDropZoneStoreContext((state) => state.fileStateArray);
 	const actions = useDropZoneStoreContext((state) => state.actions);
 	const isDraggingOver = useDropZoneStoreContext((state) => state.isDraggingOver);
@@ -437,11 +434,11 @@ Components use data attributes for styling:
 
 ```typescript
 type FileState = {
+	error?: { message: string };
 	file: File;
 	id: string;
 	preview: string | undefined;
 	progress: number; // 0-100
-	status: "idle" | "uploading" | "success" | "error";
-	error?: { message: string };
+	status: "error" | "idle" | "success" | "uploading";
 };
 ```

@@ -140,6 +140,7 @@ export type DropZoneActions = {
 		handlePaste: (event: React.ClipboardEvent<HTMLElement>) => Awaitable<void>;
 		openFilePicker: () => void;
 		removeFile: (ctx: FileStateOrIDProp) => void;
+		setInputRef: (element: HTMLInputElement | null) => void;
 		updateFileState: (
 			ctx: FileStateOrIDProp & Partial<Omit<FileState, "file" | "id" | "preview">>
 		) => void;

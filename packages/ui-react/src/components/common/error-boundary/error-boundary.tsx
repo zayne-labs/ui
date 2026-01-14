@@ -1,8 +1,9 @@
-import { isFunction } from "@zayne-labs/toolkit-type-helpers";
+"use client";
 
+import { isFunction } from "@zayne-labs/toolkit-type-helpers";
 import { Component } from "react";
 import { ErrorBoundaryContext, type ErrorBoundaryContextType } from "./error-boundary-context";
-import type { ErrorBoundaryProps, FallbackProps } from "./types";
+import type { ErrorBoundaryProps, ErrorFallbackProps } from "./types";
 
 type ErrorBoundaryState =
 	| {
@@ -77,7 +78,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 					const fallbackRenderProps = {
 						error,
 						resetErrorBoundary: this.#resetErrorBoundary,
-					} satisfies FallbackProps;
+					} satisfies ErrorFallbackProps;
 
 					childToRender = fallback(fallbackRenderProps);
 					break;

@@ -2,6 +2,7 @@ import { Switch } from "@zayne-labs/ui-react/common/switch";
 import { PageFive } from "./pages/five";
 import { PageFour } from "./pages/four";
 import { PageOne } from "./pages/one";
+import { PageSeven } from "./pages/seven";
 import { PageSix } from "./pages/six";
 import { PageThree } from "./pages/three";
 import { PageTwo } from "./pages/two";
@@ -33,6 +34,10 @@ function App() {
 
 			<Switch.Match when="/six">
 				<PageSix />
+			</Switch.Match>
+
+			<Switch.Match when="/seven">
+				<PageSeven />
 			</Switch.Match>
 
 			<Switch.Default>

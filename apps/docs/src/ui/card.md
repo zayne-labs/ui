@@ -16,25 +16,12 @@ Each part of the Card is built as a polymorphic component, allowing you to chang
 - **Semantic HTML** - Default elements follow appropriate HTML semantics (article, header, etc.)
 - **Slot Support** - CardFooter and CardAction support the `asChild` pattern for advanced composition
 
-## Installation
-
-```bash
-# Using pnpm (recommended)
-pnpm add @zayne-labs/ui-react
-
-# Using npm
-npm install @zayne-labs/ui-react
-
-# Using yarn
-yarn add @zayne-labs/ui-react
-```
-
 ## Basic Usage
 
 ```tsx
 import { Card } from "@zayne-labs/ui-react/ui/card";
 
-function BasicCard() {
+export function BasicCard() {
 	return (
 		<Card.Root className="rounded-lg border p-6 shadow-sm">
 			<Card.Header className="space-y-1.5 pb-4">
@@ -45,7 +32,7 @@ function BasicCard() {
 			<Card.Content className="py-4">This is the main content of the card.</Card.Content>
 
 			<Card.Footer className="flex justify-end pt-4">
-				<button className="rounded bg-blue-500 px-4 py-2 text-white">Action</button>
+				<button className="rounded-sm bg-blue-500 px-4 py-2 text-white">Action</button>
 			</Card.Footer>
 		</Card.Root>
 	);
@@ -59,7 +46,7 @@ function BasicCard() {
 Change the underlying HTML element of any card part using the `as` prop:
 
 ```tsx
-function PolymorphicCard() {
+export function PolymorphicCard() {
 	return (
 		<Card.Root as="div" className="rounded-lg border p-6">
 			<Card.Header as="section">
@@ -80,12 +67,12 @@ function PolymorphicCard() {
 The `asChild` prop allows you to use your own component as the root element:
 
 ```tsx
-function CardWithAsChild() {
+export function CardWithAsChild() {
 	return (
 		<Card.Root className="rounded-lg border p-6">
 			{/* Other card parts */}
 
-			<Card.Footer asChild>
+			<Card.Footer asChild={true}>
 				<div className="flex items-center justify-between pt-4">
 					<button>Cancel</button>
 					<button>Submit</button>
@@ -99,7 +86,7 @@ function CardWithAsChild() {
 ### Card with Action Button
 
 ```tsx
-function CardWithAction() {
+export function CardWithAction() {
 	return (
 		<Card.Root className="rounded-lg border p-6">
 			<Card.Header>
@@ -110,29 +97,6 @@ function CardWithAction() {
 
 			<Card.Content>
 				Content of the card with an action button positioned in the top-right corner of the header.
-			</Card.Content>
-		</Card.Root>
-	);
-}
-```
-
-### Nested Cards
-
-```tsx
-function NestedCards() {
-	return (
-		<Card.Root className="rounded-lg border p-6">
-			<Card.Header>
-				<Card.Title>Parent Card</Card.Title>
-			</Card.Header>
-
-			<Card.Content className="py-4">
-				<Card.Root className="rounded-lg border bg-gray-50 p-4">
-					<Card.Header>
-						<Card.Title>Nested Card</Card.Title>
-					</Card.Header>
-					<Card.Content>This is a nested card within the parent card.</Card.Content>
-				</Card.Root>
 			</Card.Content>
 		</Card.Root>
 	);
@@ -216,18 +180,6 @@ Container for the main content of the card.
 - `children: React.ReactNode` - Card content
 - `...props` - All other props are passed to the underlying element
 
-### Card.Footer
-
-Container for the card footer content.
-
-**Props:**
-
-- `as?: React.ElementType` - The element to render as (default: 'footer')
-- `asChild?: boolean` - Whether to merge props onto the immediate child (default: false)
-- `className?: string` - Additional CSS classes
-- `children: React.ReactNode` - Footer content
-- `...props` - All other props are passed to the underlying element
-
 ## Styling
 
 ### Approach
@@ -238,38 +190,6 @@ The Card component follows a zero-styling philosophy, with minimal default style
 - `Card.Description` has `text-zu-muted-foreground text-sm` styles
 
 All other styling is entirely up to you, giving complete freedom to match your design system.
-
-### Styling Best Practices
-
-1. **Add border and padding to Card.Root:**
-
-   ```tsx
-   <Card.Root className="rounded-lg border p-6" />
-   ```
-
-2. **Use spacing between card sections:**
-
-   ```tsx
-   <Card.Header className="pb-4" />
-   <Card.Content className="py-4" />
-   <Card.Footer className="pt-4" />
-   ```
-
-3. **Consider using a consistent approach to shadows:**
-
-   ```tsx
-   <Card.Root className="shadow-sm transition-shadow duration-200 hover:shadow-md" />
-   ```
-
-4. **For clickable cards, remember accessibility:**
-
-   ```tsx
-   <Card.Root
-   	as="button"
-   	className="block w-full cursor-pointer text-left hover:bg-gray-50"
-   	onClick={() => console.log("Card clicked")}
-   />
-   ```
 
 ## Accessibility
 
@@ -284,7 +204,7 @@ When using Card components, consider these accessibility best practices:
 ```tsx
 import { Card } from "@zayne-labs/ui-react/ui";
 
-function ProductCard({ product }) {
+export function ProductCard({ product }) {
 	return (
 		<Card.Root className="overflow-hidden rounded-lg border shadow-sm transition-shadow duration-200 hover:shadow-md">
 			<img src={product.image} alt={product.name} className="h-48 w-full object-cover" />
@@ -301,7 +221,7 @@ function ProductCard({ product }) {
 
 			<Card.Footer className="flex items-center justify-between bg-gray-50 p-4">
 				<button className="text-blue-500 hover:underline">Details</button>
-				<button className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600">
+				<button className="rounded-sm bg-blue-500 px-4 py-2 text-white hover:bg-blue-600">
 					Add to Cart
 				</button>
 			</Card.Footer>

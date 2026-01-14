@@ -59,38 +59,38 @@ yarn add @zayne-labs/ui-react
 ## Usage
 
 ```tsx
-import { Switch } from '@zayne-labs/ui-react/common/switch'
+import { Switch } from "@zayne-labs/ui-react/common/switch";
 
 export default function App() {
-  const status = "loading"
+	const status = "loading";
 
-  return (
-    <Switch.Root value={status}>
-      <Switch.Match when="loading">
-        <div>Loading...</div>
-      </Switch.Match>
+	return (
+		<Switch.Root value={status}>
+			<Switch.Match when="loading">
+				<div>Loading...</div>
+			</Switch.Match>
 
-      <Switch.Match when="error">
-        <div>Something went wrong</div>
-      </Switch.Match>
+			<Switch.Match when="error">
+				<div>Something went wrong</div>
+			</Switch.Match>
 
-      <Switch.Default>
-        <div>Content loaded!</div>
-      </Switch.Default>
-    </Switch.Root>
-  )
+			<Switch.Default>
+				<div>Content loaded!</div>
+			</Switch.Default>
+		</Switch.Root>
+	);
 }
 ```
 
 ```tsx
-import { For } from '@zayne-labs/ui-react/common/for'
+import { For } from "@zayne-labs/ui-react/common/for";
 
 export function UserList({ users }) {
-  return (
-    <For each={users} fallback={<p>No users found</p>}>
-      {(user) => <div key={user.id}>{user.name}</div>}
-    </For>
-  )
+	return (
+		<For each={users} fallback={<p>No users found</p>}>
+			{(user) => <div key={user.id}>{user.name}</div>}
+		</For>
+	);
 }
 ```
 

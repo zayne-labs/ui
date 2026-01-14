@@ -9,11 +9,13 @@ Render the children only after the JS has loaded client-side. Use an optional fa
 ```tsx
 import { ClientGate } from "@zayne-labs/ui-react/common/client-gate";
 
-return (
-	<ClientGate fallback={<FakeChart />}>
-		<Chart />
-	</ClientGate>
-);
+export default function App() {
+	return (
+		<ClientGate fallback={<FakeChart />}>
+			<Chart />
+		</ClientGate>
+	);
+}
 ```
 
 ## API

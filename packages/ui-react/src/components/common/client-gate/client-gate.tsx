@@ -35,9 +35,9 @@ function ClientGate(props: ClientGateProps) {
 
 	const isHydrated = useIsHydrated();
 
-	const getResolvedChildren = () => (isFunction(children) ? children() : children);
+	const resolvedChildren = () => (isFunction(children) ? children() : children);
 
-	return isHydrated ? getResolvedChildren() : fallback;
+	return isHydrated ? resolvedChildren() : fallback;
 }
 
 export { ClientGate };

@@ -4,48 +4,74 @@ A utility component that adds mouse-drag scrolling behavior to containers with z
 
 ## Overview
 
-The DragScroll component enables intuitive mouse-drag scrolling for content containers, enhancing user experience for scrollable content. It provides responsive options that can target specific device types and supports both horizontal and vertical scrolling.
+The DragScroll component enables intuitive mouse-drag scrolling for content containers, enhancing user experience for scrollable content. It provides responsive options that can target specific device types, supports both horizontal and vertical scrolling, and includes built-in state management for navigation controls.
 
 ## Key Features
 
 - **Orientation Options** - Support for horizontal, vertical, or both scroll directions
 - **Responsive Behavior** - Configure to work on all screens, desktop only, or mobile/tablet only
 - **Built-in Scroll Snap** - Automatic scroll snap functionality for smooth item alignment
-- **Cursor Feedback** - Automatic cursor state management during drag operations
+- **State Management** - Store-based architecture for tracking scroll state (`canGoToNext`, `isDragging`, etc.)
+- **Navigation Controls** - Helpers for implementing "Next" and "Previous" buttons easily
 - **Zero Styling By Default** - Minimal default styling with complete customization control
 - **Props Getter Pattern** - Clean API for applying behavior to existing components
-
-## Installation
-
-```bash
-# Using pnpm (recommended)
-pnpm add @zayne-labs/ui-react
-
-# Using npm
-npm install @zayne-labs/ui-react
-
-# Using yarn
-yarn add @zayne-labs/ui-react
-```
 
 ## Basic Usage
 
 ```tsx
 import { useDragScroll } from "@zayne-labs/ui-react/ui/drag-scroll";
 
-function BasicDragScroll() {
-	const { getRootProps, getItemProps } = useDragScroll();
+export function BasicDragScroll() {
+	const { propGetters } = useDragScroll();
 
 	return (
-		<div {...getRootProps()}>
+		<div {...propGetters.getRootProps()}>
 			{[...Array(10).keys()].map((index) => (
 				<div
 					key={index}
-					{...getItemProps({ className: "flex-shrink-0 w-64 h-40 bg-gray-100 m-2 p-4" })}
+					{...propGetters.getItemProps({ className: "flex-shrink-0 w-64 h-40 bg-gray-100 m-2 p-4" })}
 				>
 					Card {index + 1}
 				</div>
 			))}
+		</div>
+	);
+}
+```
+
+## Navigation Buttons
+
+The hook provides prop getters for navigation buttons and access to the scroll state via a store.
+
+```tsx
+import { useDragScroll } from "@zayne-labs/ui-react/ui/drag-scroll";
+
+export function NavigateDragScroll() {
+	const { propGetters, useDragScrollStore } = useDragScroll();
+
+	// Subscribe to state changes efficiently
+	const canGoToPrev = useDragScrollStore((state) => state.canGoToPrev);
+	const canGoToNext = useDragScrollStore((state) => state.canGoToNext);
+
+	return (
+		<div className="relative">
+			<button
+				{...propGetters.getBackButtonProps()}
+				disabled={!canGoToPrev}
+				className="disabled:opacity-50"
+			>
+				Previous
+			</button>
+
+			<div {...propGetters.getRootProps()}>{/* Items... */}</div>
+
+			<button
+				{...propGetters.getNextButtonProps()}
+				disabled={!canGoToNext}
+				className="disabled:opacity-50"
+			>
+				Next
+			</button>
 		</div>
 	);
 }
@@ -58,12 +84,12 @@ function BasicDragScroll() {
 ```tsx
 import { useDragScroll } from "@zayne-labs/ui-react/ui/drag-scroll";
 
-function HorizontalDragScroll() {
-	const { getRootProps, getItemProps } = useDragScroll({
+export function HorizontalDragScroll() {
+	const { propGetters } = useDragScroll({
 		orientation: "horizontal", // Default
 	});
 
-	return <div {...getRootProps()}>{/* Scroll items */}</div>;
+	return <div {...propGetters.getRootProps()}>{/* Scroll items */}</div>;
 }
 ```
 
@@ -72,37 +98,18 @@ function HorizontalDragScroll() {
 ```tsx
 import { useDragScroll } from "@zayne-labs/ui-react/ui/drag-scroll";
 
-function VerticalDragScroll() {
-	const { getRootProps, getItemProps } = useDragScroll({
+export function VerticalDragScroll() {
+	const { propGetters } = useDragScroll({
 		orientation: "vertical",
 	});
 
 	return (
-		<div {...getRootProps()}>
+		<div {...propGetters.getRootProps()}>
 			{[...Array(10).keys()].map((index) => (
-				<div key={index} {...getItemProps({ className: "w-full h-40 bg-gray-100 my-2 p-4" })}>
-					Card {index + 1}
-				</div>
-			))}
-		</div>
-	);
-}
-```
-
-### Both Directions
-
-```tsx
-import { useDragScroll } from "@zayne-labs/ui-react/ui/drag-scroll";
-
-function BidirectionalDragScroll() {
-	const { getRootProps, getItemProps } = useDragScroll({
-		orientation: "both",
-	});
-
-	return (
-		<div {...getRootProps({ className: "h-96 flex-wrap" })}>
-			{[...Array(20).keys()].map((index) => (
-				<div key={index} {...getItemProps({ className: "w-64 h-40 bg-gray-100 m-2 p-4" })}>
+				<div
+					key={index}
+					{...propGetters.getItemProps({ className: "w-full h-40 bg-gray-100 my-2 p-4" })}
+				>
 					Card {index + 1}
 				</div>
 			))}
@@ -118,12 +125,12 @@ function BidirectionalDragScroll() {
 ```tsx
 import { useDragScroll } from "@zayne-labs/ui-react/ui/drag-scroll";
 
-function DesktopOnlyDragScroll() {
-	const { getRootProps, getItemProps } = useDragScroll({
+export function DesktopOnlyDragScroll() {
+	const { propGetters } = useDragScroll({
 		usage: "desktopOnly", // Only applies drag behavior on desktop screens
 	});
 
-	return <div {...getRootProps()}>{/* Scroll items */}</div>;
+	return <div {...propGetters.getRootProps()}>{/* Scroll items */}</div>;
 }
 ```
 
@@ -132,99 +139,12 @@ function DesktopOnlyDragScroll() {
 ```tsx
 import { useDragScroll } from "@zayne-labs/ui-react/ui/drag-scroll";
 
-function MobileTabletDragScroll() {
-	const { getRootProps, getItemProps } = useDragScroll({
+export function MobileTabletDragScroll() {
+	const { propGetters } = useDragScroll({
 		usage: "mobileAndTabletOnly", // Only applies drag behavior on mobile/tablet screens
 	});
 
-	return <div {...getRootProps()}>{/* Scroll items */}</div>;
-}
-```
-
-## Customization
-
-### With Custom Styling
-
-```tsx
-import { useDragScroll } from "@zayne-labs/ui-react/ui/drag-scroll";
-
-function StyledDragScroll() {
-	const { getRootProps, getItemProps } = useDragScroll({
-		classNames: {
-			base: "bg-gray-50 rounded-lg p-4 shadow-inner",
-			item: "rounded-md shadow-sm bg-white hover:shadow-md transition-shadow",
-		},
-	});
-
-	return (
-		<div className="mx-auto w-full max-w-4xl">
-			<h2 className="mb-4 text-xl font-bold">Scrollable Content</h2>
-
-			<div {...getRootProps()}>
-				{[...Array(10).keys()].map((index) => (
-					<div
-						key={index}
-						{...getItemProps({
-							className: "flex-shrink-0 w-64 h-40 m-2 p-4 flex items-center justify-center",
-						})}
-					>
-						Card {index + 1}
-					</div>
-				))}
-			</div>
-		</div>
-	);
-}
-```
-
-### With Extra Props
-
-```tsx
-import { useDragScroll } from "@zayne-labs/ui-react/ui/drag-scroll";
-
-// Root level extra props
-function DragScrollWithExtraProps() {
-	const { getRootProps, getItemProps } = useDragScroll({
-		extraRootProps: {
-			"aria-label": "Scrollable content",
-			id: "scroll-container",
-			onMouseEnter: () => console.log("Mouse entered scroll area"),
-		},
-		extraItemProps: {
-			role: "listitem",
-			tabIndex: 0,
-		},
-	});
-
-	return <div {...getRootProps()}>{/* Scroll items */}</div>;
-}
-
-// Getter level extra props
-
-function DragScrollWithExtraProps() {
-	const { getRootProps, getItemProps } = useDragScroll();
-
-	return (
-		<div
-			{...getRootProps({
-				"aria-label": "Scrollable content",
-				id: "scroll-container",
-				onMouseEnter: () => console.log("Mouse entered scroll area"),
-			})}
-		>
-			{[...Array(10).keys()].map((index) => (
-				<div
-					key={index}
-					{...getItemProps({
-						role: "listitem",
-						tabIndex: 0,
-					})}
-				>
-					Card {index + 1}
-				</div>
-			))}
-		</div>
-	);
+	return <div {...propGetters.getRootProps()}>{/* Scroll items */}</div>;
 }
 ```
 
@@ -233,25 +153,35 @@ function DragScrollWithExtraProps() {
 ### useDragScroll
 
 ```tsx
-const { getRootProps, getItemProps } = useDragScroll(options?)
+const { propGetters, useDragScrollStore, storeApi } = useDragScroll(options);
 ```
 
 #### Options
 
-| Option           | Type                                                     | Default        | Description                                   |
-| ---------------- | -------------------------------------------------------- | -------------- | --------------------------------------------- |
-| `orientation`    | `"horizontal" \| "vertical" \| "both"`                   | `"horizontal"` | The direction of scrolling                    |
-| `usage`          | `"allScreens" \| "desktopOnly" \| "mobileAndTabletOnly"` | `"allScreens"` | Target device types for drag behavior         |
-| `classNames`     | `{ base?: string, item?: string }`                       | `undefined`    | CSS classes for styling                       |
-| `extraRootProps` | `object`                                                 | `undefined`    | Additional props to apply to the root element |
-| `extraItemProps` | `object`                                                 | `undefined`    | Additional props to apply to item elements    |
+| Option                             | Type                                                     | Default        | Description                                                            |
+| ---------------------------------- | -------------------------------------------------------- | -------------- | ---------------------------------------------------------------------- |
+| `orientation`                      | `"horizontal" \| "vertical" \| "both"`                   | `"horizontal"` | The direction of scrolling                                             |
+| `usage`                            | `"allScreens" \| "desktopOnly" \| "mobileAndTabletOnly"` | `"allScreens"` | Target device types for drag behavior                                  |
+| `scrollAmount`                     | `"item" \| number`                                       | `"item"`       | Amount to scroll when using nav buttons (`item` measures first child)  |
+| `classNames`                       | `{ base?: string, item?: string }`                       | `undefined`    | CSS classes for styling                                                |
+| `disableInternalStateSubscription` | `boolean`                                                | `false`        | Disable internal state subscription (useful for custom state handling) |
 
 #### Return Value
 
-| Property       | Type                         | Description                                        |
-| -------------- | ---------------------------- | -------------------------------------------------- |
-| `getRootProps` | `(props?: object) => object` | Function to get props for the scrollable container |
-| `getItemProps` | `(props?: object) => object` | Function to get props for each scrollable item     |
+| Property             | Type                          | Description                                                                                     |
+| -------------------- | ----------------------------- | ----------------------------------------------------------------------------------------------- |
+| `propGetters`        | `DragScrollPropGetters`       | Object containing all prop getters (`getRootProps`, `getItemProps`, `getBackButtonProps`, etc.) |
+| `useDragScrollStore` | `(selector) => SelectedState` | A hook to select state from the internal store (`canGoToNext`, `isDragging`, etc.)              |
+| `storeApi`           | `StoreApi<DragScrollStore>`   | Direct access to the store API (getState, setState, subscribe)                                  |
+
+#### DragScrollPropGetters
+
+| Getter               | Description                                |
+| -------------------- | ------------------------------------------ |
+| `getRootProps`       | Props for the main scrollable container    |
+| `getItemProps`       | Props for each scrollable item             |
+| `getBackButtonProps` | Props for the "Previous" navigation button |
+| `getNextButtonProps` | Props for the "Next" navigation button     |
 
 ## Default Styling
 
@@ -260,48 +190,8 @@ The DragScroll component applies minimal default styling to ensure basic functio
 1. Root container:
    - `flex w-full`
    - `overflow-x-scroll` (for horizontal mode)
-   - `overflow-y-hidden` (for horizontal mode)
-   - `cursor-grab` during drag operations
    - `snap-x snap-mandatory` for smooth snap behavior
    - CSS for hiding scrollbars
 
 2. Items:
    - `snap-center snap-always` for positioning items
-
-## Implementation Details
-
-### Scroll Snap
-
-The component automatically applies CSS scroll snap points for a smooth scrolling experience:
-
-- `snap-x` or `snap-y` on the container (based on orientation)
-- `snap-center snap-always` on items
-
-### Cursor Management
-
-The cursor is automatically updated during drag operations:
-
-- Default: `cursor-grab` indicates draggable content
-- During drag: Changes to `cursor-grabbing`
-- Returns to normal after drag completes
-
-### Event Handling
-
-The implementation uses these key events:
-
-- `mousedown` - Initiates the drag operation
-- `mousemove` - Updates scroll position based on mouse movement
-- `mouseup`/`mouseleave` - Ends the drag operation
-
-## Accessibility Considerations
-
-When implementing DragScroll, consider these accessibility enhancements:
-
-- Add keyboard navigation alternatives for non-mouse users
-- Ensure items are properly focusable with `tabIndex`
-- Add `aria-label` to identify the scrollable region
-- Consider providing pagination controls for keyboard users
-
-## Summary
-
-The DragScroll component provides an intuitive way to add mouse-based scrolling to your content containers. With support for different orientations, device-specific behavior, and automatic scroll snap functionality, it enhances the user experience while giving you complete control over styling and behavior.

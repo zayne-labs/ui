@@ -9,14 +9,13 @@ type RequiredUseDropZoneProps = {
 type InitStoreValues = Omit<
 	RequiredUseDropZoneProps,
 	"disabled" | "disableFilePickerOpenOnAreaClick" | "disableInternalStateSubscription" | "extraProps"
-> & { inputRef: React.RefObject<HTMLInputElement | null> };
+>;
 
 export const createDropZoneStore = (initStoreValues: InitStoreValues) => {
 	const {
 		allowedFileTypes,
 		disablePreviewGenForNonImageFiles,
 		initialFiles,
-		inputRef,
 		maxFileCount,
 		maxFileSize,
 		multiple,
@@ -27,6 +26,8 @@ export const createDropZoneStore = (initStoreValues: InitStoreValues) => {
 		rejectDuplicateFiles,
 		validator,
 	} = initStoreValues;
+
+	const inputRef: React.RefObject<HTMLInputElement | null> = { current: null };
 
 	const initialFileArray = toArray(initialFiles).filter(Boolean);
 
@@ -105,7 +106,6 @@ export const createDropZoneStore = (initStoreValues: InitStoreValues) => {
 
 				await actions.handleFileUpload({ newFileStateArray });
 			},
-
 			clearErrors: () => {
 				set({ errors: [], isInvalid: false });
 			},
@@ -262,6 +262,10 @@ export const createDropZoneStore = (initStoreValues: InitStoreValues) => {
 				});
 
 				set({ errors: [], fileStateArray: updatedFileStateArray });
+			},
+
+			setInputRef: (element) => {
+				inputRef.current = element;
 			},
 
 			updateFileState: (ctx) => {

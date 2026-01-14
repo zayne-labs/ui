@@ -14,19 +14,6 @@ Instead of writing `.map()` everywhere or checking for empty arrays, use the For
 - **Container Elements** - Optional wrapper with polymorphic `as` prop
 - **TypeScript Ready** - Full type inference and polymorphic components
 
-## Install
-
-```bash
-# Using pnpm (recommended)
-pnpm add @zayne-labs/ui-react
-
-# Using npm
-npm install @zayne-labs/ui-react
-
-# Using yarn
-yarn add @zayne-labs/ui-react
-```
-
 ## Basic Example
 
 Here's how to render a list of items:
@@ -34,7 +21,7 @@ Here's how to render a list of items:
 ```tsx
 import { For } from "@zayne-labs/ui-react/common/for";
 
-function UserList() {
+export function UserList() {
 	const users = [
 		{ id: 1, name: "Alice" },
 		{ id: 2, name: "Bob" },
@@ -42,7 +29,7 @@ function UserList() {
 	];
 
 	return (
-		<ul className="user-list">
+		<ul>
 			<For each={users}>
 				{(user, index, array) => (
 					<li key={user.id}>
@@ -62,29 +49,28 @@ The render function receives the current item, index, and the full array, just l
 The For component handles null, undefined, empty arrays, and zero numbers gracefully:
 
 ```tsx
-import { For } from '@zayne-labs/ui-react/common/for';
+import { For } from "@zayne-labs/ui-react/common/for";
 
-function TaskList({ tasks }) {
-  return (
-    <ul className="task-list">
-      <For
-        each={tasks}
-        fallback={<li>No tasks available</li>}
-      >
-        {(task) => (
-          <li key={task.id}>
-            <span>{task.title}</span>
-          </li>
-        )}
-      </For>
-    </ul>
-  );
+export default function TaskList({ tasks }) {
+	return (
+		<ul>
+			<For each={tasks} fallback={<li>No tasks available</li>}>
+				{(task) => (
+					<li key={task.id}>
+						<span>{task.title}</span>
+					</li>
+				)}
+			</For>
+		</ul>
+	);
 }
 
 // These all show the fallback:
-<TaskList tasks={[]} />
-<TaskList tasks={null} />
-<TaskList tasks={undefined} />
+<>
+	<TaskList tasks={[]} />
+	<TaskList tasks={null} />
+	<TaskList tasks={undefined} />
+</>;
 ```
 
 ## Number Sequences
@@ -94,7 +80,7 @@ Pass a number to generate a sequence of indices:
 ```tsx
 import { For } from "@zayne-labs/ui-react/common/for";
 
-function Pagination({ pageCount, currentPage, onPageChange }) {
+export default function Pagination({ pageCount, currentPage, onPageChange }) {
 	return (
 		<nav>
 			<ul>
@@ -130,7 +116,7 @@ The basic For component lets you control the container element:
 ```tsx
 import { For } from "@zayne-labs/ui-react/common/for";
 
-function ItemList() {
+export default function ItemList() {
 	return (
 		<ul>
 			<For each={["item1", "item2", "item3"]}>
@@ -148,10 +134,10 @@ ForWithWrapper creates the container element for you:
 ```tsx
 import { ForWithWrapper } from "@zayne-labs/ui-react/common/for";
 
-function ItemList() {
+export default function ItemList() {
 	// Uses <ul> by default
 	return (
-		<ForWithWrapper each={["item1", "item2", "item3"]} className="item-list">
+		<ForWithWrapper each={["item1", "item2", "item3"]}>
 			{(item) => <li key={item}>{item}</li>}
 		</ForWithWrapper>
 	);
@@ -160,7 +146,7 @@ function ItemList() {
 // Can use any element type
 function NavMenu() {
 	return (
-		<ForWithWrapper as="nav" className="nav-menu" each={["Home", "About", "Contact"]}>
+		<ForWithWrapper as="nav" each={["Home", "About", "Contact"]}>
 			{(item) => (
 				<a key={item} href={`/${item.toLowerCase()}`}>
 					{item}

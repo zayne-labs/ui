@@ -10,14 +10,6 @@ A utility component that uses React portals to render content at any DOM locatio
 - **Event Bubbling Preservation** - Maintain React's event system across portals
 - **Client-Side Rendering** - Works in client-side environments with DOM access
 
-## Installation
-
-```bash
-pnpm add @zayne-labs/ui-react  # recommended
-npm install @zayne-labs/ui-react
-yarn add @zayne-labs/ui-react
-```
-
 ## Usage
 
 ### Basic Usage
@@ -27,7 +19,7 @@ You can target elements using either a CSS selector string or a direct element r
 ```tsx
 import { Teleport } from "@zayne-labs/ui-react/common/teleport";
 
-function App() {
+export function App() {
 	// Using CSS selector
 	return (
 		<div>
@@ -38,7 +30,7 @@ function App() {
 	);
 }
 
-function AppWithRef() {
+export function AppWithRef() {
 	// Using element reference
 	const containerRef = useRef<HTMLDivElement>(null);
 
@@ -46,11 +38,9 @@ function AppWithRef() {
 		<div>
 			<div ref={containerRef} />
 
-			{containerRef.current && (
-				<Teleport to={containerRef.current}>
-					<div>Renders to the referenced element</div>
-				</Teleport>
-			)}
+			<Teleport to={containerRef}>
+				<div>Renders to the referenced element</div>
+			</Teleport>
 		</div>
 	);
 }
@@ -61,11 +51,11 @@ function AppWithRef() {
 ```tsx
 import { Teleport } from "@zayne-labs/ui-react/common/teleport";
 
-function App() {
+export default function App() {
 	return (
 		<div>
 			<Teleport to="body > #notifications">
-				<div className="toast">New message!</div>
+				<div>New message!</div>
 			</Teleport>
 		</div>
 	);
@@ -84,7 +74,7 @@ Control where content is inserted relative to the target element using the `inse
 ```tsx
 import { Teleport } from "@zayne-labs/ui-react/common/teleport";
 
-function App() {
+export default function App() {
 	return (
 		<div>
 			<div id="menu">
@@ -110,87 +100,13 @@ function App() {
 ```tsx
 import { Teleport } from "@zayne-labs/ui-react/common/teleport";
 
-function Modal({ isOpen, onClose, children }) {
+export function Modal({ isOpen, onClose, children }) {
 	if (!isOpen) return null;
 
 	return (
 		<Teleport to="body > #modal-container">
-			<div className="modal-overlay" onClick={onClose}>
-				<div className="modal-content" onClick={(e) => e.stopPropagation()}>
-					{children}
-				</div>
-			</div>
+			<div onClick={onClose}>{children}</div>
 		</Teleport>
-	);
-}
-```
-
-### Tooltip
-
-```tsx
-import { Teleport } from "@zayne-labs/ui-react/common/teleport";
-
-function Tooltip({ text, children }) {
-	const [isVisible, setIsVisible] = useState(false);
-	const triggerRef = useRef(null);
-
-	return (
-		<>
-			<div
-				ref={triggerRef}
-				onMouseEnter={() => setIsVisible(true)}
-				onMouseLeave={() => setIsVisible(false)}
-			>
-				{children}
-			</div>
-
-			{isVisible && triggerRef.current && (
-				<Teleport to="body > #tooltip-container">
-					<div
-						className="tooltip"
-						style={{
-							position: "absolute",
-							top: triggerRef.current.getBoundingClientRect().bottom + 5,
-							left: triggerRef.current.getBoundingClientRect().left,
-						}}
-					>
-						{text}
-					</div>
-				</Teleport>
-			)}
-		</>
-	);
-}
-```
-
-### Floating UI Integration
-
-```tsx
-import { Teleport } from "@zayne-labs/ui-react/common/teleport";
-import { useFloating, shift, offset } from "@floating-ui/react";
-
-function Popover({ trigger, content }) {
-	const [isOpen, setIsOpen] = useState(false);
-	const { refs, floatingStyles } = useFloating({
-		open: isOpen,
-		onOpenChange: setIsOpen,
-		middleware: [offset(10), shift()],
-	});
-
-	return (
-		<>
-			<button ref={refs.setReference} onClick={() => setIsOpen(!isOpen)}>
-				{trigger}
-			</button>
-
-			{isOpen && (
-				<Teleport to="body > #popover-container">
-					<div ref={refs.setFloating} style={floatingStyles}>
-						{content}
-					</div>
-				</Teleport>
-			)}
-		</>
 	);
 }
 ```

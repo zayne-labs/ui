@@ -1,6 +1,5 @@
-import { composeRefs, type InferProps, mergeProps } from "@zayne-labs/toolkit-react/utils";
+import { composeRefs, mergeProps, type InferProps } from "@zayne-labs/toolkit-react/utils";
 import { isArray, type UnknownObject } from "@zayne-labs/toolkit-type-helpers";
-
 import { Children, cloneElement, isValidElement, Fragment as ReactFragment } from "react";
 
 type SlotProps = InferProps<HTMLElement> & { ref?: React.Ref<HTMLElement> };

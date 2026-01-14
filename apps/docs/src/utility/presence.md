@@ -7,10 +7,10 @@ Manage component presence with animation support, handling mount/unmount states 
 ```tsx
 import { Presence } from "@zayne-labs/ui-react/common/presence";
 
-function AnimatedDialog({ isOpen, onClose }) {
+export function AnimatedDialog({ isOpen, onClose }) {
 	return (
 		<Presence present={isOpen} onExitComplete={onClose}>
-			<div className="dialog animate-in fade-in">
+			<div>
 				<h2>Dialog Title</h2>
 				<p>Dialog content...</p>
 			</div>

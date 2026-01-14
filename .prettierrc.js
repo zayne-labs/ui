@@ -1,8 +1,7 @@
-import { configWithTailwind } from "@zayne-labs/prettier-config";
+import { zayne } from "@zayne-labs/prettier-config";
 
-const config = {
-	...configWithTailwind,
-	tailwindStylesheet: "./packages/ui-react/tailwind.css",
-};
-
-export default config;
+export default zayne({
+	tailwindcss: {
+		tailwindStylesheet: "./apps/dev/tailwind.css",
+	},
+});

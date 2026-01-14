@@ -1,34 +1,33 @@
 "use client";
 
 import { dataAttr, formatBytes } from "@zayne-labs/toolkit-core";
-import { useShallowCompSelector } from "@zayne-labs/toolkit-react";
+import { useCompareSelector } from "@zayne-labs/toolkit-react";
 import type {
 	CssWithCustomProperties,
 	InferProps,
 	PolymorphicPropsStrict,
 } from "@zayne-labs/toolkit-react/utils";
 import {
-	type AnyFunction,
 	isBoolean,
 	isFunction,
 	isNumber,
+	type AnyFunction,
 	type SelectorFn,
 } from "@zayne-labs/toolkit-type-helpers";
-
+import { useMemo } from "react";
 import { For } from "@/components/common/for";
 import { Presence } from "@/components/common/presence";
 import { Slot } from "@/components/common/slot";
 import { cnMerge } from "@/lib/utils/cn";
-import { useMemo } from "react";
 import {
 	DropZoneRootContextProvider,
-	type DropZoneRootContextType,
 	DropZoneStoreContextProvider,
 	FileItemContextProvider,
-	type FileItemContextType,
 	useDropZoneRootContext,
 	useDropZoneStoreContext,
 	useFileItemContext,
+	type DropZoneRootContextType,
+	type FileItemContextType,
 } from "./drop-zone-context";
 import {
 	FileArchiveIcon,
@@ -76,7 +75,7 @@ type DropZoneContextProps<TSlice> = {
 export function DropZoneContext<TSlice = DropZoneStore>(props: DropZoneContextProps<TSlice>) {
 	const { children, selector } = props;
 
-	const dropZoneCtx = useDropZoneStoreContext(useShallowCompSelector(selector));
+	const dropZoneCtx = useDropZoneStoreContext(useCompareSelector(selector));
 
 	const resolvedChildren = isFunction(children) ? children(dropZoneCtx) : children;
 

@@ -1,14 +1,14 @@
-import { cnMerge } from "@/lib/utils/cn";
 import { dataAttr } from "@zayne-labs/toolkit-core";
 import {
 	useCallbackRef,
+	useCompareValue,
 	useConstant,
-	useShallowCompValue,
 	useStore,
 	useUnmountEffect,
 } from "@zayne-labs/toolkit-react";
 import { composeRefs, composeTwoEventHandlers } from "@zayne-labs/toolkit-react/utils";
 import { useCallback, useMemo, useRef } from "react";
+import { cnMerge } from "@/lib/utils/cn";
 import { createDropZoneStore } from "./drop-zone-store";
 import type { DropZonePropGetters, UseDropZoneProps, UseDropZoneResult } from "./types";
 import { getScopeAttrs } from "./utils";
@@ -41,15 +41,14 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 	const stableValidator = useCallbackRef(validator);
 
 	const constantInitialFiles = useConstant(() => initialFiles);
-	const shallowComparedMaxFileSize = useShallowCompValue(maxFileSize);
-	const shallowComparedAllowedFileTypes = useShallowCompValue(allowedFileTypes);
+	const shallowComparedMaxFileSize = useCompareValue(maxFileSize);
+	const shallowComparedAllowedFileTypes = useCompareValue(allowedFileTypes);
 
 	const storeApi = useMemo(() => {
 		return createDropZoneStore({
 			allowedFileTypes: shallowComparedAllowedFileTypes,
 			disablePreviewGenForNonImageFiles,
 			initialFiles: constantInitialFiles,
-			inputRef,
 			maxFileCount,
 			maxFileSize: shallowComparedMaxFileSize,
 			multiple,
@@ -81,8 +80,9 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 		actions.clearObjectURLs();
 	});
 
+	/* eslint-disable react-hooks/hooks -- ignore */
 	const useDropZoneStore: UseDropZoneResult["useDropZoneStore"] = (selector) => {
-		return useStore(storeApi, selector);
+		return useStore(storeApi as never, selector);
 	};
 
 	const isDraggingOver = useDropZoneStore((state) =>
@@ -96,6 +96,7 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 	const isInvalid = useDropZoneStore((state) =>
 		!disableInternalStateSubscription ? state.isInvalid : null
 	);
+	/* eslint-enable react-hooks/hooks -- ignore */
 
 	const getContainerProps: UseDropZoneResult["propGetters"]["getContainerProps"] = useCallback(
 		(innerProps) => {
@@ -151,6 +152,11 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 		]
 	);
 
+	const refCallback: React.RefCallback<HTMLInputElement> = useCallbackRef((node) => {
+		inputRef.current = node;
+		actions.setInputRef(node);
+	});
+
 	const getInputProps: UseDropZoneResult["propGetters"]["getInputProps"] = useCallback(
 		(innerProps) => {
 			const isDisabled = innerProps.disabled ?? disabled;
@@ -167,7 +173,7 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 				disabled: isDisabled,
 				multiple: multiple ?? innerProps.multiple,
 				onChange: composeTwoEventHandlers(onFileChange, innerProps.onChange),
-				ref: composeRefs(inputRef, innerProps.ref),
+				ref: composeRefs(refCallback, innerProps.ref),
 				type: "file",
 			};
 		},
@@ -178,6 +184,7 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 			disabled,
 			isDraggingOver,
 			multiple,
+			refCallback,
 		]
 	);
 
@@ -336,7 +343,7 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 		]
 	);
 
-	const savedUseDropZoneStore = useCallbackRef(useDropZoneStore);
+	const stableUseDropZoneStore = useCallbackRef(useDropZoneStore);
 
 	const result = useMemo<UseDropZoneResult>(
 		() =>
@@ -346,9 +353,9 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 				inputRef,
 				propGetters,
 				storeApi,
-				useDropZoneStore: savedUseDropZoneStore,
+				useDropZoneStore: stableUseDropZoneStore,
 			}) satisfies UseDropZoneResult,
-		[disabled, disableInternalStateSubscription, propGetters, storeApi, savedUseDropZoneStore]
+		[disabled, disableInternalStateSubscription, propGetters, storeApi, stableUseDropZoneStore]
 	);
 
 	return result;

@@ -1,11 +1,11 @@
-export type FallbackProps = {
+export type ErrorFallbackProps = {
 	error: unknown;
 	resetErrorBoundary: (...args: unknown[]) => void;
 };
 
 export type ErrorBoundaryProps = {
 	children: React.ReactNode;
-	fallback?: React.ReactNode | ((props: FallbackProps) => React.ReactNode);
+	fallback?: React.ReactNode | ((props: ErrorFallbackProps) => React.ReactNode);
 	onError?: (context: { error: Error; info: React.ErrorInfo & { ownerStack?: string } }) => void;
 	onReset?: (
 		context:

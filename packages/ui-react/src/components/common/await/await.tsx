@@ -1,14 +1,13 @@
 "use client";
 
 import {
-	type GetSlotComponentProps,
 	getSlotMap,
 	withSlotNameAndSymbol,
+	type GetSlotComponentProps,
 } from "@zayne-labs/toolkit-react/utils";
 import { isFunction } from "@zayne-labs/toolkit-type-helpers";
-
 import { Fragment as ReactFragment, Suspense, use, useMemo } from "react";
-import { ErrorBoundary, type ErrorBoundaryProps, useErrorBoundaryContext } from "../error-boundary";
+import { ErrorBoundary, useErrorBoundaryContext, type ErrorBoundaryProps } from "../error-boundary";
 import { Slot } from "../slot";
 import type { SuspenseWithBoundaryProps } from "../suspense-with-boundary";
 import { AwaitContextProvider, useAwaitContext } from "./await-context";
@@ -85,6 +84,7 @@ export function AwaitSuccess<TPromiseOrValue, TValue = Awaited<TPromiseOrValue>>
 	const { children } = props;
 
 	if (isFunction(children)) {
+		// eslint-disable-next-line react-hooks/rule-suppression -- Ignore
 		// eslint-disable-next-line react-hooks/rules-of-hooks -- This hook only uses `use` under the hood so this is safe
 		const { result } = useAwaitContext<TValue>();
 

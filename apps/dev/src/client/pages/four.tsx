@@ -7,7 +7,7 @@ function PageFour() {
 				via-indigo-500 to-purple-700 p-8"
 		>
 			<Card.Root
-				className="w-[420px] rounded-3xl border border-white/20 bg-white/10 p-8 shadow-2xl
+				className="w-105 rounded-3xl border border-white/20 bg-white/10 p-8 shadow-2xl
 					backdrop-blur-lg"
 			>
 				<Card.Header className="flex items-center gap-4">

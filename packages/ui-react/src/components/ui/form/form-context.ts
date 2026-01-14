@@ -2,11 +2,11 @@ import { ContextError, createCustomContext } from "@zayne-labs/toolkit-react";
 import type { DiscriminatedRenderProps } from "@zayne-labs/toolkit-react/utils";
 import type { UnionDiscriminator } from "@zayne-labs/toolkit-type-helpers";
 import {
+	useFormState,
+	useFormContext as useHookFormContext,
 	type Control,
 	type UseFormReturn,
 	type UseFormStateReturn,
-	useFormState,
-	useFormContext as useHookFormContext,
 } from "react-hook-form";
 import type { FieldValues, FormInputProps } from "./form";
 import { getFieldErrorMessage } from "./utils";
@@ -113,12 +113,17 @@ type FieldStateOptions =
 	  };
 
 export const useLaxFormFieldState = (options?: FieldStateOptions): FieldState => {
-	const { control = options?.control } = useFormMethodsContext({ strict: false }) ?? {};
-	const { name = options?.name } = useLaxFormFieldContext() ?? {};
+	const { control } = useFormMethodsContext({ strict: false }) ?? {};
+	const { name } = useLaxFormFieldContext() ?? {};
 
-	const getFormState = control ? useFormState : () => ({}) as Partial<ReturnType<typeof useFormState>>;
+	const resolvedControl = control ?? options?.control;
 
-	const { disabled, errors } = getFormState({ control, name });
+	const getFormState =
+		// eslint-disable-next-line react-hooks/hooks -- Ignore
+		resolvedControl ? useFormState : () => ({}) as Partial<ReturnType<typeof useFormState>>;
+
+	// eslint-disable-next-line react-hooks/hooks -- Ignore
+	const { disabled, errors } = getFormState({ control: resolvedControl, name: name ?? options?.name });
 
 	const errorMessage = getFieldErrorMessage({ errors, fieldName: name, type: "regular" });
 

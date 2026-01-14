@@ -6,19 +6,6 @@ A utility component for pattern matching and conditional rendering.
 
 The Switch component provides a more declarative way to handle complex conditional rendering in React. Inspired by traditional switch-case statements and the [Switch](https://docs.solidjs.com/reference/components/switch-and-match) component from SolidJS.
 
-## Installation
-
-```bash
-# Using pnpm (recommended)
-pnpm add @zayne-labs/ui-react
-
-# Using npm
-npm install @zayne-labs/ui-react
-
-# Using yarn
-yarn add @zayne-labs/ui-react
-```
-
 ## Usage
 
 Switch can be used in two ways:
@@ -30,7 +17,7 @@ Like `switch(value)` in JavaScript - match a specific value against cases:
 ```tsx
 import { Switch } from "@zayne-labs/ui-react/common/switch";
 
-function UserRole({ role }) {
+export function UserRole({ role }) {
 	return (
 		<Switch.Root value={role}>
 			<Switch.Match when="admin">
@@ -56,7 +43,7 @@ When no `value` prop is provided, Switch evaluates each `when` condition in orde
 ```tsx
 import { Switch } from "@zayne-labs/ui-react/common/switch";
 
-function Counter({ count }) {
+export function Counter({ count }) {
 	return (
 		<Switch.Root>
 			<Switch.Match when={count > 100}>
@@ -105,7 +92,7 @@ type SwitchProps = {
 // Match component props
 type SwitchMatchProps<TWhen = unknown> = {
 	children: React.ReactNode | ((value: TWhen) => React.ReactNode);
-	when: TWhen | null | undefined | false;
+	when: false | TWhen | null | undefined;
 };
 
 // Default component props

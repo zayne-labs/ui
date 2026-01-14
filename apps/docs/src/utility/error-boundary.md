@@ -15,25 +15,12 @@ Taken from react-error-boundary, with modifications to support both React nodes 
 - **Context Integration** - Exposes error state and reset functions to child components
 - **TypeScript Support** - Full type safety for errors and props
 
-## Installation
-
-```bash
-# Using pnpm (recommended)
-pnpm add @zayne-labs/ui-react
-
-# Using npm
-npm install @zayne-labs/ui-react
-
-# Using yarn
-yarn add @zayne-labs/ui-react
-```
-
 ## Basic Usage
 
 ```tsx
 import { ErrorBoundary } from "@zayne-labs/ui-react/common/error-boundary";
 
-function App() {
+export default function App() {
 	return (
 		<ErrorBoundary
 			fallback={<div>Something went wrong. Please try again.</div>}
@@ -52,11 +39,11 @@ You can provide a function component that receives error details and a reset fun
 ```tsx
 import { ErrorBoundary } from "@zayne-labs/ui-react/common";
 
-function App() {
+export default function App() {
 	return (
 		<ErrorBoundary
 			fallback={({ error, resetErrorBoundary }) => (
-				<div className="error-container">
+				<div>
 					<h2>An error occurred</h2>
 					<p>{error.message}</p>
 					<button onClick={resetErrorBoundary}>Try again</button>
@@ -77,7 +64,7 @@ The `resetKeys` prop allows you to automatically reset the error boundary when c
 import { ErrorBoundary } from "@zayne-labs/ui-react/common";
 import { useState } from "react";
 
-function App() {
+export default function App() {
 	const [counter, setCounter] = useState(0);
 
 	return (
@@ -111,7 +98,7 @@ The `useErrorBoundary` hook allows you to programmatically trigger and handle er
 ```tsx
 import { ErrorBoundary, useErrorBoundary } from "@zayne-labs/ui-react/common";
 
-function App() {
+export default function App() {
 	return (
 		<ErrorBoundary
 			fallback={({ resetErrorBoundary }) => (
@@ -129,21 +116,19 @@ function App() {
 function DataFetcher() {
 	const { showBoundary } = useErrorBoundary();
 
-	const fetchData = async () => {
-		try {
-			const response = await fetch("/api/data");
-			if (!response.ok) {
-				throw new Error("Failed to fetch data");
-			}
-			return await response.json();
-		} catch (error) {
-			showBoundary(error);
-		}
-	};
-
 	React.useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const response = await fetch("/api/data");
+
+				return await response.json();
+			} catch (error) {
+				showBoundary(error);
+			}
+		};
+
 		fetchData();
-	}, []);
+	}, [showBoundary]);
 
 	return <div>Loading data...</div>;
 }
@@ -156,7 +141,7 @@ You can nest error boundaries to provide different fallback UIs for different pa
 ```tsx
 import { ErrorBoundary } from "@zayne-labs/ui-react/common";
 
-function App() {
+export default function App() {
 	return (
 		<ErrorBoundary fallback={<div>Application error</div>}>
 			<Header />
@@ -183,11 +168,11 @@ The ErrorBoundary component provides full type safety:
 import { ErrorBoundary } from "@zayne-labs/ui-react/common";
 
 interface ApiError extends Error {
-	statusCode: number;
 	endpoint: string;
+	statusCode: number;
 }
 
-function App() {
+export default function App() {
 	return (
 		<ErrorBoundary
 			fallback={({
@@ -236,7 +221,18 @@ Props passed to the fallback function:
 ### useErrorBoundary Hook
 
 ```tsx
-const { resetBoundary, showBoundary } = useErrorBoundary<CustomError>();
+import { useErrorBoundary } from "@zayne-labs/ui-react/common/error-boundary";
+
+export default function App() {
+	const { resetBoundary, showBoundary } = useErrorBoundary();
+
+	return (
+		<div>
+			<button onClick={() => showBoundary(new Error("Something went wrong"))}>Trigger Error</button>
+			<button onClick={resetBoundary}>Reset Error Boundary</button>
+		</div>
+	);
+}
 ```
 
 | Return Value    | Type                      | Description                                                           |
@@ -253,33 +249,6 @@ Values available through the ErrorBoundaryContext:
 | `error`              | `unknown`                      | Current error (if any)               |
 | `hasError`           | `boolean`                      | Whether an error is currently active |
 | `resetErrorBoundary` | `(...args: unknown[]) => void` | Function to reset the error boundary |
-
-## Implementation Details
-
-The ErrorBoundary component is built as a class component because React's error boundary feature requires the use of lifecycle methods like `getDerivedStateFromError` and `componentDidCatch`, which are only available in class components.
-
-```tsx
-class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
-	static getDerivedStateFromError(error: Error) {
-		return { error, hasError: true };
-	}
-
-	componentDidCatch(error: Error, info: React.ErrorInfo) {
-		this.props.onError?.(error, info);
-	}
-
-	#resetErrorBoundary = (...parameters: unknown[]) => {
-		const { error } = this.state;
-
-		if (error !== null) {
-			this.props.onReset?.({ parameters, reason: "imperative-api" });
-			this.setState(initialState);
-		}
-	};
-
-	// ...render logic
-}
-```
 
 ## Best Practices
 

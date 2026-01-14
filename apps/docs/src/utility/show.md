@@ -14,31 +14,18 @@ The Show component provides a concise, readable way to handle conditional render
 - **Type Safety** - Full TypeScript support for props and children
 - **Zero Dependencies** - Lightweight implementation with no external dependencies
 
-## Installation
-
-```bash
-# Using pnpm (recommended)
-pnpm add @zayne-labs/ui-react
-
-# Using npm
-npm install @zayne-labs/ui-react
-
-# Using yarn
-yarn add @zayne-labs/ui-react
-```
-
 ## Basic Usage
 
 ```tsx
 import { Show } from "@zayne-labs/ui-react/common/show";
 
-function UserProfile({ user }) {
+export function UserProfile({ user }) {
 	return (
-		<div className="profile">
+		<div>
 			<h1>User Profile</h1>
 
 			<Show when={user} fallback={<p>Please sign in to view your profile</p>}>
-				<div className="user-details">
+				<div>
 					<h2>{user.name}</h2>
 					<p>Email: {user.email}</p>
 					<p>Member since: {user.joinDate}</p>
@@ -56,13 +43,13 @@ The Show component supports a Fallback slot for explicit fallback content:
 ```tsx
 import { Show } from "@zayne-labs/ui-react/common/show";
 
-function OrderDetails({ order }) {
+export function OrderDetails({ order }) {
 	return (
-		<div className="order-container">
+		<div>
 			<h1>Order Status</h1>
 
 			<Show.Root when={order?.status === "shipped"}>
-				<div className="shipped-status">
+				<div>
 					<h2>Your order has shipped!</h2>
 					<p>Tracking number: {order.trackingNumber}</p>
 				</div>
@@ -83,9 +70,9 @@ Alternatively, you can use the `fallback` prop for simpler cases:
 ```tsx
 import { Show } from "@zayne-labs/ui-react/common/show";
 
-function UserStatus({ user }) {
+export function UserStatus({ user }) {
 	return (
-		<div className="user-status">
+		<div>
 			<Show when={user?.isOnline} fallback={<p>User is offline</p>}>
 				<p>User is online</p>
 			</Show>
@@ -101,19 +88,19 @@ You can also use Show with the `control="content"` mode for more complex conditi
 ```tsx
 import { Show } from "@zayne-labs/ui-react/common/show";
 
-function LoadingState({ status, data }) {
+export function LoadingState({ status, data }) {
 	return (
 		<Show.Root control="content">
 			<Show.Content when={status === "loading"}>
-				<div className="spinner">Loading...</div>
+				<div>Loading...</div>
 			</Show.Content>
 
 			<Show.Content when={status === "error"}>
-				<div className="error">Something went wrong</div>
+				<div>Something went wrong</div>
 			</Show.Content>
 
 			<Show.Fallback>
-				<div className="data">{data}</div>
+				<div>{data}</div>
 			</Show.Fallback>
 		</Show.Root>
 	);
@@ -143,7 +130,7 @@ The Show component can provide fallback content in two ways:
 1. Using the `fallback` prop:
 
 ```tsx
-function Show({ when, fallback, children }) {
+export function Show({ when, fallback, children }) {
 	const resolvedChildren = isFunction(children) ? children(when) : children;
 	return when ? resolvedChildren : fallback;
 }
@@ -152,7 +139,7 @@ function Show({ when, fallback, children }) {
 1. Using the Show.Fallback slot:
 
 ```tsx
-function Show({ when, children }) {
+export function Show({ when, children }) {
 	const {
 		regularChildren,
 		slots: [_, fallbackSlot],

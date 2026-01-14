@@ -17,10 +17,10 @@ yarn add @zayne-labs/ui-react
 Import and use components directly:
 
 ```tsx
-import { Card } from "@zayne-labs/ui-react/ui/card";
 import { Switch } from "@zayne-labs/ui-react/common/switch";
+import { Card } from "@zayne-labs/ui-react/ui/card";
 
-function App() {
+export function App() {
 	const status = "success";
 
 	return (
@@ -94,22 +94,24 @@ Use data attributes to target specific parts:
 Most components follow a compound pattern:
 
 ```tsx
-// UI Components (complex, interactive)
-<Form.Root>
-  <Form.Field>
-    <Form.Label>Email</Form.Label>
-    <Form.Input type="email" />
-    <Form.ErrorMessage />
-  </Form.Field>
-</Form.Root>
+<>
+	{/* UI Components (complex, interactive) */}
+	<Form.Root>
+		<Form.Field>
+			<Form.Label>Email</Form.Label>
+			<Form.Input type="email" />
+			<Form.ErrorMessage />
+		</Form.Field>
+	</Form.Root>
 
-// Utility Components (simple, declarative)
-<Show.Root when={user}>
-  <UserProfile user={user} />
-  <Show.Fallback>
-    <LoginForm />
-  </Show.Fallback>
-</Show.Root>
+	{/* Utility Components (simple, declarative) */}
+	<Show.Root when={user}>
+		<UserProfile user={user} />
+		<Show.Fallback>
+			<LoginForm />
+		</Show.Fallback>
+	</Show.Root>
+</>
 ```
 
 ### Data Attributes
@@ -132,15 +134,15 @@ All components provide consistent data attributes for styling:
 Full TypeScript support is included out of the box. Components provide excellent type inference:
 
 ```tsx
-import { useForm } from "react-hook-form";
 import { Form } from "@zayne-labs/ui-react/ui/form";
+import { useForm } from "react-hook-form";
 
 type LoginData = {
 	email: string;
 	password: string;
 };
 
-function LoginForm() {
+export function LoginForm() {
 	const form = useForm<LoginData>({
 		defaultValues: {
 			email: "",

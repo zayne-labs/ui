@@ -12,12 +12,6 @@ A flexible carousel component for displaying images or content in a slideshow fo
 - 📱 **Responsive** - Works on all screen sizes
 - ♿ **Accessible** - Keyboard navigation and screen reader support
 
-## Installation
-
-```bash
-pnpm add @zayne-labs/ui-react
-```
-
 ## Component Structure
 
 The Carousel consists of several composable parts:
@@ -36,7 +30,7 @@ The Carousel consists of several composable parts:
 ```tsx
 import { Carousel } from "@zayne-labs/ui-react/ui/carousel";
 
-function BasicCarousel() {
+export function BasicCarousel() {
 	const images = ["/image1.jpg", "/image2.jpg", "/image3.jpg"];
 
 	return (
@@ -46,7 +40,7 @@ function BasicCarousel() {
 			<Carousel.ItemList>
 				{(imageSrc, index) => (
 					<Carousel.Item key={index}>
-						<img src={imageSrc} alt={`Slide ${index + 1}`} className="h-full w-full object-cover" />
+						<img src={imageSrc} alt={`Slide ${index + 1}`} className="size-full object-cover" />
 					</Carousel.Item>
 				)}
 			</Carousel.ItemList>
@@ -56,7 +50,7 @@ function BasicCarousel() {
 					<Carousel.Indicator
 						key={imageSrc}
 						currentIndex={index}
-						className="h-2 w-2 rounded-full bg-white/50 data-[active=true]:bg-white"
+						className="size-2 rounded-full bg-white/50 data-[active=true]:bg-white"
 					/>
 				)}
 			</Carousel.IndicatorList>
@@ -70,23 +64,23 @@ function BasicCarousel() {
 ```tsx
 import { Carousel } from "@zayne-labs/ui-react/ui/carousel";
 
-function AutoSlidingCarousel() {
+export function AutoSlidingCarousel() {
 	const images = ["/image1.jpg", "/image2.jpg", "/image3.jpg"];
 
 	return (
 		<Carousel.Root
 			images={images}
 			className="relative h-64 w-full overflow-hidden rounded-lg"
-			hasAutoSlide
+			hasAutoSlide={true}
 			autoSlideInterval={3000}
-			shouldPauseOnHover
+			shouldPauseOnHover={true}
 		>
 			<Carousel.Controls />
 
 			<Carousel.ItemList>
 				{(imageSrc, index) => (
 					<Carousel.Item key={index}>
-						<img src={imageSrc} alt={`Slide ${index + 1}`} className="h-full w-full object-cover" />
+						<img src={imageSrc} alt={`Slide ${index + 1}`} className="size-full object-cover" />
 					</Carousel.Item>
 				)}
 			</Carousel.ItemList>
@@ -104,7 +98,7 @@ function AutoSlidingCarousel() {
 ```tsx
 import { Carousel } from "@zayne-labs/ui-react/ui/carousel";
 
-function CaptionedCarousel() {
+export function CaptionedCarousel() {
 	const slides = [
 		{ image: "/image1.jpg", title: "Mountain View", description: "Beautiful landscape" },
 		{ image: "/image2.jpg", title: "Ocean Waves", description: "Peaceful seascape" },
@@ -123,9 +117,9 @@ function CaptionedCarousel() {
 					const slide = slides[index];
 					return (
 						<Carousel.Item key={slide.image}>
-							<img src={slide.image} alt={slide.title} className="h-full w-full object-cover" />
+							<img src={slide.image} alt={slide.title} className="size-full object-cover" />
 
-							<Carousel.Caption className="absolute bottom-0 left-0 right-0 bg-black/50 p-4 text-white">
+							<Carousel.Caption className="absolute right-0 bottom-0 left-0 bg-black/50 p-4 text-white">
 								<h3 className="text-lg font-bold">{slide.title}</h3>
 								<p>{slide.description}</p>
 							</Carousel.Caption>

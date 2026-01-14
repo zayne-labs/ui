@@ -1,39 +1,35 @@
 "use client";
 
-import { ForWithWrapper } from "@/components/common/for";
-import { Slot } from "@/components/common/slot";
-import { cnMerge } from "@/lib/utils/cn";
 import { dataAttr, on, toArray } from "@zayne-labs/toolkit-core";
-import { useCallbackRef, useToggle } from "@zayne-labs/toolkit-react";
+import { useCallbackRef, useCompareValue, useToggle } from "@zayne-labs/toolkit-react";
 import {
 	composeRefs,
 	composeTwoEventHandlers,
+	getMultipleSlots,
 	type DiscriminatedRenderItemProps,
 	type DiscriminatedRenderProps,
-	getMultipleSlots,
 	type InferProps,
 	type PolymorphicPropsStrict,
 } from "@zayne-labs/toolkit-react/utils";
-import { type AnyString, defineEnum } from "@zayne-labs/toolkit-type-helpers";
+import { defineEnum, type AnyString } from "@zayne-labs/toolkit-type-helpers";
 import { Fragment as ReactFragment, useEffect, useId, useMemo, useRef } from "react";
 import {
-	type Control,
 	Controller,
+	FormProvider as HookFormProvider,
+	useFormState,
+	useWatch,
+	type Control,
 	type ControllerProps,
 	type FieldPath,
-	FormProvider as HookFormProvider,
 	type RegisterOptions,
 	type FormStateSubscribeProps as StateSubscribeProps,
 	type UseFormReturn,
-	useFormState,
-	useWatch,
 	type WatchProps,
 } from "react-hook-form";
+import { ForWithWrapper } from "@/components/common/for";
+import { Slot } from "@/components/common/slot";
+import { cnMerge } from "@/lib/utils/cn";
 import {
-	type FieldContextValue,
-	type FieldState,
-	type FormFieldContextProps,
-	type FormRootContext,
 	LaxFormFieldProvider,
 	LaxFormRootProvider,
 	StrictFormFieldProvider,
@@ -42,6 +38,10 @@ import {
 	useLaxFormFieldState,
 	useLaxFormRootContext,
 	useStrictFormFieldContext,
+	type FieldContextValue,
+	type FieldState,
+	type FormFieldContextProps,
+	type FormRootContext,
 } from "./form-context";
 import { getEyeIcon, getFieldErrorMessage } from "./utils";
 
@@ -59,7 +59,12 @@ export function FormRoot<TFieldValues extends FieldValues, TTransformedValues = 
 ) {
 	const { children, className, form, withEyeIcon, ...restOfProps } = props;
 
-	const formContextValue = useMemo(() => ({ withEyeIcon }), [withEyeIcon]);
+	const shallowedComparedWithEyeIcon = useCompareValue(withEyeIcon);
+
+	const formContextValue = useMemo(
+		() => ({ withEyeIcon: shallowedComparedWithEyeIcon }),
+		[shallowedComparedWithEyeIcon]
+	);
 
 	return (
 		<HookFormProvider {...form}>
@@ -150,7 +155,7 @@ export function FormFieldWithController<
 >(props: FormFieldControlledFieldProps<TFieldValues, TName, TTransformedValues>) {
 	const formMethods = useFormMethodsContext({ strict: false });
 
-	const { control = formMethods?.control, name, render, ...restOfProps } = props;
+	const { control, name, render, ...restOfProps } = props;
 
 	const uniqueId = useId();
 
@@ -169,7 +174,7 @@ export function FormFieldWithController<
 		<StrictFormFieldProvider value={fieldContextValue}>
 			<LaxFormFieldProvider value={fieldContextValue}>
 				<Controller
-					control={control as never}
+					control={control ?? (formMethods?.control as never)}
 					name={name}
 					render={render as never}
 					{...(restOfProps as object)}
@@ -344,9 +349,11 @@ export function FormInputPrimitive<TFieldValues extends FieldValues>(
 		name,
 		rules,
 		type = "text",
-		withEyeIcon = formRootContextValues?.withEyeIcon ?? true,
+		withEyeIcon,
 		...restOfProps
 	} = props;
+
+	const resolvedWithEyeIcon = withEyeIcon ?? formRootContextValues?.withEyeIcon ?? true;
 
 	const fieldStateFromLaxFormField = useLaxFormFieldState({ control, name });
 
@@ -368,7 +375,7 @@ export function FormInputPrimitive<TFieldValues extends FieldValues>(
 		classNames,
 		iconType: isPasswordVisible ? "closed" : "open",
 		renderIconProps: { isPasswordVisible },
-		withEyeIcon,
+		withEyeIcon: resolvedWithEyeIcon,
 	});
 
 	return (
@@ -462,16 +469,7 @@ export function FormSelectPrimitive<TFieldValues extends FieldValues>(
 ) {
 	const fieldContextValues = useLaxFormFieldContext();
 
-	const {
-		className,
-		classNames,
-		control,
-		fieldState,
-		id = fieldContextValues?.formItemId,
-		name = fieldContextValues?.name,
-		rules,
-		...restOfProps
-	} = props;
+	const { className, classNames, control, fieldState, id, name, rules, ...restOfProps } = props;
 
 	const fieldStateFromLaxFormField = useLaxFormFieldState({ control, name });
 
@@ -493,8 +491,8 @@ export function FormSelectPrimitive<TFieldValues extends FieldValues>(
 			aria-invalid={dataAttr(isInvalid)}
 			data-disabled={dataAttr(isDisabled)}
 			data-invalid={dataAttr(isInvalid)}
-			id={id}
-			name={name}
+			id={id ?? fieldContextValues?.formItemId}
+			name={name ?? fieldContextValues?.name}
 			className={cnMerge(
 				`w-full bg-transparent text-sm placeholder:text-zu-muted-foreground
 				focus-visible:outline-hidden disabled:cursor-not-allowed disabled:opacity-50`,
@@ -623,22 +621,24 @@ type FormErrorMessagePrimitiveType = {
 };
 
 export const FormErrorMessagePrimitive: FormErrorMessagePrimitiveType = (props) => {
-	const fieldContextValues = useLaxFormFieldContext();
 	const rootContextValues = useFormMethodsContext({ strict: false });
 
 	const {
 		children,
 		className,
 		classNames,
-		control = rootContextValues?.control,
+		control,
 		disableErrorAnimation = false,
 		disableScrollToErrorField = false,
-		fieldName = fieldContextValues?.name,
+		fieldName,
 		renderItem,
 		type = "regular",
 	} = props;
 
-	const { errors } = useLaxFormFieldState({ control, name: fieldName });
+	const { errors } = useLaxFormFieldState({
+		control: control ?? rootContextValues?.control,
+		name: fieldName,
+	});
 
 	const { formMessageId } = useLaxFormFieldContext() ?? {};
 
@@ -796,14 +796,14 @@ export function FormErrorMessage<
 >(props: FormErrorMessageProps<TControl, TFieldValues, TTransformedValues>) {
 	const fieldContextValues = useLaxFormFieldContext();
 
-	const { className, errorField = fieldContextValues?.name, type = "regular" } = props;
+	const { className, errorField, type = "regular" } = props;
 
 	const { control } = useFormMethodsContext();
 
 	return (
 		<FormErrorMessagePrimitive
 			control={control}
-			fieldName={errorField as NonNullable<typeof errorField>}
+			fieldName={errorField ?? (fieldContextValues?.name as NonNullable<typeof errorField>)}
 			type={type as "root"}
 			renderItem={({ props: renderProps, state }) => (
 				<li
@@ -864,18 +864,19 @@ export function FormWatch<
 	TTransformedValues = TFieldValues,
 	TComputeValue = undefined,
 >(props: FormWatchProps<TFieldValues, TFieldName, TTransformedValues, TComputeValue>) {
-	const fieldContextValues = useLaxFormFieldContext();
+	const fieldContextValue = useLaxFormFieldContext();
 
-	const { children, compute, disabled, exact, name = fieldContextValues?.name, render } = props;
+	const { children, compute, control, defaultValue, disabled, exact, name, render } = props;
 
-	const { control } = useFormMethodsContext();
+	const methodsContextValue = useFormMethodsContext({ strict: false });
 
 	const formValue = useWatch({
 		compute: compute as never,
-		control,
+		control: methodsContextValue?.control ?? (control as never),
+		defaultValue,
 		disabled,
 		exact,
-		name: name as string,
+		name: (name ?? fieldContextValue?.name) as string,
 	}) as unknown;
 
 	const selectedChildren = typeof children === "function" ? children : render;
@@ -899,9 +900,14 @@ export function FormStateSubscribe<TFieldValues extends FieldValues, TTransforme
 ) {
 	const fieldContextValues = useLaxFormFieldContext();
 
-	const { children, control, disabled, exact, name = fieldContextValues?.name, render } = props;
+	const { children, control, disabled, exact, name, render } = props;
 
-	const formState = useFormState({ control, disabled, exact, name: name as never });
+	const formState = useFormState({
+		control,
+		disabled,
+		exact,
+		name: name ?? (fieldContextValues?.name as never),
+	});
 
 	const selectedChildren = typeof children === "function" ? children : render;
 
