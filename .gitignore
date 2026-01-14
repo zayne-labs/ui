@@ -5,4 +5,4 @@ node_modules
 eslint-typegen.d.ts
 .qodo
 .turbo
-.vitepress
+.vitepress/cache

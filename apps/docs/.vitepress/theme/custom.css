@@ -1,0 +1,78 @@
+/**
+ * Custom CSS for VitePress theme
+ */
+:root {
+	/* Typography */
+	--vp-font-family-base:
+		"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell,
+		"Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+	--vp-font-family-mono: "Fira Code", Menlo, Monaco, Consolas, "Courier New", monospace;
+
+	/* Default Properties */
+	--vp-home-hero-name-color: transparent;
+	--vp-home-hero-image-filter: blur(72px);
+}
+
+@media (min-width: 640px) {
+	:root {
+		--vp-home-hero-image-filter: blur(56px);
+	}
+}
+
+@media (min-width: 960px) {
+	:root {
+		--vp-home-hero-image-filter: blur(68px);
+	}
+}
+
+.VPHero .VPImage {
+	filter: drop-shadow(-2px 4px 6px rgba(0, 0, 0, 0.2));
+	padding: 18px;
+}
+
+/* used in reference/default-theme-search */
+img[src="/search.png"] {
+	width: 100%;
+	aspect-ratio: 1 / 1;
+}
+
+/* Dark theme colors */
+.dark {
+	/* Brand Colors */
+	--vp-c-brand-1: hsl(250, 100%, 70%);
+	--vp-c-brand-2: hsl(250, 100%, 75%);
+	--vp-c-brand-3: hsl(250, 100%, 65%);
+	--vp-c-brand-soft: hsla(250, 100%, 70%, 0.14);
+
+	/* Background Colors */
+	--vp-c-bg-alt: hsl(251, 30%, 10%);
+	--vp-c-bg-soft: hsl(251, 30%, 15%);
+
+	/* Text Colors */
+	--vp-c-text-1: hsl(0, 0%, 100%);
+	--vp-c-text-2: hsl(0, 0%, 85%);
+	--vp-c-text-3: hsl(0, 0%, 70%);
+
+	/* Custom Properties */
+	--vp-home-hero-name-background: -webkit-linear-gradient(
+		120deg,
+		hsl(250, 100%, 70%),
+		hsl(250, 100%, 75%)
+	);
+	--vp-home-hero-image-background-image: linear-gradient(
+		-45deg,
+		hsl(250, 100%, 70%) 50%,
+		hsl(251, 30%, 10%) 50%
+	);
+
+	/* Button Styles */
+	--vp-button-brand-border: var(--vp-c-brand-1);
+	--vp-button-brand-text: var(--vp-c-white);
+	--vp-button-brand-bg: var(--vp-c-brand-1);
+	--vp-button-brand-hover-border: var(--vp-c-brand-2);
+	--vp-button-brand-hover-text: var(--vp-c-white);
+	--vp-button-brand-hover-bg: var(--vp-c-brand-2);
+	--vp-button-brand-active-border: var(--vp-c-brand-3);
+	--vp-button-brand-active-text: var(--vp-c-white);
+	--vp-button-brand-active-bg: var(--vp-c-brand-3);
+}
