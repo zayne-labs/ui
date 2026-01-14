@@ -140,7 +140,7 @@ Our documentation is organized into several sections to help you find what you n
 
 ## Need Help?
 
-- 📖 Check component docs in the [ui](../ui) and [utility](../utility) folders
+- 📖 Check component docs in the [ui](../ui/index) and [utility](../utility/index) folders
 - 🐛 Found a bug? [Open an issue](https://github.com/zayne-labs/ui/issues)
 - 💡 Have an idea? [Start a discussion](https://github.com/zayne-labs/ui/discussions)
 

@@ -124,10 +124,10 @@ All components provide consistent data attributes for styling:
 
 ## Next Steps
 
-- **[UI Components](/ui)** - Interactive components like forms, file uploads, carousels
-- **[Utility Components](/utility)** - Declarative helpers like Switch, Show, For
-- **[Form Guide](/ui/form)** - Complete form handling with validation
-- **[Card Styling](/ui/card#styling)** - Advanced styling patterns and examples
+- **[UI Components](../ui/index)** - Interactive components like forms, file uploads, carousels
+- **[Utility Components](../utility/index)** - Declarative helpers like Switch, Show, For
+- **[Form Guide](../ui/form)** - Complete form handling with validation
+- **[Card Styling](../ui/card#styling)** - Advanced styling patterns and examples
 
 ## TypeScript
 
