@@ -62,6 +62,7 @@
 		}
 	},
 	"dependencies": {
+		"@zayne-labs/prettier-config": "0.11.18",
 		"@zayne-labs/toolkit-core": "0.12.25",
 		"@zayne-labs/toolkit-react": "0.12.25",
 		"@zayne-labs/toolkit-type-helpers": "0.12.25"
@@ -77,6 +78,9 @@
 		"@zayne-labs/tsconfig": "0.11.18",
 		"concurrently": "9.2.1",
 		"cross-env": "10.1.0",
+		"prettier-plugin-classnames": "0.8.6",
+		"prettier-plugin-merge": "0.8.0",
+		"prettier-plugin-tailwindcss": "0.7.2",
 		"publint": "0.3.16",
 		"publish": "0.6.0",
 		"react": "19.2.3",
