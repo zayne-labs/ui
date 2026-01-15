@@ -101,7 +101,7 @@
 	"size-limit": [
 		{
 			"path": "src/components/ui/**/index.ts",
-			"limit": "12 kB"
+			"limit": "8 kB"
 		},
 		{
 			"path": "src/components/common/**/index.ts",
