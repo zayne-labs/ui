@@ -107,14 +107,10 @@ function PageSeven() {
 									/>
 
 									<Card.Header className="relative flex flex-col items-center text-white">
-										<Card.Title
-											className="text-6xl font-black tracking-tighter opacity-90 drop-shadow-sm"
-										>
+										<Card.Title className="text-6xl font-black tracking-tighter opacity-90 drop-shadow-sm">
 											{index + 1}
 										</Card.Title>
-										<Card.Description
-											className="mt-2 text-lg font-medium tracking-wide text-white/90"
-										>
+										<Card.Description className="mt-2 text-lg font-medium tracking-wide text-white/90">
 											{item.title}
 										</Card.Description>
 									</Card.Header>
