@@ -5,7 +5,7 @@
 	"description": "A composable UI/UI-utilities components library. ",
 	"author": "Ryan Zayne",
 	"license": "MIT",
-	"homepage": "https://zayne-labs-ui.netlify.app",
+	"homepage": "https://zayne-labs-ui.vercel.app",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/zayne-labs/ui.git"

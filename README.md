@@ -96,7 +96,7 @@ export function UserList({ users }) {
 
 ## Documentation
 
-Visit our [documentation site](https://zayne-labs-ui.netlify.app) for detailed usage instructions, examples, and API references.
+Visit our [documentation site](https://zayne-labs-ui.vercel.app) for detailed usage instructions, examples, and API references.
 
 ## Development
 
