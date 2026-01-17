@@ -62,10 +62,10 @@
 		}
 	},
 	"dependencies": {
-		"@zayne-labs/prettier-config": "0.11.18",
-		"@zayne-labs/toolkit-core": "0.12.25",
-		"@zayne-labs/toolkit-react": "0.12.25",
-		"@zayne-labs/toolkit-type-helpers": "0.12.25"
+		"@zayne-labs/prettier-config": "0.11.19",
+		"@zayne-labs/toolkit-core": "0.12.26",
+		"@zayne-labs/toolkit-react": "0.12.26",
+		"@zayne-labs/toolkit-type-helpers": "0.12.26"
 	},
 	"devDependencies": {
 		"@arethetypeswrong/cli": "0.18.2",
@@ -75,7 +75,7 @@
 		"@total-typescript/ts-reset": "0.6.1",
 		"@types/react": "19.2.8",
 		"@types/react-dom": "19.2.3",
-		"@zayne-labs/tsconfig": "0.11.18",
+		"@zayne-labs/tsconfig": "0.11.19",
 		"concurrently": "9.2.1",
 		"cross-env": "10.1.0",
 		"prettier-plugin-classnames": "0.8.6",
