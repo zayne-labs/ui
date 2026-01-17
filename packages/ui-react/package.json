@@ -59,6 +59,9 @@
 		},
 		"tailwindcss": {
 			"optional": true
+		},
+		"tw-animate-css": {
+			"optional": true
 		}
 	},
 	"dependencies": {
