@@ -62,7 +62,6 @@
 		}
 	},
 	"dependencies": {
-		"@zayne-labs/prettier-config": "0.11.19",
 		"@zayne-labs/toolkit-core": "0.12.26",
 		"@zayne-labs/toolkit-react": "0.12.26",
 		"@zayne-labs/toolkit-type-helpers": "0.12.26"
@@ -75,10 +74,12 @@
 		"@total-typescript/ts-reset": "0.6.1",
 		"@types/react": "19.2.8",
 		"@types/react-dom": "19.2.3",
+		"@zayne-labs/prettier-config": "0.11.19",
 		"@zayne-labs/tsconfig": "0.11.19",
 		"concurrently": "9.2.1",
 		"cross-env": "10.1.0",
-		"prettier-plugin-classnames": "0.8.6",
+		"prettier": "3.8.0",
+		"prettier-plugin-classnames": "0.9.0",
 		"prettier-plugin-merge": "0.8.0",
 		"prettier-plugin-tailwindcss": "0.7.2",
 		"publint": "0.3.16",

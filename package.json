@@ -42,11 +42,11 @@
 		"husky": "9.1.7",
 		"lint-staged": "16.2.7",
 		"prettier": "3.8.0",
-		"prettier-plugin-classnames": "0.8.6",
+		"prettier-plugin-classnames": "0.9.0",
 		"prettier-plugin-merge": "0.8.0",
 		"prettier-plugin-tailwindcss": "0.7.2",
 		"tailwindcss": "4.1.18",
-		"turbo": "2.7.4",
+		"turbo": "2.7.5",
 		"typescript": "5.9.3"
 	},
 	"publishConfig": {
