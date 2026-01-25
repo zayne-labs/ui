@@ -14,10 +14,10 @@
 		"preview": "vitepress preview"
 	},
 	"dependencies": {
-		"vue": "3.5.26"
+		"vue": "3.5.27"
 	},
 	"devDependencies": {
-		"@zayne-labs/tsconfig": "0.11.19",
+		"@zayne-labs/tsconfig": "0.11.21",
 		"vitepress": "1.6.4"
 	}
 }

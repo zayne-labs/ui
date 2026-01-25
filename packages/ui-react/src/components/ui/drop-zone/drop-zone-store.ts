@@ -6,12 +6,23 @@ type RequiredUseDropZoneProps = {
 	[Key in keyof Required<UseDropZoneProps>]: UseDropZoneProps[Key] | undefined;
 };
 
-type InitStoreValues = Omit<
+type StoreContext = Pick<
 	RequiredUseDropZoneProps,
-	"disabled" | "disableFilePickerOpenOnAreaClick" | "disableInternalStateSubscription" | "extraProps"
+	| "allowedFileTypes"
+	| "disablePreviewGenForNonImageFiles"
+	| "initialFiles"
+	| "maxFileCount"
+	| "maxFileSize"
+	| "multiple"
+	| "onFilesChange"
+	| "onUpload"
+	| "onValidationError"
+	| "onValidationSuccess"
+	| "rejectDuplicateFiles"
+	| "validator"
 >;
 
-export const createDropZoneStore = (initStoreValues: InitStoreValues) => {
+export const createDropZoneStore = (storeContext: StoreContext) => {
 	const {
 		allowedFileTypes,
 		disablePreviewGenForNonImageFiles,
@@ -25,7 +36,7 @@ export const createDropZoneStore = (initStoreValues: InitStoreValues) => {
 		onValidationSuccess,
 		rejectDuplicateFiles,
 		validator,
-	} = initStoreValues;
+	} = storeContext;
 
 	const inputRef: React.RefObject<HTMLInputElement | null> = { current: null };
 
@@ -60,13 +71,13 @@ export const createDropZoneStore = (initStoreValues: InitStoreValues) => {
 					return;
 				}
 
-				const { actions, fileStateArray } = get();
+				const { actions, fileStateArray: existingFileStateArray } = get();
 
 				// == In single file mode, only use the first file
 				const resolvedNewFiles = !multiple ? [files[0]] : files;
 
 				const { errors, validFiles } = await handleFileValidationAsync({
-					existingFiles: fileStateArray.map((fileWithPreview) => fileWithPreview.file),
+					existingFiles: existingFileStateArray.map((fileWithPreview) => fileWithPreview.file),
 					hooks: {
 						onErrorEach: onValidationError,
 						onSuccessBatch: onValidationSuccess,
@@ -94,11 +105,13 @@ export const createDropZoneStore = (initStoreValues: InitStoreValues) => {
 					status: "idle",
 				}));
 
+				const resolvedFileStateArray =
+					!multiple ? newFileStateArray : [...existingFileStateArray, ...newFileStateArray];
+
 				set(
 					{
 						errors,
-						fileStateArray:
-							!multiple ? newFileStateArray : [...fileStateArray, ...newFileStateArray],
+						fileStateArray: resolvedFileStateArray,
 						isDraggingOver: false,
 					},
 					{ shouldNotifySync: true }
@@ -200,7 +213,7 @@ export const createDropZoneStore = (initStoreValues: InitStoreValues) => {
 						},
 					});
 
-					// Handle Errors
+					// == Handle Errors ==
 				} catch (error) {
 					const errorContext = getErrorContext(error as Error);
 
@@ -211,8 +224,6 @@ export const createDropZoneStore = (initStoreValues: InitStoreValues) => {
 							status: "error",
 						});
 					}
-
-					// set((prevState) => ({ errors: [...prevState.errors, errorContext] }));
 				}
 			},
 
@@ -275,18 +286,16 @@ export const createDropZoneStore = (initStoreValues: InitStoreValues) => {
 
 				const updatedFileStateArray: DropZoneState["fileStateArray"] = fileStateArray.map(
 					(fileState) => {
-						if (isMatchingFile({ fileState, fileStateOrID })) {
-							return { ...fileState, ...updatedFileState };
+						if (!isMatchingFile({ fileState, fileStateOrID })) {
+							return fileState;
 						}
 
-						return fileState;
+						return {
+							...fileState,
+							...updatedFileState,
+						};
 					}
 				);
-
-				// const updatedErrorsState =
-				// 	updatedFileState.error ?
-				// 		{ errors: [...errors, updatedFileState.error] satisfies DropZoneState["errors"] }
-				// 	:	null;
 
 				set({ fileStateArray: updatedFileStateArray }, { shouldNotifySync: true });
 			},
@@ -296,7 +305,9 @@ export const createDropZoneStore = (initStoreValues: InitStoreValues) => {
 	// == File change subscription
 	store.subscribe.withSelector(
 		(state) => state.fileStateArray,
-		(fileStateArray) => onFilesChange?.({ fileStateArray })
+		(fileStateArray) => {
+			onFilesChange?.({ fileStateArray });
+		}
 	);
 
 	// == Set `isInvalid` to true if there are errors

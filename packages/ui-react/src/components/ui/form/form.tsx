@@ -361,7 +361,7 @@ export function FormInputPrimitive<TFieldValues extends FieldValues>(
 
 	const [isPasswordVisible, toggleIsPasswordVisible] = useToggle(false);
 
-	const shouldHaveEyeIcon = withEyeIcon && type === "password";
+	const shouldHaveEyeIcon = Boolean(resolvedWithEyeIcon) && type === "password";
 
 	const WrapperElement = shouldHaveEyeIcon ? FormInputGroup : ReactFragment;
 

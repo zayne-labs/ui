@@ -52,13 +52,20 @@ export type FileStateOrIDProp = {
 
 type RecordForDataAttr = Record<`data-${string}`, unknown>;
 
+type SharedInputProps = {
+	/**
+	 * Set to `true` to disable the default styling
+	 */
+	unstyled?: boolean;
+};
+
 export interface PartProps {
 	container: {
-		input: PartProps["container"]["output"];
+		input: PartProps["container"]["output"] & SharedInputProps;
 		output: InferProps<HTMLElement> & RecordForDataAttr;
 	};
 	fileItem: {
-		input: PartProps["fileItem"]["output"];
+		input: PartProps["fileItem"]["output"] & SharedInputProps;
 		output: InferProps<"li"> & RecordForDataAttr;
 	};
 	fileItemClear: {
@@ -70,19 +77,21 @@ export interface PartProps {
 		output: InferProps<"button"> & RecordForDataAttr;
 	};
 	fileItemMetadata: {
-		input: PartProps["fileItemMetadata"]["output"];
+		input: PartProps["fileItemMetadata"]["output"] & SharedInputProps;
 		output: InferProps<"div"> & RecordForDataAttr;
 	};
 	fileItemPreview: {
-		input: PartProps["fileItemPreview"]["output"];
+		input: PartProps["fileItemPreview"]["output"] & SharedInputProps;
 		output: InferProps<"span"> & RecordForDataAttr;
 	};
 	fileItemProgress: {
-		input: PartProps["fileItemProgress"]["output"] & { variant?: "circular" | "fill" | "linear" };
+		input: PartProps["fileItemProgress"]["output"]
+			& SharedInputProps & { variant?: "circular" | "fill" | "linear" };
 		output: InferProps<"span"> & RecordForDataAttr;
 	};
 	fileList: {
-		input: PartProps["fileList"]["output"] & { orientation?: "horizontal" | "vertical" };
+		input: PartProps["fileList"]["output"]
+			& SharedInputProps & { orientation?: "horizontal" | "vertical" };
 		output: InferProps<"ul"> & RecordForDataAttr;
 	};
 	input: {
@@ -159,7 +168,7 @@ export interface UseDropZoneResult extends Pick<
 	useDropZoneStore: typeof useDropZoneStoreContext;
 }
 
-export interface UseDropZoneProps extends FileValidationSettingsAsync {
+export interface UseDropZoneProps extends FileValidationSettingsAsync, Pick<SharedInputProps, "unstyled"> {
 	/**
 	 * Whether or not the drop zone is disabled
 	 */
@@ -224,7 +233,7 @@ export interface UseDropZoneProps extends FileValidationSettingsAsync {
 	/**
 	 * Custom validation function.
 	 *
-	 * If the function returns false, the file will be rejected
+	 * If the function returns `false`, the file will be rejected
 	 *
 	 */
 	validator?: FileValidationSettingsAsync["validator"];

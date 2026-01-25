@@ -1,11 +1,5 @@
 import { dataAttr } from "@zayne-labs/toolkit-core";
-import {
-	useCallbackRef,
-	useCompareValue,
-	useConstant,
-	useStore,
-	useUnmountEffect,
-} from "@zayne-labs/toolkit-react";
+import { useCallbackRef, useCompareValue, useStore, useUnmountEffect } from "@zayne-labs/toolkit-react";
 import { composeRefs, composeTwoEventHandlers } from "@zayne-labs/toolkit-react/utils";
 import { useCallback, useMemo, useRef } from "react";
 import { cnMerge } from "@/lib/utils/cn";
@@ -29,6 +23,7 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 		onValidationError,
 		onValidationSuccess,
 		rejectDuplicateFiles = true,
+		unstyled: globalUnstyled = false,
 		validator,
 	} = props ?? {};
 
@@ -40,7 +35,7 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 	const stableOnUploadSuccess = useCallbackRef(onValidationSuccess);
 	const stableValidator = useCallbackRef(validator);
 
-	const constantInitialFiles = useConstant(() => initialFiles);
+	const shallowComparedInitialFiles = useCompareValue(initialFiles);
 	const shallowComparedMaxFileSize = useCompareValue(maxFileSize);
 	const shallowComparedAllowedFileTypes = useCompareValue(allowedFileTypes);
 
@@ -48,7 +43,7 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 		return createDropZoneStore({
 			allowedFileTypes: shallowComparedAllowedFileTypes,
 			disablePreviewGenForNonImageFiles,
-			initialFiles: constantInitialFiles,
+			initialFiles: shallowComparedInitialFiles,
 			maxFileCount,
 			maxFileSize: shallowComparedMaxFileSize,
 			multiple,
@@ -62,7 +57,7 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 	}, [
 		shallowComparedAllowedFileTypes,
 		disablePreviewGenForNonImageFiles,
-		constantInitialFiles,
+		shallowComparedInitialFiles,
 		maxFileCount,
 		shallowComparedMaxFileSize,
 		multiple,
@@ -89,10 +84,6 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 		!disableInternalStateSubscription ? state.isDraggingOver : null
 	);
 
-	const hasFiles = useDropZoneStore((state) =>
-		!disableInternalStateSubscription ? state.fileStateArray.length > 0 : null
-	);
-
 	const isInvalid = useDropZoneStore((state) =>
 		!disableInternalStateSubscription ? state.isInvalid : null
 	);
@@ -100,6 +91,8 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 
 	const getContainerProps: UseDropZoneResult["propGetters"]["getContainerProps"] = useCallback(
 		(innerProps) => {
+			const { unstyled = globalUnstyled, ...restOfInnerProps } = innerProps;
+
 			const isDisabled = disabled;
 			const onFileDrop = !isDisabled ? actions.handleDrop : undefined;
 			const onFilePaste = !isDisabled ? actions.handlePaste : undefined;
@@ -116,15 +109,14 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 					"data-drag-over": dataAttr(isDraggingOver),
 					"data-invalid": dataAttr(isInvalid),
 				}),
-				...innerProps,
-				className: cnMerge(
-					`relative flex flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed
-					p-6 transition-colors duration-250 ease-out outline-none select-none
-					focus-visible:border-zu-ring/50`,
-					`data-disabled:pointer-events-none data-drag-over:opacity-60
-					data-invalid:border-zu-destructive data-invalid:ring-zu-destructive/20`,
-					innerProps.className
-				),
+				...restOfInnerProps,
+				...(!unstyled && {
+					className: cnMerge(
+						`relative flex flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed p-6 transition-colors duration-250 ease-out outline-none select-none focus-visible:border-zu-ring/50`,
+						`data-disabled:pointer-events-none data-drag-over:opacity-60 data-invalid:border-zu-destructive data-invalid:ring-zu-destructive/20`,
+						innerProps.className
+					),
+				}),
 				"data-disabled": dataAttr(isDisabled),
 				onClick: composeTwoEventHandlers(onAreaClick, innerProps.onClick),
 				onDragEnter: composeTwoEventHandlers(actions.handleDragEnter, innerProps.onDragEnter),
@@ -137,18 +129,19 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 			};
 		},
 		[
+			globalUnstyled,
+			disabled,
+			actions.handleDrop,
+			actions.handlePaste,
+			actions.openFilePicker,
+			actions.handleKeyDown,
 			actions.handleDragEnter,
 			actions.handleDragLeave,
 			actions.handleDragOver,
-			actions.handleDrop,
-			actions.handleKeyDown,
-			actions.handlePaste,
-			actions.openFilePicker,
+			disableFilePickerOpenOnAreaClick,
 			disableInternalStateSubscription,
-			disabled,
 			isDraggingOver,
 			isInvalid,
-			disableFilePickerOpenOnAreaClick,
 		]
 	);
 
@@ -206,56 +199,67 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 
 	const getFileListProps: UseDropZoneResult["propGetters"]["getFileListProps"] = useCallback(
 		(innerProps) => {
-			const { orientation = "vertical", ...restOfInnerProps } = innerProps;
+			const { orientation = "vertical", unstyled = globalUnstyled, ...restOfInnerProps } = innerProps;
 
 			return {
 				...getScopeAttrs("file-list"),
 				"data-orientation": orientation,
-				...(!disableInternalStateSubscription && { "data-state": hasFiles ? "active" : "inactive" }),
 				...restOfInnerProps,
-				className: cnMerge(
-					"flex flex-col gap-2 data-[state=active]:animate-files-in",
-					orientation === "horizontal" && "flex-row overflow-x-auto p-1.5",
-					innerProps.className
-				),
+				...(!unstyled && {
+					className: cnMerge(
+						"flex flex-col gap-2",
+						orientation === "horizontal" && "flex-row overflow-x-auto p-1.5",
+						innerProps.className
+					),
+				}),
 			};
 		},
-		[disableInternalStateSubscription, hasFiles]
+		[globalUnstyled]
 	);
 
-	const getFileItemProps: UseDropZoneResult["propGetters"]["getFileItemProps"] = useCallbackRef(
+	const getFileItemProps: UseDropZoneResult["propGetters"]["getFileItemProps"] = useCallback(
 		(innerProps) => {
+			const { unstyled = globalUnstyled, ...restOfInnerProps } = innerProps;
+
 			return {
 				...getScopeAttrs("file-item"),
-				...innerProps,
-				className: cnMerge(
-					"relative flex items-center gap-2.5 rounded-md border p-2",
-					innerProps.className
-				),
+				...restOfInnerProps,
+				...(!unstyled && {
+					className: cnMerge(
+						"relative flex animate-files-in items-center gap-2.5 rounded-md border p-2",
+						innerProps.className
+					),
+				}),
 			};
-		}
+		},
+		[globalUnstyled]
 	);
 
 	const getFileItemProgressProps: UseDropZoneResult["propGetters"]["getFileItemProgressProps"] =
-		useCallbackRef((innerProps) => {
-			const { variant = "linear", ...restOfInnerProps } = innerProps;
+		useCallback(
+			(innerProps) => {
+				const { unstyled = globalUnstyled, variant = "linear", ...restOfInnerProps } = innerProps;
 
-			return {
-				...getScopeAttrs("file-item-progress"),
-				role: "progressbar",
-				...restOfInnerProps,
-				className: cnMerge(
-					"inline-flex",
-					variant === "circular" && "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
-					variant === "fill"
-						&& `absolute inset-0 bg-zu-primary/50 transition-[clip-path] duration-300 ease-linear
-						[clip-path:var(--clip-path)]`,
-					variant === "linear"
-						&& "relative h-1.5 w-full overflow-hidden rounded-full bg-zu-primary/20",
-					restOfInnerProps.className
-				),
-			};
-		});
+				return {
+					...getScopeAttrs("file-item-progress"),
+					role: "progressbar",
+					...restOfInnerProps,
+					...(!unstyled && {
+						className: cnMerge(
+							"inline-flex",
+							variant === "circular"
+								&& "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
+							variant === "fill"
+								&& `absolute inset-0 bg-zu-primary/50 transition-[clip-path] duration-300 ease-linear [clip-path:var(--clip-path)]`,
+							variant === "linear"
+								&& "relative h-1.5 w-full overflow-hidden rounded-full bg-zu-primary/20",
+							restOfInnerProps.className
+						),
+					}),
+				};
+			},
+			[globalUnstyled]
+		);
 
 	const getFileItemDeleteProps: UseDropZoneResult["propGetters"]["getFileItemDeleteProps"] = useCallback(
 		(innerProps) => {
@@ -278,26 +282,39 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 	);
 
 	const getFileItemPreviewProps: UseDropZoneResult["propGetters"]["getFileItemPreviewProps"] =
-		useCallbackRef((innerProps) => {
-			return {
-				...getScopeAttrs("file-item-preview"),
-				...innerProps,
-				className: cnMerge(
-					`relative flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-md
-					bg-zu-accent/50 [&>svg]:size-10`,
-					innerProps.className
-				),
-			};
-		});
+		useCallback(
+			(innerProps) => {
+				const { unstyled = globalUnstyled, ...restOfInnerProps } = innerProps;
+
+				return {
+					...getScopeAttrs("file-item-preview"),
+					...restOfInnerProps,
+					...(!unstyled && {
+						className: cnMerge(
+							`relative flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-md bg-zu-accent/50 [&>svg]:size-10`,
+							innerProps.className
+						),
+					}),
+				};
+			},
+			[globalUnstyled]
+		);
 
 	const getFileItemMetadataProps: UseDropZoneResult["propGetters"]["getFileItemMetadataProps"] =
-		useCallbackRef((innerProps) => {
-			return {
-				...getScopeAttrs("file-item-metadata"),
-				...innerProps,
-				className: cnMerge("flex min-w-0 grow flex-col", innerProps.className),
-			};
-		});
+		useCallback(
+			(innerProps) => {
+				const { unstyled = globalUnstyled, ...restOfInnerProps } = innerProps;
+
+				return {
+					...getScopeAttrs("file-item-metadata"),
+					...restOfInnerProps,
+					...(!unstyled && {
+						className: cnMerge("flex min-w-0 grow flex-col", innerProps.className),
+					}),
+				};
+			},
+			[globalUnstyled]
+		);
 
 	const getFileItemClearProps: UseDropZoneResult["propGetters"]["getFileItemClearProps"] = useCallback(
 		(innerProps) => {

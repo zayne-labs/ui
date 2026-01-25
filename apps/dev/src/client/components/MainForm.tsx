@@ -68,42 +68,42 @@ function MainForm() {
 						render={({ field }) => (
 							<DropZone.Root
 								// disabled={true}
-								// onUpload={async (ctx) => {
-								// 	const uploadPromises = ctx.fileStateArray.map(async (fileState) => {
-								// 		// Simulate file upload with progress
-								// 		const totalChunks = 10;
-								// 		let uploadedChunks = 0;
+								onUpload={async (ctx) => {
+									const uploadPromises = ctx.fileStateArray.map(async (fileState) => {
+										// Simulate file upload with progress
+										const totalChunks = 10;
+										let uploadedChunks = 0;
 
-								// 		// Simulate chunk upload with delays
-								// 		for (let count = 0; count < totalChunks; count++) {
-								// 			// Simulate network delay (100-300ms per chunk)
-								// 			// eslint-disable-next-line no-await-in-loop -- allow
-								// 			await new Promise((resolve) =>
-								// 				setTimeout(resolve, Math.random() * 200 + 100)
-								// 			);
+										// Simulate chunk upload with delays
+										for (let count = 0; count < totalChunks; count++) {
+											// Simulate network delay (100-300ms per chunk)
+											// eslint-disable-next-line no-await-in-loop -- allow
+											await new Promise((resolve) =>
+												setTimeout(resolve, Math.random() * 200 + 100)
+											);
 
-								// 			// Update progress for this specific file
-								// 			uploadedChunks++;
+											// Update progress for this specific file
+											uploadedChunks++;
 
-								// 			const progress = (uploadedChunks / totalChunks) * 100;
+											const progress = (uploadedChunks / totalChunks) * 100;
 
-								// 			ctx.onProgress({ fileStateOrID: fileState, progress });
-								// 		}
+											ctx.onProgress({ fileStateOrID: fileState, progress });
+										}
 
-								// 		// ctx.onError({
-								// 		// 	error: new DropZoneError({
-								// 		// 		file: fileState.file,
-								// 		// 		message: `File: ${fileState.file.name} upload did not finish successfully`,
-								// 		// 	}),
-								// 		// 	fileStateOrID: fileState,
-								// 		// });
+										// ctx.onError({
+										// 	error: new DropZoneError({
+										// 		file: fileState.file,
+										// 		message: `File: ${fileState.file.name} upload did not finish successfully`,
+										// 	}),
+										// 	fileStateOrID: fileState,
+										// });
 
-								// 		// Simulate server processing delay
-								// 		await new Promise((resolve) => setTimeout(resolve, 500));
-								// 	});
+										// Simulate server processing delay
+										await new Promise((resolve) => setTimeout(resolve, 500));
+									});
 
-								// 	await Promise.all(uploadPromises);
-								// }}
+									await Promise.all(uploadPromises);
+								}}
 								onFilesChange={(ctx) => {
 									field.onChange(ctx.fileStateArray[0]?.file);
 								}}
@@ -150,7 +150,7 @@ function MainForm() {
 										>
 											<div className="flex w-full items-center gap-2">
 												<DropZone.FileItemPreview className="size-10">
-													{/* <DropZone.FileItemProgress variant="fill" /> */}
+													<DropZone.FileItemProgress variant="fill" />
 												</DropZone.FileItemPreview>
 
 												<DropZone.FileItemMetadata />
@@ -166,7 +166,7 @@ function MainForm() {
 												</DropZone.FileItemDelete>
 											</div>
 
-											<DropZone.FileItemProgress variant="linear" />
+											{/* <DropZone.FileItemProgress variant="linear" /> */}
 										</DropZone.FileItem>
 									)}
 								</DropZone.FileList>
