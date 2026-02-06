@@ -13,6 +13,7 @@ import {
 	isNumber,
 	type AnyFunction,
 	type SelectorFn,
+	type UnionDiscriminator,
 } from "@zayne-labs/toolkit-type-helpers";
 import { useMemo } from "react";
 import { For } from "@/components/common/for";
@@ -406,9 +407,16 @@ export function DropZoneFileItemProgress<TElement extends React.ElementType = "s
 	}
 }
 
-type RenderPreviewDetails<TElement extends React.ElementType = "svg"> = { node?: React.ReactNode } & {
-	props?: InferProps<TElement>;
+type NodeCtx<TElement extends React.ElementType> = {
+	getProps: (innerProps: Partial<InferProps<TElement>>) => InferProps<TElement>;
 };
+
+type RenderPreviewDetails<TElement extends React.ElementType = "svg"> = UnionDiscriminator<
+	[
+		{ props: InferProps<TElement> },
+		{ node: React.ReactNode | ((ctx: NodeCtx<TElement>) => React.ReactNode) },
+	]
+>;
 
 type RenderPropContext = Pick<FileItemContextType, "fileState"> & {
 	fileExtension: string;
@@ -480,9 +488,22 @@ export function DropZoneFileItemPreview<TElement extends React.ElementType>(
 	);
 }
 
+const resolvePreviewNode = <
+	TPreviewDetail extends NonNullable<RenderPreviewObject[keyof RenderPreviewObject]>,
+	TNodeFn extends Extract<TPreviewDetail["node"], AnyFunction>,
+>(
+	details: TPreviewDetail | undefined,
+	getProps: Parameters<TNodeFn>[0]["getProps"] = ((props: unknown) => props) as never
+) => {
+	const resolvedNode =
+		isFunction(details?.node) ? details.node({ getProps: getProps as never }) : details?.node;
+
+	return resolvedNode;
+};
+
 const getFilePreviewOrIcon = (
 	context: Pick<Required<DropZoneFileItemPreviewProps>, "renderPreview"> & Required<RenderPropContext>
-) => {
+): React.ReactNode => {
 	const { fileExtension, fileState, fileType, renderPreview } = context;
 
 	const renderPreviewValue = isBoolean(renderPreview) ? {} : renderPreview;
@@ -494,8 +515,15 @@ const getFilePreviewOrIcon = (
 
 	switch (true) {
 		case fileType.startsWith("image/"): {
+			const resolvedNode = resolvePreviewNode(resolvedRenderPreviewObject.image, (innerProps) => ({
+				...innerProps,
+				alt: innerProps.alt ?? fileState.file.name ?? "",
+				className: cnMerge("size-full object-cover", innerProps.className),
+				src: innerProps.src ?? fileState.preview,
+			}));
+
 			return (
-				resolvedRenderPreviewObject.image?.node ?? (
+				resolvedNode ?? (
 					<img
 						{...resolvedRenderPreviewObject.image?.props}
 						src={fileState.preview}
@@ -510,8 +538,13 @@ const getFilePreviewOrIcon = (
 		}
 
 		case fileType.startsWith("video/"): {
+			const resolvedNode = resolvePreviewNode(resolvedRenderPreviewObject.video, (innerProps) => ({
+				...innerProps,
+				className: cnMerge("size-full object-cover", innerProps.className),
+			}));
+
 			return (
-				resolvedRenderPreviewObject.video?.node ?? (
+				resolvedNode ?? (
 					<FileVideoIcon
 						{...resolvedRenderPreviewObject.video?.props}
 						className={cnMerge(
@@ -524,8 +557,13 @@ const getFilePreviewOrIcon = (
 		}
 
 		case fileType.startsWith("audio/"): {
+			const resolvedNode = resolvePreviewNode(resolvedRenderPreviewObject.audio, (innerProps) => ({
+				...innerProps,
+				className: cnMerge("size-full object-cover", innerProps.className),
+			}));
+
 			return (
-				resolvedRenderPreviewObject.audio?.node ?? (
+				resolvedNode ?? (
 					<FileAudioIcon
 						{...resolvedRenderPreviewObject.audio?.props}
 						className={cnMerge(
@@ -538,11 +576,9 @@ const getFilePreviewOrIcon = (
 		}
 
 		case fileType.startsWith("text/") || ["md", "pdf", "rtf", "txt"].includes(fileExtension): {
-			return (
-				resolvedRenderPreviewObject.text?.node ?? (
-					<FileTextIcon {...resolvedRenderPreviewObject.text?.props} />
-				)
-			);
+			const resolvedNode = resolvePreviewNode(resolvedRenderPreviewObject.text);
+
+			return resolvedNode ?? <FileTextIcon {...resolvedRenderPreviewObject.text?.props} />;
 		}
 
 		case [
@@ -562,35 +598,27 @@ const getFilePreviewOrIcon = (
 			"tsx",
 			"xml",
 		].includes(fileExtension): {
-			return (
-				resolvedRenderPreviewObject.code?.node ?? (
-					<FileCodeIcon {...resolvedRenderPreviewObject.code?.props} />
-				)
-			);
+			const resolvedNode = resolvePreviewNode(resolvedRenderPreviewObject.code);
+
+			return resolvedNode ?? <FileCodeIcon {...resolvedRenderPreviewObject.code?.props} />;
 		}
 
 		case ["7z", "bz2", "gz", "rar", "tar", "zip"].includes(fileExtension): {
-			return (
-				resolvedRenderPreviewObject.archive?.node ?? (
-					<FileArchiveIcon {...resolvedRenderPreviewObject.archive?.props} />
-				)
-			);
+			const resolvedNode = resolvePreviewNode(resolvedRenderPreviewObject.archive);
+
+			return resolvedNode ?? <FileArchiveIcon {...resolvedRenderPreviewObject.archive?.props} />;
 		}
 
 		case ["apk", "app", "deb", "exe", "msi", "rpm"].includes(fileExtension): {
-			return (
-				resolvedRenderPreviewObject.executable?.node ?? (
-					<FileCogIcon {...resolvedRenderPreviewObject.executable?.props} />
-				)
-			);
+			const resolvedNode = resolvePreviewNode(resolvedRenderPreviewObject.executable);
+
+			return resolvedNode ?? <FileCogIcon {...resolvedRenderPreviewObject.executable?.props} />;
 		}
 
 		default: {
-			return (
-				resolvedRenderPreviewObject.default?.node ?? (
-					<FileIcon {...resolvedRenderPreviewObject.default?.props} />
-				)
-			);
+			const resolvedNode = resolvePreviewNode(resolvedRenderPreviewObject.default);
+
+			return resolvedNode ?? <FileIcon {...resolvedRenderPreviewObject.default?.props} />;
 		}
 	}
 };
