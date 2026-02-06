@@ -16,7 +16,9 @@
 		"lint:format": {},
 		"lint:size": {},
 		"lint:publint": {},
-		"lint:eslint": {},
+		"lint:eslint": {
+			"cache": false
+		},
 		"knip": {
 			"cache": true
 		},

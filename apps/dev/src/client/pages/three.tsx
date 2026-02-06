@@ -192,7 +192,7 @@ function RepoCard(props: RepoCardProps) {
 			</Card.Header>
 
 			<Card.Content className="flex-1 pt-0 pb-6">
-				<p className="line-clamp-3 text-sm leading-relaxed text-gray-600">
+				<p className="line-clamp-3 text-sm/relaxed text-gray-600">
 					{repo.description ?? "No description provided for this repository."}
 				</p>
 

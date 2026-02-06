@@ -119,7 +119,7 @@ export function CaptionedCarousel() {
 						<Carousel.Item key={slide.image}>
 							<img src={slide.image} alt={slide.title} className="size-full object-cover" />
 
-							<Carousel.Caption className="absolute right-0 bottom-0 left-0 bg-black/50 p-4 text-white">
+							<Carousel.Caption className="absolute inset-x-0 bottom-0 bg-black/50 p-4 text-white">
 								<h3 className="text-lg font-bold">{slide.title}</h3>
 								<p>{slide.description}</p>
 							</Carousel.Caption>

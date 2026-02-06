@@ -34,7 +34,7 @@ function PageFour() {
 				</Card.Header>
 
 				<Card.Content className="mt-4">
-					<p className="text-sm leading-relaxed text-white/90">
+					<p className="text-sm/relaxed text-white/90">
 						Creating beautiful, intuitive interfaces that bring joy to users. Always exploring new
 						design patterns and pushing creative boundaries.
 					</p>

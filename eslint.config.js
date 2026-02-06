@@ -4,6 +4,7 @@ export default zayne(
 	{
 		react: true,
 		tailwindcssBetter: {
+			enforceCanonicalClasses: true,
 			settings: { entryPoint: "apps/dev/tailwind.css" },
 		},
 		type: "lib",
@@ -23,6 +24,12 @@ export default zayne(
 		files: ["apps/**/*"],
 		rules: {
 			"eslint-comments/require-description": "off",
+		},
+	},
+	{
+		files: ["packages/ui-react/src/components/**/*"],
+		rules: {
+			"react-refresh/only-export-components": "off",
 		},
 	}
 );
