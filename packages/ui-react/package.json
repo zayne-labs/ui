@@ -1,7 +1,7 @@
 {
 	"name": "@zayne-labs/ui-react",
 	"type": "module",
-	"version": "0.10.48",
+	"version": "0.10.49",
 	"description": "A composable UI/UI-utilities components library. ",
 	"author": "Ryan Zayne",
 	"license": "MIT",
