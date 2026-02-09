@@ -1,14 +1,16 @@
-import type { PolymorphicProps } from "@zayne-labs/toolkit-react/utils";
+import type { PolymorphicPropsStrict } from "@zayne-labs/toolkit-react/utils";
 import { Slot } from "@/components/common/slot";
 import { cnMerge } from "@/lib/utils/cn";
 
 export function CardRoot<TElement extends React.ElementType = "article">(
-	props: PolymorphicProps<TElement>
+	props: PolymorphicPropsStrict<TElement, { asChild?: boolean }>
 ) {
-	const { as: Element = "article", className, ...restOfProps } = props;
+	const { as: Element = "article", asChild, className, ...restOfProps } = props;
+
+	const Component = asChild ? Slot.Root : Element;
 
 	return (
-		<Element
+		<Component
 			data-scope="card"
 			data-part="root"
 			data-slot="card-root"
@@ -19,12 +21,14 @@ export function CardRoot<TElement extends React.ElementType = "article">(
 }
 
 export function CardHeader<TElement extends React.ElementType = "header">(
-	props: PolymorphicProps<TElement>
+	props: PolymorphicPropsStrict<TElement, { asChild?: boolean }>
 ) {
-	const { as: Element = "header", className, ...restOfProps } = props;
+	const { as: Element = "header", asChild, className, ...restOfProps } = props;
+
+	const Component = asChild ? Slot.Root : Element;
 
 	return (
-		<Element
+		<Component
 			data-scope="card"
 			data-part="header"
 			data-slot="card-header"
@@ -34,7 +38,9 @@ export function CardHeader<TElement extends React.ElementType = "header">(
 	);
 }
 
-export function CardTitle<TElement extends React.ElementType = "h3">(props: PolymorphicProps<TElement>) {
+export function CardTitle<TElement extends React.ElementType = "h3">(
+	props: PolymorphicPropsStrict<TElement>
+) {
 	const { as: Element = "h3", className, ...restOfProps } = props;
 
 	return (
@@ -49,7 +55,7 @@ export function CardTitle<TElement extends React.ElementType = "h3">(props: Poly
 }
 
 export function CardDescription<TElement extends React.ElementType = "p">(
-	props: PolymorphicProps<TElement>
+	props: PolymorphicPropsStrict<TElement>
 ) {
 	const { as: Element = "p", className, ...restOfProps } = props;
 
@@ -65,7 +71,7 @@ export function CardDescription<TElement extends React.ElementType = "p">(
 }
 
 export function CardContent<TElement extends React.ElementType = "div">(
-	props: PolymorphicProps<TElement>
+	props: PolymorphicPropsStrict<TElement>
 ) {
 	const { as: Element = "div", className, ...restOfProps } = props;
 
@@ -80,7 +86,9 @@ export function CardContent<TElement extends React.ElementType = "div">(
 	);
 }
 
-export function CardAction<TElement extends React.ElementType = "div">(props: PolymorphicProps<TElement>) {
+export function CardAction<TElement extends React.ElementType = "button">(
+	props: PolymorphicPropsStrict<TElement>
+) {
 	const { as: Element = "button", className, ...restOfProps } = props;
 
 	return (
@@ -96,7 +104,7 @@ export function CardAction<TElement extends React.ElementType = "div">(props: Po
 }
 
 export function CardFooter<TElement extends React.ElementType = "footer">(
-	props: PolymorphicProps<TElement, { asChild?: boolean }>
+	props: PolymorphicPropsStrict<TElement, { asChild?: boolean }>
 ) {
 	const { as: Element = "footer", asChild, className, ...restOfProps } = props;
 
