@@ -59,7 +59,7 @@ type FromCamelToKebabCase<TString extends string> =
 		:	`${First}${FromCamelToKebabCase<Rest>}`
 	:	"";
 
-export const getScopeAttrs = (part: FromCamelToKebabCase<keyof PartProps>) => {
+export const getDropZoneScopeAttrs = (part: FromCamelToKebabCase<keyof PartProps>) => {
 	return {
 		/* eslint-disable perfectionist/sort-objects -- I need this order to be maintained */
 		"data-slot": `dropzone-${part}`,

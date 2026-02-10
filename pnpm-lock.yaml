@@ -84,11 +84,11 @@ importers:
         specifier: 1.11.46
         version: 1.11.46
       '@zayne-labs/toolkit-core':
-        specifier: 0.12.35
-        version: 0.12.35
+        specifier: 0.12.36
+        version: 0.12.36
       '@zayne-labs/toolkit-react':
-        specifier: 0.12.35
-        version: 0.12.35(@types/react@19.2.13)(react@19.2.4)(tailwind-merge@3.4.0)
+        specifier: 0.12.36
+        version: 0.12.36(@types/react@19.2.13)(react@19.2.4)(tailwind-merge@3.4.0)
       '@zayne-labs/ui-react':
         specifier: workspace:*
         version: link:../../packages/ui-react
@@ -182,14 +182,14 @@ importers:
   packages/ui-react:
     dependencies:
       '@zayne-labs/toolkit-core':
-        specifier: 0.12.35
-        version: 0.12.35
+        specifier: 0.12.36
+        version: 0.12.36
       '@zayne-labs/toolkit-react':
-        specifier: 0.12.35
-        version: 0.12.35(@types/react@19.2.13)(react@19.2.4)(tailwind-merge@3.4.0)
+        specifier: 0.12.36
+        version: 0.12.36(@types/react@19.2.13)(react@19.2.4)(tailwind-merge@3.4.0)
       '@zayne-labs/toolkit-type-helpers':
-        specifier: 0.12.35
-        version: 0.12.35
+        specifier: 0.12.36
+        version: 0.12.36
     devDependencies:
       '@arethetypeswrong/cli':
         specifier: 0.18.2
@@ -1904,12 +1904,12 @@ packages:
       prettier-plugin-tailwindcss:
         optional: true
 
-  '@zayne-labs/toolkit-core@0.12.35':
-    resolution: {integrity: sha512-C4a+7BSDTLkKvSBsMqGXtXl80UnKPE6RFzLDsZX7qJIfeW9Q5xk2vO0y+1jq2qyKvprzJweGAOnip3onDj5Acg==}
+  '@zayne-labs/toolkit-core@0.12.36':
+    resolution: {integrity: sha512-qU5iBz35LPYn3iawexl1yJQ8u3BFJ9F/J6KTfJks8eC7r1/xCrqabhjVIkkXsjuGWQPiaONKW6ieubR3abBezA==}
     engines: {node: '>=18.x'}
 
-  '@zayne-labs/toolkit-react@0.12.35':
-    resolution: {integrity: sha512-XD4x+6N61y7lvV5MNc/RgJkbAJ0bI1UMbBmjXwiShmLZjTw9JGRl25Ap4IahyG5/UE58Pjsd4Tx9zfg4Wus4sQ==}
+  '@zayne-labs/toolkit-react@0.12.36':
+    resolution: {integrity: sha512-MO7198dBe/KLJIuGB/6jvKbNivbVUTYZLRCT9ey0TwW0lmvRJ+/blIoAPZrB5jQcLpbBkTUg1U3rrV98FzoObw==}
     engines: {node: '>=18.x'}
     peerDependencies:
       '@types/react': '>=19.0.0'
@@ -1928,8 +1928,8 @@ packages:
     resolution: {integrity: sha512-OZUeKDhlIxxxwe05RTDm618RJIIMxqnWoHayB53h6AXTkhkxvN/yPtNnldtkgbQqrhBlKjycSoBm/xsfFpX1bA==}
     engines: {node: '>=18.x'}
 
-  '@zayne-labs/toolkit-type-helpers@0.12.35':
-    resolution: {integrity: sha512-2qvlm4oQ+LQh9RNAPU3b0GmDyCNVPHfZWXcbwSo4Qsg6CgO3OPpdaWV2YWxiNYpcidpBH+FI2AV+Vsu0WiF0/w==}
+  '@zayne-labs/toolkit-type-helpers@0.12.36':
+    resolution: {integrity: sha512-22Xx/LdELsaLe7/L3IQSwUAChj1o7mYNHLnMlKvRpscu/HtSZwHQufRJfEpsiYt6RUzyKpCqczva4G1Nz74xBg==}
     engines: {node: '>=18.x'}
 
   '@zayne-labs/tsconfig@0.11.27':
@@ -5845,14 +5845,14 @@ snapshots:
       prettier-plugin-merge: 0.9.0(prettier@3.8.1)
       prettier-plugin-tailwindcss: 0.7.2(@ianvs/prettier-plugin-sort-imports@4.7.1(@vue/compiler-sfc@3.5.28)(prettier@3.8.1))(prettier@3.8.1)
 
-  '@zayne-labs/toolkit-core@0.12.35':
+  '@zayne-labs/toolkit-core@0.12.36':
     dependencies:
-      '@zayne-labs/toolkit-type-helpers': 0.12.35
+      '@zayne-labs/toolkit-type-helpers': 0.12.36
 
-  '@zayne-labs/toolkit-react@0.12.35(@types/react@19.2.13)(react@19.2.4)(tailwind-merge@3.4.0)':
+  '@zayne-labs/toolkit-react@0.12.36(@types/react@19.2.13)(react@19.2.4)(tailwind-merge@3.4.0)':
     dependencies:
-      '@zayne-labs/toolkit-core': 0.12.35
-      '@zayne-labs/toolkit-type-helpers': 0.12.35
+      '@zayne-labs/toolkit-core': 0.12.36
+      '@zayne-labs/toolkit-type-helpers': 0.12.36
       tailwind-merge: 3.4.0
     optionalDependencies:
       '@types/react': 19.2.13
@@ -5860,7 +5860,7 @@ snapshots:
 
   '@zayne-labs/toolkit-type-helpers@0.12.31': {}
 
-  '@zayne-labs/toolkit-type-helpers@0.12.35': {}
+  '@zayne-labs/toolkit-type-helpers@0.12.36': {}
 
   '@zayne-labs/tsconfig@0.11.27': {}
 

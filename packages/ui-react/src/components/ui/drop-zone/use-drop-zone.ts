@@ -5,7 +5,7 @@ import { useCallback, useMemo, useRef } from "react";
 import { cnMerge } from "@/lib/utils/cn";
 import { createDropZoneStore } from "./drop-zone-store";
 import type { DropZonePropGetters, UseDropZoneProps, UseDropZoneResult } from "./types";
-import { getScopeAttrs } from "./utils";
+import { getDropZoneScopeAttrs } from "./utils";
 
 export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 	const {
@@ -103,7 +103,7 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 				!isDisabled && !disableFilePickerOpenOnAreaClick ? actions.handleKeyDown : undefined;
 
 			return {
-				...getScopeAttrs("container"),
+				...getDropZoneScopeAttrs("container"),
 				role: "region",
 				...(!disableInternalStateSubscription && {
 					"data-drag-over": dataAttr(isDraggingOver),
@@ -157,7 +157,7 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 			const onFileChange = !isDisabled ? actions.handleChange : undefined;
 
 			return {
-				...getScopeAttrs("input"),
+				...getDropZoneScopeAttrs("input"),
 				...(!disableInternalStateSubscription && { "data-drag-over": dataAttr(isDraggingOver) }),
 				...innerProps,
 				accept: allowedFileTypes ? allowedFileTypes.join(", ") : innerProps.accept,
@@ -186,7 +186,7 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 			const isDisabled = innerProps.disabled ?? disabled;
 
 			return {
-				...getScopeAttrs("trigger"),
+				...getDropZoneScopeAttrs("trigger"),
 				type: "button",
 				...innerProps,
 				"data-disabled": dataAttr(isDisabled),
@@ -202,7 +202,7 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 			const { orientation = "vertical", unstyled = globalUnstyled, ...restOfInnerProps } = innerProps;
 
 			return {
-				...getScopeAttrs("file-list"),
+				...getDropZoneScopeAttrs("file-list"),
 				"data-orientation": orientation,
 				...restOfInnerProps,
 				...(!unstyled && {
@@ -222,7 +222,7 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 			const { unstyled = globalUnstyled, ...restOfInnerProps } = innerProps;
 
 			return {
-				...getScopeAttrs("file-item"),
+				...getDropZoneScopeAttrs("file-item"),
 				...restOfInnerProps,
 				...(!unstyled && {
 					className: cnMerge(
@@ -241,7 +241,7 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 				const { unstyled = globalUnstyled, variant = "linear", ...restOfInnerProps } = innerProps;
 
 				return {
-					...getScopeAttrs("file-item-progress"),
+					...getDropZoneScopeAttrs("file-item-progress"),
 					role: "progressbar",
 					...restOfInnerProps,
 					...(!unstyled && {
@@ -270,7 +270,7 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 			const onRemoveFile = () => fileStateOrID && actions.removeFile({ fileStateOrID });
 
 			return {
-				...getScopeAttrs("file-item-delete"),
+				...getDropZoneScopeAttrs("file-item-delete"),
 				type: "button",
 				...restOfInnerProps,
 				"data-disabled": dataAttr(isDisabled),
@@ -287,7 +287,7 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 				const { unstyled = globalUnstyled, ...restOfInnerProps } = innerProps;
 
 				return {
-					...getScopeAttrs("file-item-preview"),
+					...getDropZoneScopeAttrs("file-item-preview"),
 					...restOfInnerProps,
 					...(!unstyled && {
 						className: cnMerge(
@@ -306,7 +306,7 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 				const { unstyled = globalUnstyled, ...restOfInnerProps } = innerProps;
 
 				return {
-					...getScopeAttrs("file-item-metadata"),
+					...getDropZoneScopeAttrs("file-item-metadata"),
 					...restOfInnerProps,
 					...(!unstyled && {
 						className: cnMerge("flex min-w-0 grow flex-col", innerProps.className),
@@ -321,7 +321,7 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 			const isDisabled = innerProps.disabled ?? disabled;
 
 			return {
-				...getScopeAttrs("file-item-clear"),
+				...getDropZoneScopeAttrs("file-item-clear"),
 				type: "button",
 				...innerProps,
 				"data-disabled": dataAttr(isDisabled),
