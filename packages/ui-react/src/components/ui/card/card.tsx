@@ -14,7 +14,7 @@ export function CardRoot<TElement extends React.ElementType = "article">(
 			data-slot="card-root"
 			data-scope="card"
 			data-part="root"
-			className={cnMerge("flex flex-col", className)}
+			className={className}
 			{...restOfProps}
 		/>
 	);

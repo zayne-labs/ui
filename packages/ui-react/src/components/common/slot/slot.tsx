@@ -24,22 +24,23 @@ export function SlotRoot(props: SlotProps) {
 	}
 
 	// == The new element to render is the one passed as a child of `Slot.Slottable`
-	const newElement = slottable.props.children;
+	const childToRender = slottable.props.children;
 
-	if (Children.count(newElement) > 1) {
+	if (Children.count(childToRender) > 1) {
 		return Children.only(null);
 	}
 
-	const resolvedNewElement = isArray(newElement) ? newElement[0] : newElement;
+	const resolvedChildToRender = isArray(childToRender) ? childToRender[0] : childToRender;
 
-	if (!isValidElement(resolvedNewElement)) {
+	if (!isValidElement(resolvedChildToRender)) {
+		console.error("Invalid element passed to Slot:", resolvedChildToRender);
 		return null;
 	}
 
-	const newChildren = childrenArray.map((child) => {
+	const childToRenderChildren = childrenArray.map((child) => {
 		if (child === slottable) {
-			// == Because the new element will be the one rendered, we are only interested in grabbing its children (`newElement.props.children`)
-			return (resolvedNewElement.props as SlotProps).children;
+			// == Because the new element will be the one rendered, we are only interested in grabbing its children (`childToRender.props.children`)
+			return (resolvedChildToRender.props as SlotProps).children;
 		}
 
 		return child;
@@ -47,7 +48,7 @@ export function SlotRoot(props: SlotProps) {
 
 	return (
 		<SlotClone {...restOfSlotProps}>
-			{cloneElement(resolvedNewElement, undefined, newChildren)}
+			{cloneElement(resolvedChildToRender, undefined, childToRenderChildren)}
 		</SlotClone>
 	);
 }
@@ -79,6 +80,7 @@ function SlotClone(props: SlotCloneProps) {
 	const resolvedChild = isArray(children) ? children[0] : children;
 
 	if (!isValidElement<UnknownObject>(resolvedChild)) {
+		console.error("Invalid element passed to Slot:", resolvedChild);
 		return null;
 	}
 

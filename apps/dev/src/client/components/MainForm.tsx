@@ -275,8 +275,7 @@ function MainForm() {
 				/>
 			</section>
 
-			{/* Debug Section */}
-			<div className="mt-8 space-y-4 rounded-lg bg-gray-50 p-4">
+			<section className="mt-8 flex flex-col gap-4 rounded-lg bg-gray-50 p-4">
 				<h3 className="text-sm font-medium text-gray-900">Debug Information</h3>
 
 				<div className="space-y-2 text-sm text-gray-600">
@@ -297,7 +296,7 @@ function MainForm() {
 						}}
 					/>
 				</div>
-			</div>
+			</section>
 		</Form.Root>
 	);
 }
