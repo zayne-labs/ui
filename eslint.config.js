@@ -2,18 +2,22 @@ import { GLOB_MARKDOWN_CODE, zayne } from "@zayne-labs/eslint-config";
 
 export default zayne(
 	{
-		react: true,
+		react: {
+			nextjs: {
+				overrides: { "nextjs/no-html-link-for-pages": ["error", "apps/docs"] },
+			},
+		},
 		tailwindcssBetter: {
-			enforceCanonicalClasses: true,
-			settings: { entryPoint: "apps/dev/tailwind.css" },
+			settings: { entryPoint: "apps/docs/tailwind.css" },
 		},
 		type: "lib",
 		typescript: {
-			tsconfigPath: ["**/tsconfig.json"],
+			tsconfigPath: ["tsconfig.json", "packages/*/tsconfig.json", "apps/*/tsconfig.json"],
+			// tsconfigPath: ["**/tsconfig.json"],
 		},
 	},
 	{
-		files: [`apps/docs/src/${GLOB_MARKDOWN_CODE}`],
+		files: [`apps/docs/content/docs/${GLOB_MARKDOWN_CODE}`],
 		rules: {
 			"no-await-in-loop": "off",
 			"react-hooks/hooks": "off",
@@ -21,7 +25,7 @@ export default zayne(
 		},
 	},
 	{
-		files: ["apps/**/*"],
+		files: ["apps/docs/**/*"],
 		rules: {
 			"eslint-comments/require-description": "off",
 		},

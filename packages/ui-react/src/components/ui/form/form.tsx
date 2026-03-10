@@ -664,7 +664,7 @@ export const FormErrorMessagePrimitive: FormErrorMessagePrimitiveType = (props) 
 
 			const onAnimationEnd = () => element.classList.remove(errorAnimationClass);
 
-			on("animationend", element, onAnimationEnd, { once: true, signal: controller.signal });
+			on(element, "animationend", onAnimationEnd, { once: true, signal: controller.signal });
 		}
 
 		return () => {

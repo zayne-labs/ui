@@ -56,8 +56,8 @@ export const useDragScroll = <TElement extends HTMLElement>(
 
 		if (!node) return;
 
-		const cleanupMouseDown = on("mousedown", node, actions.handleMouseDown);
-		const cleanupScroll = on("scroll", node as never, actions.handleScroll as never, {
+		const cleanupMouseDown = on(node, "mousedown", actions.handleMouseDown);
+		const cleanupScroll = on(node, "scroll", actions.handleScroll, {
 			passive: true,
 		});
 

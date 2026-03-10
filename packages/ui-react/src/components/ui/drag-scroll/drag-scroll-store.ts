@@ -114,18 +114,17 @@ export const createDragScrollStore = <TElement extends HTMLElement = HTMLElement
 
 				const { actions } = get();
 
-				on("mousemove", containerRef.current, actions.handleMouseMove, {
+				on(containerRef.current, "mousemove", actions.handleMouseMove, {
 					signal: abortControllers.current.mouseMove.signal,
 				});
-				on("mouseup", containerRef.current, actions.handleMouseUpOrLeave, {
+				on(containerRef.current, "mouseup", actions.handleMouseUpOrLeave, {
 					signal: abortControllers.current.mouseUp.signal,
 				});
-				on("mouseleave", containerRef.current, actions.handleMouseUpOrLeave, {
+				on(containerRef.current, "mouseleave", actions.handleMouseUpOrLeave, {
 					signal: abortControllers.current.mouseLeave.signal,
 				});
-
 				// == Document-level mouseup fallback for when user releases outside the container
-				on("mouseup", document, actions.handleMouseUpOrLeave, {
+				on(document, "mouseup", actions.handleMouseUpOrLeave, {
 					once: true,
 					signal: abortControllers.current.mouseUp.signal,
 				});

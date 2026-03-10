@@ -1,13 +1,17 @@
 {
-	"extends": "@zayne-labs/tsconfig/bundler/dom/app",
+	"extends": ["@zayne-labs/tsconfig/bundler/next"],
 
 	"compilerOptions": {
 		"baseUrl": ".",
 		"paths": {
-			"@/*": ["src/*"]
+			"@/*": ["./*"]
 		}
 	},
 
-	"include": ["**/*", "./.vitepress/**/*"],
-	"exclude": ["node_modules/**"]
+	"mdx": {
+		// "checkMdx": true
+	},
+
+	"include": ["**/*", "./*"],
+	"exclude": ["node_modules"]
 }
