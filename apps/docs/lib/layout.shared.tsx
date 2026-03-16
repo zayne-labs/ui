@@ -20,7 +20,7 @@ export const baseOptions = () => {
 	return {
 		githubUrl: `https://github.com/${repoOwner}/${repoName}`,
 		nav: {
-			title: <p className="font-medium in-[header]:text-[15px]">UI</p>,
+			title: <p className="font-medium in-[header]:text-[15px]">Zayne UI</p>,
 			transparentMode: "top",
 			url: "/docs",
 		},
@@ -59,7 +59,7 @@ export const docsOptions = () => {
 		],
 
 		nav: {
-			title: <p className="font-medium in-[header]:text-[15px]">UI</p>,
+			title: <p className="font-medium in-[header]:text-[15px]">Zayne UI</p>,
 
 			transparentMode: "top",
 		},

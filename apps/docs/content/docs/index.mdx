@@ -1,13 +1,75 @@
 ---
-title: Hello World
-description: Your first document
+title: Introduction
+description: Composable, headless UI components and utilities built for flexibility and great developer experience
 ---
 
-Welcome to the docs! You can start writing documents in `/content/docs`.
+## Welcome to Zayne Labs UI
 
-## What is Next?
+Zayne Labs UI is a modern component library that puts you in control. Built with a headless architecture, it provides powerful, composable components without imposing any styling decisions. Whether you're building a simple app or a complex design system, Zayne Labs UI adapts to your needs.
 
-<Cards>
-	<Card title="Learn more about Next.js" href="https://nextjs.org/docs" />
-	<Card title="Learn more about Fumadocs" href="https://fumadocs.dev" />
+## Key features
+
+import { Code2Icon, CpuIcon, LeafIcon, PuzzleIcon } from "lucide-react";
+
+<Cards cols={2}>
+	<Card title="Headless components" icon={<CpuIcon />}>
+		Complete control over styling. Components provide functionality and accessibility without imposing
+		design decisions.
+	</Card>
+	<Card title="TypeScript-first" icon={<Code2Icon />}>
+		Built with TypeScript from the ground up. Full type safety and autocomplete out of the box.
+	</Card>
+	<Card title="Tree-shakeable" icon={<LeafIcon />}>
+		Import only what you need. ESM modules ensure your bundle stays lean and efficient.
+	</Card>
+	<Card title="Composable API" icon={<PuzzleIcon />}>
+		Components work together seamlessly. Build complex UIs from simple, reusable building blocks.
+	</Card>
 </Cards>
+
+## What's included
+
+Zayne Labs UI provides two categories of components to cover all your UI needs:
+
+### UI components
+
+Headless components for common interface patterns:
+
+- **Card** - Composable card layouts with header, content, and footer sections
+- **Carousel** - Customizable slideshow component with navigation controls
+- **DragScroll** - Add drag-to-scroll behavior to any container
+- **DropZone** - File upload with drag-and-drop support and progress tracking
+- **Form** - Form handling with validation (wrapper around react-hook-form)
+
+### Utility components
+
+Declarative components for common UI patterns:
+
+- **Await** - Handle async states declaratively
+- **ClientGate** - Client-side only rendering guard
+- **ErrorBoundary** - Graceful error handling
+- **For** - List rendering with empty states
+- **Presence** - Animation presence detection
+- **Show** - Conditional rendering
+- **Slot** - Component composition with slots
+- **SuspenseWithBoundary** - Combined Suspense and ErrorBoundary
+- **Switch** - Pattern matching for conditional rendering
+- **Teleport** - Portal-based content teleportation
+
+## Framework support
+
+<Callout>React is currently available. Support for Vue, Svelte, and Solid is coming soon.</Callout>
+
+**Currently available:**
+
+- React 19.x (with full TypeScript support)
+
+**Coming soon:**
+
+- Vue 3
+- Svelte 5
+- Solid.js
+
+## Built on solid foundations
+
+Zayne Labs UI is built on top of [@zayne-labs/toolkit](https://github.com/zayne-labs/toolkit), a collection of utility functions and React hooks that power the library's functionality.

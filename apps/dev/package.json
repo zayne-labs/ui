@@ -26,10 +26,10 @@
 	},
 	"devDependencies": {
 		"@tailwindcss/vite": "4.2.1",
-		"@types/node": "25.4.0",
+		"@types/node": "25.5.0",
 		"@types/react": "19.2.14",
 		"@types/react-dom": "19.2.3",
-		"@vitejs/plugin-react": "5.1.4",
+		"@vitejs/plugin-react": "6.0.1",
 		"@zayne-labs/eslint-config": "0.11.31",
 		"@zayne-labs/prettier-config": "0.11.31",
 		"@zayne-labs/tsconfig": "0.11.31",
@@ -41,7 +41,7 @@
 		"tailwindcss": "4.2.1",
 		"tsx": "4.21.0",
 		"typescript": "5.9.3",
-		"vite": "8.0.0-beta.18",
+		"vite": "8.0.0",
 		"vite-tsconfig-paths": "6.1.1"
 	}
 }
