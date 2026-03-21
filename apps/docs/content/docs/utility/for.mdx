@@ -1,0 +1,101 @@
+---
+title: For
+description: Declarative list rendering with built-in empty state handling for cleaner JSX.
+---
+
+The `For` component provides a declarative way to render lists and arrays in React, with automatic empty state handling and support for numeric ranges.
+
+## Installation
+
+```package-install
+@zayne-labs/ui-react
+```
+
+## Basic Usage
+
+<Tabs items={['Array Rendering', 'Numeric Range']}>
+  <Tab value="Array Rendering">
+    Pass an array to `each` and utilize the render prop to define your items.
+
+    ```tsx
+    import { For } from "@zayne-labs/ui-react/common/for";
+
+    function UserList({ users }) {
+      return (
+        <For each={users} fallback={<p>No users joined yet.</p>}>
+          {(user) => (
+            <div key={user.id} className="p-2 border-b">
+              {user.name}
+            </div>
+          )}
+        </For>
+      );
+    }
+    ```
+
+  </Tab>
+  <Tab value="Numeric Range">
+    Pass a number to `each` to repeat content a specific number of times. Perfect for skeletons!
+
+    ```tsx
+    import { For } from "@zayne-labs/ui-react/common/for";
+
+    function TableSkeleton() {
+      return (
+        <For each={5}>
+          {(i) => (
+            <div key={i} className="h-8 w-full animate-pulse bg-gray-100 rounded" />
+          )}
+        </For>
+      );
+    }
+    ```
+
+  </Tab>
+</Tabs>
+
+## Component API
+
+<Accordions>
+  <Accordion title="For">
+    The standard iteration component that renders children directly into the parent.
+
+    <auto-type-table path="../../../lib/ui-options.ts" name="ForProps" />
+
+  </Accordion>
+
+  <Accordion title="ForWithWrapper">
+    Renders items within a specific container element (e.g., `<ul>`, `<tbody>`).
+
+    <auto-type-table path="../../../lib/ui-options.ts" name="ForWithWrapperProps" />
+
+  </Accordion>
+</Accordions>
+
+## Examples
+
+### Semantic Table Rows
+
+```tsx
+import { ForWithWrapper } from "@zayne-labs/ui-react/common/for";
+
+function StatisticsTable({ data }) {
+	return (
+		<table>
+			<ForWithWrapper as="tbody" each={data}>
+				{(row) => (
+					<tr key={row.id}>
+						<td>{row.label}</td>
+						<td>{row.value}</td>
+					</tr>
+				)}
+			</ForWithWrapper>
+		</table>
+	);
+}
+```
+
+<Callout type="info">
+	`For` uses the `React.Children` API internally to optimize rendering and ensure correct key management
+	in common scenarios.
+</Callout>

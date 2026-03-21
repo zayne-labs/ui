@@ -1,0 +1,80 @@
+---
+title: SuspenseWithBoundary
+description: Combine React Suspense and ErrorBoundary for complete async handling.
+---
+
+The `SuspenseWithBoundary` component is a convenience wrapper that combines an `ErrorBoundary` and `Suspense` into a single component. It's the standard way to handle the full lifecycle of an asynchronous component.
+
+## Installation
+
+```package-install
+@zayne-labs/ui-react
+```
+
+## Basic Usage
+
+```tsx
+import { SuspenseWithBoundary } from "@zayne-labs/ui-react/common/suspense-with-boundary";
+
+function Dashboard() {
+	return (
+		<SuspenseWithBoundary
+			fallback={<ChartSkeleton />}
+			errorFallback={({ error, resetErrorBoundary }) => (
+				<div className="rounded-lg border border-red-200 p-4 text-center">
+					<p className="text-red-700">Failed to load analytics</p>
+					<button onClick={resetErrorBoundary} className="mt-2 text-sm underline">
+						Retry
+					</button>
+				</div>
+			)}
+		>
+			<AsyncAnalyticsChart />
+		</SuspenseWithBoundary>
+	);
+}
+```
+
+## Component API
+
+<Accordions>
+	<Accordion title="SuspenseWithBoundary Props">
+		<auto-type-table path="../../../lib/ui-options.ts" name="SuspenseWithBoundaryProps" />
+	</Accordion>
+</Accordions>
+
+## Why use this?
+
+Handling async states typically requires nesting:
+
+```tsx
+<ErrorBoundary fallback={<ErrorUI />}>
+	<Suspense fallback={<LoadingUI />}>
+		<MyAsyncComponent />
+	</Suspense>
+</ErrorBoundary>
+```
+
+`SuspenseWithBoundary` flattens this structure, making your JSX cleaner and ensuring that errors during the loading phase are caught by the same boundary that handles errors during the success phase.
+
+## Use Cases
+
+<Cards>
+	<Card title="Async Data Fetching">
+		Wrap components that use `useSuspenseQuery` or other suspending hooks.
+	</Card>
+	<Card title="Heavy Imports">
+		Wrap `React.lazy()` imports to gracefully handle loading and network failures.
+	</Card>
+	<Card title="Server Components">
+		On the client, wrap high-stakes server-side async content for better UX.
+	</Card>
+	<Card title="Dashboard Isolation">
+		Prevent a single failing widget from bringing down your entire analytical dashboard.
+	</Card>
+</Cards>
+
+<Callout type="info">
+	The `ErrorBoundary` is placed as the outer wrapper, with `Suspense` as the inner wrapper. This is the
+	recommended pattern as it captures errors that occur during the suspension phase itself.
+</Callout>

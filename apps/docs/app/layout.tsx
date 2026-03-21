@@ -34,8 +34,8 @@ export default RootLayout;
 export const metadata: Metadata = createMetadata({
 	metadataBase: new URL(baseURL),
 	title: {
-		default: "CallApi",
-		template: "%s | CallApi",
+		default: "Zayne UI",
+		template: "%s | Zayne UI",
 	},
 });
 

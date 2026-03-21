@@ -1,0 +1,85 @@
+---
+title: Slot
+description: Compose components by merging props into children for flexible API design.
+---
+
+The `Slot` component enables advanced component composition by merging props from a parent into its immediate child element. It's the core utility behind the `asChild` pattern, allowing users to swap underlying HTML elements while maintaining functional logic.
+
+## Installation
+
+```package-install
+@zayne-labs/ui-react
+```
+
+## Basic Usage
+
+<Tabs items={['The asChild Pattern', 'Slottable Helper']}>
+  <Tab value="The asChild Pattern">
+    This pattern allows a component to "give its identity" to its child.
+
+    ```tsx
+    import { Slot } from "@zayne-labs/ui-react/common/slot";
+
+    function Button({ asChild, ...props }) {
+      const Component = asChild ? Slot.Root : 'button';
+      return <Component {...props} className="btn" />;
+    }
+
+    // Renders an <a> styled like a button
+    <Button asChild>
+      <a href="/login">Login</a>
+    </Button>
+    ```
+
+  </Tab>
+  <Tab value="Slottable Helper">
+    If your component has required surrounding markup but still needs to be slottable, use `Slot.Slottable`.
+
+    ```tsx
+    import { Slot } from "@zayne-labs/ui-react/common/slot";
+
+    function Card({ asChild, children, ...props }) {
+      const Component = asChild ? Slot.Root : 'div';
+
+      return (
+        <Component {...props} className="card-outer">
+          <div className="card-inner">
+            <Slot.Slottable>{children}</Slot.Slottable>
+          </div>
+        </Component>
+      );
+    }
+    ```
+
+  </Tab>
+</Tabs>
+
+## Component API
+
+<Accordions>
+  <Accordion title="Slot.Root">
+    Merges parent props, event handlers, and refs into the first valid React element child it receives.
+
+    <Callout type="warn">
+      `Slot.Root` requires exactly **one** valid React element child. Text nodes or multiple elements will result in an error or no-render.
+    </Callout>
+
+  </Accordion>
+
+  <Accordion title="Slot.Slottable">
+    A marker component used to indicate which part of the component's children should be preserved when the `asChild` substitution occurs.
+  </Accordion>
+</Accordions>
+
+## Why use Slot?
+
+- **Semantic Flexibility**: Allow users to change a `<button>` to an `<a>` or a `<div>` without breaking styles or interactive logic.
+- **Smart Merging**: Automatically concatenates `className` strings and merges `style` objects.
+- **EventHandler Composition**: If both the parent and child have `onClick`, both handlers will be executed in sequence.
+
+```tsx
+// Both handlers will run!
+<Button asChild={true} onClick={() => console.log("Parent Logger")}>
+	<button onClick={() => console.log("Child Action")}>Click Me</button>
+</Button>
+```

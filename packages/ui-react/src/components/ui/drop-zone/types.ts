@@ -59,50 +59,54 @@ type SharedInputProps = {
 	unstyled?: boolean;
 };
 
+/* eslint-disable perfectionist/sort-intersection-types -- I need non-standard props to come up first */
 export interface PartProps {
 	container: {
 		input: PartProps["container"]["output"] & SharedInputProps;
-		output: InferProps<HTMLElement> & RecordForDataAttr;
+		output: RecordForDataAttr & InferProps<HTMLElement>;
 	};
 	fileItem: {
 		input: PartProps["fileItem"]["output"] & SharedInputProps;
-		output: InferProps<"li"> & RecordForDataAttr;
+		output: RecordForDataAttr & InferProps<"li">;
 	};
 	fileItemClear: {
 		input: PartProps["fileItemClear"]["output"];
-		output: InferProps<"button"> & RecordForDataAttr;
+		output: RecordForDataAttr & InferProps<"button">;
 	};
 	fileItemDelete: {
 		input: Partial<FileStateOrIDProp> & PartProps["fileItemDelete"]["output"];
-		output: InferProps<"button"> & RecordForDataAttr;
+		output: RecordForDataAttr & InferProps<"button">;
 	};
 	fileItemMetadata: {
-		input: PartProps["fileItemMetadata"]["output"] & SharedInputProps;
-		output: InferProps<"div"> & RecordForDataAttr;
+		input: SharedInputProps & PartProps["fileItemMetadata"]["output"];
+		output: RecordForDataAttr & InferProps<"div">;
 	};
 	fileItemPreview: {
-		input: PartProps["fileItemPreview"]["output"] & SharedInputProps;
-		output: InferProps<"span"> & RecordForDataAttr;
+		input: SharedInputProps & PartProps["fileItemPreview"]["output"];
+		output: RecordForDataAttr & InferProps<"span">;
 	};
 	fileItemProgress: {
-		input: PartProps["fileItemProgress"]["output"]
-			& SharedInputProps & { variant?: "circular" | "fill" | "linear" };
-		output: InferProps<"span"> & RecordForDataAttr;
+		input: SharedInputProps & {
+			variant?: "circular" | "fill" | "linear";
+		} & PartProps["fileItemProgress"]["output"];
+		output: RecordForDataAttr & InferProps<"span">;
 	};
 	fileList: {
-		input: PartProps["fileList"]["output"]
-			& SharedInputProps & { orientation?: "horizontal" | "vertical" };
-		output: InferProps<"ul"> & RecordForDataAttr;
+		input: SharedInputProps & {
+			orientation?: "horizontal" | "vertical";
+		} & PartProps["fileList"]["output"];
+		output: RecordForDataAttr & InferProps<"ul">;
 	};
 	input: {
 		input: PartProps["input"]["output"];
-		output: InferProps<"input"> & RecordForDataAttr;
+		output: RecordForDataAttr & InferProps<"input">;
 	};
 	trigger: {
 		input: PartProps["trigger"]["output"];
-		output: InferProps<"button"> & RecordForDataAttr;
+		output: RecordForDataAttr & InferProps<"button">;
 	};
 }
+/* eslint-enable perfectionist/sort-intersection-types -- I need non-standard props to come up first */
 
 export type DropZonePropGetters = {
 	[Key in keyof PartProps as `get${Capitalize<Key>}Props`]: (

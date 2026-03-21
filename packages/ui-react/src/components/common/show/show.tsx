@@ -4,7 +4,7 @@ import { toArray } from "@zayne-labs/toolkit-core";
 import { getMultipleSlots, getSingleSlot } from "@zayne-labs/toolkit-react/utils";
 import { assert, isFunction } from "@zayne-labs/toolkit-type-helpers";
 
-type ShowProps<TWhen> =
+export type ShowRootProps<TWhen> =
 	| {
 			children: React.ReactNode;
 			control: "content";
@@ -18,7 +18,7 @@ type ShowProps<TWhen> =
 			when: false | TWhen | null | undefined;
 	  };
 
-export function ShowRoot<TWhen>(props: ShowProps<TWhen>) {
+export function ShowRoot<TWhen>(props: ShowRootProps<TWhen>) {
 	const { children, control = "root", fallback = null, when } = props;
 
 	if (control === "content" && !isFunction(children)) {
@@ -61,7 +61,7 @@ export function ShowRoot<TWhen>(props: ShowProps<TWhen>) {
 	return contentSlot ?? regularChildren;
 }
 
-type ShowContentProps<TWhen> = Pick<ShowProps<TWhen>, "children" | "when">;
+export type ShowContentProps<TWhen> = Pick<ShowRootProps<TWhen>, "children" | "when">;
 
 export function ShowContent<TWhen>(props: ShowContentProps<TWhen>) {
 	const { children, when } = props;

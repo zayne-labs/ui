@@ -83,11 +83,10 @@
 
 	html {
 		scroll-behavior: smooth;
-		-webkit-tap-highlight-color: transparent;
 		font-synthesis: none;
 		text-rendering: optimizeLegibility;
+		-webkit-tap-highlight-color: transparent;
 		-webkit-font-smoothing: antialiased;
-		-moz-osx-font-smoothing: grayscale;
 	}
 
 	html {

@@ -1,39 +1,40 @@
 ---
 title: Introduction
 description: Composable, headless UI components and utilities built for flexibility and great developer experience
+icon: BookOpenText
 ---
 
-## Welcome to Zayne Labs UI
+## Welcome to Zayne UI
 
-Zayne Labs UI is a modern component library that puts you in control. Built with a headless architecture, it provides powerful, composable components without imposing any styling decisions. Whether you're building a simple app or a complex design system, Zayne Labs UI adapts to your needs.
+A headless component library that gives you the functionality without the styling opinions. Build what you want, style it how you want.
 
 ## Key features
 
 import { Code2Icon, CpuIcon, LeafIcon, PuzzleIcon } from "lucide-react";
 
-<Cards cols={2}>
+<Cards>
 	<Card title="Headless components" icon={<CpuIcon />}>
-		Complete control over styling. Components provide functionality and accessibility without imposing
-		design decisions.
+		No styling decisions made for you. Components handle functionality and accessibility, you handle the
+		design.
 	</Card>
 	<Card title="TypeScript-first" icon={<Code2Icon />}>
-		Built with TypeScript from the ground up. Full type safety and autocomplete out of the box.
+		Written in TypeScript. Full type safety and autocomplete without extra setup.
 	</Card>
 	<Card title="Tree-shakeable" icon={<LeafIcon />}>
-		Import only what you need. ESM modules ensure your bundle stays lean and efficient.
+		Import what you need. ESM modules keep your bundle small.
 	</Card>
 	<Card title="Composable API" icon={<PuzzleIcon />}>
-		Components work together seamlessly. Build complex UIs from simple, reusable building blocks.
+		Components work together. Build complex UIs from simple pieces.
 	</Card>
 </Cards>
 
 ## What's included
 
-Zayne Labs UI provides two categories of components to cover all your UI needs:
+The library provides two types of components:
 
 ### UI components
 
-Headless components for common interface patterns:
+Headless components for common patterns:
 
 - **Card** - Composable card layouts with header, content, and footer sections
 - **Carousel** - Customizable slideshow component with navigation controls
@@ -43,7 +44,7 @@ Headless components for common interface patterns:
 
 ### Utility components
 
-Declarative components for common UI patterns:
+Declarative components for common utility patterns:
 
 - **Await** - Handle async states declaratively
 - **ClientGate** - Client-side only rendering guard
@@ -72,4 +73,4 @@ Declarative components for common UI patterns:
 
 ## Built on solid foundations
 
-Zayne Labs UI is built on top of [@zayne-labs/toolkit](https://github.com/zayne-labs/toolkit), a collection of utility functions and React hooks that power the library's functionality.
+Built on top of [@zayne-labs/toolkit](https://github.com/zayne-labs/toolkit), a collection of utilities and React hooks.

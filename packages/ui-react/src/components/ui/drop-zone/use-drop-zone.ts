@@ -76,6 +76,7 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 	});
 
 	/* eslint-disable react-hooks/hooks -- ignore */
+	// eslint-disable-next-line react-x/component-hook-factories -- ignore
 	const useDropZoneStore: UseDropZoneResult["useDropZoneStore"] = (selector) => {
 		return useStore(storeApi as never, selector);
 	};

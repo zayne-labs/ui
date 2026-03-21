@@ -1,0 +1,193 @@
+---
+title: DropZone
+description: A feature-rich file upload component with drag-and-drop, validation, progress tracking, and preview generation.
+---
+
+The DropZone component provides a complete file upload solution with drag-and-drop support, file validation, upload progress tracking, automatic preview generation, and extensive customization options.
+
+## Installation
+
+```package-install
+@zayne-labs/ui-react
+```
+
+## Basic Usage
+
+```tsx
+import { DropZone } from "@zayne-labs/ui-react/ui/drop-zone";
+
+export function FileUpload() {
+	return (
+		<DropZone.Root onUpload={(files) => console.log(files)}>
+			<DropZone.Area className="rounded-xl border-2 border-dashed border-gray-200 p-12 text-center transition-colors data-drag-over:border-zu-primary data-drag-over:bg-zu-primary/5">
+				<p className="text-gray-600">Drag files here or click to browse</p>
+				<DropZone.Trigger className="mt-4 rounded-md bg-zu-primary px-6 py-2 text-white shadow-sm">
+					Select Files
+				</DropZone.Trigger>
+			</DropZone.Area>
+
+			<DropZone.FileList className="mt-6 space-y-3">
+				{({ fileState }) => (
+					<DropZone.FileItem
+						fileState={fileState}
+						className="flex items-center gap-4 rounded-lg border border-gray-100 bg-white p-4"
+					>
+						<DropZone.FileItemPreview className="size-16 rounded-md object-cover" />
+						<div className="min-w-0 flex-1">
+							<DropZone.FileItemMetadata className="truncate font-medium" />
+							<DropZone.FileItemProgress variant="linear" className="mt-2" />
+						</div>
+						<DropZone.FileItemDelete className="rounded-md p-2 text-zu-destructive transition-colors hover:bg-zu-destructive/5">
+							Remove
+						</DropZone.FileItemDelete>
+					</DropZone.FileItem>
+				)}
+			</DropZone.FileList>
+		</DropZone.Root>
+	);
+}
+```
+
+## Component API
+
+<Accordions>
+  <Accordion title="DropZone.Root">
+    The main coordinator for file management and validation.
+
+    <auto-type-table path="../../../lib/ui-options.ts" name="UseDropZoneProps" />
+
+  </Accordion>
+
+  <Accordion title="DropZone.Area">
+    A convenience component that combines `DropZone.Container` and `DropZone.Input`.
+
+    <auto-type-table path="../../../lib/ui-options.ts" name="DropZoneAreaProps" />
+
+  </Accordion>
+
+  <Accordion title="DropZone.FileList">
+    Container for file items with smart rendering.
+
+    <auto-type-table path="../../../lib/ui-options.ts" name="DropZoneFileListProps" />
+
+  </Accordion>
+
+  <Accordion title="DropZone.FileItemProgress">
+    Displays upload progress with multiple visual styles.
+
+    <auto-type-table path="../../../lib/ui-options.ts" name="DropZoneFileItemProgressProps" />
+
+  </Accordion>
+</Accordions>
+
+## Examples
+
+<Tabs items={["Async Upload", "Standalone Trigger", "Custom Validation"]}>
+	<Tab value="Async Upload">
+		Handling file uploads with progress tracking in the `onUpload` callback:
+
+    	```tsx
+    	<DropZone.Root
+    		onUpload={async ({ fileStateArray, onProgress, onSuccess, onError }) => {
+    			for (const { file, id } of fileStateArray) {
+    				try {
+    					await uploadFile(file, (p) => onProgress({ fileStateOrID: id, progress: p }));
+    					onSuccess({ fileStateOrID: id });
+    				} catch (e) {
+    					onError({ fileStateOrID: id, error: e });
+    				}
+    			}
+    		}}
+    	>
+    		<DropZone.Area>{/* ... */}</DropZone.Area>
+    		<DropZone.FileList />
+    	</DropZone.Root>
+    	```
+    </Tab>
+    <Tab value="Standalone Trigger">
+    	You can build a compact UI without a drop area by using the `Trigger` component.
+
+    	```tsx
+    	<DropZone.Root multiple>
+    		<div className="flex items-center gap-4">
+    			<DropZone.Trigger className="rounded bg-black px-4 py-2 text-white text-sm">
+    				Select Resume
+    			</DropZone.Trigger>
+    			<DropZone.FileList renderMode="manual-list">
+    				{({ fileStateArray }) => (
+    					<span className="text-sm font-medium">{fileStateArray.length} files attached</span>
+    				)}
+    			</DropZone.FileList>
+    		</div>
+    	</DropZone.Root>
+    	```
+    </Tab>
+    <Tab value="Custom Validation">
+    	Add custom validation logic to enforce file naming conventions or other rules:
+
+    	```tsx
+    	<DropZone.Root
+    		validator={async (file) => {
+    			// Custom check for specific file naming conventions
+    			if (file.name.includes("draft")) {
+    				return { code: "invalid-name", message: "Draft files are not allowed" };
+    			}
+    			return null;
+    		}}
+    	>
+    		<DropZone.Area>Policy-Enforced Upload</DropZone.Area>
+    	</DropZone.Root>
+    	```
+    </Tab>
+
+</Tabs>
+
+## Styling
+
+The component provides a rich set of data attributes for styling every possible state:
+
+| Attribute        | Applied To                   | Logic                                                                     |
+| :--------------- | :--------------------------- | :------------------------------------------------------------------------ |
+| `data-drag-over` | `Area`, `Container`          | Active when files are hovering over the zone.                             |
+| `data-invalid`   | `Area`, `Container`, `Label` | Active when any file fails validation.                                    |
+| `data-state`     | `FileList`, `FileClear`      | `"active"` when files exist, `"inactive"` when empty.                     |
+| `data-part`      | All sub-components           | Identifies the specific piece of the UI (e.g., `"file-item-preview"`).    |
+| `data-status`    | `FileItem`                   | `"idle"`, `"uploading"`, `"success"`, or `"error"` based on upload state. |
+| `data-disabled`  | `Trigger`, `Input`           | Active when the component is disabled.                                    |
+| `data-scope`     | All sub-components           | Always set to `"drop-zone"` for scoped styling.                           |
+
+```css title="styles.css"
+/* High-contrast border during drag */
+[data-scope="drop-zone"][data-part="container"][data-drag-over] {
+  border-color: var(--zu-primary);
+  border-style: solid;
+  transform: scale(1.02);
+}
+
+/* Red tint for invalid containers */
+[data-scope="drop-zone"][data-part="container"][data-invalid] {
+  background-color: color-mix(in srgb, var(--zu-destructive), transparent 95%);
+  border-color: var(--zu-destructive);
+}
+```
+
+## Advanced Logic
+
+### Manual State Access
+
+For complex scenarios, you can use the `useDropZoneStoreContext` hook or the `DropZone.Context` component to access the internal store.
+
+```tsx
+import { useDropZoneStoreContext } from "@zayne-labs/ui-react/ui/drop-zone";
+
+function ClearButton() {
+	const { clearFiles } = useDropZoneStoreContext((state) => state.actions);
+	const fileCount = useDropZoneStoreContext((state) => state.fileStateArray.length);
+
+	return (
+		<button onClick={clearFiles} disabled={fileCount === 0}>
+			Clear all {fileCount} files
+		</button>
+	);
+}
+```

@@ -242,6 +242,7 @@ function RepoCard(props: RepoCardProps) {
 						</span>
 					</div>
 					<span
+						// eslint-disable-next-line react-x/purity
 						title={`Updated on ${new Date(repo.updated_at).toLocaleDateString()}`}
 						className="transition-colors group-hover:text-gray-700"
 					>

@@ -3,7 +3,7 @@ import { createElement } from "react";
 import type { FieldErrors, FieldValues } from "react-hook-form";
 import { cnMerge } from "@/lib/utils/cn";
 import type { FormErrorMessagePrimitiveProps, FormInputProps } from "./form";
-import type { FormRootContext, RenderIconProps } from "./form-context";
+import type { FormRootContextType, RenderIconProps } from "./form-context";
 import { EyeIconClosed, EyeIconOpen } from "./icons";
 
 export const getFieldErrorMessage = (options: {
@@ -48,7 +48,7 @@ export const getEyeIcon = (options: {
 	classNames: FormInputProps["classNames"];
 	iconType: "closed" | "open";
 	renderIconProps: RenderIconProps;
-	withEyeIcon: FormRootContext["withEyeIcon"];
+	withEyeIcon: FormRootContextType["withEyeIcon"];
 }) => {
 	const { classNames, iconType, renderIconProps, withEyeIcon } = options;
 

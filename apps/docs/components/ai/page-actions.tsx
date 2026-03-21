@@ -17,7 +17,7 @@ type CopyBtnProps = {
 export function LLMCopyButton(props: CopyBtnProps) {
 	const { markdownURL } = props;
 
-	const [isLoading, setLoading] = useState(false);
+	const [isLoading, setIsLoading] = useState(false);
 
 	const [checked, onClick] = useCopyButton(async () => {
 		const cached = cache.get(markdownURL);
@@ -41,8 +41,8 @@ export function LLMCopyButton(props: CopyBtnProps) {
 
 		const clipboardItem = new ClipboardItem({ "text/plain": markDownPromise });
 
-		setLoading(true);
-		await navigator.clipboard.write([clipboardItem]).finally(() => setLoading(false));
+		setIsLoading(true);
+		await navigator.clipboard.write([clipboardItem]).finally(() => setIsLoading(false));
 	});
 
 	return (

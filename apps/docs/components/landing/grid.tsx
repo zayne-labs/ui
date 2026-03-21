@@ -69,11 +69,11 @@ export function GridPattern(props: GridPatternProps) {
 	useEffect(() => {
 		// eslint-disable-next-line react-you-might-not-need-an-effect/no-event-handler
 		if (dimensions.width && dimensions.height) {
-			// eslint-disable-next-line react-you-might-not-need-an-effect/no-derived-state
+			// eslint-disable-next-line react-you-might-not-need-an-effect/no-derived-state, react-x/set-state-in-effect
 			setSquares(generateSquares(numSquares));
 		}
 		// eslint-disable-next-line react-hooks/rule-suppression
-		// eslint-disable-next-line react-hooks/exhaustive-deps
+		// eslint-disable-next-line react-hooks/exhaustive-deps, react-x/exhaustive-deps
 	}, [dimensions, numSquares]);
 
 	// Resize observer to update container dimensions
@@ -99,7 +99,8 @@ export function GridPattern(props: GridPatternProps) {
 			ref={containerRef}
 			aria-hidden="true"
 			className={cnMerge(
-				"pointer-events-none absolute inset-0 size-full fill-gray-400/30 stroke-gray-400/30",
+				`pointer-events-none absolute inset-0 size-full fill-gray-400/20 stroke-gray-400/20
+				dark:fill-gray-600/20 dark:stroke-gray-600/20`,
 				className
 			)}
 			{...restOfProps}
@@ -136,5 +137,3 @@ export function GridPattern(props: GridPatternProps) {
 		</svg>
 	);
 }
-
-export default GridPattern;

@@ -1,0 +1,156 @@
+---
+title: Form
+description: A comprehensive form component system built on React Hook Form with validation, error handling, and accessible form controls.
+---
+
+The Form component provides a complete form solution built on top of [React Hook Form](https://react-hook-form.com/). It includes accessible form controls, automatic error handling, field state management, and seamless integration with validation libraries like Zod.
+
+## Installation
+
+```package-install
+@zayne-labs/ui-react react-hook-form
+```
+
+For validation, install Zod and the resolver:
+
+```package-install
+zod @hookform/resolvers
+```
+
+## Basic Usage
+
+```tsx
+import { Form } from "@zayne-labs/ui-react/ui/form";
+import { useForm } from "react-hook-form";
+
+function LoginForm() {
+	const form = useForm({
+		defaultValues: { email: "", password: "" },
+	});
+
+	const onSubmit = form.handleSubmit((data) => console.log(data));
+
+	return (
+		<Form.Root form={form} onSubmit={onSubmit} className="max-w-md space-y-6">
+			<Form.Field name="email">
+				<Form.Label>Email Address</Form.Label>
+				<Form.Input type="email" placeholder="you@example.com" className="rounded-md border p-2" />
+				<Form.ErrorMessage />
+			</Form.Field>
+
+			<Form.Field name="password">
+				<Form.Label>Password</Form.Label>
+				<Form.Input type="password" placeholder="••••••••" className="rounded-md border p-2" />
+				<Form.ErrorMessage />
+			</Form.Field>
+
+			<Form.Submit className="w-full rounded-md bg-zu-primary py-2 font-medium text-white hover:opacity-90">
+				Sign In
+			</Form.Submit>
+		</Form.Root>
+	);
+}
+```
+
+## Component API
+
+<Accordions>
+  <Accordion title="Form.Root">
+    The root form element that provides context and configuration to all sub-components.
+
+    <auto-type-table path="../../../lib/ui-options.ts" name="FormRootProps" />
+
+  </Accordion>
+
+  <Accordion title="Form.Field">
+    Field wrapper that provides scoping for labels, inputs, and error messages.
+
+    <auto-type-table path="../../../lib/ui-options.ts" name="FormFieldProps" />
+
+  </Accordion>
+
+  <Accordion title="Form.Input">
+    Primary input control. Handles registration and styling based on field state.
+
+    <auto-type-table path="../../../lib/ui-options.ts" name="FormInputProps" />
+
+  </Accordion>
+</Accordions>
+
+## Advanced Features
+
+<Tabs items={['Validation', 'Reactive State', 'Input Groups']}>
+  <Tab value="Validation">
+    ```tsx
+    import { zodResolver } from "@hookform/resolvers/zod";
+    import { z } from "zod";
+
+    const schema = z.object({
+      username: z.string().min(3, "Username must be at least 3 characters"),
+      email: z.string().email("Invalid email address"),
+    });
+
+    const form = useForm({
+      resolver: zodResolver(schema),
+    });
+    ```
+
+  </Tab>
+  <Tab value="Reactive State">
+    Use `Form.Watch` to reacting to field changes or `Form.StateSubscribe` for global form state.
+
+    ```tsx
+    <Form.Watch name="accountType">
+      {(type) => type === "business" && (
+        <Form.Field name="taxId">
+          <Form.Label>Tax ID</Form.Label>
+          <Form.Input />
+        </Form.Field>
+      )}
+    </Form.Watch>
+
+    <Form.StateSubscribe>
+      {({ isSubmitting }) => (
+        <Form.Submit disabled={isSubmitting}>
+          {isSubmitting ? "Processing..." : "Continue"}
+        </Form.Submit>
+      )}
+    </Form.StateSubscribe>
+    ```
+
+  </Tab>
+  <Tab value="Input Groups">
+    ```tsx
+    <Form.Field name="price">
+      <Form.Label>Price</Form.Label>
+      <Form.InputGroup leftAddon={<div className="p-2 border-r">$</div>}>
+        <Form.Input type="number" className="pl-10" />
+      </Form.InputGroup>
+    </Form.Field>
+    ```
+  </Tab>
+</Tabs>
+
+## Styling
+
+The form system provides comprehensive state-based attributes for CSS targeting:
+
+| Component           | Attribute      | Description                                             |
+| :------------------ | :------------- | :------------------------------------------------------ |
+| `Form.Field`        | `data-invalid` | Present when the field has a validation error.          |
+| `Form.Label`        | `data-invalid` | Matches the field error state.                          |
+| `Form.Input`        | `data-invalid` | Matches the field error state for border/focus styling. |
+| `Form.ErrorMessage` | `data-shake`   | Triggers a visual feedback animation on error.          |
+
+```css title="styles.css"
+[data-scope="form"][data-part="input"][data-invalid] {
+  border-color: var(--zu-destructive);
+  box-shadow: 0 0 0 1px var(--zu-destructive);
+}
+
+[data-slot="form-error-message"] {
+  color: var(--zu-destructive);
+  font-size: 0.8125rem;
+  margin-top: 0.25rem;
+}
+```

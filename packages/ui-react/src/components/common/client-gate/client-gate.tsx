@@ -3,7 +3,7 @@
 import { useIsHydrated } from "@zayne-labs/toolkit-react";
 import { isFunction } from "@zayne-labs/toolkit-type-helpers";
 
-type ClientGateProps = {
+export type ClientGateProps = {
 	/**
 	 * You are encouraged to add a fallback that is the same dimensions
 	 * as the client rendered children. This will avoid content layout

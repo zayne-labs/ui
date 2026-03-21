@@ -51,7 +51,7 @@ export function createMetadata(overrides?: Metadata): Metadata {
 		openGraph: {
 			description: overrides?.description ?? defaultDescription,
 			images: bannerImage,
-			siteName: "UI",
+			siteName: "Zayne UI",
 			title: overrides?.title ?? undefined,
 			type: "website",
 			url: baseURL,

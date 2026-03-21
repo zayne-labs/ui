@@ -5,22 +5,16 @@ import type { BaseLayoutProps } from "fumadocs-ui/layouts/shared";
 import { TagIcon } from "lucide-react";
 import Link from "next/link";
 import { z } from "zod";
-import { IconBox } from "@/components/common";
+import { IconBox, ZayneLogoFull } from "@/components/common";
 import { Button } from "@/components/ui/button";
 import { source } from "@/lib/source";
 import { packageName, packageScope, repoName, repoOwner } from "./github";
-
-/**
- * Shared layout configurations
- *
-
- */
 
 export const baseOptions = () => {
 	return {
 		githubUrl: `https://github.com/${repoOwner}/${repoName}`,
 		nav: {
-			title: <p className="font-medium in-[header]:text-[15px]">Zayne UI</p>,
+			title: <ZayneLogoFull className="scale-90" />,
 			transparentMode: "top",
 			url: "/docs",
 		},
@@ -53,13 +47,13 @@ export const docsOptions = () => {
 			},
 
 			{
-				children: <GithubInfo owner={repoOwner} repo={repoName} className="lg:-mx-2" />,
+				children: <GithubInfo owner={repoOwner} repo={repoName} />,
 				type: "custom",
 			},
 		],
 
 		nav: {
-			title: <p className="font-medium in-[header]:text-[15px]">Zayne UI</p>,
+			title: <ZayneLogoFull className="scale-90" />,
 
 			transparentMode: "top",
 		},

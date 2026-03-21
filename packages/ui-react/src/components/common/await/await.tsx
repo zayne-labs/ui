@@ -16,7 +16,7 @@ type RenderPropFn<TValue> = (result: TValue) => React.ReactNode;
 
 type ChildrenType<TValue> = React.ReactNode | RenderPropFn<TValue>;
 
-type AwaitRootProps<TValue> = Pick<SuspenseWithBoundaryProps, "errorFallback" | "fallback"> & {
+export type AwaitRootProps<TValue> = Pick<SuspenseWithBoundaryProps, "errorFallback" | "fallback"> & {
 	asChild?: boolean;
 	children: ChildrenType<TValue>;
 	promise: Promise<TValue>;
@@ -85,7 +85,7 @@ export function AwaitSuccess<TPromiseOrValue, TValue = Awaited<TPromiseOrValue>>
 
 	if (isFunction(children)) {
 		// eslint-disable-next-line react-hooks/rule-suppression -- Ignore
-		// eslint-disable-next-line react-hooks/rules-of-hooks -- This hook only uses `use` under the hood so this is safe
+		// eslint-disable-next-line react-hooks/rules-of-hooks, react-x/rules-of-hooks -- This hook only uses `use` under the hood so this is safe
 		const { result } = useAwaitContext<TValue>();
 
 		return children(result);

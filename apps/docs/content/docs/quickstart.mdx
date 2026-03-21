@@ -1,0 +1,101 @@
+---
+title: Quick start
+description: Get started with Zayne UI in minutes.
+icon: Zap
+---
+
+This guide will help you create your first components with Zayne UI. We'll walk through basic usage patterns and show you how to compose components together.
+
+## Setup
+
+For detailed setup instructions, including peer dependencies and Tailwind CSS configuration, see the [Installation](/docs/installation) guide.
+
+### Quick Install
+
+```package-install
+@zayne-labs/ui-react
+```
+
+### Import Components
+
+Import the components you need from their respective modules:
+
+```tsx
+import { For } from "@zayne-labs/ui-react/common/for";
+import { DragScroll } from "@zayne-labs/ui-react/ui/drag-scroll";
+```
+
+## Basic Examples
+
+### Conditional rendering with Switch
+
+The `Switch` component provides pattern matching for conditional rendering, similar to a switch statement:
+
+```tsx
+import { Switch } from "@zayne-labs/ui-react/common/switch";
+
+export default function App() {
+	const status = "loading";
+
+	return (
+		<Switch.Root value={status}>
+			<Switch.Match when="loading">
+				<div>Loading...</div>
+			</Switch.Match>
+
+			<Switch.Match when="error">
+				<div>Something went wrong</div>
+			</Switch.Match>
+
+			<Switch.Default>
+				<div>Content loaded!</div>
+			</Switch.Default>
+		</Switch.Root>
+	);
+}
+```
+
+### List rendering with For
+
+The `For` component makes list rendering declarative and handles empty states:
+
+```tsx
+import { For } from "@zayne-labs/ui-react/common/for";
+
+function UserList({ users }) {
+	return (
+		<For each={users} fallback={<p>No users found</p>}>
+			{(user) => <div key={user.id}>{user.name}</div>}
+		</For>
+	);
+}
+```
+
+### Drag-to-Scroll with useDragScroll
+
+Add intuitive mouse drag-to-scroll behavior to any container using the `useDragScroll` hook:
+
+```tsx
+import { useDragScroll } from "@zayne-labs/ui-react/ui/drag-scroll";
+
+export function HorizontalList() {
+	const { propGetters } = useDragScroll();
+
+	return (
+		<div
+			{...propGetters.getRootProps()}
+			className="flex cursor-grab gap-4 overflow-x-auto p-4 active:cursor-grabbing"
+		>
+			{[1, 2, 3, 4, 5].map((i) => (
+				<div
+					key={i}
+					{...propGetters.getItemProps()}
+					className="flex h-40 w-64 shrink-0 items-center justify-center rounded-xl border border-zu-primary/20 bg-zu-primary/10"
+				>
+					<span className="text-2xl font-bold text-zu-primary">Item {i}</span>
+				</div>
+			))}
+		</div>
+	);
+}
+```

@@ -4,7 +4,6 @@ import lastModified from "fumadocs-mdx/plugins/last-modified";
 import type { RemarkAutoTypeTableOptions } from "fumadocs-typescript";
 import type { ElementContent } from "hast";
 import type { ShikiTransformer } from "shiki";
-import { shikiConfig } from "./lib/shiki";
 
 export const docs = defineDocs({
 	dir: "content/docs",
@@ -25,14 +24,22 @@ export const docs = defineDocs({
 				generator: createGenerator({
 					cache: createFileSystemGeneratorCache(".next/fumadocs-typescript"),
 				}),
-				shiki: shikiConfig,
+				shiki: {
+					themes: {
+						dark: "material-theme-darker",
+						light: "material-theme-lighter",
+					},
+				},
 			};
 
 			return applyMdxPreset({
 				rehypeCodeOptions: {
 					inline: "tailing-curly-colon",
 					langs: ["ts", "js", "html", "tsx", "mdx", "bash"],
-					themes: shikiConfig.defaultThemes.themes,
+					themes: {
+						dark: "material-theme-darker",
+						light: "material-theme-lighter",
+					},
 
 					transformers: [...(rehypeCodeDefaultOptions.transformers ?? []), transformerEscape()],
 				},

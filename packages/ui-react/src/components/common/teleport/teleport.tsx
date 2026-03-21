@@ -8,7 +8,7 @@ import { ClientGate } from "../client-gate";
 
 type ValidHtmlTags = keyof HTMLElementTagNameMap;
 
-type PortalProps = {
+export type TeleportProps = {
 	children: React.ReactNode;
 	insertPosition?: InsertPosition;
 	to: AnyString | HTMLElement | React.RefObject<HTMLElement> | ValidHtmlTags | null;
@@ -16,7 +16,7 @@ type PortalProps = {
 
 const TELEPORT_KEY = "teleport-wrapper";
 
-const getDestination = (to: NonNullable<PortalProps["to"]>) => {
+const getDestination = (to: NonNullable<TeleportProps["to"]>) => {
 	if (isString(to)) {
 		return document.querySelector<HTMLElement>(to);
 	}
@@ -28,12 +28,13 @@ const getDestination = (to: NonNullable<PortalProps["to"]>) => {
 	return to.current;
 };
 
-function Teleport(props: PortalProps) {
+function Teleport(props: TeleportProps) {
 	const { children, insertPosition, to } = props;
 
 	const [portalContainer, setPortalContainer] = useState<HTMLElement | null>(null);
 
 	const stableUpdatePortalContainer = useCallbackRef((destination: HTMLElement | null) => {
+		// eslint-disable-next-line react-x/set-state-in-effect -- Ignore
 		setPortalContainer(destination);
 	});
 

@@ -1,11 +1,10 @@
 {
-	"extends": ["@zayne-labs/tsconfig/bundler/next"],
+	"extends": "@zayne-labs/tsconfig/bundler/next",
 
 	"compilerOptions": {
 		"paths": {
 			"@/*": ["./*"]
-		},
-		"allowImportingTsExtensions": true
+		}
 	},
 
 	"mdx": {
