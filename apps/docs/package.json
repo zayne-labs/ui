@@ -4,7 +4,7 @@
 	"version": "0.0.0",
 	"private": true,
 	"scripts": {
-		"build": "next build",
+		"build": "turbo run --filter=@zayne-labs/ui-react build:dev && next build",
 		"build:analyze": "next experimental-analyze",
 		"dev": "next dev",
 		"lint:eslint": "eslint . --max-warnings 0",
