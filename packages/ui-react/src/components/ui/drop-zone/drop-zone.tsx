@@ -42,7 +42,9 @@ import {
 import type { DropZoneStore, PartInputProps, UseDropZoneProps } from "./types";
 import { useDropZone } from "./use-drop-zone";
 
-type DropZoneRootProps = UseDropZoneProps & { children: React.ReactNode };
+export type DropZoneRootProps = UseDropZoneProps & {
+	children: React.ReactNode;
+};
 
 export function DropZoneRoot(props: DropZoneRootProps) {
 	const { children, ...restOfProps } = props;
@@ -68,7 +70,7 @@ export function DropZoneRoot(props: DropZoneRootProps) {
 	);
 }
 
-type DropZoneContextProps<TSlice> = {
+export type DropZoneContextProps<TSlice> = {
 	children: React.ReactNode | ((context: TSlice) => React.ReactNode);
 	selector?: SelectorFn<DropZoneStore, TSlice>;
 };
@@ -83,7 +85,11 @@ export function DropZoneContext<TSlice = DropZoneStore>(props: DropZoneContextPr
 	return resolvedChildren;
 }
 
-type DropZoneContainerProps = PartInputProps["container"] & { asChild?: boolean };
+/* eslint-disable perfectionist/sort-intersection-types -- I need non-stand props to come first */
+
+export type DropZoneContainerProps = {
+	asChild?: boolean;
+} & PartInputProps["container"];
 
 export function DropZoneContainer<TElement extends React.ElementType = "div">(
 	props: PolymorphicPropsStrict<TElement, DropZoneContainerProps>
@@ -115,7 +121,9 @@ export function DropZoneContainer<TElement extends React.ElementType = "div">(
 	);
 }
 
-type DropZoneInputProps = PartInputProps["input"] & { asChild?: boolean };
+export type DropZoneInputProps = {
+	asChild?: boolean;
+} & PartInputProps["input"];
 
 export function DropZoneInput(props: DropZoneInputProps) {
 	const { asChild, ...restOfProps } = props;
@@ -138,11 +146,10 @@ export function DropZoneInput(props: DropZoneInputProps) {
 	);
 }
 
-type DropZoneAreaProps<TSlice> = DropZoneContextProps<TSlice>
-	& PartInputProps["container"] & {
-		classNames?: Partial<Record<Extract<keyof PartInputProps, "container" | "input">, string>>;
-		extraProps?: Partial<Pick<PartInputProps, "container" | "input">>;
-	};
+export type DropZoneAreaProps<TSlice = DropZoneStore> = DropZoneContextProps<TSlice> & {
+	classNames?: Partial<Record<Extract<keyof PartInputProps, "container" | "input">, string>>;
+	extraProps?: Partial<Pick<PartInputProps, "container" | "input">>;
+} & PartInputProps["container"];
 
 export function DropZoneArea<TSlice = DropZoneStore>(props: DropZoneAreaProps<TSlice>) {
 	const { children, className, classNames, extraProps, selector, ...restOfProps } = props;
@@ -163,7 +170,9 @@ export function DropZoneArea<TSlice = DropZoneStore>(props: DropZoneAreaProps<TS
 	);
 }
 
-type DropZoneTriggerProps = PartInputProps["trigger"] & { asChild?: boolean };
+export type DropZoneTriggerProps = {
+	asChild?: boolean;
+} & PartInputProps["trigger"];
 
 export function DropZoneTrigger(props: DropZoneTriggerProps) {
 	const { asChild, ...restOfProps } = props;
@@ -193,10 +202,11 @@ type FileListManualListVariant = {
 	renderMode: "manual-list";
 };
 
-type DropZoneFileListProps = Omit<PartInputProps["fileList"], "children"> & {
+export type DropZoneFileListProps = {
 	asChild?: boolean;
 	forceMount?: boolean;
-} & (FileListManualListVariant | FileListPerItemVariant);
+} & (FileListManualListVariant | FileListPerItemVariant)
+	& Omit<PartInputProps["fileList"], "children">;
 
 export function DropZoneFileList<TElement extends React.ElementType = "ul">(
 	props: PolymorphicPropsStrict<TElement, DropZoneFileListProps>
@@ -250,7 +260,9 @@ export function DropZoneFileList<TElement extends React.ElementType = "ul">(
 	);
 }
 
-type DropZoneFileItemProps = FileItemContextType & PartInputProps["fileItem"] & { asChild?: boolean };
+export type DropZoneFileItemProps = FileItemContextType & {
+	asChild?: boolean;
+} & PartInputProps["fileItem"];
 
 export function DropZoneFileItem<TElement extends React.ElementType = "li">(
 	props: PolymorphicPropsStrict<TElement, DropZoneFileItemProps>
@@ -273,7 +285,9 @@ export function DropZoneFileItem<TElement extends React.ElementType = "li">(
 	);
 }
 
-type DropZoneFileItemDeleteProps = PartInputProps["fileItemDelete"] & { asChild?: boolean };
+export type DropZoneFileItemDeleteProps = {
+	asChild?: boolean;
+} & PartInputProps["fileItemDelete"];
 
 export function DropZoneFileItemDelete(props: DropZoneFileItemDeleteProps) {
 	const { asChild, fileStateOrID, ...restOfProps } = props;
@@ -293,11 +307,11 @@ export function DropZoneFileItemDelete(props: DropZoneFileItemDeleteProps) {
 	);
 }
 
-type DropZoneFileItemProgressProps = PartInputProps["fileItemProgress"] & {
+export type DropZoneFileItemProgressProps = {
 	asChild?: boolean;
 	forceMount?: boolean;
 	size?: number;
-};
+} & PartInputProps["fileItemProgress"];
 
 export function DropZoneFileItemProgress<TElement extends React.ElementType = "span">(
 	props: PolymorphicPropsStrict<TElement, DropZoneFileItemProgressProps>
@@ -437,14 +451,13 @@ type RenderPreviewFn = (context: RenderPropContext) => RenderPreviewObject;
 
 type RenderPreview = RenderPreviewFn | RenderPreviewObject;
 
-type DropZoneFileItemPreviewProps = Omit<PartInputProps["fileItemPreview"], "children">
-	& Partial<Pick<FileItemContextType, "fileState">> & {
-		asChild?: boolean;
-		children?:
-			| React.ReactNode
-			| ((context: RenderPropContext & { fallbackPreview: () => React.ReactNode }) => React.ReactNode);
-		renderPreview?: boolean | RenderPreview;
-	};
+export type DropZoneFileItemPreviewProps = Partial<Pick<FileItemContextType, "fileState">> & {
+	asChild?: boolean;
+	children?:
+		| React.ReactNode
+		| ((context: RenderPropContext & { fallbackPreview: () => React.ReactNode }) => React.ReactNode);
+	renderPreview?: boolean | RenderPreview;
+} & Omit<PartInputProps["fileItemPreview"], "children">;
 
 export function DropZoneFileItemPreview<TElement extends React.ElementType>(
 	props: PolymorphicPropsStrict<TElement, DropZoneFileItemPreviewProps>
@@ -623,16 +636,15 @@ const getFilePreviewOrIcon = (
 	}
 };
 
-type DropZoneFileItemMetadataProps = Omit<PartInputProps["fileItemMetadata"], "children">
-	& Partial<Pick<FileItemContextType, "fileState">> & {
-		asChild?: boolean;
-		children?: React.ReactNode | ((context: Pick<FileItemContextType, "fileState">) => React.ReactNode);
-		classNames?: {
-			name?: string;
-			size?: string;
-		};
-		size?: "default" | "sm";
+export type DropZoneFileItemMetadataProps = Partial<Pick<FileItemContextType, "fileState">> & {
+	asChild?: boolean;
+	children?: React.ReactNode | ((context: Pick<FileItemContextType, "fileState">) => React.ReactNode);
+	classNames?: {
+		name?: string;
+		size?: string;
 	};
+	size?: "default" | "sm";
+} & Omit<PartInputProps["fileItemMetadata"], "children">;
 
 export function DropZoneFileItemMetadata(props: DropZoneFileItemMetadataProps) {
 	const {
@@ -695,10 +707,10 @@ export function DropZoneFileItemMetadata(props: DropZoneFileItemMetadataProps) {
 	);
 }
 
-type DropZoneFileClearProps = PartInputProps["fileItemClear"] & {
+export type DropZoneFileClearProps = {
 	asChild?: boolean;
 	forceMount?: boolean;
-};
+} & PartInputProps["fileItemClear"];
 
 export function DropZoneFileClear(props: DropZoneFileClearProps) {
 	const { asChild, forceMount = false, ...restOfProps } = props;
@@ -717,3 +729,5 @@ export function DropZoneFileClear(props: DropZoneFileClearProps) {
 
 	return <Component {...propGetters.getFileItemClearProps(restOfProps)} />;
 }
+
+/* eslint-enable perfectionist/sort-intersection-types -- I need non-stand props to come first */

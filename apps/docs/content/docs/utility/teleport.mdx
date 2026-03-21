@@ -1,0 +1,88 @@
+---
+title: Teleport
+description: Render components to different parts of the DOM tree (Portal).
+---
+
+The `Teleport` component (also known as a Portal) renders its children into a DOM node that exists outside the parent component's hierarchy. This is essential for modals, tooltips, and overlays that need to break out of `overflow: hidden` or `z-index` stacks.
+
+## Installation
+
+```package-install
+@zayne-labs/ui-react
+```
+
+## Basic Usage
+
+<Tabs items={['To Body', 'To CSS Selector', 'To React Ref']}>
+  <Tab value="To Body">
+    The most common use case is rendering overlays at the end of the document body.
+
+    ```tsx
+    import { Teleport } from "@zayne-labs/ui-react/common/teleport";
+
+    function Modal({ children }) {
+      return (
+        <Teleport to="body">
+          <div className="modal-overlay">{children}</div>
+        </Teleport>
+      );
+    }
+    ```
+
+  </Tab>
+  <Tab value="To CSS Selector">
+    Target a specific designated portal container in your HTML.
+
+    ```tsx
+    <Teleport to="#notifications-layer">
+      <Toast message="Order Shipped!" />
+    </Teleport>
+    ```
+
+  </Tab>
+  <Tab value="To React Ref">
+    Useful when you need to render into an element managed within the same React tree.
+
+    ```tsx
+    const containerRef = useRef(null);
+
+    return (
+      <>
+        <div ref={containerRef} />
+        <Teleport to={containerRef}>
+          <span>Sent to specific container</span>
+        </Teleport>
+      </>
+    );
+    ```
+
+  </Tab>
+</Tabs>
+
+## Component API
+
+<Accordions>
+	<Accordion title="Teleport Props">
+		<auto-type-table path="../../../lib/ui-options.ts" name="TeleportProps" />
+	</Accordion>
+</Accordions>
+
+## Why use Teleport?
+
+- **Escape Clipping**: Break out of parent containers with `overflow: hidden` or `clip-path`.
+- **Z-Index Layering**: Move overlays to a common sibling layer (like `body`) to manage complex `z-index` stacks predictably.
+- **Isomorphic Support**: Automatically handles hydration so that the portal works correctly in both SSR and CSR.
+
+```tsx
+<div id="app" style={{ overflow: "hidden" }}>
+	{/* Tooltip would be clipped here without Teleport */}
+	<Teleport to="body">
+		<Tooltip />
+	</Teleport>
+</div>
+```
+
+<Callout type="warn">
+	Ensure the target element exists in the DOM. If teleporting to a selector or ref, the target must be
+	rendered before the `Teleport` component attempts to teleport content.
+</Callout>

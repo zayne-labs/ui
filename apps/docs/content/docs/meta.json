@@ -1,0 +1,18 @@
+{
+	"title": "Documentation",
+	"pages": [
+		"---Guide---",
+		"index",
+		"installation",
+		"quickstart",
+		"styling",
+		"typescript",
+		"component-structure",
+
+		"---UI Components---",
+		"...ui",
+
+		"---Utility Components---",
+		"...utility"
+	]
+}

@@ -1,0 +1,100 @@
+---
+title: TypeScript
+description: Built with TypeScript for type safety and better DX
+icon: FileCode
+---
+
+Everything's written in TypeScript, so you get proper types without extra setup.
+
+## Type Inference
+
+The library infers types from your data automatically. You don't need to manually annotate most things.
+
+### Lists with For
+
+`For` figures out item types from the `each` prop:
+
+```tsx
+const products = [
+	{ id: 1, name: "Laptop", price: 999 },
+	{ id: 2, name: "Mouse", price: 29 },
+];
+
+<For each={products}>
+	{(product) => (
+		<div>
+			{product.name} - ${product.price}
+			{/* TS error: Property 'details' doesn't exist */}
+		</div>
+	)}
+</For>;
+```
+
+Works with numbers too:
+
+```tsx
+<For each={5}>{(index) => <div>Item {index}</div>}</For>
+```
+
+### Conditional Rendering with Show
+
+`Show` narrows types when you use the render function pattern:
+
+```tsx
+const user = getUser(); // User | null
+
+<Show.Root when={user}>{(user) => <div>Hello, {user.name}</div>}</Show.Root>;
+```
+
+Inside the render function, TypeScript knows `user` isn't null.
+
+## Polymorphic Components
+
+Most components accept an `as` prop to change the rendered element. TypeScript enforces valid props for whatever element you choose:
+
+```tsx
+import { Card } from "@zayne-labs/ui-react/ui/card";
+
+<>
+	{/* Renders <article> by default */}
+	<Card.Root>Content</Card.Root>
+
+	{/* Renders <section> */}
+	<Card.Root as="section">Content</Card.Root>
+
+	{/* Renders <a> with href */}
+	<Card.Root as="a" href="/dashboard">
+		Link
+	</Card.Root>
+
+	{/* TS error: 'href' doesn't exist on 'div' */}
+	<Card.Root as="div" href="/link">
+		Invalid
+	</Card.Root>
+</>;
+```
+
+Your editor will autocomplete valid props based on the element type.
+
+## Exported Types
+
+All component prop types are exported if you need them for wrappers or custom implementations:
+
+```tsx
+import type { ForProps, ShowRootProps } from "@zayne-labs/ui-react/common";
+import type { CardRootProps } from "@zayne-labs/ui-react/ui/card";
+```
+
+## Recommended TypeScript Config
+
+Use `bundler` module resolution for React 19:
+
+```json title="tsconfig.json"
+{
+	"compilerOptions": {
+		"moduleResolution": "bundler",
+		"jsx": "react-jsx",
+		"strict": true
+	}
+}
+```

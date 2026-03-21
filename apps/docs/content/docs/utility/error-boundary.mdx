@@ -1,0 +1,88 @@
+---
+title: ErrorBoundary
+description: Catch and handle React component errors with declarative error boundaries.
+---
+
+The `ErrorBoundary` component catches JavaScript errors anywhere in its child component tree, logs the error, and displays a fallback UI instead of crashing the entire application.
+
+## Installation
+
+```package-install
+@zayne-labs/ui-react
+```
+
+## Basic Usage
+
+<Tabs items={['Simple Fallback', 'Render Function']}>
+  <Tab value="Simple Fallback">
+    Provide a static component or element to display when an error occurs.
+
+    ```tsx
+    import { ErrorBoundary } from "@zayne-labs/ui-react/common/error-boundary";
+
+    function App() {
+      return (
+        <ErrorBoundary fallback={<div className="p-4 border border-red-200 bg-red-50 text-red-700">Something went wrong</div>}>
+          <ComponentThatMightCrash />
+        </ErrorBoundary>
+      );
+    }
+    ```
+
+  </Tab>
+  <Tab value="Render Function">
+    Use a render function to access the error details and provide a way to reset the boundary.
+
+    ```tsx
+    import { ErrorBoundary } from "@zayne-labs/ui-react/common/error-boundary";
+
+    function App() {
+      return (
+        <ErrorBoundary
+          fallback={({ error, resetErrorBoundary }) => (
+            <div className="flex flex-col gap-4 p-8 border rounded-lg">
+              <h2 className="text-xl font-bold">Unexpected Error</h2>
+              <code className="text-sm p-2 bg-gray-100 rounded">{error.message}</code>
+              <button
+                onClick={resetErrorBoundary}
+                className="rounded-md bg-zu-primary px-4 py-2 text-white"
+              >
+                Try Again
+              </button>
+            </div>
+          )}
+        >
+          <ComponentThatMightCrash />
+        </ErrorBoundary>
+      );
+    }
+    ```
+
+  </Tab>
+</Tabs>
+
+## Component API
+
+<Accordions>
+  <Accordion title="ErrorBoundary Props">
+    <auto-type-table path="../../../lib/ui-options.ts" name="ErrorBoundaryProps" />
+  </Accordion>
+
+  <Accordion title="useErrorBoundary() hook">
+    Provides access to the error boundary's state and methods for functional components.
+
+    <auto-type-table path="../../../lib/ui-options.ts" name="UseErrorBoundaryReturn" />
+
+  </Accordion>
+</Accordions>
+
+## Best Practices
+
+- **Isolate Failures**: Place boundaries around specific widgets or sections (like a sidebar or a feed) to prevent a single component failure from breaking the whole page.
+- **Auto-Reset**: Use `resetKeys` with URL params or resource IDs so that navigating away and back "fixes" the component if it crashed.
+- **Global Boundary**: Keep a generic boundary at the very top of your app as a last resort.
+
+<Callout type="warn">
+	Error boundaries do **not** catch errors in event handlers or asynchronous code (like `setTimeout`) by
+	default. Use the `showBoundary` method from `useErrorBoundary` to catch these manually.
+</Callout>

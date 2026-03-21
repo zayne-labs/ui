@@ -22,7 +22,7 @@ export type ForRenderProps<TArray extends ArrayOrNumber> = DiscriminatedRenderIt
 >;
 
 /* eslint-disable perfectionist/sort-intersection-types -- Prefer the object to come first before the render props */
-type ForProps<TArray extends ArrayOrNumber> = Prettify<
+export type ForProps<TArray extends ArrayOrNumber> = Prettify<
 	{
 		each: TArray;
 		fallback?: React.ReactNode;
@@ -55,10 +55,15 @@ export function For<const TArray extends ArrayOrNumber>(props: ForProps<TArray>)
 	return elementList;
 }
 
+export type ForWithWrapperProps<
+	TArray extends ArrayOrNumber,
+	TElement extends React.ElementType = "ul",
+> = PolymorphicPropsStrict<TElement, ForProps<TArray>> & { displayFallBackWhenEmpty?: boolean };
+
 export function ForWithWrapper<
 	const TArray extends ArrayOrNumber,
 	TElement extends React.ElementType = "ul",
->(props: PolymorphicPropsStrict<TElement, ForProps<TArray>> & { displayFallBackWhenEmpty?: boolean }) {
+>(props: ForWithWrapperProps<TArray, TElement>) {
 	const {
 		as: ListContainer = "ul",
 		children,

@@ -33,6 +33,7 @@ export function SlotRoot(props: SlotProps) {
 	const resolvedChildToRender = isArray(childToRender) ? childToRender[0] : childToRender;
 
 	if (!isValidElement(resolvedChildToRender)) {
+		// eslint-disable-next-line react-x/purity -- Ignore
 		console.error("Invalid element passed to Slot:", resolvedChildToRender);
 		return null;
 	}
@@ -80,6 +81,7 @@ function SlotClone(props: SlotCloneProps) {
 	const resolvedChild = isArray(children) ? children[0] : children;
 
 	if (!isValidElement<UnknownObject>(resolvedChild)) {
+		// eslint-disable-next-line react-x/purity -- Ignore
 		console.error("Invalid element passed to Slot:", resolvedChild);
 		return null;
 	}

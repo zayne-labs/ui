@@ -21,6 +21,7 @@ import {
 	type Control,
 	type ControllerProps,
 	type FieldPath,
+	type FieldValues,
 	type RegisterOptions,
 	type FormStateSubscribeProps as StateSubscribeProps,
 	type UseFormReturn,
@@ -38,18 +39,14 @@ import {
 	useLaxFormFieldState,
 	useLaxFormRootContext,
 	useStrictFormFieldContext,
-	type FieldContextValue,
+	type FieldContextType,
 	type FieldState,
-	type FormFieldContextProps,
-	type FormRootContext,
+	type FormRootContextType,
 } from "./form-context";
 import { getEyeIcon, getFieldErrorMessage } from "./utils";
 
-// eslint-disable-next-line ts-eslint/no-explicit-any -- Necessary so that arrays can also be accepted
-export type FieldValues = Record<string, any>;
-
-type FormRootProps<TFieldValues extends FieldValues, TTransformedValues> = InferProps<"form">
-	& Partial<FormRootContext> & {
+export type FormRootProps<TFieldValues extends FieldValues, TTransformedValues> = InferProps<"form">
+	& Partial<FormRootContextType> & {
 		children: React.ReactNode;
 		form: UseFormReturn<TFieldValues, unknown, TTransformedValues>;
 	};
@@ -83,9 +80,11 @@ export function FormRoot<TFieldValues extends FieldValues, TTransformedValues = 
 	);
 }
 
-type FormFieldProps<TControl, TFieldValues extends FieldValues, TTransformedValues> = (TControl extends (
-	Control<infer TValues>
-) ?
+export type FormFieldProps<
+	TControl,
+	TFieldValues extends FieldValues,
+	TTransformedValues,
+> = (TControl extends Control<infer TValues> ?
 	{
 		control?: never;
 		name: FieldPath<TValues>;
@@ -117,7 +116,7 @@ export function FormField<
 				formItemId: `${name}-(${uniqueId})-form-item`,
 				formMessageId: `${name}-(${uniqueId})-form-item-message`,
 				name,
-			}) satisfies FieldContextValue,
+			}) satisfies FieldContextType,
 		[name, uniqueId]
 	);
 
@@ -166,7 +165,7 @@ export function FormFieldWithController<
 				formItemId: `${name}-(${uniqueId})-form-item`,
 				formMessageId: `${name}-(${uniqueId})-form-item-message`,
 				name,
-			}) satisfies FieldContextValue,
+			}) satisfies FieldContextType,
 		[name, uniqueId]
 	);
 
@@ -202,6 +201,10 @@ export function FormFieldBoundController<
 	);
 }
 
+export type FormFieldContextProps = DiscriminatedRenderProps<
+	(contextValue: FieldContextType) => React.ReactNode
+>;
+
 export function FormFieldContext(props: FormFieldContextProps) {
 	const { children, render } = props;
 	const fieldContextValues = useStrictFormFieldContext();
@@ -213,7 +216,9 @@ export function FormFieldContext(props: FormFieldContextProps) {
 	return render(fieldContextValues);
 }
 
-export function FormLabel(props: InferProps<"label">) {
+export type FormLabelProps = InferProps<"label">;
+
+export function FormLabel(props: FormLabelProps) {
 	const fieldContextValues = useStrictFormFieldContext();
 
 	const { children, htmlFor, ...restOfProps } = props;
@@ -235,7 +240,9 @@ export function FormLabel(props: InferProps<"label">) {
 	);
 }
 
-export function FormInputGroup(props: InferProps<"div">) {
+export type FormInputGroupProps = InferProps<"div">;
+
+export function FormInputGroup(props: FormInputGroupProps) {
 	const { children, className, ...restOfProps } = props;
 
 	const { isDisabled, isInvalid } = useLaxFormFieldState();
@@ -262,7 +269,7 @@ export function FormInputGroup(props: InferProps<"div">) {
 	);
 }
 
-type FormSideItemProps = {
+export type FormSideItemProps = {
 	children?: React.ReactNode;
 	className?: string;
 };
@@ -305,36 +312,42 @@ export function FormInputRightItem<TElement extends React.ElementType = "span">(
 }
 FormInputRightItem.slotSymbol = Symbol("input-right-item");
 
-type FormInputPrimitiveProps<TFieldValues extends FieldValues> = Omit<
-	React.ComponentPropsWithRef<"input">,
-	"children"
-> & {
-	classNames?: { error?: string; eyeIcon?: string; input?: string; inputGroup?: string };
-	control?: Control<TFieldValues>;
-	fieldState?: FieldState;
-	name?: FieldPath<TFieldValues>;
-	withEyeIcon?: FormRootContext["withEyeIcon"];
+type RulesProp = {
+	rules?: RegisterOptions;
 };
 
-type FormTextAreaPrimitiveProps<TFieldValues extends FieldValues> =
-	React.ComponentPropsWithRef<"textarea"> & {
+export type FormInputPrimitiveProps<TFieldValues extends FieldValues> = Omit<
+	InferProps<"input">,
+	"children"
+>
+	& RulesProp & {
+		classNames?: { error?: string; eyeIcon?: string; input?: string; inputGroup?: string };
+		control?: Control<TFieldValues>;
+		fieldState?: FieldState;
+		name?: FieldPath<TFieldValues>;
+		withEyeIcon?: FormRootContextType["withEyeIcon"];
+	};
+
+export type FormTextAreaPrimitiveProps<TFieldValues extends FieldValues> = InferProps<"textarea">
+	& RulesProp & {
 		classNames?: { base?: string; error?: string };
 		control?: Control<TFieldValues>;
 		fieldState?: FieldState;
 		name?: FieldPath<TFieldValues>;
 	};
 
-type FormSelectPrimitiveProps<TFieldValues extends FieldValues> = React.ComponentPropsWithRef<"select"> & {
-	classNames?: { base?: string; error?: string };
-	control?: Control<TFieldValues>;
-	fieldState?: FieldState;
-	name?: FieldPath<TFieldValues>;
-};
+export type FormSelectPrimitiveProps<TFieldValues extends FieldValues> = InferProps<"select">
+	& RulesProp & {
+		classNames?: { base?: string; error?: string };
+		control?: Control<TFieldValues>;
+		fieldState?: FieldState;
+		name?: FieldPath<TFieldValues>;
+	};
 
 const inputTypesWithoutFullWidth = new Set<React.HTMLInputTypeAttribute>(["checkbox", "radio"]);
 
 export function FormInputPrimitive<TFieldValues extends FieldValues>(
-	props: FormInputPrimitiveProps<TFieldValues> & { rules?: RegisterOptions }
+	props: FormInputPrimitiveProps<TFieldValues>
 ) {
 	const fieldContextValues = useLaxFormFieldContext();
 
@@ -365,9 +378,11 @@ export function FormInputPrimitive<TFieldValues extends FieldValues>(
 
 	const WrapperElement = shouldHaveEyeIcon ? FormInputGroup : ReactFragment;
 
-	const wrapperElementProps = shouldHaveEyeIcon && {
-		className: cnMerge("w-full", classNames?.inputGroup, isInvalid && classNames?.error),
-	};
+	const wrapperElementProps =
+		shouldHaveEyeIcon
+		&& ({
+			className: cnMerge("w-full", classNames?.inputGroup, isInvalid && classNames?.error),
+		} satisfies InferProps<typeof FormInputGroup>);
 
 	const { register } = useFormMethodsContext({ strict: false }) ?? {};
 
@@ -425,7 +440,7 @@ export function FormInputPrimitive<TFieldValues extends FieldValues>(
 }
 
 export function FormTextAreaPrimitive<TFieldValues extends FieldValues>(
-	props: FormTextAreaPrimitiveProps<TFieldValues> & { rules?: RegisterOptions }
+	props: FormTextAreaPrimitiveProps<TFieldValues>
 ) {
 	const fieldContextValues = useLaxFormFieldContext();
 
@@ -465,7 +480,7 @@ export function FormTextAreaPrimitive<TFieldValues extends FieldValues>(
 	);
 }
 export function FormSelectPrimitive<TFieldValues extends FieldValues>(
-	props: FormSelectPrimitiveProps<TFieldValues> & { rules?: RegisterOptions }
+	props: FormSelectPrimitiveProps<TFieldValues>
 ) {
 	const fieldContextValues = useLaxFormFieldContext();
 
@@ -508,29 +523,23 @@ export function FormSelectPrimitive<TFieldValues extends FieldValues>(
 
 type PrimitivePropsToOmit = "control" | "formState" | "name";
 
-export type FormInputProps = Omit<FormInputPrimitiveProps<FieldValues>, PrimitivePropsToOmit> & {
-	rules?: RegisterOptions;
-};
+export type FormInputProps = Omit<FormInputPrimitiveProps<FieldValues>, PrimitivePropsToOmit>;
 
-export type FormTextAreaProps = Omit<FormTextAreaPrimitiveProps<FieldValues>, PrimitivePropsToOmit> & {
-	rules?: RegisterOptions;
-};
+export type FormTextAreaProps = Omit<FormTextAreaPrimitiveProps<FieldValues>, PrimitivePropsToOmit>;
 
-export type FormSelectProps = Omit<FormSelectPrimitiveProps<FieldValues>, PrimitivePropsToOmit> & {
-	rules?: RegisterOptions;
-};
+export type FormSelectProps = Omit<FormSelectPrimitiveProps<FieldValues>, PrimitivePropsToOmit>;
 
-type CombinedFormInputProps =
+export type FormInputCombinedProps =
+	| (FormInputProps & { type?: FormInputProps["type"] })
 	| (FormSelectProps & { type: "select" })
-	| (FormTextAreaProps & { type: "textarea" })
-	| FormInputProps;
+	| (FormTextAreaProps & { type: "textarea" });
 
 const InputTypeMap = defineEnum({
 	select: FormSelectPrimitive,
 	textarea: FormTextAreaPrimitive,
 });
 
-export function FormInput(props: CombinedFormInputProps & { rules?: RegisterOptions }) {
+export function FormInput(props: FormInputCombinedProps) {
 	const { onBlur, onChange, ref, rules, type, ...restOfProps } = props;
 
 	const { name } = useStrictFormFieldContext();
@@ -564,7 +573,9 @@ export function FormSelect(props: FormSelectProps) {
 	return <FormInput {...props} type="select" />;
 }
 
-export function FormDescription(props: InferProps<"p">) {
+export type FormDescriptionProps = InferProps<"p">;
+
+export function FormDescription(props: FormDescriptionProps) {
 	const { className, ...restOfProps } = props;
 
 	const { formDescriptionId } = useLaxFormFieldContext() ?? {};
@@ -581,7 +592,11 @@ type ErrorMessageRenderProps = {
 	id: string | undefined;
 };
 
-type ErrorMessageRenderState = { errorMessage: string; errorMessageArray: string[]; index: number };
+type ErrorMessageRenderState = {
+	errorMessage: string;
+	errorMessageArray: string[];
+	index: number;
+};
 
 type ErrorMessageRenderFn = (context: {
 	props: ErrorMessageRenderProps;
@@ -610,7 +625,7 @@ export type FormErrorMessagePrimitiveProps<TFieldValues extends FieldValues> =
 			  }
 		);
 
-type FormErrorMessagePrimitiveType = {
+type FormErrorMessagePrimitiveOverloadType = {
 	<TFieldValues extends FieldValues>(
 		props: Extract<FormErrorMessagePrimitiveProps<TFieldValues>, { type?: "regular" }>
 	): React.ReactNode;
@@ -620,7 +635,7 @@ type FormErrorMessagePrimitiveType = {
 	): React.ReactNode;
 };
 
-export const FormErrorMessagePrimitive: FormErrorMessagePrimitiveType = (props) => {
+export const FormErrorMessagePrimitive: FormErrorMessagePrimitiveOverloadType = (props) => {
 	const rootContextValues = useFormMethodsContext({ strict: false });
 
 	const {
@@ -664,7 +679,7 @@ export const FormErrorMessagePrimitive: FormErrorMessagePrimitiveType = (props) 
 
 			const onAnimationEnd = () => element.classList.remove(errorAnimationClass);
 
-			on("animationend", element, onAnimationEnd, { once: true, signal: controller.signal });
+			on(element, "animationend", onAnimationEnd, { once: true, signal: controller.signal });
 		}
 
 		return () => {
@@ -769,7 +784,7 @@ export const FormErrorMessagePrimitive: FormErrorMessagePrimitiveType = (props) 
 	);
 };
 
-type FormErrorMessageProps<TControl, TFieldValues extends FieldValues, TTransformedValues> =
+export type FormErrorMessageProps<TControl, TFieldValues extends FieldValues, TTransformedValues> =
 	| (TControl extends Control<infer TValues> ?
 			{
 				className?: string;
@@ -823,7 +838,9 @@ export function FormErrorMessage<
 	);
 }
 
-type FormSubmitProps = InferProps<"button"> & { asChild?: boolean };
+export type FormSubmitProps = InferProps<"button"> & {
+	asChild?: boolean;
+};
 
 export function FormSubmit<TElement extends React.ElementType = "button">(
 	props: PolymorphicPropsStrict<TElement, FormSubmitProps>
@@ -839,7 +856,7 @@ export function FormSubmit<TElement extends React.ElementType = "button">(
 	);
 }
 
-type FormWatchProps<
+export type FormWatchProps<
 	TFieldValues extends FieldValues,
 	TFieldName extends
 		| Array<FieldPath<TFieldValues>>
@@ -886,7 +903,7 @@ export function FormWatch<
 	return resolvedChildren;
 }
 
-type FormStateSubscribeProps<
+export type FormStateSubscribeProps<
 	TFieldValues extends FieldValues,
 	TTransformedValues,
 	TComputedProps extends StateSubscribeProps<TFieldValues, TTransformedValues> = StateSubscribeProps<

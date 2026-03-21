@@ -1,0 +1,107 @@
+---
+title: Show
+description: Declarative conditional rendering with fallback support for cleaner JSX.
+---
+
+The `Show` component provides a clean, declarative alternative to ternary operators and short-circuit evaluation (`&&`) in React, with built-in fallback support.
+
+## Installation
+
+```package-install
+@zayne-labs/ui-react
+```
+
+## Basic Usage
+
+<Tabs items={['Standard Pattern', 'Detailed Control']}>
+  <Tab value="Standard Pattern">
+    The simplest usage takes a `when` condition and renders children if truthy.
+
+    ```tsx
+    import { Show } from "@zayne-labs/ui-react/common/show";
+
+    function Profile({ user }) {
+      return (
+        <Show when={user} fallback={<LoginButton />}>
+          {(nonNullUser) => (
+            <div>
+              <h2>{nonNullUser.name}</h2>
+              <p>{nonNullUser.bio}</p>
+            </div>
+          )}
+        </Show>
+      );
+    }
+    ```
+
+  </Tab>
+  <Tab value="Detailed Control">
+    For complex layouts with multiple distinct conditions, use the `control="content"` pattern.
+
+    ```tsx
+    import { Show } from "@zayne-labs/ui-react/common/show";
+
+    function DataManager({ state }) {
+      return (
+        <Show.Root control="content">
+          <Show.Content when={state.loading}>
+            <Skeleton />
+          </Show.Content>
+
+          <Show.Content when={state.error}>
+            {(err) => <ErrorView message={err.message} />}
+          </Show.Content>
+
+          <Show.Content when={state.data}>
+            {(data) => <DataView items={data} />}
+          </Show.Content>
+
+          <Show.Fallback>
+             <EmptyState />
+          </Show.Fallback>
+        </Show.Root>
+      );
+    }
+    ```
+
+  </Tab>
+</Tabs>
+
+## Component API
+
+<Accordions>
+  <Accordion title="Show.Root">
+    The main container. By default, it follows the "Standard Pattern" described above.
+
+    <auto-type-table path="../../../lib/ui-options.ts" name="ShowRootProps" />
+
+  </Accordion>
+
+  <Accordion title="Show.Content">
+    Used only when `control="content"` is enabled. Acts as an individual branch.
+
+    <auto-type-table path="../../../lib/ui-options.ts" name="ShowContentProps" />
+
+  </Accordion>
+</Accordions>
+
+## Benefits over Logic Operators
+
+- **No Zero Rendering**: Unlike `count && <div />` which renders `0` if count is zero, `Show` handles falsy values correctly.
+- **Improved Readability**: Eliminates deeply nested ternaries which are difficult to parse visually.
+- **Type Safety**: The render prop pattern automatically narrows types for your data.
+
+```tsx
+// Using && (Risky)
+{
+	// ---cut---
+	/* eslint-disable unicorn/explicit-length-check */
+	// ---cut---
+	items.length && <List data={items} />;
+} // Might render '0' if empty
+
+// Using Show (Safe)
+<Show when={items.length > 0}>
+	<List data={items} />
+</Show>;
+```

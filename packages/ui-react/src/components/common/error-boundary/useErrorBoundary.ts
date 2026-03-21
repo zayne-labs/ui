@@ -42,3 +42,8 @@ export const useErrorBoundary = <TError extends Error>() => {
 
 	return { resetBoundary, showBoundary };
 };
+
+export type UseErrorBoundaryReturn = {
+	resetBoundary: () => void;
+	showBoundary: (error: Error) => void;
+};

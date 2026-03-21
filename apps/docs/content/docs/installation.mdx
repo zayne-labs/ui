@@ -1,0 +1,90 @@
+---
+title: Installation
+description: Install and configure Zayne UI in your React project.
+icon: Download
+---
+
+## Package Installation
+
+Install `@zayne-labs/ui-react` using your preferred package manager:
+
+```package-install
+@zayne-labs/ui-react
+```
+
+## Peer Dependencies
+
+Zayne UI requires React 19. Ensure your project meets the following requirements:
+
+- **React**: `^19.0.0`
+- **React DOM**: `^19.0.0`
+- **TypeScript**: `^5.0.0` (Recommended)
+
+### Optional Dependencies
+
+Some components have additional peer dependencies:
+
+<Accordions>
+  <Accordion title="Form component (react-hook-form)">
+    The `Form` component is a lightweight wrapper around `react-hook-form`. Install it only if you plan to use form utilities:
+
+    ```package-install
+    react-hook-form
+    ```
+
+  </Accordion>
+
+  <Accordion title="Styling (Tailwind CSS)">
+    While components are headless, we recommend Tailwind CSS for the best development experience with our built-in utilities:
+
+    ```package-install
+    -D tailwindcss@latest
+    ```
+
+  </Accordion>
+</Accordions>
+
+## Framework Configuration
+
+### TypeScript Setup
+
+For optimal type inference (especially for polymorphic components), update your `tsconfig.json`:
+
+```json title="tsconfig.json"
+{
+	"compilerOptions": {
+		"moduleResolution": "bundler",
+		"jsx": "react-jsx",
+		"strict": true
+	}
+}
+```
+
+### CSS Integration
+
+Choose the import method that fits your styling setup:
+
+<Tabs items={['With Tailwind v4', 'Standalone CSS']}>
+  <Tab value="With Tailwind v4">
+    If you are already using Tailwind CSS v4, import the specialized preset in your main CSS file to enable theme tokens and animations:
+
+    ```css title="app/globals.css"
+    @import "tailwindcss";
+    @import "@zayne-labs/ui-react/css/preset.css";
+    ```
+
+  </Tab>
+  <Tab value="Standalone CSS">
+    If you are NOT using Tailwind CSS, import the pre-compiled stylesheet in your root file (e.g., `main.tsx` or `app.tsx`):
+
+    ```tsx
+    import "@zayne-labs/ui-react/style.css";
+    ```
+
+  </Tab>
+</Tabs>
+
+<Callout type="info">
+	The preset method is recommended as it allows you to override theme tokens and ensures better
+	integration with your own Tailwind styles.
+</Callout>

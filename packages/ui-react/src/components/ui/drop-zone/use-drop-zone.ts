@@ -76,6 +76,7 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 	});
 
 	/* eslint-disable react-hooks/hooks -- ignore */
+	// eslint-disable-next-line react-x/component-hook-factories -- ignore
 	const useDropZoneStore: UseDropZoneResult["useDropZoneStore"] = (selector) => {
 		return useStore(storeApi as never, selector);
 	};
@@ -247,8 +248,7 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 					...(!unstyled && {
 						className: cnMerge(
 							"inline-flex",
-							variant === "circular"
-								&& "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
+							variant === "circular" && "absolute top-1/2 left-1/2 -translate-1/2",
 							variant === "fill"
 								&& `absolute inset-0 bg-zu-primary/50 transition-[clip-path] duration-300 ease-linear [clip-path:var(--clip-path)]`,
 							variant === "linear"

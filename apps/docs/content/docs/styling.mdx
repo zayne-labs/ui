@@ -1,0 +1,140 @@
+---
+title: Styling
+description: Learn how to style Zayne UI components with Tailwind CSS or vanilla CSS
+icon: Palette
+---
+
+Zayne UI is completely headless and unstyled. You decide how everything looks.
+
+## Headless Design
+
+Components ship with:
+
+- **No default styles**: You decide how components look
+- **Structural markup**: Semantic HTML with proper accessibility
+- **Data attributes**: Hooks for CSS targeting
+- **ClassName support**: Standard React className prop on all components
+
+This approach means:
+
+- No CSS conflicts
+- Full design flexibility
+- Smaller bundles
+- Style with any framework
+
+## Using with Tailwind CSS
+
+Zayne UI is built for Tailwind CSS v4. Ensure you have imported the library's preset in your global CSS as shown in the [Installation Guide](/docs/installation#tailwind-css-integration-v4).
+
+### Key Features of the Preset
+
+- **System Tokens**: Pre-defined colors like `zu-primary`, `zu-accent`, and `zu-foreground`.
+- **Motion System**: Smooth animations and transitions for components like `Presence` and `Carousel`.
+- **State Hooks**: Advanced Tailwind variants like `data-drag-over` and `data-active`.
+
+### Theme Tokens
+
+The preset defines CSS custom properties for theming:
+
+```css title="theme.css"
+@theme {
+  --color-zu-foreground: oklch(0.145 0 0);
+  --color-zu-accent: oklch(0.967 0.001 286.375);
+  --color-zu-accent-foreground: oklch(0.205 0 0);
+  --color-zu-muted-foreground: oklch(0.556 0 0);
+  --color-zu-destructive: oklch(0.577 0.245 27.325);
+  --color-zu-primary: oklch(0.21 0.04 265.75);
+  --color-zu-primary-foreground: oklch(0.985 0 0);
+  --color-zu-ring: oklch(0.705 0.015 286.067);
+}
+
+:where(.dark, [data-theme="dark"]) {
+  --color-zu-foreground: oklch(0.985 0 0);
+  --color-zu-primary: oklch(0.92 0.004 286.32);
+  /* ... */
+}
+```
+
+<Callout>Dark mode is automatic when using the `.dark` class or `data-theme="dark"` attribute.</Callout>
+
+### Apply Tailwind Classes
+
+Use the `className` prop to style components:
+
+```tsx
+import { DropZone } from "@zayne-labs/ui-react/ui/drop-zone";
+
+<DropZone.Root className="w-full max-w-xl">
+	<DropZone.Area className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 p-12 transition-colors hover:bg-gray-100 data-drag-over:border-zu-primary data-drag-over:bg-zu-primary/5">
+		<div className="text-center">
+			<p className="text-lg font-medium text-gray-700">Drag files here or click to upload</p>
+			<DropZone.Trigger className="mt-4 rounded-md bg-zu-primary px-6 py-2 text-white shadow-sm hover:opacity-90">
+				Select Files
+			</DropZone.Trigger>
+		</div>
+	</DropZone.Area>
+
+	<DropZone.FileList className="mt-6 space-y-3" />
+</DropZone.Root>;
+```
+
+## Using Without Tailwind
+
+If you're not using Tailwind, you have two options:
+
+### 1. Pre-compiled Styles
+
+Import the library's compiled CSS in your root file. This includes base styles, theme tokens, and animations:
+
+```tsx
+import "@zayne-labs/ui-react/style.css";
+```
+
+### 2. Custom Vanilla CSS
+
+Write your own CSS by targeting the data attributes each component renders.
+
+### Target Data Attributes
+
+Every component renders `data-scope`, `data-part`, and `data-slot` attributes:
+
+```css title="styles.css"
+/* Style all drag-scroll roots */
+[data-scope="drag-scroll"][data-part="root"] {
+  display: flex;
+  overflow-x: auto;
+  gap: 1rem;
+  padding: 1rem;
+  cursor: grab;
+}
+
+[data-scope="drag-scroll"][data-part="root"]:active {
+  cursor: grabbing;
+}
+
+/* Or use the combined data-slot */
+[data-slot="drag-scroll-root"] {
+  scrollbar-width: none; /* Hide scrollbar for cleaner look */
+}
+
+[data-slot="drag-scroll-root"]::-webkit-scrollbar {
+  display: none;
+}
+```
+
+## Best Practices
+
+<Accordions>
+  <Accordion title="Use Design Tokens">
+    Leverage the built-in theme tokens (`zu-primary`, `zu-foreground`, etc.) for consistency and automatic dark mode support.
+  </Accordion>
+
+<Accordion title="Prefer Data Attributes for Global Styles">
+	Use data attributes in your global CSS for base component styles, and `className` for instance-specific
+	customization.
+</Accordion>
+
+  <Accordion title="Organize Your Styles">
+    For Tailwind projects, keep component-specific utilities in your component files or extract repeated patterns into custom Tailwind utilities.
+  </Accordion>
+</Accordions>

@@ -33,6 +33,7 @@ export const useDragScroll = <TElement extends HTMLElement>(
 	const actions = storeApi.getState().actions;
 
 	/* eslint-disable react-hooks/hooks -- ignore */
+	// eslint-disable-next-line react-x/component-hook-factories -- Ignore
 	const useDragScrollStore: UseDragScrollResult<TElement>["useDragScrollStore"] = (selector) => {
 		return useStore(storeApi as never, selector);
 	};
@@ -56,8 +57,8 @@ export const useDragScroll = <TElement extends HTMLElement>(
 
 		if (!node) return;
 
-		const cleanupMouseDown = on("mousedown", node, actions.handleMouseDown);
-		const cleanupScroll = on("scroll", node as never, actions.handleScroll as never, {
+		const cleanupMouseDown = on(node, "mousedown", actions.handleMouseDown);
+		const cleanupScroll = on(node, "scroll", actions.handleScroll, {
 			passive: true,
 		});
 

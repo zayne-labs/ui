@@ -9,7 +9,7 @@ type RefProp = { ref?: React.Ref<HTMLElement> };
 
 type RenderPropContext = Omit<UsePresenceResult, "propGetters" | "ref">;
 
-type PresenceProps = UsePresenceOptions & {
+export type PresenceProps = UsePresenceOptions & {
 	children?: React.ReactElement<RefProp> | ((props: RenderPropContext) => React.ReactElement<RefProp>);
 	className?: string;
 	forceMount?: boolean;

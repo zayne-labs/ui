@@ -14,10 +14,20 @@ export const createDragScrollStore = <TElement extends HTMLElement = HTMLElement
 ) => {
 	const { orientation = "horizontal", scrollAmount = "item", usage = "allScreens" } = initStoreValues;
 
-	const containerRef: React.RefObject<TElement | null> = { current: null };
-	const positionRef = { left: 0, top: 0, x: 0, y: 0 };
+	const containerRef: React.RefObject<TElement | null> = {
+		current: null,
+	};
 
-	const abortControllers = {
+	const positionRef = {
+		current: {
+			left: 0,
+			top: 0,
+			x: 0,
+			y: 0,
+		},
+	};
+
+	const abortControllerRef = {
 		current: {
 			mouseLeave: new AbortController(),
 			mouseMove: new AbortController(),
@@ -50,9 +60,9 @@ export const createDragScrollStore = <TElement extends HTMLElement = HTMLElement
 		// eslint-disable-next-line perfectionist/sort-objects -- actions should be last
 		actions: {
 			cleanupDragListeners: () => {
-				abortControllers.current.mouseMove.abort();
-				abortControllers.current.mouseUp.abort();
-				abortControllers.current.mouseLeave.abort();
+				abortControllerRef.current.mouseMove.abort();
+				abortControllerRef.current.mouseUp.abort();
+				abortControllerRef.current.mouseLeave.abort();
 			},
 
 			goToNext: () => {
@@ -92,7 +102,7 @@ export const createDragScrollStore = <TElement extends HTMLElement = HTMLElement
 				if (!containerRef.current) return;
 
 				// == Create fresh AbortControllers for each drag session (they cannot be reused after abort)
-				abortControllers.current = {
+				abortControllerRef.current = {
 					mouseLeave: new AbortController(),
 					mouseMove: new AbortController(),
 					mouseUp: new AbortController(),
@@ -100,13 +110,13 @@ export const createDragScrollStore = <TElement extends HTMLElement = HTMLElement
 
 				// == Update all initial position properties
 				if (orientation === "horizontal" || orientation === "both") {
-					positionRef.x = event.clientX;
-					positionRef.left = containerRef.current.scrollLeft;
+					positionRef.current.x = event.clientX;
+					positionRef.current.left = containerRef.current.scrollLeft;
 				}
 
 				if (orientation === "vertical" || orientation === "both") {
-					positionRef.y = event.clientY;
-					positionRef.top = containerRef.current.scrollTop;
+					positionRef.current.y = event.clientY;
+					positionRef.current.top = containerRef.current.scrollTop;
 				}
 
 				updateCursor(containerRef.current);
@@ -114,20 +124,19 @@ export const createDragScrollStore = <TElement extends HTMLElement = HTMLElement
 
 				const { actions } = get();
 
-				on("mousemove", containerRef.current, actions.handleMouseMove, {
-					signal: abortControllers.current.mouseMove.signal,
+				on(containerRef.current, "mousemove", actions.handleMouseMove, {
+					signal: abortControllerRef.current.mouseMove.signal,
 				});
-				on("mouseup", containerRef.current, actions.handleMouseUpOrLeave, {
-					signal: abortControllers.current.mouseUp.signal,
+				on(containerRef.current, "mouseup", actions.handleMouseUpOrLeave, {
+					signal: abortControllerRef.current.mouseUp.signal,
 				});
-				on("mouseleave", containerRef.current, actions.handleMouseUpOrLeave, {
-					signal: abortControllers.current.mouseLeave.signal,
+				on(containerRef.current, "mouseleave", actions.handleMouseUpOrLeave, {
+					signal: abortControllerRef.current.mouseLeave.signal,
 				});
-
 				// == Document-level mouseup fallback for when user releases outside the container
-				on("mouseup", document, actions.handleMouseUpOrLeave, {
+				on(document, "mouseup", actions.handleMouseUpOrLeave, {
 					once: true,
-					signal: abortControllers.current.mouseUp.signal,
+					signal: abortControllerRef.current.mouseUp.signal,
 				});
 			},
 
@@ -135,13 +144,13 @@ export const createDragScrollStore = <TElement extends HTMLElement = HTMLElement
 				if (!containerRef.current) return;
 
 				if (orientation === "horizontal" || orientation === "both") {
-					const dx = event.clientX - positionRef.x;
-					containerRef.current.scrollLeft = positionRef.left - dx;
+					const dx = event.clientX - positionRef.current.x;
+					containerRef.current.scrollLeft = positionRef.current.left - dx;
 				}
 
 				if (orientation === "vertical" || orientation === "both") {
-					const dy = event.clientY - positionRef.y;
-					containerRef.current.scrollTop = positionRef.top - dy;
+					const dy = event.clientY - positionRef.current.y;
+					containerRef.current.scrollTop = positionRef.current.top - dy;
 				}
 			},
 

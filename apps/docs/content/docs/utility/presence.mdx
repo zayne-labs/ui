@@ -1,0 +1,90 @@
+---
+title: Presence
+description: Animate component mount and unmount with CSS animations or transitions.
+---
+
+The `Presence` component enables smooth entry and exit animations for components when they are added to or removed from the DOM. It coordinates the unmounting lifecycle to ensure exit animations complete before the element is removed.
+
+## Installation
+
+```package-install
+@zayne-labs/ui-react
+```
+
+## Basic Usage
+
+<Tabs items={['CSS Animation', 'Tailwind v4 Transition']}>
+  <Tab value="CSS Animation">
+    Animations are the default and recommended way to use Presence.
+
+    ```tsx
+    import { Presence } from "@zayne-labs/ui-react/common/presence";
+
+    function FadeBox({ isOpen }) {
+      return (
+        <Presence present={isOpen}>
+          <div className="rounded-lg bg-zu-primary p-6 text-white shadow-xl animate-in fade-in duration-300 data-[state=unmountSuspended]:animate-out data-[state=unmountSuspended]:fade-out">
+            Hello, I am animated!
+          </div>
+        </Presence>
+      );
+    }
+    ```
+
+  </Tab>
+  <Tab value="Tailwind v4 Transition">
+    Use `variant="transition"` when you prefer using CSS transitions over keyframe animations.
+
+    ```tsx
+    <Presence present={isOpen} variant="transition">
+      <div className="transition-all duration-300 opacity-0 scale-95 data-[transition=active]:opacity-100 data-[transition=active]:scale-100">
+        Smooth transition
+      </div>
+    </Presence>
+    ```
+
+  </Tab>
+</Tabs>
+
+## Component API
+
+<Accordions>
+	<Accordion title="Presence Props">
+		<auto-type-table path="../../../lib/ui-options.ts" name="PresenceProps" />
+	</Accordion>
+</Accordions>
+
+## Data Attributes
+
+Presence applies stateful attributes to the child element, allowing you to trigger CSS animations.
+
+| Attribute         | Value                             | Description                               |
+| :---------------- | :-------------------------------- | :---------------------------------------- |
+| `data-state`      | `"mounted" \| "unmountSuspended"` | Current lifecycle state.                  |
+| `data-present`    | `"true" \| "false"`               | Matches the `present` prop.               |
+| `data-transition` | `"active" \| "inactive"`          | Only present when `variant="transition"`. |
+
+### Tailwind Selection
+
+You can target these states efficiently in Tailwind CSS:
+
+```css
+/* In your global CSS if using custom v4 variants */
+@variant data-state-unmountSuspended (&[data-state="unmountSuspended"]);
+@variant data-transition-active (&[data-transition="active"]);
+```
+
+## Examples
+
+### Modal Backstop Pattern
+
+```tsx
+<Presence present={isOpen}>
+	<div className="fixed inset-0 animate-in bg-black/50 backdrop-blur-sm fade-in data-[state=unmountSuspended]:animate-out data-[state=unmountSuspended]:fade-out" />
+</Presence>
+```
+
+<Callout type="tip">
+	The `Presence` component is built on top of the battle-tested Radix UI presence logic, ensuring it
+	handles browser edge cases and animation cancellations perfectly.
+</Callout>

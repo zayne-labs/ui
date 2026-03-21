@@ -1,0 +1,104 @@
+---
+title: Switch
+description: Pattern matching and multi-way conditional rendering for declarative multi-condition logic.
+---
+
+The Switch component provides a declarative pattern-matching approach for rendering content based on multiple conditions, similar to `switch` statements in JavaScript.
+
+## Installation
+
+```package-install
+@zayne-labs/ui-react
+```
+
+## Basic Usage
+
+<Tabs items={['Value Matching', 'Boolean Matching']}>
+  <Tab value="Value Matching">
+    In value matching mode, you provide a `value` to `Switch.Root`, and each `Switch.Match` checks its `when` prop against that value.
+
+    ```tsx
+    import { Switch } from "@zayne-labs/ui-react/common/switch";
+
+    function StatusIndicator({ status }) {
+      return (
+        <Switch.Root value={status}>
+          <Switch.Match when="loading">Loading...</Switch.Match>
+          <Switch.Match when="success">Success!</Switch.Match>
+          <Switch.Match when="error">Error occurred</Switch.Match>
+          <Switch.Default>Unknown status</Switch.Default>
+        </Switch.Root>
+      );
+    }
+    ```
+
+  </Tab>
+  <Tab value="Boolean Matching">
+    Omit the `value` prop to use boolean matching. It acts like a `switch(true)` block, rendering the first component whose `when` condition evaluates to truthy.
+
+    ```tsx
+    import { Switch } from "@zayne-labs/ui-react/common/switch";
+
+    function UserGreeting({ user, isLoading, error }) {
+      return (
+        <Switch.Root>
+          <Switch.Match when={isLoading}>Loading...</Switch.Match>
+          <Switch.Match when={error}>Error: {error.message}</Switch.Match>
+          <Switch.Match when={user}>
+            {(data) => <div>Welcome, {data.name}!</div>}
+          </Switch.Match>
+          <Switch.Default>Please log in</Switch.Default>
+        </Switch.Root>
+      );
+    }
+    ```
+
+  </Tab>
+</Tabs>
+
+## Component API
+
+<Accordions>
+  <Accordion title="Switch.Root">
+    The coordinator for pattern matching. Only the first truthful match is rendered.
+
+    <auto-type-table path="../../../lib/ui-options.ts" name="SwitchRootProps" />
+
+  </Accordion>
+
+  <Accordion title="Switch.Match">
+    Defines a conditional case. Supports render props for type-safe access to the matched value.
+
+    <auto-type-table path="../../../lib/ui-options.ts" name="SwitchMatchProps" />
+
+  </Accordion>
+
+  <Accordion title="Switch.Default">
+     The fallback component rendered when no matches are found.
+  </Accordion>
+</Accordions>
+
+## Examples
+
+### Complex Layout Switching
+
+```tsx
+<Switch.Root value={viewMode}>
+	<Switch.Match when="grid">
+		<div className="grid grid-cols-3 gap-4">{/* ... */}</div>
+	</Switch.Match>
+
+	<Switch.Match when="list">
+		<div className="flex flex-col gap-2">{/* ... */}</div>
+	</Switch.Match>
+
+	<Switch.Default>
+		<p>Select a view mode.</p>
+	</Switch.Default>
+</Switch.Root>
+```
+
+<Callout type="info">
+	Only the first matching `Switch.Match` is rendered. This prevents the "multiple truth" problem common
+	when stacking ternary operators.
+</Callout>

@@ -217,13 +217,13 @@ const usePresence = (options: UsePresenceOptions): UsePresenceResult => {
 			send("ANIMATION_END");
 		};
 
-		const onAnimationStartCleanup = on("animationstart", node, handleAnimationStart);
-		const onAnimationEndCleanup = on("animationend", node, handleAnimationEnd);
-		const onAnimationCancelCleanup = on("animationcancel", node, handleAnimationEnd);
+		const onAnimationStartCleanup = on(node, "animationstart", handleAnimationStart);
+		const onAnimationEndCleanup = on(node, "animationend", handleAnimationEnd);
+		const onAnimationCancelCleanup = on(node, "animationcancel", handleAnimationEnd);
 
-		const onTransitionRunCleanup = on("transitionrun", node, handleTransitionRun);
-		const onTransitionEndCleanup = on("transitionend", node, handleTransitionEnd);
-		const onTransitionCancelCleanup = on("transitioncancel", node, handleTransitionEnd);
+		const onTransitionRunCleanup = on(node, "transitionrun", handleTransitionRun);
+		const onTransitionEndCleanup = on(node, "transitionend", handleTransitionEnd);
+		const onTransitionCancelCleanup = on(node, "transitioncancel", handleTransitionEnd);
 
 		return () => {
 			ownerWindow.clearTimeout(timeoutId);

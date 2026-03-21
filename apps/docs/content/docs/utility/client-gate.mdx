@@ -1,0 +1,82 @@
+---
+title: ClientGate
+description: Conditionally render content only after client-side hydration.
+---
+
+The `ClientGate` component ensures content is rendered only after JavaScript has loaded client-side. This is essential for preventing hydration mismatches and handling browser-only APIs gracefully in SSR environments like Next.js.
+
+## Installation
+
+```package-install
+@zayne-labs/ui-react
+```
+
+## Basic Usage
+
+<Tabs items={['Standard', 'Render Callback']}>
+  <Tab value="Standard">
+    Standard usage wraps children that depend on browser APIs.
+
+    ```tsx
+    import { ClientGate } from "@zayne-labs/ui-react/common/client-gate";
+
+    function App() {
+      return (
+        <ClientGate fallback={<div className="h-64 bg-gray-100 animate-pulse" />}>
+          <InteractiveMap region="Global" />
+        </ClientGate>
+      );
+    }
+    ```
+
+  </Tab>
+  <Tab value="Render Callback">
+    Use a render callback for deferred initialization of browser-only logic.
+
+    ```tsx
+    import { ClientGate } from "@zayne-labs/ui-react/common/client-gate";
+
+    function App() {
+      return (
+        <ClientGate fallback={<div>Loading Browser Data...</div>}>
+          {() => (
+            <div>
+              Window width: {window.innerWidth}px
+            </div>
+          )}
+        </ClientGate>
+      );
+    }
+    ```
+
+  </Tab>
+</Tabs>
+
+## Component API
+
+<Accordions>
+	<Accordion title="ClientGate Props">
+		<auto-type-table path="../../../lib/ui-options.ts" name="ClientGateProps" />
+	</Accordion>
+</Accordions>
+
+## Why use ClientGate?
+
+- **Zero Hydration Mismatches**: Guarantees the server HTML and client initial render are identical (or correctly deferred).
+- **Safe Browser Access**: Safely access `window`, `localStorage`, or `document` within the children.
+- **Improved CLS**: By providing a matching fallback, you can maintain Cumulative Layout Shift scores.
+
+```tsx
+// ❌ Dangerous (causes mismatch or crash)
+const isDesktop = window.innerWidth > 1024;
+
+// ✅ Safe with ClientGate
+<ClientGate fallback={<MobileNav />}>
+	<DesktopNav />
+</ClientGate>;
+```
+
+<Callout type="warn">
+	Content inside a `ClientGate` is **invisible to search engines** and SEO bots because it only appears
+	after hydration. Use it sparingly for non-critical UI elements or interactive widgets.
+</Callout>

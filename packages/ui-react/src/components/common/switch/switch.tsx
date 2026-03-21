@@ -5,7 +5,7 @@ import { isFunction } from "@zayne-labs/toolkit-type-helpers";
 
 type ValidSwitchComponentType = React.ReactElement<SwitchMatchProps<unknown>>;
 
-type SwitchProps<TValue> = {
+export type SwitchRootProps<TValue> = {
 	children: ValidSwitchComponentType | ValidSwitchComponentType[];
 	value?: TValue;
 };
@@ -14,7 +14,7 @@ const defaultValueSymbol = Symbol("default-value");
 
 // TODO - Add a factory to make this 'when' and 'value' type-safe later following the link below
 // LINK - https://tkdodo.eu/blog/building-type-safe-compound-components#component-factory-pattern
-export function SwitchRoot<TValue>(props: SwitchProps<TValue>) {
+export function SwitchRoot<TValue>(props: SwitchRootProps<TValue>) {
 	const { children, value = defaultValueSymbol } = props;
 
 	const defaultCase = getSingleSlot(children, SwitchDefault, {
@@ -37,7 +37,7 @@ export function SwitchRoot<TValue>(props: SwitchProps<TValue>) {
 	return matchedCase ?? defaultCase;
 }
 
-type SwitchMatchProps<TWhen> = {
+export type SwitchMatchProps<TWhen> = {
 	children: React.ReactNode | ((value: TWhen) => React.ReactNode);
 	when: false | TWhen | null | undefined;
 };

@@ -1,0 +1,106 @@
+---
+title: Await
+description: Handle async operations with declarative loading, error, and success states.
+---
+
+The `Await` component provides a declarative way to handle asynchronous operations in React, managing loading states, errors, and successful data resolution with a clean, composable API.
+
+## Installation
+
+```package-install
+@zayne-labs/ui-react
+```
+
+## Basic Usage
+
+<Tabs items={['Brief Pattern', 'Comprehensive Pattern']}>
+  <Tab value="Brief Pattern">
+    For simple use cases, you can pass a `fallback` directly to the root.
+
+    ```tsx
+    import { Await } from "@zayne-labs/ui-react/common/await";
+
+    function UserProfile({ userId }) {
+      const userPromise = fetchUser(userId);
+
+      return (
+        <Await.Root promise={userPromise} fallback={<Skeleton />}>
+          {(user) => (
+            <div>
+              <h1>{user.name}</h1>
+              <p>{user.email}</p>
+            </div>
+          )}
+        </Await.Root>
+      );
+    }
+    ```
+
+  </Tab>
+  <Tab value="Comprehensive Pattern">
+    Use sub-components for fine-grained control over each promise state.
+
+    ```tsx
+    import { Await } from "@zayne-labs/ui-react/common/await";
+
+    function ProductHero({ productPromise }) {
+      return (
+        <Await.Root promise={productPromise}>
+          <Await.Pending>
+            <HeroSkeleton />
+          </Await.Pending>
+
+          <Await.Error>
+            {({ error }) => <p className="text-red-500">Failed: {error.message}</p>}
+          </Await.Error>
+
+          <Await.Success>
+            {(product) => <Hero data={product} />}
+          </Await.Success>
+        </Await.Root>
+      );
+    }
+    ```
+
+  </Tab>
+</Tabs>
+
+## Component API
+
+<Accordions>
+  <Accordion title="Await.Root">
+    The coordinator for the promise lifecycle.
+
+    <auto-type-table path="../../../lib/ui-options.ts" name="AwaitRootProps" />
+
+  </Accordion>
+
+<Accordion title="Await.Success">
+	Renders when the promise resolves. The result is passed to the render function.
+</Accordion>
+
+<Accordion title="Await.Pending">Renders while the promise is in a pending state.</Accordion>
+
+  <Accordion title="Await.Error">
+    Renders when the promise rejects. Receives the `error` and `resetErrorBoundary` function.
+  </Accordion>
+</Accordions>
+
+## Why use Await?
+
+- **Unwraps with `use()`**: Internally uses the React `use()` hook for optimal integration with Suspense.
+- **Type Safety**: Automatically infers the resolved type of your promise in the success render function.
+- **Declarative**: Removes the need for manually managing `isLoading` and `error` state variables.
+
+```tsx
+// Instead of this:
+const [data, setData] = useState(null);
+const [loading, setLoading] = useState(true);
+
+// Do this:
+<Await.Root promise={myPromise}>{(data) => <Display data={data} />}</Await.Root>;
+```
+
+<Callout type="info">
+	Always create your promises outside of the component or memoize them to prevent infinite re-renders.
+</Callout>
