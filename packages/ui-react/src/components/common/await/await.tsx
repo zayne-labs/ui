@@ -84,8 +84,7 @@ export function AwaitSuccess<TPromiseOrValue, TValue = Awaited<TPromiseOrValue>>
 	const { children } = props;
 
 	if (isFunction(children)) {
-		// eslint-disable-next-line react-hooks/rule-suppression -- Ignore
-		// eslint-disable-next-line react-hooks/rules-of-hooks, react-x/rules-of-hooks -- This hook only uses `use` under the hood so this is safe
+		// eslint-disable-next-line react-x/rules-of-hooks, react-hooks/hooks -- This hook only uses `use` under the hood so this is safe
 		const { result } = useAwaitContext<TValue>();
 
 		return children(result);

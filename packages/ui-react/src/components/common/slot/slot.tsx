@@ -34,7 +34,7 @@ export function SlotRoot(props: SlotProps) {
 
 	if (!isValidElement(resolvedChildToRender)) {
 		// eslint-disable-next-line react-x/purity -- Ignore
-		console.error("Invalid element passed to Slot:", resolvedChildToRender);
+		console.error("Invalid element passed to Slottable:", resolvedChildToRender);
 		return null;
 	}
 
@@ -86,8 +86,7 @@ function SlotClone(props: SlotCloneProps) {
 		return null;
 	}
 
-	const childRef = (resolvedChild.props.ref
-		?? (resolvedChild as unknown as UnknownObject).ref) as React.Ref<HTMLElement>;
+	const childRef = resolvedChild.props.ref as React.Ref<HTMLElement>;
 
 	const ref = composeRefs(forwardedRef, childRef);
 

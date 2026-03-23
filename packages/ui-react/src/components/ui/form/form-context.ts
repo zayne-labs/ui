@@ -80,20 +80,19 @@ export type FieldState = {
 	isInvalid?: boolean;
 };
 
-// eslint-disable-next-line ts-eslint/no-explicit-any -- any is used here for type compatibility
-export type AnyControl = Control<any>;
-
-type FieldStateOptions =
+type FieldStateOptions<TFieldValues extends FieldValues, TTransformedValues = TFieldValues> =
 	| {
-			control: AnyControl | undefined;
+			control: Control<TFieldValues, unknown, TTransformedValues> | undefined;
 			name?: string;
 	  }
 	| {
-			control?: AnyControl;
+			control?: Control<TFieldValues, unknown, TTransformedValues>;
 			name: string | undefined;
 	  };
 
-export const useLaxFormFieldState = (options?: FieldStateOptions): FieldState => {
+export const useLaxFormFieldState = <TFieldValues extends FieldValues, TTransformedValues = TFieldValues>(
+	options?: FieldStateOptions<TFieldValues, TTransformedValues>
+): FieldState => {
 	const { control } = useFormMethodsContext({ strict: false }) ?? {};
 	const { name } = useLaxFormFieldContext() ?? {};
 
@@ -101,10 +100,13 @@ export const useLaxFormFieldState = (options?: FieldStateOptions): FieldState =>
 
 	const getFormState =
 		// eslint-disable-next-line react-hooks/hooks -- Ignore
-		resolvedControl ? useFormState : () => ({}) as Partial<ReturnType<typeof useFormState>>;
+		resolvedControl ? useFormState : ((() => ({})) as typeof useFormState);
 
 	// eslint-disable-next-line react-hooks/hooks -- Ignore
-	const { disabled, errors } = getFormState({ control: resolvedControl, name: name ?? options?.name });
+	const { disabled, errors } = getFormState({
+		control: resolvedControl as never,
+		name: name ?? options?.name,
+	});
 
 	const errorMessage = getFieldErrorMessage({ errors, fieldName: name, type: "regular" });
 

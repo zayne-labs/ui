@@ -94,11 +94,20 @@ The `Await` component provides a declarative way to handle asynchronous operatio
 
 ```tsx
 // Instead of this:
-const [data, setData] = useState(null);
-const [loading, setLoading] = useState(true);
+function OldComponent() {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  // ...
+}
 
 // Do this:
-<Await.Root promise={myPromise}>{(data) => <Display data={data} />}</Await.Root>;
+function NewComponent({ myPromise }) {
+  return (
+    <Await.Root promise={myPromise}>
+      {(data) => <Display data={data} />}
+    </Await.Root>
+  );
+}
 ```
 
 <Callout type="info">

@@ -4,7 +4,7 @@ import { motion } from "motion/react";
 import { useEffect, useId, useRef, useState } from "react";
 import { cnMerge } from "@/lib/utils/cn";
 
-type GridPatternProps = {
+type GridProps = {
 	className?: string;
 	duration?: number;
 	height?: number;
@@ -17,7 +17,7 @@ type GridPatternProps = {
 	y?: number;
 };
 
-export function GridPattern(props: GridPatternProps) {
+export function Grid(props: GridProps) {
 	const {
 		className,
 		duration = 4,
@@ -72,8 +72,7 @@ export function GridPattern(props: GridPatternProps) {
 			// eslint-disable-next-line react-you-might-not-need-an-effect/no-derived-state, react-x/set-state-in-effect
 			setSquares(generateSquares(numSquares));
 		}
-		// eslint-disable-next-line react-hooks/rule-suppression
-		// eslint-disable-next-line react-hooks/exhaustive-deps, react-x/exhaustive-deps
+		// eslint-disable-next-line react-x/exhaustive-deps
 	}, [dimensions, numSquares]);
 
 	// Resize observer to update container dimensions
