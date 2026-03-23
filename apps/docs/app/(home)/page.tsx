@@ -1,6 +1,8 @@
+"use client";
+
 import Link from "fumadocs-core/link";
+import { Grid } from "@/components/common/Grid";
 import { DocsIcon, GitHubIcon } from "@/components/icons";
-import { GridPattern } from "@/components/landing/grid";
 import { Button } from "@/components/ui/button";
 
 export default function HomePage() {
@@ -9,7 +11,7 @@ export default function HomePage() {
 			className="relative flex min-h-screen w-full items-center justify-center overflow-hidden
 				bg-fd-background"
 		>
-			<GridPattern />
+			<Grid />
 			<div className="z-10 flex flex-col items-center justify-center px-6">
 				<h1 className="mb-6 text-center text-6xl font-bold tracking-tight md:text-7xl">Zayne UI</h1>
 

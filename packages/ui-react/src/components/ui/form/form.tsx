@@ -651,7 +651,7 @@ export const FormErrorMessagePrimitive: FormErrorMessagePrimitiveOverloadType = 
 	} = props;
 
 	const { errors } = useLaxFormFieldState({
-		control: control ?? rootContextValues?.control,
+		control: control ?? (rootContextValues?.control as never),
 		name: fieldName,
 	});
 
