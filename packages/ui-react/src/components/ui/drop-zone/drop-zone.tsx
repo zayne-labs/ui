@@ -85,7 +85,7 @@ export function DropZoneContext<TSlice = DropZoneStore>(props: DropZoneContextPr
 	return resolvedChildren;
 }
 
-/* eslint-disable perfectionist/sort-intersection-types -- I need non-stand props to come first */
+/* eslint-disable perfectionist/sort-intersection-types -- I need non-standard props to come first */
 
 export type DropZoneContainerProps = {
 	asChild?: boolean;
@@ -309,6 +309,9 @@ export function DropZoneFileItemDelete(props: DropZoneFileItemDeleteProps) {
 
 export type DropZoneFileItemProgressProps = {
 	asChild?: boolean;
+	classNames?: {
+		circular?: { root?: string; svgCircleOne?: string; svgCircleTwo?: string; svgRoot?: string };
+	};
 	forceMount?: boolean;
 	size?: number;
 } & PartInputProps["fileItemProgress"];
@@ -319,6 +322,8 @@ export function DropZoneFileItemProgress<TElement extends React.ElementType = "s
 	const {
 		as: Element = "span",
 		asChild,
+		className,
+		classNames,
 		forceMount = false,
 		size = 40,
 		variant = "linear",
@@ -353,9 +358,9 @@ export function DropZoneFileItemProgress<TElement extends React.ElementType = "s
 			const strokeDashoffset = circumference - (currentProgress / 100) * circumference;
 
 			return (
-				<Component {...componentProps}>
+				<Component className={cnMerge(className, classNames?.circular?.root)} {...componentProps}>
 					<svg
-						className="-rotate-90"
+						className={cnMerge("-rotate-90", classNames?.circular?.svgRoot)}
 						width={size}
 						height={size}
 						viewBox={`0 0 ${size} ${size}`}
@@ -363,14 +368,17 @@ export function DropZoneFileItemProgress<TElement extends React.ElementType = "s
 						stroke="currentColor"
 					>
 						<circle
-							className="text-zu-primary/20"
+							className={cnMerge("text-zu-primary/20", classNames?.circular?.svgCircleOne)}
 							strokeWidth="2"
 							cx={size / 2}
 							cy={size / 2}
 							r={(size - 4) / 2}
 						/>
 						<circle
-							className="text-zu-primary transition-[stroke-dashoffset] duration-300 ease-linear"
+							className={cnMerge(
+								"text-zu-primary transition-[stroke-dashoffset] duration-300 ease-linear",
+								classNames?.circular?.svgCircleTwo
+							)}
 							strokeWidth="2"
 							strokeLinecap="round"
 							strokeDasharray={circumference}
@@ -389,10 +397,12 @@ export function DropZoneFileItemProgress<TElement extends React.ElementType = "s
 
 			return (
 				<Component
+					className={className}
 					{...componentProps}
 					style={
 						{
 							"--clip-path": `inset(${topInset}% 0% 0% 0%)`,
+							...componentProps.style,
 						} satisfies CssWithCustomProperties as CssWithCustomProperties
 					}
 				/>
@@ -401,15 +411,20 @@ export function DropZoneFileItemProgress<TElement extends React.ElementType = "s
 
 		case "linear": {
 			return (
-				<Component {...componentProps}>
-					<span
-						className="inline-block size-full grow translate-x-(--translate-distance) bg-zu-primary transition-transform duration-300 ease-linear"
-						style={
-							{
-								"--translate-distance": `-${100 - currentProgress}%`,
-							} satisfies CssWithCustomProperties as CssWithCustomProperties
-						}
-					/>
+				<Component
+					className={cnMerge(
+						"inline-block size-full grow translate-x-(--translate-distance) bg-zu-primary transition-transform duration-300 ease-linear",
+						className
+					)}
+					{...componentProps}
+					style={
+						{
+							"--translate-distance": `-${100 - currentProgress}%`,
+							...componentProps.style,
+						} satisfies CssWithCustomProperties as CssWithCustomProperties
+					}
+				>
+					<span />
 				</Component>
 			);
 		}
@@ -730,4 +745,4 @@ export function DropZoneFileClear(props: DropZoneFileClearProps) {
 	return <Component {...propGetters.getFileItemClearProps(restOfProps)} />;
 }
 
-/* eslint-enable perfectionist/sort-intersection-types -- I need non-stand props to come first */
+/* eslint-enable perfectionist/sort-intersection-types -- I need non-standard props to come first */

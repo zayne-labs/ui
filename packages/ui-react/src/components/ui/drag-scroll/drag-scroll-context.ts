@@ -2,16 +2,15 @@ import { createCustomContext } from "@zayne-labs/toolkit-react";
 import { createReactStoreContext } from "@zayne-labs/toolkit-react/zustand";
 import type { DragScrollStore, UseDragScrollResult } from "./types";
 
-const [DragScrollStoreContextProvider, useDragScrollStoreContext] = createReactStoreContext<
-	DragScrollStore<HTMLElement>
->({
-	hookName: "useDragScrollStoreContext",
-	name: "DragScrollStoreContext",
-	providerName: "DragScrollRoot",
-});
+const [DragScrollStoreContextProvider, useDragScrollStoreContext] =
+	createReactStoreContext<DragScrollStore>({
+		hookName: "useDragScrollStoreContext",
+		name: "DragScrollStoreContext",
+		providerName: "DragScrollRoot",
+	});
 
-export type DragScrollRootContextType = Pick<
-	UseDragScrollResult<HTMLElement>,
+export type DragScrollRootContextType<TElement extends HTMLElement = HTMLElement> = Pick<
+	UseDragScrollResult<TElement>,
 	"containerRef" | "disableInternalStateSubscription" | "propGetters"
 >;
 

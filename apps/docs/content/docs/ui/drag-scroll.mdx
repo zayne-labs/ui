@@ -1,9 +1,9 @@
 ---
 title: DragScroll
-description: A headless hook for adding mouse drag-to-scroll functionality to containers with optional navigation buttons.
+description: A headless component suite for adding mouse drag-to-scroll functionality to containers with optional navigation buttons and state subscription.
 ---
 
-The `useDragScroll` hook provides mouse drag-to-scroll behavior for horizontal or vertical scrollable containers. It's completely headless and unstyled, giving you full control over the UI while handling all the complex drag, scroll, and navigation logic.
+The `DragScroll` component suite provides mouse drag-to-scroll behavior for horizontal or vertical scrollable containers. It follows a compound component pattern that separates logic (Root) from the scroller element (Container), allowing for flexible layouts where navigation controls can stay outside the scroll area.
 
 ## Installation
 
@@ -13,115 +13,139 @@ The `useDragScroll` hook provides mouse drag-to-scroll behavior for horizontal o
 
 ## Basic Usage
 
+The recommended way to use DragScroll is via the compound components, which manage context and state internally.
+
 ```tsx
-import { useDragScroll } from "@zayne-labs/ui-react/ui/drag-scroll";
+import { DragScroll } from "@zayne-labs/ui-react/ui/drag-scroll";
 
 function HorizontalScroller() {
-	const { propGetters } = useDragScroll();
-
 	return (
-		<div className="relative">
-			<button {...propGetters.getBackButtonProps()}>←</button>
+		<DragScroll.Root>
+			<DragScroll.Prev className="absolute top-1/2 left-0 -translate-y-1/2">←</DragScroll.Prev>
 
-			<div {...propGetters.getRootProps()} className="flex gap-4 overflow-x-auto p-4">
+			<DragScroll.Container className="flex gap-4 overflow-x-auto p-10">
 				{[1, 2, 3, 4, 5].map((item) => (
-					<div
+					<DragScroll.Item
 						key={item}
-						{...propGetters.getItemProps()}
 						className="flex h-40 w-64 shrink-0 items-center justify-center rounded-xl border border-zu-primary/20 bg-zu-primary/10"
 					>
 						Item {item}
-					</div>
+					</DragScroll.Item>
 				))}
-			</div>
+			</DragScroll.Container>
 
-			<button {...propGetters.getNextButtonProps()}>→</button>
+			<DragScroll.Next className="absolute top-1/2 right-0 -translate-y-1/2">→</DragScroll.Next>
+		</DragScroll.Root>
+	);
+}
+```
+
+## Hook Usage (Advanced)
+
+If you need fine-grained control or want to apply props to custom components without using the compound components, you can use the `useDragScroll` hook.
+
+```tsx
+import { useDragScroll } from "@zayne-labs/ui-react/ui/drag-scroll";
+
+function CustomScroller() {
+	const { propGetters } = useDragScroll();
+
+	return (
+		<div {...propGetters.getContainerProps()} className="flex gap-4 overflow-x-auto">
+			{/* ... items */}
 		</div>
 	);
 }
 ```
 
+## Anatomy
+
+```tsx
+<DragScroll.Root>
+	<DragScroll.Prev />
+
+	<DragScroll.Container>
+		<DragScroll.Item />
+		<DragScroll.Item />
+	</DragScroll.Container>
+
+	<DragScroll.Next />
+</DragScroll.Root>
+```
+
+## Component API
+
+<Accordions>
+	<Accordion title="DragScroll.Root">
+		The provider that initializes the drag-scroll engine and manages the store.
+		<auto-type-table path="../../../lib/ui-options.ts" name="DragScrollRootProps" />
+	</Accordion>
+
+    <Accordion title="DragScroll.Container">
+    	The element that handles the drag tracking and scrolling.
+    	<auto-type-table path="../../../lib/ui-options.ts" name="DragScrollContainerProps" />
+    </Accordion>
+
+    <Accordion title="DragScroll.Item">
+    	The element that applies snapping and item-specific attributes.
+    	<auto-type-table path="../../../lib/ui-options.ts" name="DragScrollItemProps" />
+    </Accordion>
+
+    <Accordion title="DragScroll.Prev / Next">
+    	Buttons for programmatic navigation.
+    	<auto-type-table path="../../../lib/ui-options.ts" name="DragScrollPrevProps" />
+    	<auto-type-table path="../../../lib/ui-options.ts" name="DragScrollNextProps" />
+    </Accordion>
+
+    <Accordion title="DragScroll.Context">
+    	Provides access to the internal store state via a render prop or internal hooks.
+    	<auto-type-table path="../../../lib/ui-options.ts" name="DragScrollContextProps" />
+    </Accordion>
+
+</Accordions>
+
 ## Hook Options
 
 <auto-type-table path="../../../lib/ui-options.ts" name="UseDragScrollProps" />
 
-## Return Values
+## Return Values (from `useDragScroll`)
 
 <Accordions>
 	<Accordion title="propGetters">
-		Functions that return a collection of props to be spread onto your elements. - `getRootProps`: Props
-		for the scrollable container. - `getItemProps`: Props for each scrollable item. -
-		`getBackButtonProps`: Props for the previous navigation button. - `getNextButtonProps`: Props for the
+		Functions that return a collection of props to be spread onto your elements: - `getContainerProps`:
+		Props for the scrollable container. - `getItemProps`: Props for each scrollable item. -
+		`getPrevButtonProps`: Props for the previous navigation button. - `getNextButtonProps`: Props for the
 		next navigation button.
 	</Accordion>
 	<Accordion title="containerRef">
 		A standard React ref object containing the scrollable container element.
 	</Accordion>
-	<Accordion title="storeApi">The raw Zustand-like store API for advanced state management.</Accordion>
+	<Accordion title="storeApi">The raw Zustand-style store API for advanced state management.</Accordion>
 	<Accordion title="useDragScrollStore">
-		A hook-based selector for subscribing to specific pieces of the drag-scroll state.
+		A hook-based selector for subscribing to specific pieces of state.
 	</Accordion>
 </Accordions>
 
-## Examples
+## Styling
 
-<Tabs items={['Product Carousel', 'Vertical Timeline']}>
-  <Tab value="Product Carousel">
-    ```tsx
-    const { propGetters } = useDragScroll({
-      scrollAmount: 300,
-      classNames: { base: "gallery-root" }
-    });
+The following data attributes are automatically applied to the components for scoped styling:
 
-    return (
-      <div {...propGetters.getRootProps()} className="flex gap-6 overflow-x-auto">
-        <For each={products}>
-          {(product) => (
-            <div key={product.id} {...propGetters.getItemProps()} className="w-64 shrink-0 border p-4 rounded-lg">
-              <h4 className="font-bold">{product.name}</h4>
-              <p className="text-sm text-zu-muted-foreground">${product.price}</p>
-            </div>
-          )}
-        </For>
-      </div>
-    );
-    ```
-
-  </Tab>
-  <Tab value="Vertical Timeline">
-    ```tsx
-    const { propGetters } = useDragScroll({ orientation: "vertical" });
-
-    return (
-      <div {...propGetters.getRootProps()} className="relative h-100 flex-col gap-4 overflow-y-auto p-4">
-        <For each={events}>
-          {(event, i) => (
-            <div key={i} {...propGetters.getItemProps()} className="shrink-0 border-l-4 border-zu-primary p-4 bg-zu-primary/5">
-              <span className="text-xs font-medium uppercase tracking-wider">{event.date}</span>
-              <h3 className="font-semibold">{event.title}</h3>
-            </div>
-          )}
-        </For>
-      </div>
-    );
-    ```
-
-  </Tab>
-</Tabs>
-
-## Data Attributes
-
-The hook automatically applies data attributes to the root element for styling based on its state:
-
-| Attribute       | Value               | Description                                       |
-| :-------------- | :------------------ | :------------------------------------------------ |
-| `data-scope`    | `"drag-scroll"`     | Identifies the component family.                  |
-| `data-part`     | `"root"`            | Identifies the root container.                    |
-| `data-dragging` | `"true" \| "false"` | Whether the container is currently being dragged. |
+| Component   | Attribute       | Value               | Description                                       |
+| :---------- | :-------------- | :------------------ | :------------------------------------------------ |
+| `Container` | `data-dragging` | `"true" \| "false"` | Whether the container is currently being dragged. |
+| `Container` | `data-scope`    | `"drag-scroll"`     | Always set to `"drag-scroll"`.                    |
+| `Container` | `data-part`     | `"container"`       | Identifies the container part.                    |
+| `Prev`      | `data-disabled` | `"true" \| "false"` | Active when the button is logicaly disabled.      |
+| `Next`      | `data-disabled` | `"true" \| "false"` | Active when the button is logicaly disabled.      |
 
 ```css title="styles.css"
-[data-scope="drag-scroll"][data-part="root"][data-dragging="true"] {
-  cursor: grabbing;
-  user-select: none;
+[data-scope="drag-scroll"][data-part="container"][data-dragging="true"] {
+	cursor: grabbing;
+	user-select: none;
+}
+
+[data-scope="drag-scroll"][data-part="prev"][data-disabled="true"] {
+	opacity: 0.5;
+	pointer-events: none;
 }
 ```

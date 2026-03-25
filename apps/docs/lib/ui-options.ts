@@ -4,7 +4,15 @@ export type {
 	CarouselIndicatorProps,
 } from "@zayne-labs/ui-react/ui/carousel";
 
-export type { UseDragScrollProps } from "@zayne-labs/ui-react/ui/drag-scroll";
+export type {
+	UseDragScrollProps,
+	DragScrollRootProps,
+	DragScrollContainerProps,
+	DragScrollItemProps,
+	DragScrollPrevProps,
+	DragScrollNextProps,
+	DragScrollContextProps,
+} from "@zayne-labs/ui-react/ui/drag-scroll";
 
 export type {
 	UseDropZoneProps,

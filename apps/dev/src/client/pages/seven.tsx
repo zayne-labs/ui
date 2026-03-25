@@ -1,205 +1,211 @@
+import { Icon } from "@iconify/react";
 import { For, ForWithWrapper } from "@zayne-labs/ui-react/common/for";
 import { Card } from "@zayne-labs/ui-react/ui/card";
-import { useDragScroll } from "@zayne-labs/ui-react/ui/drag-scroll";
+import { DragScroll } from "@zayne-labs/ui-react/ui/drag-scroll";
 import { cnJoin } from "../../lib/utils/cn";
 
+const items = [
+	{ category: "Abstract", color: "from-indigo-500", title: "Midnight Flow" },
+	{ category: "Nature", color: "from-emerald-500", title: "Forest Deep" },
+	{ category: "Architecture", color: "from-amber-500", title: "Glass & Steel" },
+	{ category: "Minimal", color: "from-rose-500", title: "Soft Tones" },
+	{ category: "Tech", color: "from-cyan-500", title: "Data Streams" },
+	{ category: "Art", color: "from-violet-500", title: "Paint Over" },
+	{ category: "Space", color: "from-slate-700", title: "Outer Void" },
+	{ category: "Urban", color: "from-orange-500", title: "City Lights" },
+];
+
 function PageSeven() {
-	const { propGetters, useDragScrollStore } = useDragScroll<HTMLUListElement>();
-
-	/* eslint-disable react-hooks/hooks */
-	const canGoToPrev = useDragScrollStore((state) => state.canGoToPrev);
-	const canGoToNext = useDragScrollStore((state) => state.canGoToNext);
-	const isDragging = useDragScrollStore((state) => state.isDragging);
-	/* eslint-enable react-hooks/hooks */
-
 	return (
-		<main
-			className="flex min-h-screen flex-col items-center bg-gray-50/50 p-8 font-sans text-gray-900
-				selection:bg-indigo-100 selection:text-indigo-900"
-		>
-			<header className="text-center">
-				<h1
-					className="bg-linear-to-r from-indigo-600 to-violet-600 bg-clip-text text-5xl font-extrabold
-						tracking-tight text-transparent"
+		<div className="flex flex-col gap-12 text-slate-900">
+			<header className="flex flex-col gap-5">
+				<p
+					className="flex w-fit items-center gap-2 rounded-full border border-slate-200 bg-white px-3
+						py-1 text-[10px] font-black tracking-[0.2em] text-slate-500 uppercase shadow-xs"
 				>
-					Drag Scroll Demo
-				</h1>
-				<p className="mt-4 max-w-2xl text-lg text-gray-600">
-					Experience smooth horizontal scrolling with drag gestures, touch support, and snap physics.
+					Interaction Engine v1.0
 				</p>
+				<div className="flex flex-col gap-2">
+					<h1 className="text-4xl font-black tracking-tighter">Drag Scroll Canvas</h1>
+					<p className="max-w-xl text-lg font-medium text-slate-500">
+						A high-performance primitive for touch and mouse-based horizontal navigation with native
+						inertia and snap alignment.
+					</p>
+				</div>
 			</header>
 
 			<section
-				className="mt-12 max-w-7xl overflow-hidden rounded-3xl border border-white/50 bg-white/80 p-8
-					shadow-xl ring-1 ring-black/5 backdrop-blur-xl"
+				className="overflow-hidden rounded-4xl border border-slate-200 bg-white p-10 shadow-2xl
+					shadow-slate-200/50"
 			>
-				<div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-					<h2 className="text-2xl font-bold tracking-tight text-gray-800">Horizontal Gallery</h2>
+				<DragScroll.Root>
+					<header className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
+						<div className="flex flex-col gap-1">
+							<h2 className="text-xl font-bold tracking-tight">Media Content Shelf</h2>
+							<p className="text-sm font-medium text-slate-400">
+								Testing container snap & scroll-padding
+							</p>
+						</div>
 
-					<div className="flex gap-2">
-						<StatusPill label="Can Go Back" value={canGoToPrev} />
-						<StatusPill label="Dragging" value={isDragging} />
-						<StatusPill label="Can Go Next" value={canGoToNext} />
-					</div>
-				</div>
+						<DragScroll.Context>
+							{({ canGoToNext, canGoToPrev, isDragging }) => (
+								<div className="flex flex-wrap gap-2">
+									<Indicator active={canGoToPrev} label="Prev" />
+									<Indicator active={isDragging} label="Dragging" />
+									<Indicator active={canGoToNext} label="Next" />
+								</div>
+							)}
+						</DragScroll.Context>
+					</header>
 
-				<div className="group/container relative mt-8">
-					<button
-						type="button"
-						{...propGetters.getBackButtonProps({
-							className: `absolute top-1/2 -left-4 z-10 flex size-12 -translate-y-1/2 cursor-pointer
-								items-center justify-center rounded-full border border-gray-100 bg-white/90 text-xl
-								text-gray-700 shadow-[0_8px_30px_rgb(0,0,0,0.12)] backdrop-blur-sm transition-all
-								hover:scale-110 hover:bg-white disabled:pointer-events-none disabled:opacity-0`,
-						})}
+					<DragScroll.Prev
+						className="absolute top-1/2 -left-5 z-20 flex size-12 -translate-y-1/2 cursor-pointer
+							items-center justify-center rounded-2xl border border-slate-100 bg-white/90
+							text-slate-900 shadow-xl backdrop-blur-md transition-all hover:scale-110
+							active:scale-95 disabled:pointer-events-none disabled:opacity-0"
 					>
-						<svg
-							width="24"
-							height="24"
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="currentColor"
-							strokeWidth="2"
-							strokeLinecap="round"
-							strokeLinejoin="round"
-						>
-							<path d="m15 18-6-6 6-6" />
-						</svg>
-					</button>
+						<Icon className="size-6" icon="lucide:chevron-left" />
+					</DragScroll.Prev>
 
-					<ul
-						{...propGetters.getRootProps({
-							className:
-								"flex gap-6 overflow-x-auto scroll-smooth py-8 px-4 scrollbar-hidden data-[dragging=true]:cursor-grabbing mask-linear-fade",
-						})}
+					<DragScroll.Container
+						className="scrollbar-hidden flex items-stretch gap-6 overflow-x-auto scroll-smooth p-4
+							data-[dragging=true]:cursor-grabbing"
 					>
 						<For
-							each={[
-								{ color: "#ef4444", title: "Card 1" },
-								{ color: "#f97316", title: "Card 2" },
-								{ color: "#eab308", title: "Card 3" },
-								{ color: "#22c55e", title: "Card 4" },
-								{ color: "#06b6d4", title: "Card 5" },
-								{ color: "#3b82f6", title: "Card 6" },
-								{ color: "#8b5cf6", title: "Card 7" },
-								{ color: "#ec4899", title: "Card 8" },
-							]}
+							each={items}
 							renderItem={(item, index) => (
-								<Card.Root
-									as="li"
-									key={item.title}
-									{...propGetters.getItemProps({
-										className:
-											"group relative aspect-[4/3] w-[280px] shrink-0 cursor-grab select-none items-center justify-center rounded-2xl shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl active:cursor-grabbing",
-									})}
+								<DragScroll.Item
+									asChild={true}
+									className="group relative flex aspect-4/5 w-[280px] shrink-0 cursor-grab
+										flex-col justify-end overflow-hidden rounded-3xl border border-slate-100 p-8
+										transition-all duration-500 select-none hover:-translate-y-1 hover:shadow-2xl
+										active:cursor-grabbing"
 								>
-									{/* Background Gradient and Glass Overlay */}
-									<span
-										className="absolute inset-0 rounded-2xl opacity-90 transition-opacity
-											duration-300 group-hover:opacity-100"
-										style={{
-											background: `linear-gradient(135deg, ${item.color}, color-mix(in srgb, ${item.color}, black 20%))`,
-										}}
-									/>
-									<span
-										className="absolute inset-0 rounded-2xl bg-linear-to-br from-white/20
-											to-transparent"
-									/>
+									<Card.Root key={item.title}>
+										<div
+											className={cnJoin(
+												`absolute inset-0 bg-linear-to-br to-slate-900 opacity-90
+												transition-transform duration-700 group-hover:scale-110`,
+												item.color
+											)}
+										/>
+										<div
+											className="absolute inset-0 bg-slate-900/40 opacity-0 transition-opacity
+												duration-300 group-hover:opacity-100"
+										/>
 
-									<Card.Header className="relative flex flex-col items-center text-white">
-										<Card.Title
-											className="text-6xl font-black tracking-tighter opacity-90 drop-shadow-sm"
-										>
-											{index + 1}
-										</Card.Title>
-										<Card.Description
-											className="mt-2 text-lg font-medium tracking-wide text-white/90"
-										>
-											{item.title}
-										</Card.Description>
-									</Card.Header>
-								</Card.Root>
+										<Card.Header className="relative z-10 p-0 text-white">
+											<div
+												className="mb-2 w-fit rounded-full bg-white/20 px-2 py-0.5 text-[10px]
+													font-black tracking-widest uppercase backdrop-blur-md"
+											>
+												{item.category}
+											</div>
+											<Card.Title className="text-2xl/tight font-black tracking-tight">
+												{item.title}
+											</Card.Title>
+											<Card.Description className="mt-1 text-xs font-bold text-white/60">
+												Collection Item #{index + 1}
+											</Card.Description>
+										</Card.Header>
+									</Card.Root>
+								</DragScroll.Item>
 							)}
 						/>
-					</ul>
+					</DragScroll.Container>
 
-					<button
-						type="button"
-						{...propGetters.getNextButtonProps({
-							className: `absolute top-1/2 -right-4 z-10 flex size-12 -translate-y-1/2 cursor-pointer
-								items-center justify-center rounded-full border border-gray-100 bg-white/90 text-xl
-								text-gray-700 shadow-[0_8px_30px_rgb(0,0,0,0.12)] backdrop-blur-sm transition-all
-								hover:scale-110 hover:bg-white disabled:pointer-events-none disabled:opacity-0`,
-						})}
+					<DragScroll.Next
+						className="absolute top-1/2 -right-5 z-20 flex size-12 -translate-y-1/2 cursor-pointer
+							items-center justify-center rounded-2xl border border-slate-100 bg-white/90
+							text-slate-900 shadow-xl backdrop-blur-md transition-all hover:scale-110
+							active:scale-95 disabled:pointer-events-none disabled:opacity-0"
 					>
-						<svg
-							width="24"
-							height="24"
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="currentColor"
-							strokeWidth="2"
-							strokeLinecap="round"
-							strokeLinejoin="round"
-						>
-							<path d="m9 18 6-6-6-6" />
-						</svg>
-					</button>
-				</div>
+						<Icon className="size-6" icon="lucide:chevron-right" />
+					</DragScroll.Next>
+				</DragScroll.Root>
 			</section>
 
-			<section className="mx-auto mt-16 max-w-5xl">
-				<h2 className="mb-8 text-center text-2xl font-bold tracking-tight text-gray-800">
-					Key Features
-				</h2>
+			<section className="mt-8 flex flex-col gap-10">
+				<div className="flex flex-col gap-2">
+					<h2 className="text-xl font-bold tracking-tight">Internal Capabilities</h2>
+					<p className="text-sm font-medium text-slate-500">
+						Technical breakdown of the interaction store
+					</p>
+				</div>
 
 				<ForWithWrapper
-					className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
+					className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"
 					each={[
 						{
-							desc: "Intuitive drag gestures for all devices",
-							icon: "👆",
-							title: "Touch & Drag",
+							desc: "Optimized pointer event handlers for 1:1 movement tracking.",
+							icon: "lucide:mouse-pointer-2",
+							title: "High-Frequency Tracking",
 						},
-						{ desc: "Aligns perfectly to content items", icon: "🎯", title: "Snap Physics" },
-						{ desc: "Throttled events for 60fps animations", icon: "⚡", title: "Performance" },
-						{ desc: "Programmatic navigation support", icon: "🎮", title: "Control" },
-						{ desc: "Keyboard friendly with ARIA support", icon: "♿", title: "Accessible" },
-						{ desc: "Separated state logic for flexibility", icon: "📦", title: "Store-Based" },
+						{
+							desc: "Configurable snap points for precise item alignment after release.",
+							icon: "lucide:magnet",
+							title: "Magnetic Snapping",
+						},
+						{
+							desc: "Hardware accelerated transitions with configurable damping.",
+							icon: "lucide:zap",
+							title: "Inertial Physics",
+						},
+						{
+							desc: "External store access for custom navigation controls.",
+							icon: "lucide:gamepad-2",
+							title: "Remote Control",
+						},
+						{
+							desc: "Full keyboard navigation and ARIA-compliant focus management.",
+							icon: "lucide:accessibility",
+							title: "Semantic Access",
+						},
+						{
+							desc: "Pure headless logic separated from DOM-reliant layout.",
+							icon: "lucide:package",
+							title: "Logic Encapsulation",
+						},
 					]}
 					renderItem={(feature) => (
 						<li
+							className="group flex flex-col gap-5 rounded-3xl border border-slate-100 bg-white p-8
+								transition-all hover:border-indigo-200 hover:shadow-xl hover:shadow-indigo-500/5"
 							key={feature.title}
-							className="group relative overflow-hidden rounded-2xl bg-white p-6 shadow-sm ring-1
-								ring-gray-900/5 transition-all hover:shadow-md hover:ring-indigo-500/20"
 						>
-							<span className="mb-4 text-3xl">{feature.icon}</span>
-							<h3 className="mb-2 text-lg font-semibold text-gray-900">{feature.title}</h3>
-							<p className="text-sm text-gray-500">{feature.desc}</p>
+							<div
+								className="flex size-12 items-center justify-center rounded-2xl bg-slate-50
+									text-slate-400 transition-colors group-hover:bg-indigo-50
+									group-hover:text-indigo-600"
+							>
+								<Icon className="size-6" icon={feature.icon} />
+							</div>
+							<div className="flex flex-col gap-2">
+								<h3 className="font-bold">{feature.title}</h3>
+								<p className="text-sm/relaxed font-medium text-slate-500">{feature.desc}</p>
+							</div>
 						</li>
 					)}
 				/>
 			</section>
-		</main>
+		</div>
 	);
 }
 
-function StatusPill({ label, value }: { label: string; value: boolean }) {
+function Indicator({ active, label }: { active: boolean; label: string }) {
 	return (
-		<span
+		<div
 			className={cnJoin(
-				`flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium transition-colors
-				duration-300`,
-				value ?
-					"border-emerald-200 bg-emerald-50 text-emerald-700"
-				:	"border-gray-200 bg-gray-50 text-gray-400"
+				`flex items-center gap-2 rounded-lg border px-3 py-1.5 text-[10px] font-black tracking-widest
+				uppercase transition-all duration-300`,
+				active ?
+					"border-indigo-200 bg-indigo-50 text-indigo-700 shadow-sm"
+				:	"border-slate-100 bg-white text-slate-300"
 			)}
 		>
-			<span
-				className={`size-1.5 rounded-full ${value ? "animate-pulse bg-emerald-500" : "bg-gray-300"}`}
-			/>
-			<span className="tracking-wider uppercase">{label}</span>
-		</span>
+			<div className={cnJoin("size-1.5 rounded-full", active ? "bg-indigo-600" : "bg-slate-200")} />
+			{label}
+		</div>
 	);
 }
 

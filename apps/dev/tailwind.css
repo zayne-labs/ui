@@ -47,10 +47,11 @@
 	--color-sonner-error-text: hsl(358, 100%, 81%);
 	--color-sonner-error-border: hsl(357, 89%, 16%);
 
-	--nav-width: 82%;
+	--nav-width: 40%;
 
 	--animate-nav-show: nav-show 350ms ease;
 	--animate-nav-close: nav-close 500ms ease;
+	--animate-shine: shine 2s infinite;
 
 	@keyframes nav-show {
 		from {
@@ -67,6 +68,15 @@
 		}
 		to {
 			width: 0;
+		}
+	}
+
+	@keyframes shine {
+		0% {
+			transform: translateX(-100%);
+		}
+		100% {
+			transform: translateX(100%);
 		}
 	}
 }

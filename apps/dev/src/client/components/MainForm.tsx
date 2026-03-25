@@ -7,9 +7,9 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { shadcnButtonVariants } from "./shadcn-button";
 
-const zodSchema = z.object({
+const MainFormSchema = z.object({
 	files: z.file({ error: "Please upload a file" }).nullable(),
-	notifications: z.array(z.coerce.string()),
+	notifications: z.array(z.coerce.string<string>()),
 	password: z.string().min(8, "Password must be at least 8 characters"),
 	username: z.string().min(6, "Username must be at least 6 characters"),
 });
@@ -18,7 +18,7 @@ function MainForm() {
 	const form = useForm({
 		defaultValues: { notifications: [], password: "", username: "" },
 		mode: "onChange",
-		resolver: zodResolver(zodSchema),
+		resolver: zodResolver(MainFormSchema),
 	});
 
 	const onSubmit = form.handleSubmit((data) => console.info({ formData: data }));
@@ -27,79 +27,64 @@ function MainForm() {
 		<Form.Root
 			form={form}
 			onSubmit={(event) => void onSubmit(event)}
-			className="w-full max-w-md gap-8 rounded-xl bg-white p-8 shadow-lg"
+			className="w-full max-w-md gap-8 rounded-2xl border border-white/40 bg-white/70 p-8 shadow-2xl
+				shadow-indigo-500/10 backdrop-blur-xl"
 		>
-			<div className="text-center">
-				<h2 className="text-2xl font-bold tracking-tight text-gray-900">Welcome back</h2>
-				<p className="mt-2 text-sm text-gray-600">Please sign in to your account</p>
+			<div className="flex flex-col gap-1.5">
+				<h2
+					className="text-2xl font-bold tracking-tight text-slate-900 transition-colors
+						group-hover:text-indigo-600"
+				>
+					Account Setup
+				</h2>
+				<p className="text-sm text-slate-500">Enter your details to configure your profile</p>
 			</div>
 
 			<section className="flex flex-col gap-6">
 				<Form.Field control={form.control} name="username" className="gap-2">
-					<Form.Label className="text-sm font-medium text-gray-900">Username</Form.Label>
+					<Form.Label className="text-sm font-semibold text-slate-700">Username</Form.Label>
 					<Form.Input
-						className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900
-							placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20
-							focus:outline-none"
-						placeholder="Enter your username"
+						className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-slate-900
+							transition-all placeholder:text-slate-400 focus:border-indigo-500 focus:ring-4
+							focus:ring-indigo-500/10 focus:outline-none"
+						placeholder="johndoe"
 					/>
-
-					<Form.ErrorMessage />
+					<Form.ErrorMessage className="text-xs font-medium text-rose-500" />
 				</Form.Field>
 
 				<Form.Field control={form.control} name="password" className="gap-2">
-					<Form.Label className="text-sm font-medium text-gray-900">Password</Form.Label>
+					<Form.Label className="text-sm font-semibold text-slate-700">Password</Form.Label>
 					<Form.Input
 						type="password"
 						classNames={{
-							inputGroup: `w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900
-							placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20
-							focus:outline-none`,
+							inputGroup: `w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5
+							text-slate-900 transition-all placeholder:text-slate-400 focus:border-indigo-500
+							focus:ring-4 focus:ring-indigo-500/10 focus:outline-none`,
 						}}
 						placeholder="••••••••"
 					/>
-
-					<Form.ErrorMessage />
+					<Form.ErrorMessage className="text-xs font-medium text-rose-500" />
 				</Form.Field>
 
 				<Form.Field control={form.control} name="files" className="gap-2">
-					<Form.Label className="text-sm font-medium text-gray-900">Files</Form.Label>
+					<Form.Label className="text-sm font-semibold text-slate-700">Avatar Upload</Form.Label>
 					<Form.FieldBoundController
 						render={({ field }) => (
 							<DropZone.Root
-								// disabled={true}
 								onUpload={async (ctx) => {
 									const uploadPromises = ctx.fileStateArray.map(async (fileState) => {
-										// Simulate file upload with progress
 										const totalChunks = 10;
 										let uploadedChunks = 0;
-
-										// Simulate chunk upload with delays
 										for (let count = 0; count < totalChunks; count++) {
-											// Simulate network delay (100-300ms per chunk)
-											// eslint-disable-next-line no-await-in-loop -- allow
+											// eslint-disable-next-line no-await-in-loop
 											await new Promise((resolve) =>
-												setTimeout(resolve, Math.random() * 200 + 100)
+												setTimeout(resolve, Math.random() * 150 + 50)
 											);
-
-											// Update progress for this specific file
 											uploadedChunks++;
-
 											const progress = (uploadedChunks / totalChunks) * 100;
-
 											ctx.onProgress({ fileStateOrID: fileState, progress });
 										}
-
-										// ctx.onError({
-										// 	error: new DropZoneError({
-										// 		file: fileState.file,
-										// 		message: `File: ${fileState.file.name} upload did not finish successfully`,
-										// 	}),
-										// 	fileStateOrID: fileState,
-										// });
-
-										// Simulate server processing delay
-										await new Promise((resolve) => setTimeout(resolve, 500));
+										await new Promise((resolve) => setTimeout(resolve, 300));
 									});
 
 									await Promise.all(uploadPromises);
@@ -107,38 +92,26 @@ function MainForm() {
 								onFilesChange={(ctx) => {
 									field.onChange(ctx.fileStateArray[0]?.file);
 								}}
-								onValidationError={(ctx) => console.error(ctx.message)}
-								onValidationSuccess={(ctx) => console.info(ctx.message)}
-								multiple={true}
-								allowedFileTypes={["image/jpeg", "image/png", "image/jpg", "image/gif"]}
-								maxFileSize={{ mb: 7 }}
-								maxFileCount={2}
+								multiple={false}
+								allowedFileTypes={["image/jpeg", "image/png", "image/jpg"]}
+								maxFileSize={{ mb: 2 }}
 							>
 								<DropZone.Area
 									classNames={{
-										container: `flex w-full flex-col items-center justify-center rounded-lg
-										border-2 border-dashed border-gray-300 p-6 transition-colors
-										hover:border-blue-500 hover:bg-blue-50 data-drag-over:border-pink-600
-										data-drag-over:bg-pink-50`,
+										container: `flex w-full flex-col items-center justify-center rounded-xl
+										border-2 border-dashed border-slate-200 bg-slate-50/50 p-6 transition-all
+										hover:border-indigo-400 hover:bg-indigo-50/50
+										data-drag-over:border-indigo-600 data-drag-over:bg-indigo-50`,
 									}}
 								>
-									<svg
-										className="mb-2 size-8 text-gray-400"
-										fill="none"
-										stroke="currentColor"
-										viewBox="0 0 24 24"
+									<div
+										className="mb-3 flex size-12 items-center justify-center rounded-full
+											bg-white text-slate-400 shadow-sm ring-1 ring-slate-200"
 									>
-										<path
-											strokeLinecap="round"
-											strokeLinejoin="round"
-											strokeWidth="2"
-											d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-										/>
-									</svg>
-									<p className="text-sm font-medium text-gray-600">
-										Drop files here or click to upload
-									</p>
-									<p className="mt-1 text-xs text-gray-500">Supported files: PDF, DOC, DOCX</p>
+										<Icon icon="lucide:cloud-upload" className="size-6" />
+									</div>
+									<p className="text-sm font-semibold text-slate-900">Click to upload avatar</p>
+									<p className="mt-1 text-center text-xs text-slate-500">JPG, PNG up to 2MB</p>
 								</DropZone.Area>
 
 								<DropZone.FileList>
@@ -146,116 +119,94 @@ function MainForm() {
 										<DropZone.FileItem
 											key={ctx.fileState.id}
 											fileState={ctx.fileState}
-											className="flex-col p-3"
+											className="mt-2 flex-row items-center gap-3 rounded-xl border
+												border-slate-100 bg-white p-3 shadow-sm"
 										>
-											<div className="flex w-full items-center gap-2">
-												<DropZone.FileItemPreview className="size-10">
-													<DropZone.FileItemProgress variant="fill" />
-												</DropZone.FileItemPreview>
+											<DropZone.FileItemPreview
+												className="size-10 shrink-0 overflow-hidden rounded-lg"
+											>
+												<DropZone.FileItemProgress
+													variant="fill"
+													className="bg-indigo-600/20 text-indigo-700"
+												/>
+											</DropZone.FileItemPreview>
 
-												<DropZone.FileItemMetadata />
-
-												<DropZone.FileItemDelete
-													className={shadcnButtonVariants({
-														className: "size-7 shrink-0",
-														size: "icon",
-														variant: "ghost",
-													})}
-												>
-													<Icon icon="lucide:trash-2" className="size-full" />
-												</DropZone.FileItemDelete>
+											<div className="flex min-w-0 grow flex-col gap-1.5">
+												<DropZone.FileItemMetadata
+													className="truncate font-medium text-slate-900"
+												/>
+												<DropZone.FileItemProgress
+													variant="linear"
+													className="h-1.5 w-full overflow-hidden rounded-full bg-indigo-600
+														shadow-inner transition-all duration-300"
+												/>
 											</div>
 
-											{/* <DropZone.FileItemProgress variant="linear" /> */}
+											<DropZone.FileItemDelete
+												className={shadcnButtonVariants({
+													className: "size-8 shrink-0",
+													size: "icon",
+													variant: "ghost",
+												})}
+											>
+												<Icon icon="lucide:trash-2" className="size-4" />
+											</DropZone.FileItemDelete>
 										</DropZone.FileItem>
 									)}
 								</DropZone.FileList>
-
-								<DropZone.Context selector={({ errors }) => ({ errors })}>
-									{(ctx) => (
-										<ForWithWrapper
-											className="flex flex-col gap-1"
-											each={ctx.errors}
-											renderItem={(error) => (
-												<li
-													key={error.file.name}
-													className="flex items-center gap-1 text-xs text-red-600"
-													role="alert"
-												>
-													<Icon icon="lucide:circle-alert" className="size-3 shrink-0" />
-													<span>{error.message}</span>
-												</li>
-											)}
-										/>
-									)}
-								</DropZone.Context>
 							</DropZone.Root>
 						)}
 					/>
-
-					<Form.ErrorMessage />
+					<Form.ErrorMessage className="text-xs font-medium text-rose-500" />
 				</Form.Field>
 
-				<div className="space-y-4 rounded-lg border p-5">
+				<div className="flex flex-col gap-4 rounded-2xl border border-slate-100 bg-slate-50/50 p-6">
 					<div className="flex flex-col gap-1">
-						<h3 className="text-lg font-semibold">Notification Preferences</h3>
-						<p className="text-sm">Choose how you want to receive updates</p>
+						<h3 className="text-base font-bold text-slate-900">Notifications</h3>
+						<p className="text-xs text-slate-500">Stay updated with your account activity</p>
 					</div>
 
-					<div className="space-y-4">
-						<Form.Field
-							control={form.control}
-							name="notifications.0"
-							className="group flex-row items-start gap-4 rounded-md p-2"
-						>
-							<Form.Input
-								type="checkbox"
-								value="email"
-								className="mt-1 size-4 rounded-sm border-2"
-							/>
-							<div className="flex flex-1 flex-col gap-1">
-								<Form.Label className="text-sm font-medium">Email Notifications</Form.Label>
-								<span className="text-xs">
-									Get important updates and summaries delivered to your inbox
-								</span>
-								<Form.ErrorMessage />
-							</div>
-						</Form.Field>
-
-						<Form.Field
-							control={form.control}
-							name="notifications.1"
-							className="group flex-row items-start gap-4 rounded-md p-2"
-						>
-							<Form.Input type="checkbox" value="sms" className="mt-1 size-4 rounded-sm border-2" />
-							<div className="flex flex-1 flex-col gap-1">
-								<Form.Label className="text-sm font-medium">SMS Updates</Form.Label>
-								<span className="text-xs">
-									Receive time-sensitive notifications via text message
-								</span>
-								<Form.ErrorMessage />
-							</div>
-						</Form.Field>
-
-						<Form.Field
-							control={form.control}
-							name="notifications.2"
-							className="group flex flex-row items-start gap-4 rounded-md p-2"
-						>
-							<Form.Input
-								type="checkbox"
-								value="push"
-								className="mt-1 size-4 rounded-sm border-2"
-							/>
-							<div className="flex flex-1 flex-col gap-1">
-								<Form.Label className="text-sm font-medium">Push Notifications</Form.Label>
-								<span className="text-xs">
-									Get instant alerts directly on your device for real-time updates
-								</span>
-								<Form.ErrorMessage />
-							</div>
-						</Form.Field>
-					</div>
+					<ForWithWrapper
+						className="flex flex-col gap-3"
+						each={[
+							{
+								desc: "Weekly summaries and activity",
+								id: 0,
+								label: "Email Notifications",
+								value: "email",
+							},
+							{
+								desc: "Instant alerts on your device",
+								id: 1,
+								label: "Push Updates",
+								value: "push",
+							},
+						]}
+						renderItem={(opt) => (
+							<Form.Field
+								key={opt.id}
+								control={form.control}
+								name={`notifications.${opt.id}`}
+								className="group flex flex-row items-start gap-3 rounded-xl p-2 transition-colors
+									hover:bg-white"
+							>
+								<Form.Input
+									type="checkbox"
+									value={opt.value}
+									className="mt-1 size-4 rounded-sm border-slate-300 text-indigo-600
+										focus:ring-indigo-500"
+								/>
+								<div className="pointer-events-none flex flex-1 flex-col gap-0.5">
+									<Form.Label
+										className="text-sm/tight font-semibold tracking-tight text-slate-900"
+									>
+										{opt.label}
+									</Form.Label>
+									<span className="text-xs text-slate-500">{opt.desc}</span>
+								</div>
+							</Form.Field>
+						)}
+					/>
 				</div>
 
 				<Form.StateSubscribe
@@ -264,36 +215,57 @@ function MainForm() {
 						return (
 							<Form.Submit
 								disabled={formState.isSubmitting}
-								className="w-full rounded-lg bg-blue-600 px-5 py-3 text-sm font-semibold text-white
-									transition-colors hover:bg-blue-700 focus:ring-2 focus:ring-blue-500
-									focus:ring-offset-2 focus:outline-none disabled:opacity-50"
+								className="group relative w-full overflow-hidden rounded-xl bg-indigo-600 px-5
+									py-3.5 text-sm font-bold text-white transition-all hover:bg-indigo-700
+									hover:shadow-lg hover:shadow-indigo-500/25 active:scale-[0.98]
+									disabled:pointer-events-none disabled:opacity-50"
 							>
-								Sign in
+								<span className="relative z-10">Create Account</span>
+								<div
+									/* eslint-disable tailwindcss-better/enforce-consistent-class-order,tailwindcss-better/no-unknown-classes */
+									className="absolute inset-0 -translate-x-full bg-linear-to-r from-transparent
+										via-white/10 to-transparent group-hover:animate-shine"
+									/* eslint-enable tailwindcss-better/enforce-consistent-class-order,tailwindcss-better/no-unknown-classes */
+								/>
 							</Form.Submit>
 						);
 					}}
 				/>
 			</section>
 
-			<section className="mt-8 flex flex-col gap-4 rounded-lg bg-gray-50 p-4">
-				<h3 className="text-sm font-medium text-gray-900">Debug Information</h3>
+			<section
+				className="mt-2 flex flex-col gap-4 rounded-xl border border-indigo-50 bg-indigo-50/30 p-4"
+			>
+				<div className="flex items-center gap-2 text-indigo-900">
+					<Icon icon="lucide:terminal" className="size-4" />
+					<h3 className="text-xs font-bold tracking-wider uppercase">Debug State</h3>
+				</div>
 
-				<div className="space-y-2 text-sm text-gray-600">
+				<div
+					className="flex flex-col gap-1.5 rounded-lg border border-indigo-100/50 bg-white/50 p-3
+						font-mono text-[13px] text-indigo-700/80"
+				>
 					<Form.Watch
 						control={form.control}
-						name={["password", "username"]}
-						render={(value) => {
-							return (
-								<>
-									<p>
-										<span className="font-medium">Password:</span> {value[0]}
-									</p>
-									<p>
-										<span className="font-medium">Username:</span> {value[1]}
-									</p>
-								</>
-							);
-						}}
+						name={["username"]}
+						render={(value) => (
+							<p className="flex justify-between">
+								<span className="opacity-60">username:</span>
+								<span className="font-semibold">{value[0] || '""'}</span>
+							</p>
+						)}
+					/>
+					<Form.Watch
+						control={form.control}
+						name={["notifications"]}
+						render={(value) => (
+							<p className="flex justify-between">
+								<span className="opacity-60">notifications:</span>
+								<span className="font-semibold">
+									[{value[0].filter(Boolean).join(", ") || ""}]
+								</span>
+							</p>
+						)}
 					/>
 				</div>
 			</section>

@@ -12,44 +12,63 @@ const onClick = composeEventHandlers();
 
 function PageTwo() {
 	return (
-		<main>
+		<div className="flex flex-col gap-12">
 			<style>{scopedCss}</style>
+
+			<header className="flex flex-col gap-4">
+				<h1 className="text-3xl font-extrabold tracking-tight text-slate-900">Slots & Show Pattern</h1>
+				<p className="text-slate-500">
+					Testing complex component decomposition with slot-based architecture and conditional
+					rendering.
+				</p>
+			</header>
 
 			{/* eslint-disable-next-line tailwindcss-better/no-unknown-classes */}
 			<section className="wrapper-section">
 				<ParentOne>
-					<ParentOne.Slot name="header">ParentOne Header</ParentOne.Slot>
+					<ParentOne.Slot name="header">
+						<div className="font-bold text-indigo-600">ParentOne Header</div>
+					</ParentOne.Slot>
 
-					<ParentOne.Slot name="content">ParentOne Content</ParentOne.Slot>
+					<ParentOne.Slot name="content">
+						Standard content using the <code>getSlotMap</code> utility.
+					</ParentOne.Slot>
 
-					<ParentOne.Slot name="footer">ParentOne Footer</ParentOne.Slot>
+					<ParentOne.Slot name="footer">
+						<span className="text-xs tracking-widest text-slate-400 uppercase">Section Footer</span>
+					</ParentOne.Slot>
 
-					<p>This is a default Slot under Parent One</p>
+					<p className="text-sm text-slate-400 italic">Default Slot Content (Auto-filled)</p>
 				</ParentOne>
 
 				<ParentTwo>
-					<ParentTwo.Header>ParentTwo Header</ParentTwo.Header>
+					<ParentTwo.Header>
+						<span className="font-black text-rose-500">Modern Header Slot</span>
+					</ParentTwo.Header>
 
-					<ParentTwo.Content>ParentTwo Content</ParentTwo.Content>
+					<ParentTwo.Content>
+						Multi-slot extraction via <code>getMultipleSlots</code>.
+					</ParentTwo.Content>
 
-					<ParentTwo.Footer>ParentTwo Footer</ParentTwo.Footer>
+					<ParentTwo.Footer>
+						<div className="flex items-center gap-4">
+							<div className="size-2 rounded-full bg-slate-200" />
+							<div className="size-2 rounded-full bg-slate-200" />
+						</div>
+					</ParentTwo.Footer>
 
-					<p>This is a default Slot under Parent Two</p>
+					<p className="text-sm text-slate-400 italic">Regular Children Rendering</p>
 				</ParentTwo>
 			</section>
 
 			<Show.Root control="content">
 				<Show.Content when={false}>
 					<button type="button" onClick={onClick}>
-						Click me
+						Hidden Action
 					</button>
 				</Show.Content>
-
-				{/* <Show.Fallback>
-					<p>Default content</p>
-				</Show.Fallback> */}
 			</Show.Root>
-		</main>
+		</div>
 	);
 }
 
@@ -131,9 +150,7 @@ ParentTwoFooter.slotSymbol = Symbol("footer");
 const scopedCss = css`
 	@scope {
 		:scope {
-			padding: 2rem;
 			max-width: 1200px;
-			margin: 0 auto;
 		}
 
 		.wrapper-section {
@@ -143,10 +160,12 @@ const scopedCss = css`
 		}
 
 		.slot-container {
-			border: 2px solid #e2e8f0;
+			border: 1px solid #e2e8f0;
+			background: white;
 			text-align: center;
-			border-radius: 0.5rem;
-			padding: 1.5rem;
+			border-radius: 1rem;
+			padding: 2rem;
+			box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05);
 
 			h2 {
 				font-size: 1.7rem;

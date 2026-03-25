@@ -1,3 +1,4 @@
+import { Icon } from "@iconify/react";
 import { callApi } from "@zayne-labs/callapi";
 import { useConstant } from "@zayne-labs/toolkit-react";
 import type { InferProps } from "@zayne-labs/toolkit-react/utils";
@@ -34,32 +35,21 @@ function PageThree() {
 	const promise = useConstant(() => fetchRepos());
 
 	return (
-		<main
-			className="flex min-h-screen justify-center bg-slate-50/50
-				bg-[radial-gradient(ellipse_at_top_right,var(--tw-gradient-stops))] from-indigo-100/40
-				via-white to-purple-100/40 selection:bg-indigo-100 selection:text-indigo-900"
-		>
-			<div className="container px-4 py-12 sm:px-6 lg:px-8">
-				<header className="text-center">
-					<span
-						className="mb-3 inline-block rounded-full bg-indigo-50 px-4 py-1.5 text-sm font-semibold
-							text-indigo-600 shadow-sm ring-1 ring-indigo-500/10"
-					>
-						Portfolio
-					</span>
-					<h1
-						className="mb-4 bg-linear-to-r from-gray-900 via-indigo-800 to-gray-900 bg-clip-text
-							text-4xl font-extrabold tracking-tight text-transparent sm:text-5xl lg:text-6xl"
-					>
-						Open Source Projects
-					</h1>
-					<p className="mx-auto max-w-2xl text-lg text-gray-600">
-						Explore our collection of open source libraries, internal tools, and community
-						contributions.
-					</p>
-				</header>
+		<div className="flex flex-col gap-10">
+			<header className="flex flex-col gap-4">
+				<div className="inline-flex items-center gap-2 rounded-full border border-indigo-100 bg-indigo-50 px-3 py-1 text-xs font-bold tracking-wider text-indigo-700 uppercase">
+					<Icon icon="lucide:github" className="size-3" />
+					Open Source
+				</div>
+				<h1 className="text-4xl font-black tracking-tight text-slate-900 sm:text-5xl lg:text-6xl">
+					GitHub Repositories
+				</h1>
+				<p className="max-w-2xl text-lg/relaxed text-slate-600">
+					Showcasing the project portfolio of Zayne Labs. Fetching real-time data from the GitHub API.
+				</p>
+			</header>
 
-				<section className="mt-16">
+			<section>
 					<Await.Root promise={promise}>
 						<Await.Pending>
 							<LoadingSpinner />
@@ -119,8 +109,7 @@ function PageThree() {
 						</Await.Error>
 					</Await.Root>
 				</section>
-			</div>
-		</main>
+		</div>
 	);
 }
 
@@ -223,7 +212,7 @@ function RepoCard(props: RepoCardProps) {
 					group-hover:bg-indigo-50/30"
 			>
 				<div className="flex w-full items-center justify-between text-xs font-medium text-gray-500">
-					<div className="flex items-center space-x-4">
+					<div className="flex items-center gap-4">
 						<span className="flex items-center transition-colors group-hover:text-indigo-600">
 							<svg className="mr-1.5 size-4" fill="currentColor" viewBox="0 0 24 24">
 								<path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
@@ -318,7 +307,7 @@ function LoadingSpinner() {
 						<Skeleton className="size-8 rounded-full" />
 					</div>
 					<Skeleton className="h-4 w-1/4" />
-					<div className="space-y-2 py-2">
+					<div className="flex flex-col gap-2 py-2">
 						<Skeleton className="h-4 w-full" />
 						<Skeleton className="h-4 w-5/6" />
 						<Skeleton className="h-4 w-4/6" />

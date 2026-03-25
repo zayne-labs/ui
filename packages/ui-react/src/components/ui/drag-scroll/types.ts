@@ -4,30 +4,46 @@ import type { createDragScrollStore } from "./drag-scroll-store";
 
 type RecordForDataAttr = Record<`data-${string}`, unknown>;
 
-// eslint-disable-next-line ts-eslint/consistent-type-definitions -- ignore
-export interface PartProps<TElement extends HTMLElement> {
-	backButton: {
-		input: PartProps<TElement>["backButton"]["output"];
-		output: InferProps<"button"> & RecordForDataAttr;
+type SharedInputProps = {
+	/**
+	 * Set to `true` to disable the default styling
+	 */
+	unstyled?: boolean;
+};
+
+/* eslint-disable perfectionist/sort-intersection-types -- I need non-stand props to come first */
+export type PartProps<TContainerElement extends HTMLElement = HTMLElement> = {
+	container: {
+		input: PartProps<TContainerElement>["container"]["output"] & SharedInputProps;
+		output: RecordForDataAttr & InferProps<TContainerElement>;
 	};
 	item: {
-		input: PartProps<TElement>["item"]["output"];
+		input: PartProps<TContainerElement>["item"]["output"] & SharedInputProps;
 		output: InferProps<HTMLElement> & RecordForDataAttr;
 	};
 	nextButton: {
-		input: PartProps<TElement>["nextButton"]["output"];
-		output: InferProps<"button"> & RecordForDataAttr;
+		input: PartProps<TContainerElement>["nextButton"]["output"] & SharedInputProps;
+		output: RecordForDataAttr & InferProps<"button">;
+	};
+	prevButton: {
+		input: PartProps<TContainerElement>["prevButton"]["output"] & SharedInputProps;
+		output: RecordForDataAttr & InferProps<"button">;
 	};
 	root: {
-		input: PartProps<TElement>["root"]["output"];
-		output: InferProps<TElement> & RecordForDataAttr & { ref?: React.Ref<TElement> };
+		input: PartProps<TContainerElement>["root"]["output"] & SharedInputProps;
+		output: RecordForDataAttr & InferProps<"div">;
 	};
-}
+};
+/* eslint-enable perfectionist/sort-intersection-types -- I need non-stand props to come first */
 
-export type DragScrollPropGetters<TElement extends HTMLElement> = {
-	[Key in keyof PartProps<TElement> as `get${Capitalize<Key>}Props`]: (
-		props?: PartProps<TElement>[Key]["input"]
-	) => PartProps<TElement>[Key]["output"];
+export type DragScrollPropGetters<TContainerElement extends HTMLElement = HTMLElement> = {
+	[Key in keyof PartProps<TContainerElement> as `get${Capitalize<Key>}Props`]: (
+		props?: PartProps<TContainerElement>[Key]["input"]
+	) => PartProps<TContainerElement>[Key]["output"];
+};
+
+export type PartInputProps<TContainerElement extends HTMLElement = HTMLElement> = {
+	[Key in keyof PartProps<TContainerElement>]: PartProps<TContainerElement>[Key]["input"];
 };
 
 export type DragScrollState = {
@@ -39,7 +55,7 @@ export type DragScrollState = {
 	isDragging: boolean;
 };
 
-export type DragScrollActions<TElement extends HTMLElement> = {
+export type DragScrollActions = {
 	actions: {
 		cleanupDragListeners: () => void;
 		goToNext: () => void;
@@ -49,18 +65,14 @@ export type DragScrollActions<TElement extends HTMLElement> = {
 		handleMouseUpOrLeave: () => void;
 		handleScroll: () => void;
 		initializeResizeObserver: () => (() => void) | undefined;
-		setContainerRef: (element: TElement | null) => void;
+		setContainerRef: (element: HTMLElement | null) => void;
 		updateScrollState: () => void;
 	};
 };
 
-export type DragScrollStore<TElement extends HTMLElement> = DragScrollActions<TElement> & DragScrollState;
+export type DragScrollStore = DragScrollActions & DragScrollState;
 
 export type UseDragScrollProps = {
-	/**
-	 * Custom class names for the root container and items
-	 */
-	classNames?: { base?: string; item?: string };
 	/**
 	 * Whether to disable the internal state subscription for setting things like data attributes
 	 * - This is useful if you want to subscribe to the state yourself
@@ -92,12 +104,12 @@ export type UseDragScrollProps = {
 	usage?: "allScreens" | "desktopOnly" | "mobileAndTabletOnly";
 };
 
-export type UseDragScrollResult<TElement extends HTMLElement> = Pick<
+export type UseDragScrollResult<TContainerElement extends HTMLElement> = Pick<
 	UseDragScrollProps,
 	"disableInternalStateSubscription"
 > & {
-	containerRef: React.RefObject<TElement | null>;
-	propGetters: DragScrollPropGetters<TElement>;
-	storeApi: ReturnType<typeof createDragScrollStore<TElement>>;
+	containerRef: React.RefObject<TContainerElement | null>;
+	propGetters: DragScrollPropGetters<TContainerElement>;
+	storeApi: ReturnType<typeof createDragScrollStore>;
 	useDragScrollStore: typeof useDragScrollStoreContext;
 };

@@ -90,7 +90,7 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 	);
 	/* eslint-enable react-hooks/hooks -- ignore */
 
-	const getContainerProps: UseDropZoneResult["propGetters"]["getContainerProps"] = useCallback(
+	const getContainerProps: DropZonePropGetters["getContainerProps"] = useCallback(
 		(innerProps) => {
 			const { unstyled = globalUnstyled, ...restOfInnerProps } = innerProps;
 
@@ -151,7 +151,7 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 		actions.setInputRef(node);
 	});
 
-	const getInputProps: UseDropZoneResult["propGetters"]["getInputProps"] = useCallback(
+	const getInputProps: DropZonePropGetters["getInputProps"] = useCallback(
 		(innerProps) => {
 			const isDisabled = innerProps.disabled ?? disabled;
 
@@ -182,7 +182,7 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 		]
 	);
 
-	const getTriggerProps: UseDropZoneResult["propGetters"]["getTriggerProps"] = useCallback(
+	const getTriggerProps: DropZonePropGetters["getTriggerProps"] = useCallback(
 		(innerProps) => {
 			const isDisabled = innerProps.disabled ?? disabled;
 
@@ -198,7 +198,7 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 		[actions.openFilePicker, disabled]
 	);
 
-	const getFileListProps: UseDropZoneResult["propGetters"]["getFileListProps"] = useCallback(
+	const getFileListProps: DropZonePropGetters["getFileListProps"] = useCallback(
 		(innerProps) => {
 			const { orientation = "vertical", unstyled = globalUnstyled, ...restOfInnerProps } = innerProps;
 
@@ -218,7 +218,7 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 		[globalUnstyled]
 	);
 
-	const getFileItemProps: UseDropZoneResult["propGetters"]["getFileItemProps"] = useCallback(
+	const getFileItemProps: DropZonePropGetters["getFileItemProps"] = useCallback(
 		(innerProps) => {
 			const { unstyled = globalUnstyled, ...restOfInnerProps } = innerProps;
 
@@ -236,32 +236,31 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 		[globalUnstyled]
 	);
 
-	const getFileItemProgressProps: UseDropZoneResult["propGetters"]["getFileItemProgressProps"] =
-		useCallback(
-			(innerProps) => {
-				const { unstyled = globalUnstyled, variant = "linear", ...restOfInnerProps } = innerProps;
+	const getFileItemProgressProps: DropZonePropGetters["getFileItemProgressProps"] = useCallback(
+		(innerProps) => {
+			const { unstyled = globalUnstyled, variant = "linear", ...restOfInnerProps } = innerProps;
 
-				return {
-					...getDropZoneScopeAttrs("file-item-progress"),
-					role: "progressbar",
-					...restOfInnerProps,
-					...(!unstyled && {
-						className: cnMerge(
-							"inline-flex",
-							variant === "circular" && "absolute top-1/2 left-1/2 -translate-1/2",
-							variant === "fill"
-								&& `absolute inset-0 bg-zu-primary/50 transition-[clip-path] duration-300 ease-linear [clip-path:var(--clip-path)]`,
-							variant === "linear"
-								&& "relative h-1.5 w-full overflow-hidden rounded-full bg-zu-primary/20",
-							restOfInnerProps.className
-						),
-					}),
-				};
-			},
-			[globalUnstyled]
-		);
+			return {
+				...getDropZoneScopeAttrs("file-item-progress"),
+				role: "progressbar",
+				...restOfInnerProps,
+				...(!unstyled && {
+					className: cnMerge(
+						"inline-flex",
+						variant === "circular" && "absolute top-1/2 left-1/2 -translate-1/2",
+						variant === "fill"
+							&& `absolute inset-0 bg-zu-primary/50 transition-[clip-path] duration-300 ease-linear [clip-path:var(--clip-path)]`,
+						variant === "linear"
+							&& "relative h-1.5 w-full overflow-hidden rounded-full bg-zu-primary/20",
+						restOfInnerProps.className
+					),
+				}),
+			};
+		},
+		[globalUnstyled]
+	);
 
-	const getFileItemDeleteProps: UseDropZoneResult["propGetters"]["getFileItemDeleteProps"] = useCallback(
+	const getFileItemDeleteProps: DropZonePropGetters["getFileItemDeleteProps"] = useCallback(
 		(innerProps) => {
 			const { fileStateOrID, ...restOfInnerProps } = innerProps;
 
@@ -281,42 +280,40 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 		[actions, disabled]
 	);
 
-	const getFileItemPreviewProps: UseDropZoneResult["propGetters"]["getFileItemPreviewProps"] =
-		useCallback(
-			(innerProps) => {
-				const { unstyled = globalUnstyled, ...restOfInnerProps } = innerProps;
+	const getFileItemPreviewProps: DropZonePropGetters["getFileItemPreviewProps"] = useCallback(
+		(innerProps) => {
+			const { unstyled = globalUnstyled, ...restOfInnerProps } = innerProps;
 
-				return {
-					...getDropZoneScopeAttrs("file-item-preview"),
-					...restOfInnerProps,
-					...(!unstyled && {
-						className: cnMerge(
-							`relative flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-md bg-zu-accent/50 [&>svg]:size-10`,
-							innerProps.className
-						),
-					}),
-				};
-			},
-			[globalUnstyled]
-		);
+			return {
+				...getDropZoneScopeAttrs("file-item-preview"),
+				...restOfInnerProps,
+				...(!unstyled && {
+					className: cnMerge(
+						`relative flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-md bg-zu-accent/50 [&>svg]:size-10`,
+						innerProps.className
+					),
+				}),
+			};
+		},
+		[globalUnstyled]
+	);
 
-	const getFileItemMetadataProps: UseDropZoneResult["propGetters"]["getFileItemMetadataProps"] =
-		useCallback(
-			(innerProps) => {
-				const { unstyled = globalUnstyled, ...restOfInnerProps } = innerProps;
+	const getFileItemMetadataProps: DropZonePropGetters["getFileItemMetadataProps"] = useCallback(
+		(innerProps) => {
+			const { unstyled = globalUnstyled, ...restOfInnerProps } = innerProps;
 
-				return {
-					...getDropZoneScopeAttrs("file-item-metadata"),
-					...restOfInnerProps,
-					...(!unstyled && {
-						className: cnMerge("flex min-w-0 grow flex-col", innerProps.className),
-					}),
-				};
-			},
-			[globalUnstyled]
-		);
+			return {
+				...getDropZoneScopeAttrs("file-item-metadata"),
+				...restOfInnerProps,
+				...(!unstyled && {
+					className: cnMerge("flex min-w-0 grow flex-col", innerProps.className),
+				}),
+			};
+		},
+		[globalUnstyled]
+	);
 
-	const getFileItemClearProps: UseDropZoneResult["propGetters"]["getFileItemClearProps"] = useCallback(
+	const getFileItemClearProps: DropZonePropGetters["getFileItemClearProps"] = useCallback(
 		(innerProps) => {
 			const isDisabled = innerProps.disabled ?? disabled;
 

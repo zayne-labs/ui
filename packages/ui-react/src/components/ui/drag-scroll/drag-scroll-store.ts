@@ -9,12 +9,10 @@ type RequiredUseDragScrollProps = {
 
 type InitStoreValues = Pick<RequiredUseDragScrollProps, "orientation" | "scrollAmount" | "usage">;
 
-export const createDragScrollStore = <TElement extends HTMLElement = HTMLElement>(
-	initStoreValues: InitStoreValues
-) => {
+export const createDragScrollStore = (initStoreValues: InitStoreValues) => {
 	const { orientation = "horizontal", scrollAmount = "item", usage = "allScreens" } = initStoreValues;
 
-	const containerRef: React.RefObject<TElement | null> = {
+	const containerRef: React.RefObject<HTMLElement | null> = {
 		current: null,
 	};
 
@@ -36,7 +34,7 @@ export const createDragScrollStore = <TElement extends HTMLElement = HTMLElement
 	};
 
 	// == Calculate scroll amount based on orientation and settings
-	const getScrollAmount = (container: TElement): number => {
+	const getScrollAmount = (container: HTMLElement): number => {
 		if (isNumber(scrollAmount)) {
 			return scrollAmount;
 		}
@@ -52,7 +50,7 @@ export const createDragScrollStore = <TElement extends HTMLElement = HTMLElement
 			:	firstChild.offsetWidth;
 	};
 
-	const store = createStore<DragScrollStore<TElement>>((set, get) => ({
+	const store = createStore<DragScrollStore>((set, get) => ({
 		canGoToNext: true,
 		canGoToPrev: false,
 		isDragging: false,
@@ -192,7 +190,7 @@ export const createDragScrollStore = <TElement extends HTMLElement = HTMLElement
 			},
 
 			setContainerRef: (element) => {
-				containerRef.current = element;
+				containerRef.current = element as HTMLElement;
 
 				if (!element) return;
 
