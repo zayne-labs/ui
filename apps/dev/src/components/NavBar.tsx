@@ -2,7 +2,7 @@ import { Icon } from "@iconify/react";
 import { useToggle } from "@zayne-labs/toolkit-react";
 import { ForWithWrapper } from "@zayne-labs/ui-react/common/for";
 import { Presence } from "@zayne-labs/ui-react/common/presence";
-import { cnMerge } from "../../lib/utils/cn";
+import { cnMerge } from "../lib/utils/cn";
 import { dashboardLinkItems } from "./constants";
 
 export function NavBar() {
@@ -76,8 +76,8 @@ function MobileNavigation(props: MobileNavProps) {
 			present={isNavShow}
 			variant="transition"
 			className={cnMerge(
-				`z-40 transition-[width] duration-500 ease-in-out data-[transition=active]:w-(--nav-width)
-				data-[transition=inactive]:w-0 data-[transition=inactive]:duration-350`
+				`z-40 transition-[width] duration-500 ease-in-out data-[transition-phase=enter]:w-(--nav-width)
+				data-[transition-phase=exit]:w-0 data-[transition-phase=exit]:duration-350`
 			)}
 		>
 			<section
@@ -91,16 +91,16 @@ function MobileNavigation(props: MobileNavProps) {
 					element.closest("a") && toggleNavShow();
 				}}
 			>
-				<div className="mb-8 px-8">
-					<div className="mb-6 flex h-px w-8 bg-indigo-500" />
-					<span className="text-[10px] font-black tracking-[0.4em] text-white/30 uppercase">
+				<header className="px-8">
+					<div className="flex h-px w-8 bg-indigo-500" />
+					<p className="mt-6 text-[10px] font-black tracking-[0.4em] text-white/30 uppercase">
 						Workspace
-					</span>
-				</div>
+					</p>
+				</header>
 
 				<ForWithWrapper
 					as="nav"
-					className="flex flex-col gap-1.5 px-4 text-nowrap"
+					className="mt-8 flex flex-col gap-1.5 px-4 text-nowrap"
 					each={dashboardLinkItems}
 					renderItem={(item) => {
 						const isActive = currentPath === item.link;
@@ -137,12 +137,12 @@ function MobileNavigation(props: MobileNavProps) {
 					}}
 				/>
 
-				<div className="mt-12 border-t border-white/5 p-8">
-					<div className="flex items-center gap-3 opacity-40">
-						<div className="size-2 animate-pulse rounded-full bg-emerald-500" />
-						<span className="text-[10px] font-bold tracking-widest uppercase">Live System</span>
-					</div>
-				</div>
+				<hr className="mt-12 border-t border-white/5" />
+
+				<footer className="flex items-center gap-3 p-8 opacity-40">
+					<span className="size-2 animate-pulse rounded-full bg-emerald-500" />
+					<p className="text-[10px] font-bold tracking-widest uppercase">Live System</p>
+				</footer>
 			</section>
 		</Presence>
 	);

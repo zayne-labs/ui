@@ -49,20 +49,19 @@ function Teleport(props: TeleportProps) {
 		}
 
 		const tempWrapper = document.createElement("div");
-		tempWrapper.id = TELEPORT_KEY;
+		tempWrapper.dataset.id = TELEPORT_KEY;
 		tempWrapper.style.display = "contents";
 
 		destination?.insertAdjacentElement(insertPosition, tempWrapper);
 
-		const timeoutId = setTimeout(() => {
-			tempWrapper.replaceWith(...tempWrapper.children);
-		}, 0);
+		// const timeoutId = setTimeout(() => {
+		// 	tempWrapper.replaceWith(...tempWrapper.children);
+		// }, 0);
 
 		stableUpdatePortalContainer(tempWrapper);
 
 		return () => {
 			tempWrapper.remove();
-			clearTimeout(timeoutId);
 		};
 	}, [to, insertPosition, stableUpdatePortalContainer]);
 

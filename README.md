@@ -1,5 +1,9 @@
 # @zayne-labs/ui
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/zayne-labs/ui/refs/heads/main/apps/docs/public/logo.png" alt="zayne ui logo" width="80" />
+</p>
+
 Composable, headless UI components and utilities built for flexibility and great developer experience. Currently supports React, with more frameworks coming soon.
 
 ## Features

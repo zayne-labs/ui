@@ -1,5 +1,6 @@
+import { useLocationState } from "@zayne-labs/toolkit-react";
 import { Switch } from "@zayne-labs/ui-react/common/switch";
-import { DevLayout } from "./components/DevLayout";
+import { BaseLayout } from "./components/BaseLayout";
 import { PageFive } from "./pages/five";
 import { PageFour } from "./pages/four";
 import { PageOne } from "./pages/one";
@@ -9,10 +10,10 @@ import { PageThree } from "./pages/three";
 import { PageTwo } from "./pages/two";
 
 function App() {
-	const pathname = globalThis.location.pathname;
+	const [pathname] = useLocationState((state) => state.pathname);
 
 	return (
-		<DevLayout>
+		<BaseLayout>
 			<Switch.Root value={pathname}>
 				<Switch.Match when="/one">
 					<PageOne />
@@ -46,8 +47,8 @@ function App() {
 					<PageOne />
 				</Switch.Default>
 			</Switch.Root>
-		</DevLayout>
+		</BaseLayout>
 	);
 }
 
-export default App;
+export { App };

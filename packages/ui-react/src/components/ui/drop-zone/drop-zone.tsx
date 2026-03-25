@@ -14,11 +14,13 @@ import {
 	type AnyFunction,
 	type SelectorFn,
 	type UnionDiscriminator,
+	type UnionToIntersection,
 } from "@zayne-labs/toolkit-type-helpers";
 import { useMemo } from "react";
 import { For } from "@/components/common/for";
 import { Presence } from "@/components/common/presence";
 import { Slot } from "@/components/common/slot";
+import { Switch } from "@/components/common/switch";
 import { cnMerge } from "@/lib/utils/cn";
 import {
 	DropZoneRootContextProvider,
@@ -307,14 +309,27 @@ export function DropZoneFileItemDelete(props: DropZoneFileItemDeleteProps) {
 	);
 }
 
+type StrictExtract<TUnion, TPick extends TUnion> = Extract<TUnion, TPick>;
+
 export type DropZoneFileItemProgressProps = {
 	asChild?: boolean;
-	classNames?: {
-		circular?: { root?: string; svgCircleOne?: string; svgCircleTwo?: string; svgRoot?: string };
-	};
 	forceMount?: boolean;
 	size?: number;
-} & PartInputProps["fileItemProgress"];
+} & PartInputProps["fileItemProgress"]
+	& (
+		| {
+				classNames?: { svgCircleOne?: string; svgCircleTwo?: string; svgRoot?: string };
+				variant: StrictExtract<PartInputProps["fileItemProgress"]["variant"], "circular">;
+		  }
+		| {
+				classNames?: { track?: string };
+				variant: StrictExtract<PartInputProps["fileItemProgress"]["variant"], "fill">;
+		  }
+		| {
+				classNames?: { track?: string };
+				variant?: StrictExtract<PartInputProps["fileItemProgress"]["variant"], "linear">;
+		  }
+	);
 
 export function DropZoneFileItemProgress<TElement extends React.ElementType = "span">(
 	props: PolymorphicPropsStrict<TElement, DropZoneFileItemProgressProps>
@@ -323,12 +338,16 @@ export function DropZoneFileItemProgress<TElement extends React.ElementType = "s
 		as: Element = "span",
 		asChild,
 		className,
-		classNames,
+		classNames: classNamesProp,
 		forceMount = false,
 		size = 40,
 		variant = "linear",
 		...restOfProps
 	} = props;
+
+	const classNames = classNamesProp as
+		| UnionToIntersection<NonNullable<typeof classNamesProp>>
+		| undefined;
 
 	const fileItemContextValue = useFileItemContext();
 
@@ -340,100 +359,88 @@ export function DropZoneFileItemProgress<TElement extends React.ElementType = "s
 		return null;
 	}
 
-	const currentProgress = fileState.progress;
-
-	const shouldRender = forceMount || fileState.progress !== 100;
-
-	if (!shouldRender) {
-		return null;
-	}
-
 	const Component = asChild ? Slot.Root : Element;
 
 	const componentProps = propGetters.getFileItemProgressProps({ variant, ...restOfProps });
 
-	switch (variant) {
-		case "circular": {
-			const circumference = 2 * Math.PI * ((size - 4) / 2);
-			const strokeDashoffset = circumference - (currentProgress / 100) * circumference;
+	return (
+		<Presence
+			present={fileState.progress !== 100}
+			forceMount={forceMount}
+			className="data-[animation-phase=exit]:animate-progress-out"
+		>
+			<Component className={cnMerge("inline-block", className)} {...componentProps}>
+				<Switch.Root>
+					<Switch.Match when={variant === "circular"}>
+						{() => {
+							const circumference = 2 * Math.PI * ((size - 4) / 2);
+							const strokeDashoffset = circumference - (fileState.progress / 100) * circumference;
 
-			return (
-				<Component className={cnMerge(className, classNames?.circular?.root)} {...componentProps}>
-					<svg
-						className={cnMerge("-rotate-90", classNames?.circular?.svgRoot)}
-						width={size}
-						height={size}
-						viewBox={`0 0 ${size} ${size}`}
-						fill="none"
-						stroke="currentColor"
-					>
-						<circle
-							className={cnMerge("text-zu-primary/20", classNames?.circular?.svgCircleOne)}
-							strokeWidth="2"
-							cx={size / 2}
-							cy={size / 2}
-							r={(size - 4) / 2}
-						/>
-						<circle
+							return (
+								<svg
+									className={cnMerge("-rotate-90", classNames?.svgRoot)}
+									width={size}
+									height={size}
+									viewBox={`0 0 ${size} ${size}`}
+									fill="none"
+									stroke="currentColor"
+								>
+									<circle
+										className={cnMerge("text-zu-primary/20", classNames?.svgCircleOne)}
+										strokeWidth="2"
+										cx={size / 2}
+										cy={size / 2}
+										r={(size - 4) / 2}
+									/>
+									<circle
+										className={cnMerge(
+											"text-zu-primary transition-[stroke-dashoffset] duration-300 ease-linear",
+											classNames?.svgCircleTwo
+										)}
+										strokeWidth="2"
+										strokeLinecap="round"
+										strokeDasharray={2 * Math.PI * ((size - 4) / 2)}
+										strokeDashoffset={strokeDashoffset}
+										cx={size / 2}
+										cy={size / 2}
+										r={(size - 4) / 2}
+									/>
+								</svg>
+							);
+						}}
+					</Switch.Match>
+					<Switch.Match when={variant === "fill"}>
+						<span
 							className={cnMerge(
-								"text-zu-primary transition-[stroke-dashoffset] duration-300 ease-linear",
-								classNames?.circular?.svgCircleTwo
+								`size-full bg-zu-primary/50 transition-[clip-path] duration-300 ease-linear
+								[clip-path:var(--clip-path)]`,
+								classNames?.track
 							)}
-							strokeWidth="2"
-							strokeLinecap="round"
-							strokeDasharray={circumference}
-							strokeDashoffset={strokeDashoffset}
-							cx={size / 2}
-							cy={size / 2}
-							r={(size - 4) / 2}
+							style={
+								{
+									"--clip-path": `inset(${100 - fileState.progress}% 0% 0% 0%)`,
+								} satisfies CssWithCustomProperties as CssWithCustomProperties
+							}
 						/>
-					</svg>
-				</Component>
-			);
-		}
-
-		case "fill": {
-			const topInset = 100 - currentProgress;
-
-			return (
-				<Component
-					className={className}
-					{...componentProps}
-					style={
-						{
-							"--clip-path": `inset(${topInset}% 0% 0% 0%)`,
-							...componentProps.style,
-						} satisfies CssWithCustomProperties as CssWithCustomProperties
-					}
-				/>
-			);
-		}
-
-		case "linear": {
-			return (
-				<Component
-					className={cnMerge(
-						"inline-block size-full grow translate-x-(--translate-distance) bg-zu-primary transition-transform duration-300 ease-linear",
-						className
-					)}
-					{...componentProps}
-					style={
-						{
-							"--translate-distance": `-${100 - currentProgress}%`,
-							...componentProps.style,
-						} satisfies CssWithCustomProperties as CssWithCustomProperties
-					}
-				>
-					<span />
-				</Component>
-			);
-		}
-
-		default: {
-			variant satisfies never;
-			return null;
-		}
-	}
+					</Switch.Match>
+					<Switch.Match when={variant === "linear"}>
+						<span
+							className={cnMerge(
+								`inline-block size-full grow translate-x-(--translate-distance) bg-zu-primary
+								transition-transform duration-300 ease-linear`,
+								classNames?.track
+							)}
+							style={
+								{
+									"--translate-distance": `-${100 - fileState.progress}%`,
+								} satisfies CssWithCustomProperties as CssWithCustomProperties
+							}
+						/>
+					</Switch.Match>
+				</Switch.Root>
+			</Component>
+		</Presence>
+	);
 }
 
 type NodeCtx<TElement extends React.ElementType> = {

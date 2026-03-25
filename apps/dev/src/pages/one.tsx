@@ -33,15 +33,16 @@ function PageOne() {
 			</header>
 
 			<section
-				className="flex flex-col gap-10 rounded-4xl border border-dashed border-slate-200
+				className="flex flex-col items-center gap-10 rounded-4xl border border-dashed border-slate-200
 					bg-slate-50/30 p-12"
 			>
-				<div className="flex flex-col gap-2">
+				<div className="flex flex-col gap-2 text-center">
 					<h3 className="text-sm font-black tracking-[0.3em] text-slate-400 uppercase">
 						Current Focus
 					</h3>
 					<p className="text-xl font-bold text-slate-700">Refining the MainForm component</p>
 				</div>
+
 				<MainForm />
 			</section>
 		</div>

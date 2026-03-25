@@ -7,7 +7,7 @@ import { ForWithWrapper } from "@zayne-labs/ui-react/common/for";
 import { Card } from "@zayne-labs/ui-react/ui/card";
 import { cache } from "react";
 import { tv, type VariantProps } from "tailwind-variants";
-import { cnMerge } from "../../lib/utils/cn";
+import { cnMerge } from "../lib/utils/cn";
 
 type GitHubRepoDetails = {
 	description: string | null;

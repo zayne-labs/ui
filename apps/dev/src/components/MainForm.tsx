@@ -89,6 +89,9 @@ function MainForm() {
 
 									await Promise.all(uploadPromises);
 								}}
+								onValidationError={(ctx) => {
+									form.setError("files", { message: ctx.message });
+								}}
 								onFilesChange={(ctx) => {
 									field.onChange(ctx.fileStateArray[0]?.file);
 								}}
@@ -104,13 +107,15 @@ function MainForm() {
 										data-drag-over:border-indigo-600 data-drag-over:bg-indigo-50`,
 									}}
 								>
-									<div
-										className="mb-3 flex size-12 items-center justify-center rounded-full
-											bg-white text-slate-400 shadow-sm ring-1 ring-slate-200"
+									<span
+										className="flex size-12 items-center justify-center rounded-full bg-white
+											text-slate-400 shadow-sm ring-1 ring-slate-200"
 									>
 										<Icon icon="lucide:cloud-upload" className="size-6" />
-									</div>
-									<p className="text-sm font-semibold text-slate-900">Click to upload avatar</p>
+									</span>
+									<p className="mt-3 text-sm font-semibold text-slate-900">
+										Click to upload avatar
+									</p>
 									<p className="mt-1 text-center text-xs text-slate-500">JPG, PNG up to 2MB</p>
 								</DropZone.Area>
 
@@ -127,7 +132,7 @@ function MainForm() {
 											>
 												<DropZone.FileItemProgress
 													variant="fill"
-													className="bg-indigo-600/20 text-indigo-700"
+													classNames={{ track: "bg-indigo-600/30" }}
 												/>
 											</DropZone.FileItemPreview>
 
@@ -137,8 +142,10 @@ function MainForm() {
 												/>
 												<DropZone.FileItemProgress
 													variant="linear"
-													className="h-1.5 w-full overflow-hidden rounded-full bg-indigo-600
-														shadow-inner transition-all duration-300"
+													classNames={{
+														track: `h-1.5 w-full rounded-full bg-indigo-600 shadow-inner
+														transition-all duration-300`,
+													}}
 												/>
 											</div>
 
@@ -157,6 +164,7 @@ function MainForm() {
 							</DropZone.Root>
 						)}
 					/>
+
 					<Form.ErrorMessage className="text-xs font-medium text-rose-500" />
 				</Form.Field>
 

@@ -130,22 +130,40 @@ function CustomScroller() {
 
 The following data attributes are automatically applied to the components for scoped styling:
 
-| Component   | Attribute       | Value               | Description                                       |
-| :---------- | :-------------- | :------------------ | :------------------------------------------------ |
-| `Container` | `data-dragging` | `"true" \| "false"` | Whether the container is currently being dragged. |
-| `Container` | `data-scope`    | `"drag-scroll"`     | Always set to `"drag-scroll"`.                    |
-| `Container` | `data-part`     | `"container"`       | Identifies the container part.                    |
-| `Prev`      | `data-disabled` | `"true" \| "false"` | Active when the button is logicaly disabled.      |
-| `Next`      | `data-disabled` | `"true" \| "false"` | Active when the button is logicaly disabled.      |
+| Component   | Attribute         | Value               | Description                                           |
+| :---------- | :---------------- | :------------------ | :---------------------------------------------------- |
+| `Root`      | `data-part`       | `"root"`            | Identifies the root wrapper component.                |
+| `Container` | `data-part`       | `"container"`       | Identifies the scrollable container.                  |
+| `Container` | `data-dragging`   | `"true" \| "false"` | Active when the container is currently being dragged. |
+| `Item`      | `data-part`       | `"item"`            | Identifies an individual scrollable item.             |
+| `Prev`      | `data-part`       | `"prev-button"`     | Identifies the previous navigation button.            |
+| `Prev`      | `data-disabled`   | `"true" \| "false"` | Active when there's no more content to scroll back.   |
+| `Next`      | `data-part`       | `"next-button"`     | Identifies the next navigation button.                |
+| `Next`      | `data-disabled`   | `"true" \| "false"` | Active when there's no more content to scroll forward. |
+| **All**     | `data-scope`      | `"drag-scroll"`     | Shared scope for all sub-components.                  |
+| **All**     | `data-slot`       | `drag-scroll-*`     | Direct slot identifier (e.g. `drag-scroll-item`).     |
 
 ```css title="styles.css"
+/* Scoped styling for the scrollable area */
+[data-scope="drag-scroll"][data-part="container"] {
+	scrollbar-width: none;
+	-ms-overflow-style: none;
+}
+
+[data-scope="drag-scroll"][data-part="container"]::-webkit-scrollbar {
+	display: none;
+}
+
+/* Visual feedback during drag */
 [data-scope="drag-scroll"][data-part="container"][data-dragging="true"] {
 	cursor: grabbing;
 	user-select: none;
 }
 
-[data-scope="drag-scroll"][data-part="prev"][data-disabled="true"] {
+/* Styling navigation buttons based on state */
+[data-scope="drag-scroll"][data-part$="-button"][data-disabled="true"] {
 	opacity: 0.5;
 	pointer-events: none;
+	filter: grayscale(1);
 }
 ```

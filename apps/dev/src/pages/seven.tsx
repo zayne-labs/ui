@@ -2,9 +2,9 @@ import { Icon } from "@iconify/react";
 import { For, ForWithWrapper } from "@zayne-labs/ui-react/common/for";
 import { Card } from "@zayne-labs/ui-react/ui/card";
 import { DragScroll } from "@zayne-labs/ui-react/ui/drag-scroll";
-import { cnJoin } from "../../lib/utils/cn";
+import { cnJoin } from "../lib/utils/cn";
 
-const items = [
+const scrollItems = [
 	{ category: "Abstract", color: "from-indigo-500", title: "Midnight Flow" },
 	{ category: "Nature", color: "from-emerald-500", title: "Forest Deep" },
 	{ category: "Architecture", color: "from-amber-500", title: "Glass & Steel" },
@@ -72,9 +72,10 @@ function PageSeven() {
 							data-[dragging=true]:cursor-grabbing"
 					>
 						<For
-							each={items}
+							each={scrollItems}
 							renderItem={(item, index) => (
 								<DragScroll.Item
+									key={item.title}
 									asChild={true}
 									className="group relative flex aspect-4/5 w-[280px] shrink-0 cursor-grab
 										flex-col justify-end overflow-hidden rounded-3xl border border-slate-100 p-8

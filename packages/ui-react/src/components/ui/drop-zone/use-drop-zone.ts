@@ -248,8 +248,7 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 					className: cnMerge(
 						"inline-flex",
 						variant === "circular" && "absolute top-1/2 left-1/2 -translate-1/2",
-						variant === "fill"
-							&& `absolute inset-0 bg-zu-primary/50 transition-[clip-path] duration-300 ease-linear [clip-path:var(--clip-path)]`,
+						variant === "fill" && `absolute inset-0`,
 						variant === "linear"
 							&& "relative h-1.5 w-full overflow-hidden rounded-full bg-zu-primary/20",
 						restOfInnerProps.className

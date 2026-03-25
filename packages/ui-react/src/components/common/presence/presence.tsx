@@ -7,7 +7,8 @@ import { usePresence, type UsePresenceOptions, type UsePresenceResult } from "./
 
 type RefProp = { ref?: React.Ref<HTMLElement> };
 
-type RenderPropContext = Omit<UsePresenceResult, "propGetters" | "ref">;
+type RenderPropContext = Omit<UsePresenceResult, "propGetters" | "ref">
+	& Pick<UsePresenceOptions, "present">;
 
 export type PresenceProps = UsePresenceOptions & {
 	children?: React.ReactElement<RefProp> | ((props: RenderPropContext) => React.ReactElement<RefProp>);
@@ -19,17 +20,16 @@ function Presence(props: PresenceProps) {
 	const { children, className, forceMount = false, onExitComplete, present, variant } = props;
 
 	const {
-		isPresent,
-		isPresentOrIsTransitionComplete,
+		isMounted,
+		isTransitionComplete,
 		propGetters,
 		ref: presenceRef,
-		shouldStartTransition,
 	} = usePresence({ onExitComplete, present, variant });
 
 	const context = {
-		isPresent,
-		isPresentOrIsTransitionComplete,
-		shouldStartTransition,
+		isMounted,
+		isTransitionComplete,
+		present,
 	} satisfies RenderPropContext;
 
 	const resolvedChild = isFunction(children) ? children(context) : children;
@@ -40,7 +40,7 @@ function Presence(props: PresenceProps) {
 	const ref = useComposeRefs(presenceRef, childRef);
 
 	const shouldRender =
-		forceMount || (variant === "transition" ? isPresentOrIsTransitionComplete : isPresent);
+		forceMount || (variant === "transition" ? isMounted || isTransitionComplete : isMounted);
 
 	if (!shouldRender) {
 		return null;

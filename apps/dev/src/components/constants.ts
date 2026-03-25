@@ -1,4 +1,6 @@
-export const dashboardLinkItems = [
+import { defineEnumDeep } from "@zayne-labs/toolkit-type-helpers";
+
+export const dashboardLinkItems = defineEnumDeep([
 	{
 		icon: "mynaui:grid",
 		label: "Dash Board",
@@ -33,4 +35,4 @@ export const dashboardLinkItems = [
 		label: "Input Student Scores",
 		link: "/admin/school/dashboard/students/input-scores",
 	},
-];
+]);
