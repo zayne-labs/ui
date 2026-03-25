@@ -37,7 +37,10 @@ function PageThree() {
 	return (
 		<div className="flex flex-col gap-10">
 			<header className="flex flex-col gap-4">
-				<div className="inline-flex items-center gap-2 rounded-full border border-indigo-100 bg-indigo-50 px-3 py-1 text-xs font-bold tracking-wider text-indigo-700 uppercase">
+				<div
+					className="inline-flex items-center gap-2 rounded-full border border-indigo-100 bg-indigo-50
+						px-3 py-1 text-xs font-bold tracking-wider text-indigo-700 uppercase"
+				>
 					<Icon icon="lucide:github" className="size-3" />
 					Open Source
 				</div>
@@ -50,65 +53,60 @@ function PageThree() {
 			</header>
 
 			<section>
-					<Await.Root promise={promise}>
-						<Await.Pending>
-							<LoadingSpinner />
-						</Await.Pending>
+				<Await.Root promise={promise}>
+					<Await.Pending>
+						<LoadingSpinner />
+					</Await.Pending>
 
-						<Await.Success<typeof promise>>
-							{(repos) => (
-								<ForWithWrapper
-									className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:gap-8"
-									each={repos}
-								>
-									{(repo) => <RepoCard key={repo.id} repo={repo} />}
-								</ForWithWrapper>
-							)}
-						</Await.Success>
+					<Await.Success<typeof promise>>
+						{(repos) => (
+							<ForWithWrapper
+								className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:gap-8"
+								each={repos}
+							>
+								{(repo) => <RepoCard key={repo.id} repo={repo} />}
+							</ForWithWrapper>
+						)}
+					</Await.Success>
 
-						<Await.Error>
-							{({ error, resetErrorBoundary }) => (
+					<Await.Error>
+						{({ error, resetErrorBoundary }) => (
+							<div
+								className="mx-auto max-w-md rounded-2xl border border-red-100 bg-white p-8
+									text-center shadow-lg ring-1 ring-black/5"
+							>
 								<div
-									className="mx-auto max-w-md rounded-2xl border border-red-100 bg-white p-8
-										text-center shadow-lg ring-1 ring-black/5"
+									className="mx-auto mb-4 flex size-14 items-center justify-center rounded-full
+										bg-red-50 text-red-500 ring-4 ring-red-50"
 								>
-									<div
-										className="mx-auto mb-4 flex size-14 items-center justify-center rounded-full
-											bg-red-50 text-red-500 ring-4 ring-red-50"
-									>
-										<svg
-											className="size-6"
-											fill="none"
-											viewBox="0 0 24 24"
-											stroke="currentColor"
-										>
-											<path
-												strokeLinecap="round"
-												strokeLinejoin="round"
-												strokeWidth={2}
-												d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-											/>
-										</svg>
-									</div>
-									<h3 className="mb-2 text-lg font-semibold text-gray-900">
-										Unable to load projects
-									</h3>
-									<p className="mb-6 text-sm text-gray-500">
-										{(error as Error | null)?.message ?? "An unknown error occurred"}
-									</p>
-									<Button
-										variant="outline"
-										className="w-full justify-center border-red-200 text-red-700
-											hover:border-red-300 hover:bg-red-50/50"
-										onClick={resetErrorBoundary}
-									>
-										Try again
-									</Button>
+									<svg className="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+										<path
+											strokeLinecap="round"
+											strokeLinejoin="round"
+											strokeWidth={2}
+											d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+										/>
+									</svg>
 								</div>
-							)}
-						</Await.Error>
-					</Await.Root>
-				</section>
+								<h3 className="mb-2 text-lg font-semibold text-gray-900">
+									Unable to load projects
+								</h3>
+								<p className="mb-6 text-sm text-gray-500">
+									{(error as Error | null)?.message ?? "An unknown error occurred"}
+								</p>
+								<Button
+									variant="outline"
+									className="w-full justify-center border-red-200 text-red-700
+										hover:border-red-300 hover:bg-red-50/50"
+									onClick={resetErrorBoundary}
+								>
+									Try again
+								</Button>
+							</div>
+						)}
+					</Await.Error>
+				</Await.Root>
+			</section>
 		</div>
 	);
 }

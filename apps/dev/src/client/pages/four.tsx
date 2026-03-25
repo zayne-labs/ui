@@ -4,7 +4,10 @@ function PageFour() {
 	return (
 		<div className="flex flex-col gap-12">
 			<header className="flex flex-col gap-4">
-				<div className="inline-flex items-center gap-2 rounded-full border border-indigo-100 bg-indigo-50 px-3 py-1 text-xs font-bold tracking-wider text-indigo-700 uppercase">
+				<div
+					className="inline-flex items-center gap-2 rounded-full border border-indigo-100 bg-indigo-50
+						px-3 py-1 text-xs font-bold tracking-wider text-indigo-700 uppercase"
+				>
 					Glassmorphism
 				</div>
 				<h1 className="text-3xl font-extrabold tracking-tight text-slate-900">
@@ -15,9 +18,13 @@ function PageFour() {
 				</p>
 			</header>
 
-			<section className="flex justify-center rounded-3xl border border-white/40 bg-linear-to-br from-indigo-500/10 to-violet-500/10 p-8">
+			<section
+				className="flex justify-center rounded-3xl border border-white/40 bg-linear-to-br
+					from-indigo-500/10 to-violet-500/10 p-8"
+			>
 				<Card.Root
-					className="w-105 rounded-3xl border border-white/50 bg-white/40 p-8 shadow-2xl shadow-indigo-500/10 backdrop-blur-2xl"
+					className="w-105 rounded-3xl border border-white/50 bg-white/40 p-8 shadow-2xl
+						shadow-indigo-500/10 backdrop-blur-2xl"
 				>
 					<Card.Header className="flex items-center gap-4">
 						<img
@@ -27,16 +34,28 @@ function PageFour() {
 						/>
 
 						<div className="flex-1">
-							<Card.Title className="text-xl/tight font-bold text-slate-900">Sarah Anderson</Card.Title>
-							<Card.Description className="font-medium text-slate-500">Senior Product Designer</Card.Description>
+							<Card.Title className="text-xl/tight font-bold text-slate-900">
+								Sarah Anderson
+							</Card.Title>
+							<Card.Description className="font-medium text-slate-500">
+								Senior Product Designer
+							</Card.Description>
 						</div>
 
 						<Card.Action>
 							<button
 								type="button"
-								className="flex size-10 items-center justify-center rounded-xl bg-indigo-600 text-white shadow-lg shadow-indigo-200 transition-all hover:bg-indigo-700 active:scale-95"
+								className="flex size-10 items-center justify-center rounded-xl bg-indigo-600
+									text-white shadow-lg shadow-indigo-200 transition-all hover:bg-indigo-700
+									active:scale-95"
 							>
-								<svg className="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+								<svg
+									className="size-5"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke="currentColor"
+									strokeWidth={2.5}
+								>
 									<path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
 								</svg>
 							</button>
