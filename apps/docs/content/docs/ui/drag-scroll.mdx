@@ -130,18 +130,18 @@ function CustomScroller() {
 
 The following data attributes are automatically applied to the components for scoped styling:
 
-| Component   | Attribute         | Value               | Description                                           |
-| :---------- | :---------------- | :------------------ | :---------------------------------------------------- |
-| `Root`      | `data-part`       | `"root"`            | Identifies the root wrapper component.                |
-| `Container` | `data-part`       | `"container"`       | Identifies the scrollable container.                  |
-| `Container` | `data-dragging`   | `"true" \| "false"` | Active when the container is currently being dragged. |
-| `Item`      | `data-part`       | `"item"`            | Identifies an individual scrollable item.             |
-| `Prev`      | `data-part`       | `"prev-button"`     | Identifies the previous navigation button.            |
-| `Prev`      | `data-disabled`   | `"true" \| "false"` | Active when there's no more content to scroll back.   |
-| `Next`      | `data-part`       | `"next-button"`     | Identifies the next navigation button.                |
-| `Next`      | `data-disabled`   | `"true" \| "false"` | Active when there's no more content to scroll forward. |
-| **All**     | `data-scope`      | `"drag-scroll"`     | Shared scope for all sub-components.                  |
-| **All**     | `data-slot`       | `drag-scroll-*`     | Direct slot identifier (e.g. `drag-scroll-item`).     |
+| Component   | Attribute       | Value               | Description                                            |
+| :---------- | :-------------- | :------------------ | :----------------------------------------------------- |
+| `Root`      | `data-part`     | `"root"`            | Identifies the root wrapper component.                 |
+| `Container` | `data-part`     | `"container"`       | Identifies the scrollable container.                   |
+| `Container` | `data-dragging` | `"true" \| "false"` | Active when the container is currently being dragged.  |
+| `Item`      | `data-part`     | `"item"`            | Identifies an individual scrollable item.              |
+| `Prev`      | `data-part`     | `"prev-button"`     | Identifies the previous navigation button.             |
+| `Prev`      | `data-disabled` | `"true" \| "false"` | Active when there's no more content to scroll back.    |
+| `Next`      | `data-part`     | `"next-button"`     | Identifies the next navigation button.                 |
+| `Next`      | `data-disabled` | `"true" \| "false"` | Active when there's no more content to scroll forward. |
+| **All**     | `data-scope`    | `"drag-scroll"`     | Shared scope for all sub-components.                   |
+| **All**     | `data-slot`     | `drag-scroll-*`     | Direct slot identifier (e.g. `drag-scroll-item`).      |
 
 ```css title="styles.css"
 /* Scoped styling for the scrollable area */
