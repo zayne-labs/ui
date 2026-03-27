@@ -19,6 +19,7 @@ function RootLayout({ children }: { children: React.ReactNode }) {
 	return (
 		<html
 			lang="en"
+			data-scroll-behavior="smooth"
 			className={cnJoin(geistSans.variable, geistMono.variable)}
 			suppressHydrationWarning={true}
 		>
