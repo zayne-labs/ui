@@ -7,7 +7,7 @@ export type {
 export type {
 	UseDragScrollProps,
 	DragScrollRootProps,
-	DragScrollContainerProps,
+	DragScrollListProps,
 	DragScrollItemProps,
 	DragScrollPrevProps,
 	DragScrollNextProps,

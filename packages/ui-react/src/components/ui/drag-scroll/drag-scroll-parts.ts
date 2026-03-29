@@ -4,5 +4,5 @@ export {
 	DragScrollNext as Next,
 	DragScrollPrev as Prev,
 	DragScrollRoot as Root,
-	DragScrollContainer as Container,
+	DragScrollList as List,
 } from "./drag-scroll";

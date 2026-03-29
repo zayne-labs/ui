@@ -3,7 +3,7 @@ title: DragScroll
 description: A headless component suite for adding mouse drag-to-scroll functionality to containers with optional navigation buttons and state subscription.
 ---
 
-The `DragScroll` component suite provides mouse drag-to-scroll behavior for horizontal or vertical scrollable containers. It follows a compound component pattern that separates logic (Root) from the scroller element (Container), allowing for flexible layouts where navigation controls can stay outside the scroll area.
+The `DragScroll` component suite provides mouse drag-to-scroll behavior for horizontal or vertical scrollable containers.
 
 ## Installation
 
@@ -23,7 +23,7 @@ function HorizontalScroller() {
 		<DragScroll.Root>
 			<DragScroll.Prev className="absolute top-1/2 left-0 -translate-y-1/2">←</DragScroll.Prev>
 
-			<DragScroll.Container className="flex gap-4 overflow-x-auto p-10">
+			<DragScroll.List className="flex gap-4 overflow-x-auto p-10">
 				{[1, 2, 3, 4, 5].map((item) => (
 					<DragScroll.Item
 						key={item}
@@ -32,7 +32,7 @@ function HorizontalScroller() {
 						Item {item}
 					</DragScroll.Item>
 				))}
-			</DragScroll.Container>
+			</DragScroll.List>
 
 			<DragScroll.Next className="absolute top-1/2 right-0 -translate-y-1/2">→</DragScroll.Next>
 		</DragScroll.Root>
@@ -51,7 +51,7 @@ function CustomScroller() {
 	const { propGetters } = useDragScroll();
 
 	return (
-		<div {...propGetters.getContainerProps()} className="flex gap-4 overflow-x-auto">
+		<div {...propGetters.getListProps()} className="flex gap-4 overflow-x-auto">
 			{/* ... items */}
 		</div>
 	);
@@ -64,10 +64,10 @@ function CustomScroller() {
 <DragScroll.Root>
 	<DragScroll.Prev />
 
-	<DragScroll.Container>
+	<DragScroll.List>
 		<DragScroll.Item />
 		<DragScroll.Item />
-	</DragScroll.Container>
+	</DragScroll.List>
 
 	<DragScroll.Next />
 </DragScroll.Root>
@@ -81,9 +81,9 @@ function CustomScroller() {
 		<auto-type-table path="../../../lib/ui-options.ts" name="DragScrollRootProps" />
 	</Accordion>
 
-    <Accordion title="DragScroll.Container">
+    <Accordion title="DragScroll.List">
     	The element that handles the drag tracking and scrolling.
-    	<auto-type-table path="../../../lib/ui-options.ts" name="DragScrollContainerProps" />
+    	<auto-type-table path="../../../lib/ui-options.ts" name="DragScrollListProps" />
     </Accordion>
 
     <Accordion title="DragScroll.Item">
@@ -112,12 +112,12 @@ function CustomScroller() {
 
 <Accordions>
 	<Accordion title="propGetters">
-		Functions that return a collection of props to be spread onto your elements: - `getContainerProps`:
-		Props for the scrollable container. - `getItemProps`: Props for each scrollable item. -
+		Functions that return a collection of props to be spread onto your elements: - `getListProps`: Props
+		for the scrollable container. - `getItemProps`: Props for each scrollable item. -
 		`getPrevButtonProps`: Props for the previous navigation button. - `getNextButtonProps`: Props for the
 		next navigation button.
 	</Accordion>
-	<Accordion title="containerRef">
+	<Accordion title="listRef">
 		A standard React ref object containing the scrollable container element.
 	</Accordion>
 	<Accordion title="storeApi">The raw Zustand-style store API for advanced state management.</Accordion>

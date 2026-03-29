@@ -13,13 +13,13 @@ type SharedInputProps = {
 
 /* eslint-disable perfectionist/sort-intersection-types -- I need non-stand props to come first */
 export type PartProps<TContainerElement extends HTMLElement = HTMLElement> = {
-	container: {
-		input: PartProps<TContainerElement>["container"]["output"] & SharedInputProps;
-		output: RecordForDataAttr & InferProps<TContainerElement>;
-	};
 	item: {
 		input: PartProps<TContainerElement>["item"]["output"] & SharedInputProps;
 		output: InferProps<HTMLElement> & RecordForDataAttr;
+	};
+	list: {
+		input: PartProps<TContainerElement>["list"]["output"] & SharedInputProps;
+		output: RecordForDataAttr & InferProps<TContainerElement>;
 	};
 	nextButton: {
 		input: PartProps<TContainerElement>["nextButton"]["output"] & SharedInputProps;
@@ -65,7 +65,7 @@ export type DragScrollActions = {
 		handleMouseUpOrLeave: () => void;
 		handleScroll: () => void;
 		initializeResizeObserver: () => (() => void) | undefined;
-		setContainerRef: (element: HTMLElement | null) => void;
+		setListRef: (element: HTMLElement | null) => void;
 		updateScrollState: () => void;
 	};
 };
@@ -108,7 +108,7 @@ export type UseDragScrollResult<TContainerElement extends HTMLElement> = Pick<
 	UseDragScrollProps,
 	"disableInternalStateSubscription"
 > & {
-	containerRef: React.RefObject<TContainerElement | null>;
+	listRef: React.RefObject<TContainerElement | null>;
 	propGetters: DragScrollPropGetters<TContainerElement>;
 	storeApi: ReturnType<typeof createDragScrollStore>;
 	useDragScrollStore: typeof useDragScrollStoreContext;

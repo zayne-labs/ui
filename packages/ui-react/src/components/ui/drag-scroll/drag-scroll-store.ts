@@ -12,7 +12,7 @@ type InitStoreValues = Pick<RequiredUseDragScrollProps, "orientation" | "scrollA
 export const createDragScrollStore = (initStoreValues: InitStoreValues) => {
 	const { orientation = "horizontal", scrollAmount = "item", usage = "allScreens" } = initStoreValues;
 
-	const containerRef: React.RefObject<HTMLElement | null> = {
+	const listRef: React.RefObject<HTMLElement | null> = {
 		current: null,
 	};
 
@@ -64,14 +64,14 @@ export const createDragScrollStore = (initStoreValues: InitStoreValues) => {
 			},
 
 			goToNext: () => {
-				if (!containerRef.current) return;
+				if (!listRef.current) return;
 
 				const { canGoToNext } = get();
 				if (!canGoToNext) return;
 
-				const amount = getScrollAmount(containerRef.current);
+				const amount = getScrollAmount(listRef.current);
 
-				containerRef.current.scrollBy({
+				listRef.current.scrollBy({
 					behavior: "smooth",
 					left: orientation === "vertical" ? 0 : amount,
 					top: orientation === "vertical" || orientation === "both" ? amount : 0,
@@ -79,14 +79,14 @@ export const createDragScrollStore = (initStoreValues: InitStoreValues) => {
 			},
 
 			goToPrev: () => {
-				if (!containerRef.current) return;
+				if (!listRef.current) return;
 
 				const { canGoToPrev } = get();
 				if (!canGoToPrev) return;
 
-				const amount = getScrollAmount(containerRef.current);
+				const amount = getScrollAmount(listRef.current);
 
-				containerRef.current.scrollBy({
+				listRef.current.scrollBy({
 					behavior: "smooth",
 					left: orientation === "vertical" ? 0 : -amount,
 					top: orientation === "vertical" || orientation === "both" ? -amount : 0,
@@ -97,7 +97,7 @@ export const createDragScrollStore = (initStoreValues: InitStoreValues) => {
 				if (usage === "mobileAndTabletOnly" && window.innerWidth >= 768) return;
 				if (usage === "desktopOnly" && window.innerWidth < 768) return;
 
-				if (!containerRef.current) return;
+				if (!listRef.current) return;
 
 				// == Create fresh AbortControllers for each drag session (they cannot be reused after abort)
 				abortControllerRef.current = {
@@ -109,26 +109,26 @@ export const createDragScrollStore = (initStoreValues: InitStoreValues) => {
 				// == Update all initial position properties
 				if (orientation === "horizontal" || orientation === "both") {
 					positionRef.current.x = event.clientX;
-					positionRef.current.left = containerRef.current.scrollLeft;
+					positionRef.current.left = listRef.current.scrollLeft;
 				}
 
 				if (orientation === "vertical" || orientation === "both") {
 					positionRef.current.y = event.clientY;
-					positionRef.current.top = containerRef.current.scrollTop;
+					positionRef.current.top = listRef.current.scrollTop;
 				}
 
-				updateCursor(containerRef.current);
+				updateCursor(listRef.current);
 				set({ isDragging: true });
 
 				const { actions } = get();
 
-				on(containerRef.current, "mousemove", actions.handleMouseMove, {
+				on(listRef.current, "mousemove", actions.handleMouseMove, {
 					signal: abortControllerRef.current.mouseMove.signal,
 				});
-				on(containerRef.current, "mouseup", actions.handleMouseUpOrLeave, {
+				on(listRef.current, "mouseup", actions.handleMouseUpOrLeave, {
 					signal: abortControllerRef.current.mouseUp.signal,
 				});
-				on(containerRef.current, "mouseleave", actions.handleMouseUpOrLeave, {
+				on(listRef.current, "mouseleave", actions.handleMouseUpOrLeave, {
 					signal: abortControllerRef.current.mouseLeave.signal,
 				});
 				// == Document-level mouseup fallback for when user releases outside the container
@@ -139,23 +139,23 @@ export const createDragScrollStore = (initStoreValues: InitStoreValues) => {
 			},
 
 			handleMouseMove: (event) => {
-				if (!containerRef.current) return;
+				if (!listRef.current) return;
 
 				if (orientation === "horizontal" || orientation === "both") {
 					const dx = event.clientX - positionRef.current.x;
-					containerRef.current.scrollLeft = positionRef.current.left - dx;
+					listRef.current.scrollLeft = positionRef.current.left - dx;
 				}
 
 				if (orientation === "vertical" || orientation === "both") {
 					const dy = event.clientY - positionRef.current.y;
-					containerRef.current.scrollTop = positionRef.current.top - dy;
+					listRef.current.scrollTop = positionRef.current.top - dy;
 				}
 			},
 
 			handleMouseUpOrLeave: () => {
-				if (!containerRef.current) return;
+				if (!listRef.current) return;
 
-				resetCursor(containerRef.current);
+				resetCursor(listRef.current);
 				set({ isDragging: false });
 
 				const { actions } = get();
@@ -168,17 +168,17 @@ export const createDragScrollStore = (initStoreValues: InitStoreValues) => {
 			}),
 
 			initializeResizeObserver: () => {
-				if (!containerRef.current) return;
+				if (!listRef.current) return;
 
 				const { actions } = get();
 
 				// == Use ResizeObserver to detect when container or children resize
 				const resizeObserver = new ResizeObserver(() => actions.updateScrollState());
 
-				resizeObserver.observe(containerRef.current);
+				resizeObserver.observe(listRef.current);
 
 				// == Also observe children for size changes
-				for (const child of containerRef.current.children) {
+				for (const child of listRef.current.children) {
 					resizeObserver.observe(child);
 				}
 
@@ -189,8 +189,8 @@ export const createDragScrollStore = (initStoreValues: InitStoreValues) => {
 				return cleanup;
 			},
 
-			setContainerRef: (element) => {
-				containerRef.current = element as HTMLElement;
+			setListRef: (element) => {
+				listRef.current = element as HTMLElement;
 
 				if (!element) return;
 
@@ -201,10 +201,10 @@ export const createDragScrollStore = (initStoreValues: InitStoreValues) => {
 			},
 
 			updateScrollState: () => {
-				if (!containerRef.current) return;
+				if (!listRef.current) return;
 
 				if (orientation === "horizontal" || orientation === "both") {
-					const { clientWidth, scrollLeft, scrollWidth } = containerRef.current;
+					const { clientWidth, scrollLeft, scrollWidth } = listRef.current;
 
 					set({
 						canGoToNext: Math.ceil(scrollLeft + clientWidth) < scrollWidth,
@@ -213,7 +213,7 @@ export const createDragScrollStore = (initStoreValues: InitStoreValues) => {
 				}
 
 				if (orientation === "vertical") {
-					const { clientHeight, scrollHeight, scrollTop } = containerRef.current;
+					const { clientHeight, scrollHeight, scrollTop } = listRef.current;
 
 					set({
 						canGoToNext: Math.ceil(scrollTop + clientHeight) < scrollHeight,

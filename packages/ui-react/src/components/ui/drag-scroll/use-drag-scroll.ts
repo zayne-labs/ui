@@ -3,15 +3,19 @@ import { useCallbackRef, useStore } from "@zayne-labs/toolkit-react";
 import { composeRefs, composeTwoEventHandlers } from "@zayne-labs/toolkit-react/utils";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import { cnMerge } from "@/lib/utils/cn";
+import type { FromCamelToKebabCase } from "@/lib/utils/type-helpers";
 import { createDragScrollStore } from "./drag-scroll-store";
-import type { DragScrollPropGetters, UseDragScrollProps, UseDragScrollResult } from "./types";
+import type { DragScrollPropGetters, PartProps, UseDragScrollProps, UseDragScrollResult } from "./types";
 
-const getScopeAttrs = (part: string) =>
-	({
-		"data-part": part,
-		"data-scope": "drag-scroll",
+export const getDragScrollScopeAttrs = (part: FromCamelToKebabCase<keyof PartProps>) => {
+	return {
+		/* eslint-disable perfectionist/sort-objects -- I need this order to be maintained */
 		"data-slot": `drag-scroll-${part}`,
-	}) as const;
+		"data-scope": "drag-scroll",
+		"data-part": part,
+		/* eslint-enable perfectionist/sort-objects -- I need this order to be maintained */
+	} as const;
+};
 
 export const useDragScroll = <TContainerElement extends HTMLElement = HTMLElement>(
 	props?: UseDragScrollProps
@@ -23,7 +27,7 @@ export const useDragScroll = <TContainerElement extends HTMLElement = HTMLElemen
 		usage = "allScreens",
 	} = props ?? {};
 
-	const containerRef = useRef<TContainerElement>(null);
+	const listRef = useRef<TContainerElement>(null);
 
 	const storeApi = useMemo(() => {
 		return createDragScrollStore({ orientation, scrollAmount, usage });
@@ -51,8 +55,8 @@ export const useDragScroll = <TContainerElement extends HTMLElement = HTMLElemen
 	/* eslint-enable react-hooks/hooks -- ignore */
 
 	const refCallback: React.RefCallback<TContainerElement> = useCallbackRef((node) => {
-		containerRef.current = node;
-		actions.setContainerRef(node);
+		listRef.current = node;
+		actions.setListRef(node);
 
 		if (!node) return;
 
@@ -77,17 +81,17 @@ export const useDragScroll = <TContainerElement extends HTMLElement = HTMLElemen
 	const getRootProps: DragScrollPropGetters<TContainerElement>["getRootProps"] = useCallbackRef(
 		(innerProps) => {
 			return {
-				...getScopeAttrs("root"),
+				...getDragScrollScopeAttrs("root"),
 				...innerProps,
 				className: cnMerge("relative", innerProps?.className),
 			};
 		}
 	);
 
-	const getContainerProps: DragScrollPropGetters<TContainerElement>["getContainerProps"] = useCallback(
+	const getListProps: DragScrollPropGetters<TContainerElement>["getListProps"] = useCallback(
 		(innerProps) => {
 			return {
-				...getScopeAttrs("container"),
+				...getDragScrollScopeAttrs("list"),
 				...(!disableInternalStateSubscription && {
 					"data-dragging": dataAttr(isDragging),
 				}),
@@ -112,7 +116,7 @@ export const useDragScroll = <TContainerElement extends HTMLElement = HTMLElemen
 	const getItemProps: DragScrollPropGetters<TContainerElement>["getItemProps"] = useCallbackRef(
 		(innerProps) => {
 			return {
-				...getScopeAttrs("item"),
+				...getDragScrollScopeAttrs("item"),
 				...innerProps,
 				className: cnMerge("snap-center snap-always", innerProps?.className),
 			};
@@ -124,7 +128,7 @@ export const useDragScroll = <TContainerElement extends HTMLElement = HTMLElemen
 			const isDisabled = innerProps?.disabled ?? !canGoToPrev;
 
 			return {
-				...getScopeAttrs("prev-button"),
+				...getDragScrollScopeAttrs("prev-button"),
 				type: "button",
 				...innerProps,
 				"aria-disabled": dataAttr(isDisabled),
@@ -142,7 +146,7 @@ export const useDragScroll = <TContainerElement extends HTMLElement = HTMLElemen
 			const isDisabled = innerProps?.disabled ?? !canGoToNext;
 
 			return {
-				...getScopeAttrs("next-button"),
+				...getDragScrollScopeAttrs("next-button"),
 				type: "button",
 				...innerProps,
 				"aria-disabled": dataAttr(isDisabled),
@@ -158,13 +162,13 @@ export const useDragScroll = <TContainerElement extends HTMLElement = HTMLElemen
 	const propGetters = useMemo<DragScrollPropGetters<TContainerElement>>(
 		() =>
 			({
-				getContainerProps,
 				getItemProps,
+				getListProps,
 				getNextButtonProps,
 				getPrevButtonProps,
 				getRootProps,
 			}) satisfies DragScrollPropGetters<TContainerElement>,
-		[getPrevButtonProps, getContainerProps, getItemProps, getNextButtonProps, getRootProps]
+		[getPrevButtonProps, getListProps, getItemProps, getNextButtonProps, getRootProps]
 	);
 
 	const stableUseDragScrollStore = useCallbackRef(useDragScrollStore);
@@ -172,8 +176,8 @@ export const useDragScroll = <TContainerElement extends HTMLElement = HTMLElemen
 	const result = useMemo<UseDragScrollResult<TContainerElement>>(
 		() =>
 			({
-				containerRef,
 				disableInternalStateSubscription,
+				listRef,
 				propGetters,
 				storeApi,
 				useDragScrollStore: stableUseDragScrollStore,

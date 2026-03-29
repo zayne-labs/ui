@@ -11,7 +11,7 @@ const [DragScrollStoreContextProvider, useDragScrollStoreContext] =
 
 export type DragScrollRootContextType<TElement extends HTMLElement = HTMLElement> = Pick<
 	UseDragScrollResult<TElement>,
-	"containerRef" | "disableInternalStateSubscription" | "propGetters"
+	"disableInternalStateSubscription" | "listRef" | "propGetters"
 >;
 
 const [DragScrollRootContextProvider, useDragScrollRootContext] =

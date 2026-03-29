@@ -22,25 +22,22 @@ export type DragScrollRootProps = UseDragScrollProps & {
 	children: React.ReactNode;
 } & PartInputProps["root"];
 
-export function DragScrollRoot<TElement extends React.ElementType = "div">(
-	props: PolymorphicPropsStrict<TElement, DragScrollRootProps>
-) {
-	const { as: Element = "div", asChild, children, ...restOfProps } = props;
+export function DragScrollRoot(props: DragScrollRootProps) {
+	const { asChild, children, ...restOfProps } = props;
 
-	const { containerRef, disableInternalStateSubscription, propGetters, storeApi } =
-		useDragScroll(restOfProps);
+	const { disableInternalStateSubscription, listRef, propGetters, storeApi } = useDragScroll(restOfProps);
 
 	const rootContextValue = useMemo<DragScrollRootContextType>(
 		() =>
 			({
-				containerRef,
 				disableInternalStateSubscription,
+				listRef,
 				propGetters,
 			}) satisfies DragScrollRootContextType,
-		[containerRef, disableInternalStateSubscription, propGetters]
+		[listRef, disableInternalStateSubscription, propGetters]
 	);
 
-	const Component = asChild ? Slot.Root : Element;
+	const Component = asChild ? Slot.Root : "div";
 
 	return (
 		<DragScrollStoreContextProvider store={storeApi}>
@@ -66,12 +63,12 @@ export function DragScrollContext<TSlice = DragScrollStore>(props: DragScrollCon
 	return resolvedChildren;
 }
 
-export type DragScrollContainerProps = {
+export type DragScrollListProps = {
 	asChild?: boolean;
-} & PartInputProps["container"];
+} & PartInputProps["list"];
 
-export function DragScrollContainer<TElement extends React.ElementType = "ul">(
-	props: PolymorphicPropsStrict<TElement, DragScrollContainerProps>
+export function DragScrollList<TElement extends React.ElementType = "ul">(
+	props: PolymorphicPropsStrict<TElement, DragScrollListProps>
 ) {
 	const { as: Element = "ul", asChild, ...restOfProps } = props;
 
@@ -79,7 +76,7 @@ export function DragScrollContainer<TElement extends React.ElementType = "ul">(
 
 	const Component = asChild ? Slot.Root : Element;
 
-	return <Component {...propGetters.getContainerProps(restOfProps)} />;
+	return <Component {...propGetters.getListProps(restOfProps)} />;
 }
 
 export type DragScrollItemProps = {
