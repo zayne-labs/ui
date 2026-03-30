@@ -6,7 +6,11 @@ export default zayne(
 		type: "lib",
 		ignores: ["eslint.config.js", "apps/docs/.source/**/*"],
 		react: {
-			nextjs: true,
+			nextjs: {
+				overrides: {
+					"nextjs/no-html-link-for-pages": ["error", "apps/docs"],
+				},
+			},
 		},
 		typescript: {
 			tsconfigPath: ["tsconfig.json", "packages/*/tsconfig.json", "apps/*/tsconfig.json"],
