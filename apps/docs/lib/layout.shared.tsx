@@ -23,9 +23,8 @@ export const baseOptions = () => {
 
 export const docsOptions = () => {
 	const npmDataPromise = callApi(`https://registry.npmjs.org/${packageScope}/${packageName}/latest`, {
-		schema: {
-			data: z.object({ version: z.string() }),
-		},
+		dedupeStrategy: "defer",
+		schema: { data: z.object({ version: z.string() }) },
 	});
 
 	const descriptionPromise = npmDataPromise.then((result) => `v${result.data?.version ?? "*.*.*"}`);

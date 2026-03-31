@@ -96,19 +96,14 @@ The `Show` component provides a clean, declarative alternative to ternary operat
 ## Benefits over Logic Operators
 
 - **No Zero Rendering**: Unlike `count && <div />` which renders `0` if count is zero, `Show` handles falsy values correctly.
-- **Improved Readability**: Eliminates deeply nested ternaries which are difficult to parse visually.
-- **Type Safety**: The render prop pattern automatically narrows types for your data.
+- **Improved Readability**: Eliminates deeply nested ternaries.
+- **Type Safety**: The render prop automatically narrows types for your data.
 
 ```tsx
-// Using && (Risky)
-{
-	// ---cut---
-	/* eslint-disable unicorn/explicit-length-check */
-	// ---cut---
-	items.length && <List data={items} />;
-} // Might render '0' if empty
+// Risky — renders '0' if items is empty
+items.length && <List data={items} />;
 
-// Using Show (Safe)
+// Safe
 <Show when={items.length > 0}>
 	<List data={items} />
 </Show>;

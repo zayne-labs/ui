@@ -36,7 +36,7 @@ export function ShowRoot<TWhen>(props: ShowRootProps<TWhen>) {
 		return foundContentSlot ?? fallBackSlot ?? fallback;
 	}
 
-	const resolvedChildren = isFunction(children) ? children(when as TWhen) : children;
+	const resolvedChildren = isFunction(children) ? when && children(when) : children;
 
 	const {
 		regularChildren,

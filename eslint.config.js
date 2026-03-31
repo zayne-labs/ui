@@ -21,9 +21,10 @@ export default zayne(
 		},
 	},
 	{
-		files: [`apps/docs/content/docs/${GLOB_MARKDOWN_CODE}`, `apps/docs-old/src/${GLOB_MARKDOWN_CODE}`],
+		files: [`apps/docs/content/docs/${GLOB_MARKDOWN_CODE}`],
 		rules: {
 			"eslint-comments/disable-enable-pair": "off",
+			"unicorn/explicit-length-check": "off",
 			"no-param-reassign": "off",
 			"no-await-in-loop": "off",
 			"react-hooks/hooks": "off",
