@@ -108,9 +108,18 @@ export function Grid(props: GridProps) {
 				<pattern id={uniqueId} width={width} height={height} patternUnits="userSpaceOnUse" x={x} y={y}>
 					<path d={`M.5 ${height}V.5H${width}`} fill="none" strokeDasharray={strokeDasharray} />
 				</pattern>
+				<radialGradient id={`${uniqueId}-mask`} cx="50%" cy="50%" r="50%">
+					<stop offset="0%" stopColor="black" stopOpacity="1" />
+					<stop offset="40%" stopColor="black" stopOpacity="0.6" />
+					<stop offset="100%" stopColor="black" stopOpacity="0" />
+				</radialGradient>
+				<mask id={`${uniqueId}-fade`}>
+					<rect width="100%" height="100%" fill="white" />
+					<rect width="100%" height="100%" fill={`url(#${uniqueId}-mask)`} />
+				</mask>
 			</defs>
 			<rect width="100%" height="100%" fill={`url(#${uniqueId})`} />
-			<svg x={x} y={y} className="overflow-visible">
+			<svg x={x} y={y} className="overflow-visible" mask={`url(#${uniqueId}-fade)`}>
 				{squares.map(({ id, pos: [posX, posY] }, index) => (
 					<motion.rect
 						initial={{ opacity: 0 }}
