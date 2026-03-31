@@ -21,7 +21,7 @@ const fetchUser = async (id: number) => {
 
 	await waitFor(1500);
 
-	if (id === 999) {
+	if (id === 666) {
 		reject(new Error("User not found"));
 
 		return promise;
@@ -39,6 +39,7 @@ const fetchUser = async (id: number) => {
 export default function AwaitDemo() {
 	const [userId, setUserId] = useState(1);
 	const [userPromise, setUserPromise] = useState(() => fetchUser(userId));
+	const [resetKey, setResetKey] = useState(0);
 
 	const loadUser = (id: number) => {
 		setUserId(id);
@@ -50,8 +51,16 @@ export default function AwaitDemo() {
 	};
 
 	const handleTriggerError = () => {
-		loadUser(999);
+		loadUser(666);
 	};
+
+	const handleReset = () => {
+		setUserId(1);
+		setUserPromise(fetchUser(1));
+		setResetKey((prev) => prev + 1);
+	};
+
+	const hasError = userId === 666;
 
 	return (
 		<section className="flex w-full max-w-md flex-col gap-4">
@@ -59,19 +68,20 @@ export default function AwaitDemo() {
 				<button
 					className={cnJoin(
 						"rounded-lg px-4 py-2 text-sm font-medium shadow-sm transition-all active:scale-95",
-						userId !== 999 ?
+						userId !== 666 ?
 							"bg-fd-primary text-fd-primary-foreground hover:bg-fd-primary/90"
-						:	"bg-fd-primary/50 text-fd-primary-foreground/70"
+						:	"cursor-not-allowed bg-fd-primary/50 text-fd-primary-foreground/70"
 					)}
 					onClick={handleLoadRandomUser}
 					type="button"
+					disabled={hasError}
 				>
 					Load User
 				</button>
 				<button
 					className={cnJoin(
 						"rounded-lg px-4 py-2 text-sm font-medium transition-all active:scale-95",
-						userId === 999 ?
+						hasError ?
 							"bg-red-500 text-white shadow-lg shadow-red-500/30 hover:bg-red-600"
 						:	"border border-fd-border bg-fd-card hover:bg-fd-muted"
 					)}
@@ -80,9 +90,20 @@ export default function AwaitDemo() {
 				>
 					Trigger Error
 				</button>
+
+				{hasError && (
+					<button
+						className="rounded-lg border border-fd-border bg-fd-card px-4 py-2 text-sm font-medium
+							transition-all hover:bg-fd-muted active:scale-95"
+						onClick={handleReset}
+						type="button"
+					>
+						Reset
+					</button>
+				)}
 			</div>
 
-			<Await.Root promise={userPromise} onErrorReset={handleLoadRandomUser}>
+			<Await.Root promise={userPromise} errorResetKeys={[resetKey]} onErrorReset={handleReset}>
 				<Await.Pending>
 					<div
 						className="rounded-xl border border-fd-border bg-fd-card/40 p-6 shadow-sm

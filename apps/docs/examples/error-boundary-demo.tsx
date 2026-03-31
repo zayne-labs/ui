@@ -65,9 +65,9 @@ export default function ErrorBoundaryDemo() {
 			</div>
 
 			<ErrorBoundary
-				resetKeys={[resetKey]}
 				onErrorReset={handleReset}
-				fallback={({ error, resetErrorBoundary }) => (
+				errorResetKeys={[resetKey]}
+				errorFallback={({ error, resetErrorBoundary }) => (
 					<div
 						className="rounded-xl border border-red-200 bg-red-50/50 p-6 shadow-sm backdrop-blur-sm
 							dark:border-red-900/50 dark:bg-red-950/50"

@@ -5,7 +5,8 @@ export type ErrorFallbackRenderProps = {
 
 export type ErrorBoundaryProps = {
 	children: React.ReactNode;
-	fallback?: React.ReactNode | ((props: ErrorFallbackRenderProps) => React.ReactNode);
+	errorFallback?: React.ReactNode | ((props: ErrorFallbackRenderProps) => React.ReactNode);
+	errorResetKeys?: unknown[];
 	onError?: (context: { error: Error; info: React.ErrorInfo & { ownerStack?: string } }) => void;
 	onErrorReset?: (
 		context:
@@ -19,5 +20,4 @@ export type ErrorBoundaryProps = {
 					reason: "keys";
 			  }
 	) => void;
-	resetKeys?: unknown[];
 };

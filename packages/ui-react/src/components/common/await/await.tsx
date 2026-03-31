@@ -26,14 +26,17 @@ export type AwaitRootProps<TValue> = Omit<SuspenseWithBoundaryProps, "children">
 
 export function AwaitRoot<TValue>(props: AwaitRootProps<TValue>) {
 	const {
+		asChild,
 		children,
 		errorFallback,
+		errorResetKeys,
 		fallback,
+		name,
 		onError,
 		onErrorReset,
+		promise,
 		withErrorBoundary = true,
 		withSuspense = true,
-		...restOfProps
 	} = props;
 
 	const WithErrorBoundary = withErrorBoundary ? ErrorBoundary : ReactFragment;
@@ -50,13 +53,16 @@ export function AwaitRoot<TValue>(props: AwaitRootProps<TValue>) {
 	return (
 		<WithErrorBoundary
 			{...(withErrorBoundary && {
-				fallback: resolvedErrorFallback,
+				errorFallback: resolvedErrorFallback,
+				errorResetKeys,
 				onError,
 				onErrorReset,
 			})}
 		>
-			<WithSuspense {...(withSuspense && { fallback: resolvedPendingFallback })}>
-				<AwaitRootImpl {...restOfProps}>{slots.default}</AwaitRootImpl>
+			<WithSuspense {...(withSuspense && { fallback: resolvedPendingFallback, name })}>
+				<AwaitRootImpl promise={promise} asChild={asChild}>
+					{slots.default}
+				</AwaitRootImpl>
 			</WithSuspense>
 		</WithErrorBoundary>
 	);
@@ -103,7 +109,7 @@ export function AwaitSuccess<TPromiseOrValue, TValue = Awaited<TPromiseOrValue>>
 
 Object.assign(AwaitSuccess, withSlotNameAndSymbol<AwaitSuccessProps>("default"));
 
-type AwaitErrorProps = GetSlotComponentProps<"error", ErrorBoundaryProps["fallback"]>;
+type AwaitErrorProps = GetSlotComponentProps<"error", ErrorBoundaryProps["errorFallback"]>;
 
 export const AwaitError = withSlotNameAndSymbol<AwaitErrorProps, { asChild?: boolean }>(
 	"error",

@@ -49,16 +49,20 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 
 	override componentDidUpdate(prevProps: ErrorBoundaryProps, prevState: ErrorBoundaryState) {
 		const { hasError } = this.state;
-		const { resetKeys } = this.props;
+		const { errorResetKeys } = this.props;
 
 		// == There's an edge case where if the thing that triggered the error happens to *also* be in the resetKeys array, we'd end up resetting the error boundary immediately.
 		// == This would likely trigger a second error to be thrown.
 		// == So we make sure that we don't check the resetKeys on the first call of cDU after the error is set.
 
-		if (hasError && prevState.error !== null && hasArrayChanged(prevProps.resetKeys, resetKeys)) {
+		if (
+			hasError
+			&& prevState.error !== null
+			&& hasArrayChanged(prevProps.errorResetKeys, errorResetKeys)
+		) {
 			this.props.onErrorReset?.({
-				next: resetKeys,
-				prev: prevProps.resetKeys,
+				next: errorResetKeys,
+				prev: prevProps.errorResetKeys,
 				reason: "keys",
 			});
 
@@ -67,23 +71,23 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 	}
 
 	override render() {
-		const { children, fallback } = this.props;
+		const { children, errorFallback } = this.props;
 		const { error, hasError } = this.state;
 
 		let childToRender = children;
 
 		if (hasError) {
 			switch (true) {
-				case isFunction(fallback): {
-					childToRender = fallback({
+				case isFunction(errorFallback): {
+					childToRender = errorFallback({
 						error,
 						resetErrorBoundary: this.#resetErrorBoundary,
 					});
 					break;
 				}
 
-				case Boolean(fallback): {
-					childToRender = fallback;
+				case Boolean(errorFallback): {
+					childToRender = errorFallback;
 					break;
 				}
 
