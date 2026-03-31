@@ -19,7 +19,7 @@ const config = defineConfig([
 	{
 		...sharedOptions,
 		name: "ESM",
-		outDir: "./dist/esm",
+		outDir: "./dist/components",
 	},
 ]);
 

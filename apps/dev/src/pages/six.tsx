@@ -64,7 +64,7 @@ function PageSix() {
 						Target Container (#six-target)
 					</div>
 
-					<div className="flex flex-1 flex-col justify-end">
+					<div className="flex grow flex-col justify-end">
 						<h1 className="text-2xl font-black text-slate-900">Landing Zone</h1>
 						<p className="text-slate-500">Elements will appear at the top of this container.</p>
 					</div>

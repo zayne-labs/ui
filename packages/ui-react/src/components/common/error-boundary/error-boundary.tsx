@@ -2,8 +2,8 @@
 
 import { isFunction } from "@zayne-labs/toolkit-type-helpers";
 import { Component } from "react";
-import { ErrorBoundaryContext, type ErrorBoundaryContextType } from "./error-boundary-context";
-import type { ErrorBoundaryProps, ErrorFallbackProps } from "./types";
+import { ErrorBoundaryContext } from "./error-boundary-context";
+import type { ErrorBoundaryProps } from "./types";
 
 type ErrorBoundaryState =
 	| {
@@ -56,7 +56,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 		// == So we make sure that we don't check the resetKeys on the first call of cDU after the error is set.
 
 		if (hasError && prevState.error !== null && hasArrayChanged(prevProps.resetKeys, resetKeys)) {
-			this.props.onReset?.({
+			this.props.onErrorReset?.({
 				next: resetKeys,
 				prev: prevProps.resetKeys,
 				reason: "keys",
@@ -75,12 +75,10 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 		if (hasError) {
 			switch (true) {
 				case isFunction(fallback): {
-					const fallbackRenderProps = {
+					childToRender = fallback({
 						error,
 						resetErrorBoundary: this.#resetErrorBoundary,
-					} satisfies ErrorFallbackProps;
-
-					childToRender = fallback(fallbackRenderProps);
+					});
 					break;
 				}
 
@@ -93,27 +91,33 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 					console.warn("No fallback provided to error boundary");
 				}
 			}
+
+			return (
+				<ErrorBoundaryContext
+					value={{
+						error,
+						hasError,
+						resetErrorBoundary: this.#resetErrorBoundary,
+					}}
+				>
+					{childToRender}
+				</ErrorBoundaryContext>
+			);
 		}
 
-		const contextValue = {
-			error,
-			hasError,
-			resetErrorBoundary: this.#resetErrorBoundary,
-		} satisfies ErrorBoundaryContextType;
-
-		return <ErrorBoundaryContext value={contextValue}>{childToRender}</ErrorBoundaryContext>;
+		return childToRender;
 	}
 
 	#resetErrorBoundary = (...parameters: unknown[]) => {
 		const { error } = this.state;
 
-		if (error !== null) {
-			this.props.onReset?.({
-				args: parameters,
-				reason: "imperative-api",
-			});
+		if (error === null) return;
 
-			this.setState(initialState);
-		}
+		this.props.onErrorReset?.({
+			args: parameters,
+			reason: "imperative-api",
+		});
+
+		this.setState(initialState);
 	};
 }

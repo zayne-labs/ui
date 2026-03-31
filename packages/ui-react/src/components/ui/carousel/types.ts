@@ -24,7 +24,7 @@ export type CarouselRootProps<TImages extends ImagesType = ImagesType> = {
 	children: React.ReactNode;
 	classNames?: {
 		base?: string;
-		scrollContainer?: string;
+		content?: string;
 	};
 	hasAutoSlide?: boolean;
 	images: CarouselStore<TImages>["images"];
@@ -44,13 +44,7 @@ export type CarouselButtonsProps = {
 	variant: "next" | "prev";
 };
 
-export type CarouselControlProps = {
-	classNames?: {
-		base?: string;
-		defaultIcon?: string;
-		iconContainer?: string;
-	};
-
+export type CarouselControlProps = Pick<CarouselButtonsProps, "classNames"> & {
 	// == Allow for custom icons, either passing both or just one of the two
 	icon?: UnionDiscriminator<
 		[

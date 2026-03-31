@@ -108,7 +108,7 @@ export class DropZoneError extends Error {
 	}
 }
 
-export const getErrorContext = (error: DropZoneError | Error): NonNullable<FileState["error"]> => {
+export const getErrorContext = (error: unknown): NonNullable<FileState["error"]> => {
 	if (DropZoneError.isError(error)) {
 		return {
 			cause: "custom-error",

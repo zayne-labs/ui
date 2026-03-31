@@ -297,11 +297,11 @@ const usePresence = (options: UsePresenceOptions): UsePresenceResult => {
 	const getPresenceProps: PresencePropGetters["getPresenceProps"] = useCallback(
 		(innerProps) => {
 			return {
-				"data-animation-phase": animationPhase,
 				"data-mounted": isMounted,
 				"data-present": presentProp,
-				"data-transition-phase": transitionPhase,
 				"data-variant": variant,
+				...(variant === "animation" && { "data-animation-phase": animationPhase }),
+				...(variant === "transition" && { "data-transition-phase": transitionPhase }),
 				...innerProps,
 				className: innerProps.className,
 			};

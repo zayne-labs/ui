@@ -39,12 +39,12 @@ export default zayne(
 ).overrides({
 	"zayne/react/nextjs/recommended": (config) => ({
 		...config,
-		ignores: ["apps/docs/content/docs/**/*"],
+		ignores: ["apps/docs/content/docs/**/*", "apps/docs/examples/**/*"],
 		files: ["apps/docs/**/*.{ts,tsx}"],
 	}),
 	"zayne/react/nextjs/rules": (config) => ({
 		...config,
-		ignores: ["apps/docs/content/docs/**/*"],
+		ignores: ["apps/docs/content/docs/**/*", "apps/docs/examples/**/*"],
 		files: ["apps/docs/**/*.{ts,tsx}"],
 	}),
 	"zayne/react/refresh/rules": (config) => ({

@@ -10,8 +10,8 @@ import {
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { LLMCopyButton, ViewOptions } from "@/components/ai/page-actions";
-import { getMDXComponents } from "@/components/common";
 import { EditOnGithub } from "@/components/common/EditOnGithub";
+import { getMDXComponents } from "@/components/common/MdxComponents";
 import { HoverCard } from "@/components/ui";
 import { repoName, repoOwner } from "@/lib/github";
 import { createMetadata, defaultDescription } from "@/lib/metadata";

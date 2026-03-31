@@ -215,7 +215,7 @@ export const createDropZoneStore = (storeContext: StoreContext) => {
 
 					// == Handle Errors ==
 				} catch (error) {
-					const errorContext = getErrorContext(error as Error);
+					const errorContext = getErrorContext(error);
 
 					for (const fileState of newFileStateArray) {
 						actions.updateFileState({

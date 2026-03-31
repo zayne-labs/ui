@@ -204,7 +204,7 @@ function MainForm() {
 									className="mt-1 size-4 rounded-sm border-slate-300 text-indigo-600
 										focus:ring-indigo-500"
 								/>
-								<div className="pointer-events-none flex flex-1 flex-col gap-0.5">
+								<div className="pointer-events-none flex grow flex-col gap-0.5">
 									<Form.Label
 										className="text-sm/tight font-semibold tracking-tight text-slate-900"
 									>

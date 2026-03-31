@@ -11,7 +11,11 @@ The `Await` component provides a declarative way to handle asynchronous operatio
 @zayne-labs/ui-react
 ```
 
-## Basic Usage
+## Preview
+
+<ComponentTabs name="await-demo" />
+
+## Usage
 
 <Tabs items={['Brief Pattern', 'Comprehensive Pattern']}>
   <Tab value="Brief Pattern">
@@ -65,7 +69,11 @@ The `Await` component provides a declarative way to handle asynchronous operatio
   </Tab>
 </Tabs>
 
-## Component API
+## Component Source
+
+<ComponentSource name="await" src="../../packages/ui-react/src/components/common/await/await.tsx" />
+
+## API Reference
 
 <Accordions>
   <Accordion title="Await.Root">
@@ -85,27 +93,3 @@ The `Await` component provides a declarative way to handle asynchronous operatio
     Renders when the promise rejects. Receives the `error` and `resetErrorBoundary` function.
   </Accordion>
 </Accordions>
-
-## Why use Await?
-
-- **Unwraps with `use()`**: Internally uses the React `use()` hook for optimal integration with Suspense.
-- **Type Safety**: Automatically infers the resolved type of your promise in the success render function.
-- **Declarative**: Removes the need for manually managing `isLoading` and `error` state variables.
-
-```tsx
-// Instead of this:
-function OldComponent() {
-	const [data, setData] = useState(null);
-	const [loading, setLoading] = useState(true);
-	// ...
-}
-
-// Do this:
-function NewComponent({ myPromise }) {
-	return <Await.Root promise={myPromise}>{(data) => <Display data={data} />}</Await.Root>;
-}
-```
-
-<Callout type="info">
-	Always create your promises outside of the component or memoize them to prevent infinite re-renders.
-</Callout>

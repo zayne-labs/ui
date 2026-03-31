@@ -1,9 +1,8 @@
 import { createCustomContext } from "@zayne-labs/toolkit-react";
+import type { ErrorFallbackRenderProps } from "./types";
 
-export type ErrorBoundaryContextType = {
-	error: unknown;
+export type ErrorBoundaryContextType = ErrorFallbackRenderProps & {
 	hasError: boolean;
-	resetErrorBoundary: (...args: unknown[]) => void;
 };
 
 const [ErrorBoundaryContext, useErrorBoundaryContext] = createCustomContext<ErrorBoundaryContextType>({

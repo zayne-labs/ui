@@ -10,7 +10,6 @@ import type { InferProps } from "@zayne-labs/toolkit-react/utils";
 import type { Awaitable } from "@zayne-labs/toolkit-type-helpers";
 import type { useDropZoneStoreContext } from "./drop-zone-context";
 import type { createDropZoneStore } from "./drop-zone-store";
-import type { DropZoneError } from "./utils";
 
 type FileErrorContext = Omit<FileValidationErrorContextEach, "code"> & {
 	code: "upload-error" | FileValidationErrorContextEach["code"];
@@ -218,7 +217,7 @@ export interface UseDropZoneProps extends FileValidationSettingsAsync, Pick<Shar
 	 */
 	onUpload?: (
 		context: Pick<DropZoneState, "fileStateArray"> & {
-			onError: (ctx: FileStateOrIDProp & { error: DropZoneError }) => void;
+			onError: (ctx: FileStateOrIDProp & { error: unknown }) => void;
 			onProgress: (ctx: FileStateOrIDProp & { progress: number }) => void;
 			onSuccess: (ctx: FileStateOrIDProp) => void;
 		}

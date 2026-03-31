@@ -5,17 +5,16 @@ export type SuspenseWithBoundaryProps = {
 	children: React.ReactNode;
 	errorFallback?: ErrorBoundaryProps["fallback"];
 	fallback?: React.ReactNode;
+	onError?: ErrorBoundaryProps["onError"];
+	onErrorReset?: ErrorBoundaryProps["onErrorReset"];
 };
 
 export function SuspenseWithBoundary(props: SuspenseWithBoundaryProps) {
-	const { children, errorFallback, fallback } = props;
-
-	const errorBoundaryProps = Boolean(errorFallback) && { fallback: errorFallback };
-	const suspenseProps = Boolean(fallback) && { fallback };
+	const { children, errorFallback, fallback, onError, onErrorReset } = props;
 
 	return (
-		<ErrorBoundary {...errorBoundaryProps}>
-			<Suspense {...suspenseProps}>{children}</Suspense>
+		<ErrorBoundary fallback={errorFallback} onError={onError} onErrorReset={onErrorReset}>
+			<Suspense fallback={fallback}>{children}</Suspense>
 		</ErrorBoundary>
 	);
 }

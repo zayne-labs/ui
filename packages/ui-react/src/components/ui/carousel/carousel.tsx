@@ -52,16 +52,19 @@ export function CarouselRoot<TImages extends ImagesType, TElement extends React.
 		<CarouselStoreContextProvider store={carouselStore}>
 			<Element
 				data-scope="carousel"
-				data-part="content"
-				data-slot="carousel-content"
-				className={cnMerge("relative select-none", classNames?.base)}
+				data-part="root"
+				data-slot="carousel-root"
+				className={cnMerge("relative isolate", classNames?.base)}
 				onMouseEnter={pauseAutoSlide}
 				onMouseLeave={resumeAutoSlide}
 			>
 				<div
+					data-scope="carousel"
+					data-part="content"
+					data-slot="carousel-content"
 					className={cnMerge(
-						"flex size-full overflow-x-scroll [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
-						classNames?.scrollContainer
+						"scrollbar-hidden flex size-full overflow-x-scroll",
+						classNames?.content
 					)}
 				>
 					{children}
@@ -80,11 +83,12 @@ export function CarouselButton(props: CarouselButtonsProps) {
 		<button
 			data-scope="carousel"
 			data-part="button"
-			data-slot="carousel-button"
+			data-slot={`carousel-${variant}-button`}
 			type="button"
 			className={cnMerge(
-				"z-30 flex h-full w-fit items-center",
-				variant === "prev" ? "justify-start" : "justify-end",
+				"absolute inset-y-0 z-20 flex items-center justify-center",
+				variant === "prev" && "left-0",
+				variant === "next" && "right-0",
 				classNames?.base
 			)}
 			onClick={variant === "prev" ? goToPreviousSlide : goToNextSlide}
@@ -104,60 +108,39 @@ export function CarouselControls(props: CarouselControlProps) {
 	const { classNames, icon } = props;
 
 	return (
-		<div
-			data-scope="carousel"
-			data-part="controls"
-			data-slot="carousel-controls"
-			className={cnMerge("absolute inset-0 flex justify-between", classNames?.base)}
-		>
-			<Show.Root when={icon?.iconType}>
-				<Show.Content>
-					<CarouselButton
-						variant="prev"
-						classNames={{
-							defaultIcon: classNames?.defaultIcon,
-							iconContainer: cnMerge(
-								icon?.iconType === "nextIcon" && "rotate-180",
-								classNames?.iconContainer
-							),
-						}}
-						icon={icon?.icon}
-					/>
+		<Show.Root when={icon?.iconType}>
+			<Show.Content>
+				<CarouselButton
+					variant="prev"
+					classNames={{
+						...classNames,
+						iconContainer: cnMerge(
+							icon?.iconType === "nextIcon" && "rotate-180",
+							classNames?.iconContainer
+						),
+					}}
+					icon={icon?.icon}
+				/>
 
-					<CarouselButton
-						variant="next"
-						classNames={{
-							defaultIcon: classNames?.defaultIcon,
-							iconContainer: cnMerge(
-								icon?.iconType === "prevIcon" && "rotate-180",
-								classNames?.iconContainer
-							),
-						}}
-						icon={icon?.icon}
-					/>
-				</Show.Content>
+				<CarouselButton
+					variant="next"
+					classNames={{
+						...classNames,
+						iconContainer: cnMerge(
+							icon?.iconType === "prevIcon" && "rotate-180",
+							classNames?.iconContainer
+						),
+					}}
+					icon={icon?.icon}
+				/>
+			</Show.Content>
 
-				<Show.Fallback>
-					<CarouselButton
-						variant="prev"
-						classNames={{
-							defaultIcon: classNames?.defaultIcon,
-							iconContainer: classNames?.iconContainer,
-						}}
-						icon={icon?.prev}
-					/>
+			<Show.Fallback>
+				<CarouselButton variant="prev" classNames={classNames} icon={icon?.prev} />
 
-					<CarouselButton
-						variant="next"
-						classNames={{
-							defaultIcon: classNames?.defaultIcon,
-							iconContainer: classNames?.iconContainer,
-						}}
-						icon={icon?.next}
-					/>
-				</Show.Fallback>
-			</Show.Root>
-		</div>
+				<CarouselButton variant="next" classNames={classNames} icon={icon?.next} />
+			</Show.Fallback>
+		</Show.Root>
 	);
 }
 
@@ -209,17 +192,17 @@ export function CarouselItem(props: OtherCarouselProps) {
 export function CarouselCaption<TElement extends React.ElementType = "div">(
 	props: PolymorphicPropsStrict<TElement, OtherCarouselProps>
 ) {
-	const { as: HtmlElement = "div", children, className } = props;
+	const { as: Element = "div", children, className } = props;
 
 	return (
-		<HtmlElement
+		<Element
 			data-scope="carousel"
 			data-part="caption"
 			data-slot="carousel-caption"
 			className={cnMerge("absolute z-10", className)}
 		>
 			{children}
-		</HtmlElement>
+		</Element>
 	);
 }
 

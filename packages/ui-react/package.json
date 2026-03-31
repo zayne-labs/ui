@@ -17,8 +17,8 @@
 	"sideEffects": false,
 	"exports": {
 		".": null,
-		"./ui/*": "./dist/esm/ui/*/index.js",
-		"./common/*": "./dist/esm/common/*/index.js",
+		"./ui/*": "./dist/components/ui/*/index.js",
+		"./common/*": "./dist/components/common/*/index.js",
 		"./css/*": "./css/*",
 		"./style.css": "./dist/style.css"
 	},

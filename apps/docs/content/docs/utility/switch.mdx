@@ -11,74 +11,86 @@ The Switch component provides a declarative pattern-matching approach for render
 @zayne-labs/ui-react
 ```
 
-## Basic Usage
+## Preview
 
-<Tabs items={['Value Matching', 'Boolean Matching']}>
-  <Tab value="Value Matching">
-    In value matching mode, you provide a `value` to `Switch.Root`, and each `Switch.Match` checks its `when` prop against that value.
+<ComponentTabs name="switch-demo" />
 
-    ```tsx
-    import { Switch } from "@zayne-labs/ui-react/common/switch";
+## Usage
 
-    function StatusIndicator({ status }) {
-      return (
-        <Switch.Root value={status}>
-          <Switch.Match when="loading">Loading...</Switch.Match>
-          <Switch.Match when="success">Success!</Switch.Match>
-          <Switch.Match when="error">Error occurred</Switch.Match>
-          <Switch.Default>Unknown status</Switch.Default>
-        </Switch.Root>
-      );
-    }
-    ```
+```tsx
+import { Switch } from "@zayne-labs/ui-react/common/switch";
 
-  </Tab>
-  <Tab value="Boolean Matching">
-    Omit the `value` prop to use boolean matching. It acts like a `switch(true)` block, rendering the first component whose `when` condition evaluates to truthy.
+function StatusIndicator({ status }) {
+	return (
+		<Switch.Root value={status}>
+			<Switch.Match when="loading">Loading...</Switch.Match>
+			<Switch.Match when="success">Success!</Switch.Match>
+			<Switch.Match when="error">Error occurred</Switch.Match>
+			<Switch.Default>Unknown status</Switch.Default>
+		</Switch.Root>
+	);
+}
+```
 
-    ```tsx
-    import { Switch } from "@zayne-labs/ui-react/common/switch";
+## Component Source
 
-    function UserGreeting({ user, isLoading, error }) {
-      return (
-        <Switch.Root>
-          <Switch.Match when={isLoading}>Loading...</Switch.Match>
-          <Switch.Match when={error}>Error: {error.message}</Switch.Match>
-          <Switch.Match when={user}>
-            {(data) => <div>Welcome, {data.name}!</div>}
-          </Switch.Match>
-          <Switch.Default>Please log in</Switch.Default>
-        </Switch.Root>
-      );
-    }
-    ```
-
-  </Tab>
-</Tabs>
+<ComponentSource name="switch" src="../../packages/ui-react/src/components/common/switch/switch.tsx" />
 
 ## Component API
 
-<Accordions>
-  <Accordion title="Switch.Root">
-    The coordinator for pattern matching. Only the first truthful match is rendered.
+### Switch.Root
 
-    <auto-type-table path="../../../lib/ui-options.ts" name="SwitchRootProps" />
+The coordinator for pattern matching. Only the first truthful match is rendered.
 
-  </Accordion>
+**Props:**
 
-  <Accordion title="Switch.Match">
-    Defines a conditional case. Supports render props for type-safe access to the matched value.
+- `value?: TValue` - The value to match against. If omitted, uses boolean matching mode.
+- `children: React.ReactNode` - The Switch.Match and Switch.Default components.
 
-    <auto-type-table path="../../../lib/ui-options.ts" name="SwitchMatchProps" />
+### Switch.Match
 
-  </Accordion>
+Defines a conditional case. Supports render props for type-safe access to the matched value.
 
-  <Accordion title="Switch.Default">
-     The fallback component rendered when no matches are found.
-  </Accordion>
-</Accordions>
+**Props:**
+
+- `when: TValue | boolean` - The condition to match against.
+- `children: React.ReactNode | ((value: TValue) => React.ReactNode)` - Content to render when matched. Can be a render function for type-safe access to the value.
+
+### Switch.Default
+
+The fallback component rendered when no matches are found.
+
+**Props:**
+
+- `children: React.ReactNode` - Content to render as fallback.
 
 ## Examples
+
+### Value Matching
+
+In value matching mode, you provide a `value` to `Switch.Root`, and each `Switch.Match` checks its `when` prop against that value.
+
+```tsx
+<Switch.Root value={status}>
+	<Switch.Match when="loading">Loading...</Switch.Match>
+	<Switch.Match when="success">Success!</Switch.Match>
+	<Switch.Match when="error">Error occurred</Switch.Match>
+	<Switch.Default>Unknown status</Switch.Default>
+</Switch.Root>
+```
+
+### Boolean Matching
+
+Omit the `value` prop to use boolean matching. It acts like a `switch(true)` block, rendering the first component whose `when` condition evaluates to truthy.
+
+```tsx
+<Switch.Root>
+	<Switch.Match when={isLoading}>Loading...</Switch.Match>
+	<Switch.Match when={error}>Error: {error.message}</Switch.Match>
+	<Switch.Match when={user}>{(data) => <div>Welcome, {data.name}!</div>}</Switch.Match>
+	<Switch.Default>Please log in</Switch.Default>
+</Switch.Root>
+```
 
 ### Complex Layout Switching
 

@@ -1,13 +1,13 @@
-export type ErrorFallbackProps = {
-	error: unknown;
+export type ErrorFallbackRenderProps = {
+	error: Error;
 	resetErrorBoundary: (...args: unknown[]) => void;
 };
 
 export type ErrorBoundaryProps = {
 	children: React.ReactNode;
-	fallback?: React.ReactNode | ((props: ErrorFallbackProps) => React.ReactNode);
+	fallback?: React.ReactNode | ((props: ErrorFallbackRenderProps) => React.ReactNode);
 	onError?: (context: { error: Error; info: React.ErrorInfo & { ownerStack?: string } }) => void;
-	onReset?: (
+	onErrorReset?: (
 		context:
 			| {
 					args: unknown[];

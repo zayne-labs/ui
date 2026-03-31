@@ -11,9 +11,13 @@ The `For` component provides a declarative way to render lists and arrays in Rea
 @zayne-labs/ui-react
 ```
 
-## Basic Usage
+## Preview
 
-<Tabs items={['Array Rendering', 'Numeric Range']}>
+<ComponentTabs name="for-demo" />
+
+## Usage
+
+<Tabs items={['Array Rendering', 'Numeric Range', 'With renderItem']}>
   <Tab value="Array Rendering">
     Pass an array to `each` and utilize the render prop to define your items.
 
@@ -52,7 +56,34 @@ The `For` component provides a declarative way to render lists and arrays in Rea
     ```
 
   </Tab>
+  <Tab value="With renderItem">
+    Use `renderItem` prop for cleaner syntax when you need to pass the render function as a prop.
+
+    ```tsx
+    import { ForWithWrapper } from "@zayne-labs/ui-react/common/for";
+
+    function ProductGrid({ products }) {
+      return (
+        <ForWithWrapper
+          className="grid grid-cols-3 gap-4"
+          each={products}
+          renderItem={(product) => (
+            <li key={product.id} className="p-4 border rounded">
+              <h3>{product.name}</h3>
+              <p>${product.price}</p>
+            </li>
+          )}
+        />
+      );
+    }
+    ```
+
+  </Tab>
 </Tabs>
+
+## Component Source
+
+<ComponentSource name="for" src="../../packages/ui-react/src/components/common/for/for.tsx" />
 
 ## Component API
 
@@ -94,8 +125,3 @@ function StatisticsTable({ data }) {
 	);
 }
 ```
-
-<Callout type="info">
-	`For` uses the `React.Children` API internally to optimize rendering and ensure correct key management
-	in common scenarios.
-</Callout>

@@ -11,9 +11,13 @@ The `Presence` component enables smooth entry and exit animations for components
 @zayne-labs/ui-react
 ```
 
+## Preview
+
+<ComponentTabs name="presence-demo" />
+
 ## Basic Usage
 
-<Tabs items={['CSS Animation', 'Tailwind v4 Transition']}>
+<Tabs items={['CSS Animation', 'CSS Transition']}>
   <Tab value="CSS Animation">
     Animations are the default and recommended way to use Presence.
 
@@ -23,7 +27,7 @@ The `Presence` component enables smooth entry and exit animations for components
     function FadeBox({ isOpen }) {
       return (
         <Presence present={isOpen}>
-          <div className="rounded-lg bg-zu-primary p-6 text-white shadow-xl animate-in fade-in duration-300 data-[state=unmountSuspended]:animate-out data-[state=unmountSuspended]:fade-out">
+          <div className="rounded-lg bg-zu-primary p-6 text-white shadow-xl animate-in fade-in duration-300 data-[animation-phase=exit]:animate-out data-[animation-phase=exit]:fade-out">
             Hello, I am animated!
           </div>
         </Presence>
@@ -32,12 +36,12 @@ The `Presence` component enables smooth entry and exit animations for components
     ```
 
   </Tab>
-  <Tab value="Tailwind v4 Transition">
+  <Tab value="CSS Transition">
     Use `variant="transition"` when you prefer using CSS transitions over keyframe animations.
 
     ```tsx
     <Presence present={isOpen} variant="transition">
-      <div className="transition-all duration-300 opacity-0 scale-95 data-[transition=active]:opacity-100 data-[transition=active]:scale-100">
+      <div className="transition-all duration-300 opacity-0 scale-95 data-[transition-phase=enter]:opacity-100 data-[transition-phase=enter]:scale-100">
         Smooth transition
       </div>
     </Presence>
@@ -45,6 +49,13 @@ The `Presence` component enables smooth entry and exit animations for components
 
   </Tab>
 </Tabs>
+
+## Component Source
+
+<ComponentSource
+	name="presence"
+	src="../../packages/ui-react/src/components/common/presence/presence.tsx"
+/>
 
 ## Component API
 
@@ -58,20 +69,20 @@ The `Presence` component enables smooth entry and exit animations for components
 
 Presence applies stateful attributes to the child element, allowing you to trigger CSS animations.
 
-| Attribute         | Value                             | Description                               |
-| :---------------- | :-------------------------------- | :---------------------------------------- |
-| `data-state`      | `"mounted" \| "unmountSuspended"` | Current lifecycle state.                  |
-| `data-present`    | `"true" \| "false"`               | Matches the `present` prop.               |
-| `data-transition` | `"active" \| "inactive"`          | Only present when `variant="transition"`. |
+| Attribute               | Value                         | Availability                | Description                                            |
+| :---------------------- | :---------------------------- | :-------------------------- | :----------------------------------------------------- |
+| `data-mounted`          | `true \| false`               | Always                      | Whether the component is currently mounted in the DOM. |
+| `data-present`          | `true \| false`               | Always                      | Matches the `present` prop value.                      |
+| `data-animation-phase`  | `"enter" \| "exit"`           | `variant="animation"` only  | Current animation phase.                               |
+| `data-transition-phase` | `"enter" \| "exit"`           | `variant="transition"` only | Current transition phase.                              |
+| `data-variant`          | `"animation" \| "transition"` | Always                      | The variant being used.                                |
 
 ### Tailwind Selection
 
 You can target these states efficiently in Tailwind CSS:
 
-```css
-/* In your global CSS if using custom v4 variants */
-@variant data-state-unmountSuspended (&[data-state="unmountSuspended"]);
-@variant data-transition-active (&[data-transition="active"]);
+```jsx
+<div className="data-[animation-phase=exit]:animate-out data-[animation-phase=exit]:fade-out" />
 ```
 
 ## Examples
@@ -80,7 +91,7 @@ You can target these states efficiently in Tailwind CSS:
 
 ```tsx
 <Presence present={isOpen}>
-	<div className="fixed inset-0 animate-in bg-black/50 backdrop-blur-sm fade-in data-[state=unmountSuspended]:animate-out data-[state=unmountSuspended]:fade-out" />
+	<div className="fixed inset-0 animate-in bg-black/50 backdrop-blur-sm fade-in data-[animation-phase=exit]:animate-out data-[animation-phase=exit]:fade-out" />
 </Presence>
 ```
 

@@ -33,7 +33,7 @@ function PageFour() {
 							className="size-16 rounded-2xl object-cover shadow-sm ring-4 ring-white"
 						/>
 
-						<div className="flex-1">
+						<div className="grow">
 							<Card.Title className="text-xl/tight font-bold text-slate-900">
 								Sarah Anderson
 							</Card.Title>

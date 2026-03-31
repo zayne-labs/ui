@@ -3,13 +3,15 @@ title: Carousel
 description: A flexible carousel component with automatic sliding, navigation controls, and customizable indicators.
 ---
 
-The Carousel component provides a fully-featured image and content slider with support for automatic sliding, navigation buttons, indicators, captions, and custom rendering. It's built with composition in mind and offers fine-grained control over behavior and appearance.
-
 ## Installation
 
 ```package-install
 @zayne-labs/ui-react
 ```
+
+## Preview
+
+<ComponentTabs name="carousel-demo" />
 
 ## Basic Usage
 
@@ -17,16 +19,16 @@ The Carousel component provides a fully-featured image and content slider with s
 import { Carousel } from "@zayne-labs/ui-react/ui/carousel";
 
 const items = [
-	{ src: "https://example.com/image1.jpg", title: "Slide 1" },
-	{ src: "https://example.com/image2.jpg", title: "Slide 2" },
-	{ src: "https://example.com/image3.jpg", title: "Slide 3" },
+	{ src: "/image1.jpg", title: "Slide 1" },
+	{ src: "/image2.jpg", title: "Slide 2" },
+	{ src: "/image3.jpg", title: "Slide 3" },
 ];
 
-<Carousel.Root images={items}>
+<Carousel.Root images={items} hasAutoSlide={true} autoSlideInterval={5000} shouldPauseOnHover={true}>
 	<Carousel.ItemList>
 		{({ image }) => (
 			<Carousel.Item>
-				<img src={image.src} alt={image.title} className="h-96 w-full rounded-xl object-cover" />
+				<img src={image.src} alt={image.title} />
 			</Carousel.Item>
 		)}
 	</Carousel.ItemList>
@@ -39,125 +41,53 @@ const items = [
 </Carousel.Root>;
 ```
 
+## Component Source
+
+<ComponentSource name="carousel" src="../../packages/ui-react/src/components/ui/carousel/carousel.tsx" />
+
 ## Component API
 
-### Carousel.Root
+<Accordions>
+	<Accordion title="Carousel.Root">
+		<auto-type-table path="../../../lib/ui-options.ts" name="CarouselRootProps" />
+	</Accordion>
+	<Accordion title="Carousel.Controls">
+		<auto-type-table path="../../../lib/ui-options.ts" name="CarouselControlProps" />
+	</Accordion>
+	<Accordion title="Carousel.Indicator">
+		<auto-type-table path="../../../lib/ui-options.ts" name="CarouselIndicatorProps" />
+	</Accordion>
+</Accordions>
 
-The root provider that manages carousel state, timers, and transitions.
-
-<auto-type-table path="../../../lib/ui-options.ts" name="CarouselRootProps" />
-
-### Carousel.Controls
-
-Navigation container for previous and next buttons.
-
-<auto-type-table path="../../../lib/ui-options.ts" name="CarouselControlProps" />
-
-### Carousel.Indicator
-
-Individual slide indicator component.
-
-<auto-type-table path="../../../lib/ui-options.ts" name="CarouselIndicatorProps" />
-
-### Other Components
-
-The following components accept standard HTML props:
-
-- `Carousel.ItemList` - Container for carousel items (accepts `className`)
-- `Carousel.Item` - Individual carousel item (accepts `className`)
-- `Carousel.IndicatorList` - Container for indicators (accepts `className`)
-- `Carousel.Caption` - Caption overlay (accepts `className` and polymorphic `as` prop)
-
-## Examples
-
-<Tabs items={['Auto-Playing', 'Custom Navigation', 'Vertical Content']}>
-  <Tab value="Auto-Playing">
-    ```tsx
-    <Carousel.Root
-      images={images}
-      hasAutoSlide
-      autoSlideInterval={5000}
-      shouldPauseOnHover
-      className="relative w-full rounded-2xl overflow-hidden"
-    >
-      <Carousel.ItemList>
-        {({ image }) => (
-          <Carousel.Item>
-            <div className="relative h-96 w-full">
-              <img src={image} className="absolute inset-0 h-full w-full object-cover" alt="Slide" />
-              <div className="absolute inset-0 bg-black/20" />
-            </div>
-          </Carousel.Item>
-        )}
-      </Carousel.ItemList>
-      <Carousel.Controls />
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2">
-        <Carousel.IndicatorList />
-      </div>
-    </Carousel.Root>
-    ```
-  </Tab>
-  <Tab value="Custom Navigation">
-    ```tsx
-    import { ArrowLeft, ArrowRight } from "lucide-react";
-
-    <Carousel.Root images={images}>
-      <Carousel.ItemList>{/* ... */}</Carousel.ItemList>
-
-      <Carousel.Controls
-        icon={{
-          prev: <ArrowLeft className="size-6" />,
-          next: <ArrowRight className="size-6" />,
-        }}
-        className="mt-6 flex justify-center gap-4"
-      />
-    </Carousel.Root>
-    ```
-
-  </Tab>
-</Tabs>
-
-## Navigation Patterns
-
-The Carousel supports flexible icon configuration to handle both symmetrical and asymmetrical designs:
+## Navigation Icons
 
 <Accordions>
-  <Accordion title="Separate Icons">
-    ```tsx
-    <Carousel.Controls
-      icon={{
-        prev: <PrevIcon />,
-        next: <NextIcon />,
-      }}
-    />
-    ```
-  </Accordion>
-  <Accordion title="Single Icon Pattern">
-    Provide one icon and specify its type. The library will handle rotating the icon for the opposite direction.
-
-    ```tsx
-    <Carousel.Controls
-      icon={{
-        icon: <ArrowIcon />,
-        iconType: "nextIcon", // Prev button will be rotated 180deg
-      }}
-    />
-    ```
-
-  </Accordion>
+	<Accordion title="Separate Icons">
+		```tsx
+		<Carousel.Controls
+			icon={{
+				prev: <PrevIcon />,
+				next: <NextIcon />,
+			}}
+		/>
+		```
+	</Accordion>
+	<Accordion title="Single Icon (Auto-Rotate)">
+		```tsx
+		<Carousel.Controls
+			icon={{
+				icon: <ArrowIcon />,
+				iconType: "nextIcon", // Prev button rotates 180deg
+			}}
+		/>
+		```
+	</Accordion>
 </Accordions>
 
 ## Data Attributes
 
-| Component            | Attribute               | Description                              |
-| :------------------- | :---------------------- | :--------------------------------------- |
-| `Carousel.Root`      | `data-scope="carousel"` | The component family.                    |
-| `Carousel.Item`      | `data-part="item"`      | Individual slide element.                |
-| `Carousel.Indicator` | `data-active`           | Present on the active slide's indicator. |
-
-```css title="styles.css"
-[data-scope="carousel"] [data-active] {
-  background-color: var(--zu-primary);
-  width: 2rem;
-}
-```
+| Component       | Attribute               | Description                  |
+| :-------------- | :---------------------- | :--------------------------- |
+| `Carousel.Root` | `data-scope="carousel"` | Component family identifier. |
+| `Carousel.Item` | `data-part="item"`      | Individual slide element.    |
+| All parts       | `data-slot`             | Combined identifier pattern. |

@@ -1,9 +1,7 @@
 ---
 title: DragScroll
-description: A headless component suite for adding mouse drag-to-scroll functionality to containers with optional navigation buttons and state subscription.
+description: Mouse drag-to-scroll functionality for horizontal or vertical scrollable containers.
 ---
-
-The `DragScroll` component suite provides mouse drag-to-scroll behavior for horizontal or vertical scrollable containers.
 
 ## Installation
 
@@ -11,38 +9,59 @@ The `DragScroll` component suite provides mouse drag-to-scroll behavior for hori
 @zayne-labs/ui-react
 ```
 
-## Basic Usage
+## Preview
 
-The recommended way to use DragScroll is via the compound components, which manage context and state internally.
+<ComponentTabs name="drag-scroll-demo" />
+
+## Basic Usage
 
 ```tsx
 import { DragScroll } from "@zayne-labs/ui-react/ui/drag-scroll";
 
-function HorizontalScroller() {
+function Example() {
 	return (
 		<DragScroll.Root>
-			<DragScroll.Prev className="absolute top-1/2 left-0 -translate-y-1/2">←</DragScroll.Prev>
+			<DragScroll.Prev>←</DragScroll.Prev>
 
-			<DragScroll.List className="flex gap-4 overflow-x-auto p-10">
-				{[1, 2, 3, 4, 5].map((item) => (
-					<DragScroll.Item
-						key={item}
-						className="flex h-40 w-64 shrink-0 items-center justify-center rounded-xl border border-zu-primary/20 bg-zu-primary/10"
-					>
-						Item {item}
-					</DragScroll.Item>
+			<DragScroll.List className="flex gap-4 overflow-x-auto">
+				{items.map((item) => (
+					<DragScroll.Item key={item.id}>{item.content}</DragScroll.Item>
 				))}
 			</DragScroll.List>
 
-			<DragScroll.Next className="absolute top-1/2 right-0 -translate-y-1/2">→</DragScroll.Next>
+			<DragScroll.Next>→</DragScroll.Next>
 		</DragScroll.Root>
 	);
 }
 ```
 
-## Hook Usage (Advanced)
+## Component Source
 
-If you need fine-grained control or want to apply props to custom components without using the compound components, you can use the `useDragScroll` hook.
+<ComponentSource
+	name="drag-scroll"
+	src="../../packages/ui-react/src/components/ui/drag-scroll/drag-scroll.tsx"
+/>
+
+## Component API
+
+<Accordions>
+	<Accordion title="DragScroll.Root">
+		<auto-type-table path="../../../lib/ui-options.ts" name="DragScrollRootProps" />
+	</Accordion>
+	<Accordion title="DragScroll.List">
+		<auto-type-table path="../../../lib/ui-options.ts" name="DragScrollListProps" />
+	</Accordion>
+	<Accordion title="DragScroll.Item">
+		<auto-type-table path="../../../lib/ui-options.ts" name="DragScrollItemProps" />
+	</Accordion>
+	<Accordion title="DragScroll.Prev / Next">
+		<auto-type-table path="../../../lib/ui-options.ts" name="DragScrollPrevProps" />
+	</Accordion>
+</Accordions>
+
+## Hook Usage
+
+For advanced use cases, use the `useDragScroll` hook directly:
 
 ```tsx
 import { useDragScroll } from "@zayne-labs/ui-react/ui/drag-scroll";
@@ -50,120 +69,16 @@ import { useDragScroll } from "@zayne-labs/ui-react/ui/drag-scroll";
 function CustomScroller() {
 	const { propGetters } = useDragScroll();
 
-	return (
-		<div {...propGetters.getListProps()} className="flex gap-4 overflow-x-auto">
-			{/* ... items */}
-		</div>
-	);
+	return <div {...propGetters.getListProps()}>{/* items */}</div>;
 }
 ```
 
-## Anatomy
+## Data Attributes
 
-```tsx
-<DragScroll.Root>
-	<DragScroll.Prev />
-
-	<DragScroll.List>
-		<DragScroll.Item />
-		<DragScroll.Item />
-	</DragScroll.List>
-
-	<DragScroll.Next />
-</DragScroll.Root>
-```
-
-## Component API
-
-<Accordions>
-	<Accordion title="DragScroll.Root">
-		The provider that initializes the drag-scroll engine and manages the store.
-		<auto-type-table path="../../../lib/ui-options.ts" name="DragScrollRootProps" />
-	</Accordion>
-
-    <Accordion title="DragScroll.List">
-    	The element that handles the drag tracking and scrolling.
-    	<auto-type-table path="../../../lib/ui-options.ts" name="DragScrollListProps" />
-    </Accordion>
-
-    <Accordion title="DragScroll.Item">
-    	The element that applies snapping and item-specific attributes.
-    	<auto-type-table path="../../../lib/ui-options.ts" name="DragScrollItemProps" />
-    </Accordion>
-
-    <Accordion title="DragScroll.Prev / Next">
-    	Buttons for programmatic navigation.
-    	<auto-type-table path="../../../lib/ui-options.ts" name="DragScrollPrevProps" />
-    	<auto-type-table path="../../../lib/ui-options.ts" name="DragScrollNextProps" />
-    </Accordion>
-
-    <Accordion title="DragScroll.Context">
-    	Provides access to the internal store state via a render prop or internal hooks.
-    	<auto-type-table path="../../../lib/ui-options.ts" name="DragScrollContextProps" />
-    </Accordion>
-
-</Accordions>
-
-## Hook Options
-
-<auto-type-table path="../../../lib/ui-options.ts" name="UseDragScrollProps" />
-
-## Return Values (from `useDragScroll`)
-
-<Accordions>
-	<Accordion title="propGetters">
-		Functions that return a collection of props to be spread onto your elements: - `getListProps`: Props
-		for the scrollable container. - `getItemProps`: Props for each scrollable item. -
-		`getPrevButtonProps`: Props for the previous navigation button. - `getNextButtonProps`: Props for the
-		next navigation button.
-	</Accordion>
-	<Accordion title="listRef">
-		A standard React ref object containing the scrollable container element.
-	</Accordion>
-	<Accordion title="storeApi">The raw Zustand-style store API for advanced state management.</Accordion>
-	<Accordion title="useDragScrollStore">
-		A hook-based selector for subscribing to specific pieces of state.
-	</Accordion>
-</Accordions>
-
-## Styling
-
-The following data attributes are automatically applied to the components for scoped styling:
-
-| Component   | Attribute       | Value               | Description                                            |
-| :---------- | :-------------- | :------------------ | :----------------------------------------------------- |
-| `Root`      | `data-part`     | `"root"`            | Identifies the root wrapper component.                 |
-| `Container` | `data-part`     | `"container"`       | Identifies the scrollable container.                   |
-| `Container` | `data-dragging` | `"true" \| "false"` | Active when the container is currently being dragged.  |
-| `Item`      | `data-part`     | `"item"`            | Identifies an individual scrollable item.              |
-| `Prev`      | `data-part`     | `"prev-button"`     | Identifies the previous navigation button.             |
-| `Prev`      | `data-disabled` | `"true" \| "false"` | Active when there's no more content to scroll back.    |
-| `Next`      | `data-part`     | `"next-button"`     | Identifies the next navigation button.                 |
-| `Next`      | `data-disabled` | `"true" \| "false"` | Active when there's no more content to scroll forward. |
-| **All**     | `data-scope`    | `"drag-scroll"`     | Shared scope for all sub-components.                   |
-| **All**     | `data-slot`     | `drag-scroll-*`     | Direct slot identifier (e.g. `drag-scroll-item`).      |
-
-```css title="styles.css"
-/* Scoped styling for the scrollable area */
-[data-scope="drag-scroll"][data-part="container"] {
-	scrollbar-width: none;
-	-ms-overflow-style: none;
-}
-
-[data-scope="drag-scroll"][data-part="container"]::-webkit-scrollbar {
-	display: none;
-}
-
-/* Visual feedback during drag */
-[data-scope="drag-scroll"][data-part="container"][data-dragging="true"] {
-	cursor: grabbing;
-	user-select: none;
-}
-
-/* Styling navigation buttons based on state */
-[data-scope="drag-scroll"][data-part$="-button"][data-disabled="true"] {
-	opacity: 0.5;
-	pointer-events: none;
-	filter: grayscale(1);
-}
-```
+| Component | Attribute       | Value               | Description                                    |
+| :-------- | :-------------- | :------------------ | :--------------------------------------------- |
+| `List`    | `data-dragging` | `"true" \| "false"` | Active when container is being dragged.        |
+| `Prev`    | `data-disabled` | `"true" \| "false"` | Active when no more content to scroll back.    |
+| `Next`    | `data-disabled` | `"true" \| "false"` | Active when no more content to scroll forward. |
+| **All**   | `data-scope`    | `"drag-scroll"`     | Shared scope identifier.                       |
+| **All**   | `data-slot`     | `drag-scroll-*`     | Combined identifier (e.g. `drag-scroll-item`). |

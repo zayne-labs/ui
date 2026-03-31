@@ -67,7 +67,7 @@ function PageSeven() {
 						<Icon className="size-6" icon="lucide:chevron-left" />
 					</DragScroll.Prev>
 
-					<DragScroll.Container
+					<DragScroll.List
 						className="scrollbar-hidden flex items-stretch gap-6 overflow-x-auto scroll-smooth p-4
 							data-[dragging=true]:cursor-grabbing"
 					>
@@ -113,7 +113,7 @@ function PageSeven() {
 								</DragScroll.Item>
 							)}
 						/>
-					</DragScroll.Container>
+					</DragScroll.List>
 
 					<DragScroll.Next
 						className="absolute top-1/2 -right-5 z-20 flex size-12 -translate-y-1/2 cursor-pointer

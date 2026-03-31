@@ -16,7 +16,7 @@ type RenderPropFn<TValue> = (result: TValue) => React.ReactNode;
 
 type ChildrenType<TValue> = React.ReactNode | RenderPropFn<TValue>;
 
-export type AwaitRootProps<TValue> = Pick<SuspenseWithBoundaryProps, "errorFallback" | "fallback"> & {
+export type AwaitRootProps<TValue> = Omit<SuspenseWithBoundaryProps, "children"> & {
 	asChild?: boolean;
 	children: ChildrenType<TValue>;
 	promise: Promise<TValue>;
@@ -29,6 +29,8 @@ export function AwaitRoot<TValue>(props: AwaitRootProps<TValue>) {
 		children,
 		errorFallback,
 		fallback,
+		onError,
+		onErrorReset,
 		withErrorBoundary = true,
 		withSuspense = true,
 		...restOfProps
@@ -42,21 +44,27 @@ export function AwaitRoot<TValue>(props: AwaitRootProps<TValue>) {
 			getSlotMap<SlotComponentProps>(children)
 		:	({ default: children } as unknown as ReturnType<typeof getSlotMap<SlotComponentProps>>);
 
-	const selectedPendingFallback = slots.pending ?? fallback;
-	const selectedErrorFallback = slots.error ?? errorFallback;
+	const resolvedPendingFallback = slots.pending ?? fallback;
+	const resolvedErrorFallback = slots.error ?? errorFallback;
 
 	return (
-		<WithErrorBoundary {...(Boolean(selectedErrorFallback) && { fallback: selectedErrorFallback })}>
-			<WithSuspense {...(Boolean(selectedPendingFallback) && { fallback: selectedPendingFallback })}>
-				<AwaitRootInner {...restOfProps}>{slots.default}</AwaitRootInner>
+		<WithErrorBoundary
+			{...(withErrorBoundary && {
+				fallback: resolvedErrorFallback,
+				onError,
+				onErrorReset,
+			})}
+		>
+			<WithSuspense {...(withSuspense && { fallback: resolvedPendingFallback })}>
+				<AwaitRootImpl {...restOfProps}>{slots.default}</AwaitRootImpl>
 			</WithSuspense>
 		</WithErrorBoundary>
 	);
 }
 
-type AwaitRootInnerProps<TValue> = Pick<AwaitRootProps<TValue>, "asChild" | "children" | "promise">;
+type AwaitRootImplProps<TValue> = Pick<AwaitRootProps<TValue>, "asChild" | "children" | "promise">;
 
-function AwaitRootInner<TValue>(props: AwaitRootInnerProps<TValue>) {
+function AwaitRootImpl<TValue>(props: AwaitRootImplProps<TValue>) {
 	const { asChild, children, promise } = props;
 
 	const result = use(promise);

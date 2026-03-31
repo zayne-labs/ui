@@ -1,13 +1,12 @@
 import { Icon } from "@iconify/react";
 import { callApi } from "@zayne-labs/callapi";
-import { useConstant } from "@zayne-labs/toolkit-react";
 import type { InferProps } from "@zayne-labs/toolkit-react/utils";
 import { Await } from "@zayne-labs/ui-react/common/await";
 import { ForWithWrapper } from "@zayne-labs/ui-react/common/for";
 import { Card } from "@zayne-labs/ui-react/ui/card";
-import { cache } from "react";
+import { useState } from "react";
 import { tv, type VariantProps } from "tailwind-variants";
-import { cnMerge } from "../lib/utils/cn";
+import { cnJoin, cnMerge } from "../lib/utils/cn";
 
 type GitHubRepoDetails = {
 	description: string | null;
@@ -22,17 +21,33 @@ type GitHubRepoDetails = {
 	updated_at: string;
 };
 
-const fetchRepos = cache(() => {
+const fetchRepos = (shouldFail = false) => {
+	if (shouldFail) {
+		return Promise.reject(new Error("Failed to fetch repositories"));
+	}
+
 	return callApi("https://api.github.com/orgs/zayne-labs/repos", {
+		dedupeStrategy: "defer",
 		query: { per_page: 12, sort: "updated" },
 		resultMode: "onlyData",
 		schema: { data: (data) => data as GitHubRepoDetails[] },
 		throwOnError: true,
 	});
-});
+};
 
 function PageThree() {
-	const promise = useConstant(() => fetchRepos());
+	const [shouldFail, setShouldFail] = useState(false);
+	const [promise, setPromise] = useState(() => fetchRepos());
+
+	const handleLoadRepos = () => {
+		setShouldFail(false);
+		setPromise(fetchRepos(false));
+	};
+
+	const handleTriggerError = () => {
+		setShouldFail(true);
+		setPromise(fetchRepos(true));
+	};
 
 	return (
 		<div className="flex flex-col gap-10">
@@ -50,10 +65,37 @@ function PageThree() {
 				<p className="max-w-2xl text-lg/relaxed text-slate-600">
 					Showcasing the project portfolio of Zayne Labs. Fetching real-time data from the GitHub API.
 				</p>
+
+				<div className="flex gap-2">
+					<button
+						type="button"
+						onClick={handleLoadRepos}
+						className={cnJoin(
+							"rounded-md px-4 py-2 text-sm transition-colors",
+							!shouldFail ?
+								"bg-zu-primary text-white ring-2 ring-zu-primary ring-offset-2"
+							:	"bg-zu-primary/50 text-white/70 hover:bg-zu-primary/80"
+						)}
+					>
+						Load Repos
+					</button>
+					<button
+						type="button"
+						onClick={handleTriggerError}
+						className={cnJoin(
+							"rounded-md px-4 py-2 text-sm transition-colors",
+							shouldFail ?
+								"bg-red-600 text-white ring-2 ring-red-500 ring-offset-2"
+							:	"bg-red-600/50 text-white/70 hover:bg-red-600/80"
+						)}
+					>
+						Trigger Error
+					</button>
+				</div>
 			</header>
 
 			<section>
-				<Await.Root promise={promise}>
+				<Await.Root promise={promise} onErrorReset={handleLoadRepos}>
 					<Await.Pending>
 						<LoadingSpinner />
 					</Await.Pending>
@@ -91,9 +133,7 @@ function PageThree() {
 								<h3 className="mb-2 text-lg font-semibold text-gray-900">
 									Unable to load projects
 								</h3>
-								<p className="mb-6 text-sm text-gray-500">
-									{(error as Error | null)?.message ?? "An unknown error occurred"}
-								</p>
+								<p className="mb-6 text-sm text-gray-500">{error.message}</p>
 								<Button
 									variant="outline"
 									className="w-full justify-center border-red-200 text-red-700
@@ -178,7 +218,7 @@ function RepoCard(props: RepoCardProps) {
 				</div>
 			</Card.Header>
 
-			<Card.Content className="flex-1 pt-0 pb-6">
+			<Card.Content className="grow pt-0 pb-6">
 				<p className="line-clamp-3 text-sm/relaxed text-gray-600">
 					{repo.description ?? "No description provided for this repository."}
 				</p>
