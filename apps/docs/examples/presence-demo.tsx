@@ -3,7 +3,7 @@
 import { Presence } from "@zayne-labs/ui-react/common/presence";
 import { useState } from "react";
 
-export default function PresenceDemo() {
+function PresenceDemo() {
 	const [isOpen, setIsOpen] = useState(true);
 
 	return (
@@ -31,3 +31,5 @@ export default function PresenceDemo() {
 		</div>
 	);
 }
+
+export default PresenceDemo;

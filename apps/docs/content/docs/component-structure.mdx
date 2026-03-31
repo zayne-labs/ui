@@ -4,13 +4,9 @@ description: Understanding the compound component pattern and architecture of Za
 icon: Layers
 ---
 
-Zayne UI uses a **compound component** pattern for flexibility and composability.
+Zayne UI uses a compound component pattern — sub-components that work together under a shared namespace.
 
-## Compound Component Pattern
-
-Components are structured as sub-components that work together. Each component is namespaced and can be imported individually or as a group.
-
-### Example: DropZone Component
+## Compound Components
 
 ```tsx
 import { DropZone } from "@zayne-labs/ui-react/ui/drop-zone";
@@ -33,121 +29,62 @@ import { DropZone } from "@zayne-labs/ui-react/ui/drop-zone";
 </DropZone.Root>;
 ```
 
-DonEach sub-component (Root, Area, FileList, etc.) can be used independently for full control over composition.
+Each sub-component can be used independently for full control over composition.
 
-## Data Attributes for Styling
+## Data Attributes
 
-Every component renders three data attributes for styling and debugging:
+Every component renders three data attributes:
 
-- **`data-scope`**: The component family (e.g., `"card"`, `"carousel"`, `"form"`)
-- **`data-part`**: The specific part within the component (e.g., `"root"`, `"header"`, `"title"`)
-- **`data-slot`**: A combined identifier (e.g., `"card-header"`, `"carousel-button"`)
+| Attribute    | Description         | Example                            |
+| :----------- | :------------------ | :--------------------------------- |
+| `data-scope` | Component family    | `"dropzone"`, `"card"`             |
+| `data-part`  | Specific part       | `"root"`, `"area"`, `"title"`      |
+| `data-slot`  | Combined identifier | `"dropzone-area"`, `"card-header"` |
 
-### From the DropZone Source
+Use them for CSS targeting without relying on class names:
 
-```tsx title="drop-zone.tsx"
-export function DropZoneArea(props: React.ComponentPropsWithoutRef<"div">) {
-	const { className, ...restOfProps } = props;
+```css
+[data-scope="dropzone"][data-part="area"] {
+	border: 2px dashed;
+}
 
-	return (
-		<div
-			data-slot="drop-zone-area"
-			data-scope="drop-zone"
-			data-part="area"
-			className={className}
-			{...restOfProps}
-		/>
-	);
+[data-scope="dropzone"][data-part="area"][data-drag-over] {
+	background: oklch(0.97 0.01 265);
 }
 ```
 
-These attributes let you:
+## Import Pattern
 
-<Steps>
-<Step>
-	### CSS targeting
-	Target components without relying on class names.
-</Step>
-<Step>
-   ### Style encapsulation
-   Scope styles to specific components or parts.
-</Step>
-<Step>
-	### Developer experience
-	Identify components quickly in DevTools.
-</Step>
-
-</Steps>
-
-## Export Pattern
-
-Components use a dual export pattern:
-
-```tsx title="card-parts.ts"
-export {
-	CardAction as Action,
-	CardContent as Content,
-	CardDescription as Description,
-	CardFooter as Footer,
-	CardHeader as Header,
-	CardRoot as Root,
-	CardTitle as Title,
-} from "./card";
-```
-
-This allows both approaches:
+Components support both namespaced and individual imports:
 
 ```tsx
 // Namespaced (recommended)
-import { DropZone } from "@zayne-labs/ui-react/ui/drop-zone";
+// Individual
+import { DropZone, DropZoneRoot } from "@zayne-labs/ui-react/ui/drop-zone";
 
 <DropZone.Root>...</DropZone.Root>;
-```
-
-```tsx
-// Individual imports
-import { DropZoneArea, DropZoneRoot } from "@zayne-labs/ui-react/ui/drop-zone";
 
 <DropZoneRoot>...</DropZoneRoot>;
 ```
 
-## UI Components vs Utility Components
+## UI vs Utility Components
 
-The library includes two types of components:
+**UI Components** (`ui/*`) are interactive components with built-in state management and richer composition:
 
-### UI Components (`ui/*`)
+```tsx
+import { Card } from "@zayne-labs/ui-react/ui/card";
+import { DropZone } from "@zayne-labs/ui-react/ui/drop-zone";
+```
 
-Full-featured interactive components with state management:
+Available: `Card`, `Carousel`, `DragScroll`, `DropZone`, `Form`
 
-- **Card**: Presentational card layouts
-- **Carousel**: Image/content carousel with navigation
-- **Form**: Form field management with validation
-- **DropZone**: File upload areas
+---
 
-These components often include:
-
-- Context providers for state sharing
-- Event handlers and interactivity
-- Complex composition patterns
-
-### Utility Components (`common/*`)
-
-Lightweight rendering utilities without styling:
-
-- **For**: Array rendering with type safety
-- **Show**: Conditional rendering helper
-- **Slot**: Component composition utility
-- **ErrorBoundary**: Error handling boundary
+**Utility Components** (`common/*`) are lightweight rendering primitives with no styling:
 
 ```tsx
 import { For } from "@zayne-labs/ui-react/common/for";
 import { Show } from "@zayne-labs/ui-react/common/show";
-
-<For each={items}>
-	{(item) => (
-		<Show.Root when={item.isActive}>
-			<div>{item.name}</div>
-		</Show.Root>
-	)}
-</For>;
 ```
+
+Available: `For`, `Show`, `Switch`, `Await`, `Presence`, `ErrorBoundary`, `Teleport`, `ClientGate`

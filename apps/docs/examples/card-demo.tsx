@@ -5,7 +5,7 @@ import { Card } from "@zayne-labs/ui-react/ui/card";
 import { useState } from "react";
 import { cnJoin } from "@/lib/utils/cn";
 
-export default function CardDemo() {
+function CardDemo() {
 	const [selectedCard, setSelectedCard] = useState<number>(0);
 
 	return (
@@ -104,3 +104,5 @@ export default function CardDemo() {
 		</div>
 	);
 }
+
+export default CardDemo;

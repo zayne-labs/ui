@@ -25,7 +25,7 @@ const slides = [
 	},
 ];
 
-export default function CarouselDemo() {
+function CarouselDemo() {
 	return (
 		<Carousel.Root
 			images={slides}
@@ -78,3 +78,5 @@ export default function CarouselDemo() {
 		</Carousel.Root>
 	);
 }
+
+export default CarouselDemo;

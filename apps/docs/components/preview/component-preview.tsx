@@ -36,12 +36,10 @@ export function ComponentPreview(props: ComponentPreviewProps) {
 					className
 				)}
 			>
-				<div>
-					<Suspense fallback={<p className="text-fd-muted-foreground">Loading...</p>}>
-						{/* eslint-disable-next-line react-hooks/static-components */}
-						<Component />
-					</Suspense>
-				</div>
+				<Suspense fallback={<p className="text-fd-muted-foreground">Loading...</p>}>
+					{/* eslint-disable-next-line react-hooks/static-components */}
+					<Component />
+				</Suspense>
 			</div>
 		</div>
 	);

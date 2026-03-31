@@ -3,8 +3,8 @@
 	"pages": [
 		"---Guide---",
 		"index",
-		"installation",
 		"quickstart",
+		"installation",
 		"styling",
 		"typescript",
 		"component-structure",

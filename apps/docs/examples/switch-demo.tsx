@@ -4,7 +4,7 @@ import { Switch } from "@zayne-labs/ui-react/common/switch";
 import { useState } from "react";
 import { cnJoin } from "@/lib/utils/cn";
 
-export default function SwitchDemo() {
+function SwitchDemo() {
 	const [status, setStatus] = useState<"error" | "idle" | "loading" | "success">("idle");
 
 	return (
@@ -117,3 +117,5 @@ export default function SwitchDemo() {
 		</div>
 	);
 }
+
+export default SwitchDemo;

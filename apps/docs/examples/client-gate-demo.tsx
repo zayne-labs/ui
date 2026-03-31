@@ -4,7 +4,7 @@
 import { ClientGate } from "@zayne-labs/ui-react/common/client-gate";
 import { useState } from "react";
 
-export default function ClientGateDemo() {
+function ClientGateDemo() {
 	const [showContent, setShowContent] = useState(true);
 
 	return (
@@ -35,3 +35,5 @@ export default function ClientGateDemo() {
 		</div>
 	);
 }
+
+export default ClientGateDemo;

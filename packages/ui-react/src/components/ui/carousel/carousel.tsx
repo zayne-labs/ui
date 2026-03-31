@@ -51,9 +51,9 @@ export function CarouselRoot<TImages extends ImagesType, TElement extends React.
 	return (
 		<CarouselStoreContextProvider store={carouselStore}>
 			<Element
+				data-slot="carousel-root"
 				data-scope="carousel"
 				data-part="root"
-				data-slot="carousel-root"
 				className={cnMerge("relative isolate", classNames?.base)}
 				onMouseEnter={pauseAutoSlide}
 				onMouseLeave={resumeAutoSlide}
@@ -81,9 +81,9 @@ export function CarouselButton(props: CarouselButtonsProps) {
 
 	return (
 		<button
+			data-slot={`carousel-${variant}-button`}
 			data-scope="carousel"
 			data-part="button"
-			data-slot={`carousel-${variant}-button`}
 			type="button"
 			className={cnMerge(
 				"absolute inset-y-0 z-20 flex items-center justify-center",
@@ -152,9 +152,9 @@ export function CarouselItemList<TArray extends unknown[]>(props: CarouselWrappe
 
 	return (
 		<ul
+			data-slot="carousel-item-list"
 			data-scope="carousel"
 			data-part="item-list"
-			data-slot="carousel-item-list"
 			className={cnMerge(
 				`flex w-full shrink-0 transform-[translate3d(var(--translate-distance),0,0)] snap-center
 				transition-transform duration-800`,
@@ -178,9 +178,9 @@ export function CarouselItem(props: OtherCarouselProps) {
 
 	return (
 		<li
+			data-slot="carousel-item"
 			data-scope="carousel"
 			data-part="item"
-			data-slot="carousel-item"
 			className={cnMerge("flex w-full shrink-0 snap-center justify-center", className)}
 			{...restOfProps}
 		>
@@ -196,9 +196,9 @@ export function CarouselCaption<TElement extends React.ElementType = "div">(
 
 	return (
 		<Element
+			data-slot="carousel-caption"
 			data-scope="carousel"
 			data-part="caption"
-			data-slot="carousel-caption"
 			className={cnMerge("absolute z-10", className)}
 		>
 			{children}
@@ -215,9 +215,9 @@ export function CarouselIndicatorList<TArray extends unknown[]>(
 
 	return (
 		<ul
+			data-slot="carousel-indicator-list"
 			data-scope="carousel"
 			data-part="indicator-list"
-			data-slot="carousel-indicator-list"
 			className={cnMerge(
 				"absolute bottom-[25px] z-2 flex w-full items-center justify-center gap-[15px]",
 				className
@@ -240,9 +240,9 @@ export function CarouselIndicator(props: CarouselIndicatorProps) {
 
 	return (
 		<li
+			data-slot="carousel-indicator"
 			data-scope="carousel"
 			data-part="indicator"
-			data-slot="carousel-indicator"
 			className={cnMerge("inline-flex", classNames?.base)}
 		>
 			<button

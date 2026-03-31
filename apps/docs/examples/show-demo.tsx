@@ -3,7 +3,7 @@
 import { Show } from "@zayne-labs/ui-react/common/show";
 import { useState } from "react";
 
-export default function ShowDemo() {
+function ShowDemo() {
 	const [user, setUser] = useState<{ email: string; name: string } | null>(null);
 
 	return (
@@ -40,3 +40,5 @@ export default function ShowDemo() {
 		</div>
 	);
 }
+
+export default ShowDemo;

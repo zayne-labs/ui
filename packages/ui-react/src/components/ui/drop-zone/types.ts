@@ -61,11 +61,11 @@ type SharedInputProps = {
 /* eslint-disable perfectionist/sort-intersection-types -- I need non-standard props to come up first */
 export interface PartProps {
 	container: {
-		input: PartProps["container"]["output"] & SharedInputProps;
+		input: SharedInputProps & PartProps["container"]["output"];
 		output: RecordForDataAttr & InferProps<HTMLElement>;
 	};
 	fileItem: {
-		input: PartProps["fileItem"]["output"] & SharedInputProps;
+		input: SharedInputProps & PartProps["fileItem"]["output"];
 		output: RecordForDataAttr & InferProps<"li">;
 	};
 	fileItemClear: {
@@ -99,6 +99,10 @@ export interface PartProps {
 	input: {
 		input: PartProps["input"]["output"];
 		output: RecordForDataAttr & InferProps<"input">;
+	};
+	root: {
+		input: SharedInputProps & PartProps["root"]["output"];
+		output: RecordForDataAttr & InferProps<"div">;
 	};
 	trigger: {
 		input: PartProps["trigger"]["output"];

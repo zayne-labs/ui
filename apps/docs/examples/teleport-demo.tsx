@@ -3,7 +3,7 @@
 import { Teleport } from "@zayne-labs/ui-react/common/teleport";
 import { useState } from "react";
 
-export default function TeleportDemo() {
+function TeleportDemo() {
 	const [showModal, setShowModal] = useState(false);
 
 	return (
@@ -52,3 +52,5 @@ export default function TeleportDemo() {
 		</div>
 	);
 }
+
+export default TeleportDemo;

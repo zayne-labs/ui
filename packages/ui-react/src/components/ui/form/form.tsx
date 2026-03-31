@@ -396,9 +396,9 @@ export function FormInputPrimitive<TFieldValues extends FieldValues>(
 	return (
 		<WrapperElement {...wrapperElementProps}>
 			<input
+				data-slot="form-input"
 				data-scope="form"
 				data-part="input"
-				data-slot="form-input"
 				aria-describedby={
 					!isInvalid ?
 						fieldContextValues?.formDescriptionId
@@ -454,9 +454,9 @@ export function FormTextAreaPrimitive<TFieldValues extends FieldValues>(
 
 	return (
 		<textarea
+			data-slot="form-textarea"
 			data-scope="form"
 			data-part="textarea"
-			data-slot="form-textarea"
 			aria-describedby={
 				!isInvalid ?
 					fieldContextValues?.formDescriptionId
@@ -495,9 +495,9 @@ export function FormSelectPrimitive<TFieldValues extends FieldValues>(
 	return (
 		<select
 			defaultValue=""
+			data-slot="form-select"
 			data-scope="form"
 			data-part="select"
-			data-slot="form-select"
 			aria-describedby={
 				!isInvalid ?
 					fieldContextValues?.formDescriptionId
@@ -580,7 +580,16 @@ export function FormDescription(props: FormDescriptionProps) {
 
 	const { formDescriptionId } = useLaxFormFieldContext() ?? {};
 
-	return <p id={formDescriptionId} className={cnMerge("text-[12px]", className)} {...restOfProps} />;
+	return (
+		<p
+			data-slot="form-description"
+			data-scope="form"
+			data-part="description"
+			id={formDescriptionId}
+			className={cnMerge("text-[12px]", className)}
+			{...restOfProps}
+		/>
+	);
 }
 
 type ErrorMessageRenderProps = {
@@ -746,10 +755,12 @@ export const FormErrorMessagePrimitive: FormErrorMessagePrimitiveOverloadType = 
 
 		return {
 			className: cnMerge(className, classNames?.errorMessage),
-			"data-index": index,
+			/* eslint-disable perfectionist/sort-objects -- Ignore */
+			"data-slot": "form-error-message",
 			"data-part": "error-message",
 			"data-scope": "form",
-			"data-slot": "form-error-message",
+			"data-index": index,
+			/* eslint-enable perfectionist/sort-objects -- Ignore */
 			id: formMessageId,
 		};
 	};
@@ -770,9 +781,9 @@ export const FormErrorMessagePrimitive: FormErrorMessagePrimitiveOverloadType = 
 		<ForWithWrapper
 			ref={containerRef}
 			className={cnMerge("flex flex-col", classNames?.container)}
-			data-part="error-message-container"
-			data-scope="form"
 			data-slot="form-error-message-container"
+			data-scope="form"
+			data-part="error-message-container"
 			each={errorMessageArray}
 			renderItem={(errorMessage, index) => {
 				return selectedChildren({
@@ -850,7 +861,7 @@ export function FormSubmit<TElement extends React.ElementType = "button">(
 	const Component = asChild ? Slot.Root : Element;
 
 	return (
-		<Component data-part="submit" data-scope="form" data-slot="form-submit" type={type} {...restOfProps}>
+		<Component data-slot="form-submit" data-part="submit" data-scope="form" type={type} {...restOfProps}>
 			{children}
 		</Component>
 	);

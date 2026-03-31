@@ -36,7 +36,7 @@ const fetchUser = async (id: number) => {
 	return promise;
 };
 
-export default function AwaitDemo() {
+function AwaitDemo() {
 	const [userId, setUserId] = useState(1);
 	const [userPromise, setUserPromise] = useState(() => fetchUser(userId));
 	const [resetKey, setResetKey] = useState(0);
@@ -204,3 +204,5 @@ export default function AwaitDemo() {
 		</section>
 	);
 }
+
+export default AwaitDemo;

@@ -10,7 +10,7 @@ const isDevMode = process.env.NODE_ENV !== "production";
 
 const config: NextConfig = {
 	devIndicators: {
-		position: "bottom-left",
+		position: "bottom-right",
 	},
 
 	logging: {

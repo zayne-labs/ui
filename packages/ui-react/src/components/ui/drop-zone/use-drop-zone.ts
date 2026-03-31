@@ -90,6 +90,22 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 	);
 	/* eslint-enable react-hooks/hooks -- ignore */
 
+	const getRootProps: DropZonePropGetters["getRootProps"] = useCallback(
+		(innerProps) => {
+			const { unstyled = globalUnstyled } = innerProps;
+
+			return {
+				...innerProps,
+				...getDropZoneScopeAttrs("root"),
+				"data-disabled": dataAttr(disabled),
+				...(!unstyled && {
+					className: cnMerge("flex flex-col gap-4", innerProps.className),
+				}),
+			};
+		},
+		[disabled, globalUnstyled]
+	);
+
 	const getContainerProps: DropZonePropGetters["getContainerProps"] = useCallback(
 		(innerProps) => {
 			const { unstyled = globalUnstyled, ...restOfInnerProps } = innerProps;
@@ -104,13 +120,14 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 				!isDisabled && !disableFilePickerOpenOnAreaClick ? actions.handleKeyDown : undefined;
 
 			return {
+				...restOfInnerProps,
 				...getDropZoneScopeAttrs("container"),
-				role: "region",
 				...(!disableInternalStateSubscription && {
 					"data-drag-over": dataAttr(isDraggingOver),
 					"data-invalid": dataAttr(isInvalid),
 				}),
-				...restOfInnerProps,
+				"data-disabled": dataAttr(isDisabled),
+				role: "region",
 				...(!unstyled && {
 					className: cnMerge(
 						`relative flex flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed p-6 transition-colors duration-250 ease-out outline-none select-none focus-visible:border-zu-ring/50`,
@@ -118,7 +135,6 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 						innerProps.className
 					),
 				}),
-				"data-disabled": dataAttr(isDisabled),
 				onClick: composeTwoEventHandlers(onAreaClick, innerProps.onClick),
 				onDragEnter: composeTwoEventHandlers(actions.handleDragEnter, innerProps.onDragEnter),
 				onDragLeave: composeTwoEventHandlers(actions.handleDragLeave, innerProps.onDragLeave),
@@ -158,9 +174,9 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 			const onFileChange = !isDisabled ? actions.handleChange : undefined;
 
 			return {
+				...innerProps,
 				...getDropZoneScopeAttrs("input"),
 				...(!disableInternalStateSubscription && { "data-drag-over": dataAttr(isDraggingOver) }),
-				...innerProps,
 				accept: allowedFileTypes ? allowedFileTypes.join(", ") : innerProps.accept,
 				className: cnMerge("hidden", innerProps.className),
 				"data-disabled": dataAttr(isDisabled),
@@ -203,9 +219,9 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 			const { orientation = "vertical", unstyled = globalUnstyled, ...restOfInnerProps } = innerProps;
 
 			return {
+				...restOfInnerProps,
 				...getDropZoneScopeAttrs("file-list"),
 				"data-orientation": orientation,
-				...restOfInnerProps,
 				...(!unstyled && {
 					className: cnMerge(
 						"flex flex-col gap-2",
@@ -223,8 +239,8 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 			const { unstyled = globalUnstyled, ...restOfInnerProps } = innerProps;
 
 			return {
-				...getDropZoneScopeAttrs("file-item"),
 				...restOfInnerProps,
+				...getDropZoneScopeAttrs("file-item"),
 				...(!unstyled && {
 					className: cnMerge(
 						"relative flex animate-files-in items-center gap-2.5 rounded-md border p-2",
@@ -241,9 +257,9 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 			const { unstyled = globalUnstyled, variant = "linear", ...restOfInnerProps } = innerProps;
 
 			return {
+				...restOfInnerProps,
 				...getDropZoneScopeAttrs("file-item-progress"),
 				role: "progressbar",
-				...restOfInnerProps,
 				...(!unstyled && {
 					className: cnMerge(
 						"inline-flex",
@@ -268,12 +284,12 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 			const onRemoveFile = () => fileStateOrID && actions.removeFile({ fileStateOrID });
 
 			return {
-				...getDropZoneScopeAttrs("file-item-delete"),
-				type: "button",
 				...restOfInnerProps,
+				...getDropZoneScopeAttrs("file-item-delete"),
 				"data-disabled": dataAttr(isDisabled),
 				disabled: isDisabled,
 				onClick: composeTwoEventHandlers(onRemoveFile, restOfInnerProps.onClick),
+				type: "button",
 			};
 		},
 		[actions, disabled]
@@ -284,8 +300,8 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 			const { unstyled = globalUnstyled, ...restOfInnerProps } = innerProps;
 
 			return {
-				...getDropZoneScopeAttrs("file-item-preview"),
 				...restOfInnerProps,
+				...getDropZoneScopeAttrs("file-item-preview"),
 				...(!unstyled && {
 					className: cnMerge(
 						`relative flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-md bg-zu-accent/50 [&>svg]:size-10`,
@@ -302,8 +318,8 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 			const { unstyled = globalUnstyled, ...restOfInnerProps } = innerProps;
 
 			return {
-				...getDropZoneScopeAttrs("file-item-metadata"),
 				...restOfInnerProps,
+				...getDropZoneScopeAttrs("file-item-metadata"),
 				...(!unstyled && {
 					className: cnMerge("flex min-w-0 grow flex-col", innerProps.className),
 				}),
@@ -317,12 +333,12 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 			const isDisabled = innerProps.disabled ?? disabled;
 
 			return {
-				...getDropZoneScopeAttrs("file-item-clear"),
-				type: "button",
 				...innerProps,
+				...getDropZoneScopeAttrs("file-item-clear"),
 				"data-disabled": dataAttr(isDisabled),
 				disabled: isDisabled,
 				onClick: composeTwoEventHandlers(actions.clearFiles, innerProps.onClick),
+				type: "button",
 			};
 		},
 		[actions.clearFiles, disabled]
@@ -340,18 +356,20 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 				getFileItemProps,
 				getFileListProps,
 				getInputProps,
+				getRootProps,
 				getTriggerProps,
 			}) satisfies DropZonePropGetters,
 		[
 			getContainerProps,
-			getFileListProps,
 			getFileItemClearProps,
 			getFileItemDeleteProps,
 			getFileItemMetadataProps,
 			getFileItemPreviewProps,
 			getFileItemProgressProps,
 			getFileItemProps,
+			getFileListProps,
 			getInputProps,
+			getRootProps,
 			getTriggerProps,
 		]
 	);

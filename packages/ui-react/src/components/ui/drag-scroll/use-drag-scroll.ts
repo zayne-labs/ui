@@ -61,9 +61,7 @@ export const useDragScroll = <TContainerElement extends HTMLElement = HTMLElemen
 		if (!node) return;
 
 		const cleanupMouseDown = on(node, "mousedown", actions.handleMouseDown);
-		const cleanupScroll = on(node, "scroll", actions.handleScroll, {
-			passive: true,
-		});
+		const cleanupScroll = on(node, "scroll", actions.handleScroll, { passive: true });
 
 		return () => {
 			cleanupMouseDown();
@@ -81,8 +79,8 @@ export const useDragScroll = <TContainerElement extends HTMLElement = HTMLElemen
 	const getRootProps: DragScrollPropGetters<TContainerElement>["getRootProps"] = useCallbackRef(
 		(innerProps) => {
 			return {
-				...getDragScrollScopeAttrs("root"),
 				...innerProps,
+				...getDragScrollScopeAttrs("root"),
 				className: cnMerge("relative", innerProps?.className),
 			};
 		}
@@ -91,11 +89,11 @@ export const useDragScroll = <TContainerElement extends HTMLElement = HTMLElemen
 	const getListProps: DragScrollPropGetters<TContainerElement>["getListProps"] = useCallback(
 		(innerProps) => {
 			return {
+				...innerProps,
 				...getDragScrollScopeAttrs("list"),
 				...(!disableInternalStateSubscription && {
 					"data-dragging": dataAttr(isDragging),
 				}),
-				...innerProps,
 				className: cnMerge(
 					`scrollbar-hidden flex w-full cursor-grab snap-x snap-mandatory overflow-x-scroll overflow-y-hidden`,
 					orientation === "horizontal" && "flex-row",
@@ -116,8 +114,8 @@ export const useDragScroll = <TContainerElement extends HTMLElement = HTMLElemen
 	const getItemProps: DragScrollPropGetters<TContainerElement>["getItemProps"] = useCallbackRef(
 		(innerProps) => {
 			return {
-				...getDragScrollScopeAttrs("item"),
 				...innerProps,
+				...getDragScrollScopeAttrs("item"),
 				className: cnMerge("snap-center snap-always", innerProps?.className),
 			};
 		}
@@ -128,14 +126,14 @@ export const useDragScroll = <TContainerElement extends HTMLElement = HTMLElemen
 			const isDisabled = innerProps?.disabled ?? !canGoToPrev;
 
 			return {
-				...getDragScrollScopeAttrs("prev-button"),
-				type: "button",
 				...innerProps,
+				...getDragScrollScopeAttrs("prev-button"),
 				"aria-disabled": dataAttr(isDisabled),
 				"aria-label": innerProps?.["aria-label"] ?? "Scroll back",
 				"data-disabled": dataAttr(isDisabled),
 				disabled: isDisabled,
 				onClick: composeTwoEventHandlers(actions.goToPrev, innerProps?.onClick),
+				type: "button",
 			};
 		},
 		[actions.goToPrev, canGoToPrev]
@@ -146,14 +144,13 @@ export const useDragScroll = <TContainerElement extends HTMLElement = HTMLElemen
 			const isDisabled = innerProps?.disabled ?? !canGoToNext;
 
 			return {
-				...getDragScrollScopeAttrs("next-button"),
-				type: "button",
 				...innerProps,
-				"aria-disabled": dataAttr(isDisabled),
+				...getDragScrollScopeAttrs("next-button"),
 				"aria-label": innerProps?.["aria-label"] ?? "Scroll forward",
 				"data-disabled": dataAttr(isDisabled),
 				disabled: isDisabled,
 				onClick: composeTwoEventHandlers(actions.goToNext, innerProps?.onClick),
+				type: "button",
 			};
 		},
 		[actions.goToNext, canGoToNext]

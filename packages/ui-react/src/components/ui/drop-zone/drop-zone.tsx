@@ -1,6 +1,6 @@
 "use client";
 
-import { dataAttr, formatBytes } from "@zayne-labs/toolkit-core";
+import { dataAttr, formatBytes, omitKeys } from "@zayne-labs/toolkit-core";
 import { useCompareSelector } from "@zayne-labs/toolkit-react";
 import type {
 	CssWithCustomProperties,
@@ -15,6 +15,7 @@ import {
 	type SelectorFn,
 	type UnionDiscriminator,
 	type UnionToIntersection,
+	type UnionToTuple,
 } from "@zayne-labs/toolkit-type-helpers";
 import { useMemo } from "react";
 import { For } from "@/components/common/for";
@@ -44,12 +45,37 @@ import {
 import type { DropZoneStore, PartInputProps, UseDropZoneProps } from "./types";
 import { useDropZone } from "./use-drop-zone";
 
-export type DropZoneRootProps = UseDropZoneProps & {
-	children: React.ReactNode;
-};
+/* eslint-disable perfectionist/sort-intersection-types -- I need non-standard props to come first */
 
-export function DropZoneRoot(props: DropZoneRootProps) {
-	const { children, ...restOfProps } = props;
+export type DropZoneRootProps = UseDropZoneProps & {
+	asChild?: boolean;
+} & PartInputProps["root"];
+
+const dropzonePropKeys = [
+	"allowedFileTypes",
+	"disableFilePickerOpenOnAreaClick",
+	"disableInternalStateSubscription",
+	"disablePreviewGenForNonImageFiles",
+	"disabled",
+	"initialFiles",
+	"maxFileCount",
+	"maxFileSize",
+	"multiple",
+	"onFilesChange",
+	"onUpload",
+	"onValidationError",
+	"onValidationSuccess",
+	"rejectDuplicateFiles",
+	"unstyled",
+	"validator",
+] satisfies UnionToTuple<keyof UseDropZoneProps>;
+
+export function DropZoneRoot<TElement extends React.ElementType = "div">(
+	props: PolymorphicPropsStrict<TElement, DropZoneRootProps>
+) {
+	const { as: Element = "div", asChild, children, ...restOfProps } = props;
+
+	const rootProps = useMemo(() => omitKeys(restOfProps, dropzonePropKeys), [restOfProps]);
 
 	const { disabled, disableInternalStateSubscription, inputRef, propGetters, storeApi } =
 		useDropZone(restOfProps);
@@ -65,9 +91,13 @@ export function DropZoneRoot(props: DropZoneRootProps) {
 		[disableInternalStateSubscription, disabled, inputRef, propGetters]
 	);
 
+	const Component = asChild ? Slot.Root : Element;
+
 	return (
 		<DropZoneStoreContextProvider store={storeApi}>
-			<DropZoneRootContextProvider value={rootContextValue}>{children}</DropZoneRootContextProvider>
+			<DropZoneRootContextProvider value={rootContextValue}>
+				<Component {...propGetters.getRootProps(rootProps)}>{children}</Component>
+			</DropZoneRootContextProvider>
 		</DropZoneStoreContextProvider>
 	);
 }
@@ -86,8 +116,6 @@ export function DropZoneContext<TSlice = DropZoneStore>(props: DropZoneContextPr
 
 	return resolvedChildren;
 }
-
-/* eslint-disable perfectionist/sort-intersection-types -- I need non-standard props to come first */
 
 export type DropZoneContainerProps = {
 	asChild?: boolean;

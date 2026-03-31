@@ -3,32 +3,7 @@
 import { ErrorBoundary } from "@zayne-labs/ui-react/common/error-boundary";
 import { useState } from "react";
 
-function BuggyComponent({ shouldError }: { shouldError: boolean }) {
-	if (shouldError) {
-		throw new Error("Component crashed unexpectedly!");
-	}
-
-	return (
-		<div className="rounded-xl border border-fd-border bg-fd-card/40 p-6 shadow-sm backdrop-blur-sm">
-			<div className="mb-2 flex items-center gap-2">
-				<div className="flex size-8 items-center justify-center rounded-lg bg-green-500/10">
-					<svg
-						className="size-4 text-green-600"
-						fill="none"
-						viewBox="0 0 24 24"
-						stroke="currentColor"
-					>
-						<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-					</svg>
-				</div>
-				<p className="font-semibold text-fd-foreground">Component Active</p>
-			</div>
-			<p className="text-sm text-fd-muted-foreground">Everything is running smoothly!</p>
-		</div>
-	);
-}
-
-export default function ErrorBoundaryDemo() {
+function ErrorBoundaryDemo() {
 	const [shouldError, setShouldError] = useState(false);
 	const [resetKey, setResetKey] = useState(0);
 
@@ -105,6 +80,35 @@ export default function ErrorBoundaryDemo() {
 			>
 				<BuggyComponent shouldError={shouldError} />
 			</ErrorBoundary>
+		</div>
+	);
+}
+
+export default ErrorBoundaryDemo;
+
+function BuggyComponent(props: { shouldError: boolean }) {
+	const { shouldError } = props;
+
+	if (shouldError) {
+		throw new Error("Component crashed unexpectedly!");
+	}
+
+	return (
+		<div className="rounded-xl border border-fd-border bg-fd-card/40 p-6 shadow-sm backdrop-blur-sm">
+			<div className="mb-2 flex items-center gap-2">
+				<div className="flex size-8 items-center justify-center rounded-lg bg-green-500/10">
+					<svg
+						className="size-4 text-green-600"
+						fill="none"
+						viewBox="0 0 24 24"
+						stroke="currentColor"
+					>
+						<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+					</svg>
+				</div>
+				<p className="font-semibold text-fd-foreground">Component Active</p>
+			</div>
+			<p className="text-sm text-fd-muted-foreground">Everything is running smoothly!</p>
 		</div>
 	);
 }

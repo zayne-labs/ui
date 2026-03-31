@@ -9,7 +9,7 @@ const initialUsers = [
 	{ id: 3, name: "Carol White", role: "Manager" },
 ];
 
-export default function ForDemo() {
+function ForDemo() {
 	const [users, setUsers] = useState(initialUsers);
 
 	return (
@@ -62,3 +62,5 @@ export default function ForDemo() {
 		</div>
 	);
 }
+
+export default ForDemo;

@@ -27,7 +27,7 @@ export function ComponentTabs(props: ComponentTabsProps) {
 				</TabsTrigger>
 			</TabsList>
 
-			<TabsContent className="p-0" value="preview">
+			<TabsContent className="p-0" value="preview" asChild={true}>
 				<ComponentPreview name={name} {...restOfProps} />
 			</TabsContent>
 

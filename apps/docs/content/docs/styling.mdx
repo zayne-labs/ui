@@ -4,39 +4,21 @@ description: Learn how to style Zayne UI components with Tailwind CSS or vanilla
 icon: Palette
 ---
 
-Zayne UI is completely headless and unstyled. You decide how everything looks.
+Zayne UI ships with minimal structural styles for layout only. Override with `className` or wipe entirely with the `unstyled` prop.
 
-## Headless Design
+## Design Philosophy
 
-Components ship with:
-
-- **No default styles**: You decide how components look
-- **Structural markup**: Semantic HTML with proper accessibility
-- **Data attributes**: Hooks for CSS targeting
-- **ClassName support**: Standard React className prop on all components
-
-This approach means:
-
-- No CSS conflicts
-- Full design flexibility
-- Smaller bundles
-- Style with any framework
+Components ship with minimal structural styles — override with `className` or use the `unstyled` prop for full control. Data attributes are available for CSS targeting.
 
 ## Using with Tailwind CSS
 
-Zayne UI is built for Tailwind CSS v4. Ensure you have imported the library's preset in your global CSS as shown in the [Installation Guide](/docs/installation#tailwind-css-integration-v4).
-
-### Key Features of the Preset
-
-- **System Tokens**: Pre-defined colors like `zu-primary`, `zu-accent`, and `zu-foreground`.
-- **Motion System**: Smooth animations and transitions for components like `Presence` and `Carousel`.
-- **State Hooks**: Advanced Tailwind variants like `data-drag-over` and `data-active`.
+Zayne UI is built for Tailwind CSS v4. Import the preset in your global CSS as shown in the [Installation Guide](/docs/installation#tailwind-css-integration-v4).
 
 ### Theme Tokens
 
-The preset defines CSS custom properties for theming:
+The preset defines these CSS custom properties:
 
-```css title="theme.css"
+```css title="@zayne-labs/ui-react/css/theme.css"
 @theme {
   --color-zu-foreground: oklch(0.145 0 0);
   --color-zu-accent: oklch(0.967 0.001 286.375);
@@ -55,56 +37,68 @@ The preset defines CSS custom properties for theming:
 }
 ```
 
-<Callout>Dark mode is automatic when using the `.dark` class or `data-theme="dark"` attribute.</Callout>
+<Callout>
+	Dark mode activates automatically with the `.dark` class or `data-theme="dark"` attribute.
+</Callout>
 
-### Apply Tailwind Classes
+### Animations
 
-Use the `className` prop to style components:
+The preset also includes named animations you can use directly:
+
+| Token                  | Description                               |
+| :--------------------- | :---------------------------------------- |
+| `animate-shake`        | Error shake (used by `Form.ErrorMessage`) |
+| `animate-fade-up`      | Fade in from below                        |
+| `animate-fade-down`    | Fade in from above                        |
+| `animate-files-in`     | File item entry (used by `DropZone`)      |
+| `animate-progress-out` | Progress bar exit (used by `DropZone`)    |
+
+### Utilities
+
+The preset adds a `scrollbar-hidden` utility that hides scrollbars cross-browser:
+
+```tsx
+<DragScroll.List className="scrollbar-hidden flex gap-4 overflow-x-auto" />
+```
+
+### Example
 
 ```tsx
 import { DropZone } from "@zayne-labs/ui-react/ui/drop-zone";
 
 <DropZone.Root className="w-full max-w-xl">
-	<DropZone.Area className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 p-12 transition-colors hover:bg-gray-100 data-drag-over:border-zu-primary data-drag-over:bg-zu-primary/5">
-		<div className="text-center">
-			<p className="text-lg font-medium text-gray-700">Drag files here or click to upload</p>
-			<DropZone.Trigger className="mt-4 rounded-md bg-zu-primary px-6 py-2 text-white shadow-sm hover:opacity-90">
-				Select Files
-			</DropZone.Trigger>
-		</div>
+	<DropZone.Area
+		className="flex flex-col items-center rounded-lg border-2 border-dashed
+    border-gray-300 p-12 transition-colors hover:bg-gray-50
+    data-drag-over:border-zu-primary data-drag-over:bg-zu-primary/5"
+	>
+		<p className="font-medium text-gray-700">Drop files here</p>
+		<DropZone.Trigger className="mt-4 rounded-md bg-zu-primary px-6 py-2 text-white hover:opacity-90">
+			Select Files
+		</DropZone.Trigger>
 	</DropZone.Area>
-
-	<DropZone.FileList className="mt-6 gap-3" />
 </DropZone.Root>;
 ```
 
 ## Using Without Tailwind
 
-If you're not using Tailwind, you have two options:
+### Pre-compiled Styles
 
-### 1. Pre-compiled Styles
-
-Import the library's compiled CSS in your root file. This includes base styles, theme tokens, and animations:
+Import the compiled CSS in your root file:
 
 ```tsx
 import "@zayne-labs/ui-react/style.css";
 ```
 
-### 2. Custom Vanilla CSS
+### Vanilla CSS via Data Attributes
 
-Write your own CSS by targeting the data attributes each component renders.
-
-### Target Data Attributes
-
-Every component renders `data-scope`, `data-part`, and `data-slot` attributes:
+Every component renders `data-scope`, `data-part`, and `data-slot` attributes you can target:
 
 ```css title="styles.css"
-/* Style all drag-scroll roots */
 [data-scope="drag-scroll"][data-part="root"] {
   display: flex;
   overflow-x: auto;
   gap: 1rem;
-  padding: 1rem;
   cursor: grab;
 }
 
@@ -112,29 +106,8 @@ Every component renders `data-scope`, `data-part`, and `data-slot` attributes:
   cursor: grabbing;
 }
 
-/* Or use the combined data-slot */
+/* Or use the combined slot */
 [data-slot="drag-scroll-root"] {
-  scrollbar-width: none; /* Hide scrollbar for cleaner look */
-}
-
-[data-slot="drag-scroll-root"]::-webkit-scrollbar {
-  display: none;
+  scrollbar-width: none;
 }
 ```
-
-## Best Practices
-
-<Accordions>
-  <Accordion title="Use Design Tokens">
-    Leverage the built-in theme tokens (`zu-primary`, `zu-foreground`, etc.) for consistency and automatic dark mode support.
-  </Accordion>
-
-<Accordion title="Prefer Data Attributes for Global Styles">
-	Use data attributes in your global CSS for base component styles, and `className` for instance-specific
-	customization.
-</Accordion>
-
-  <Accordion title="Organize Your Styles">
-    For Tailwind projects, keep component-specific utilities in your component files or extract repeated patterns into custom Tailwind utilities.
-  </Accordion>
-</Accordions>

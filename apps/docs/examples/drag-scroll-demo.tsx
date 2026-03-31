@@ -15,7 +15,7 @@ const scrollItems = [
 	{ category: "Version", color: "from-rose-500", title: "Git" },
 ];
 
-export default function DragScrollDemo() {
+function DragScrollDemo() {
 	return (
 		<div className="w-full max-w-4xl">
 			<DragScroll.Root>
@@ -131,3 +131,5 @@ function Indicator({ active, label }: { active: boolean; label: string }) {
 		</div>
 	);
 }
+
+export default DragScrollDemo;
