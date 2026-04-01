@@ -92,18 +92,13 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 
 	const getRootProps: DropZonePropGetters["getRootProps"] = useCallback(
 		(innerProps) => {
-			const { unstyled = globalUnstyled } = innerProps;
-
 			return {
 				...innerProps,
 				...getDropZoneScopeAttrs("root"),
 				"data-disabled": dataAttr(disabled),
-				...(!unstyled && {
-					className: cnMerge("flex flex-col gap-4", innerProps.className),
-				}),
 			};
 		},
-		[disabled, globalUnstyled]
+		[disabled]
 	);
 
 	const getContainerProps: DropZonePropGetters["getContainerProps"] = useCallback(
@@ -203,12 +198,12 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 			const isDisabled = innerProps.disabled ?? disabled;
 
 			return {
-				...getDropZoneScopeAttrs("trigger"),
-				type: "button",
 				...innerProps,
+				...getDropZoneScopeAttrs("trigger"),
 				"data-disabled": dataAttr(isDisabled),
 				disabled: isDisabled,
 				onClick: composeTwoEventHandlers(actions.openFilePicker, innerProps.onClick),
+				type: "button",
 			};
 		},
 		[actions.openFilePicker, disabled]
