@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { baseURL, createMetadata } from "@/lib/metadata";
+import { baseURL, createMetadata, defaultSiteName } from "@/lib/metadata";
 import { cnJoin } from "@/lib/utils/cn";
 import { Providers } from "./Providers";
 import "../tailwind.css";
@@ -35,12 +35,13 @@ export default RootLayout;
 export const metadata: Metadata = createMetadata({
 	metadataBase: new URL(baseURL),
 	title: {
-		default: "Zayne UI",
-		template: "%s | Zayne UI",
+		default: defaultSiteName,
+		template: `%s | ${defaultSiteName}`,
 	},
 });
 
 export const viewport: Viewport = {
+	colorScheme: "dark light",
 	themeColor: [
 		{ color: "#0A0A0A", media: "(prefers-color-scheme: dark)" },
 		{ color: "#ffffff", media: "(prefers-color-scheme: light)" },

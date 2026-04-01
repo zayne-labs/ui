@@ -32,6 +32,8 @@ const defaultKeywords = [
 	"typescript",
 ];
 
+export const defaultSiteName = "Zayne UI";
+
 export const defaultDescription =
 	"Composable, headless UI components and utilities built for flexibility and great developer experience.";
 
@@ -44,20 +46,30 @@ export function createMetadata(overrides?: Metadata): Metadata {
 			...overrides?.alternates,
 		},
 
+		applicationName: overrides?.applicationName ?? defaultSiteName,
+
 		description: overrides?.description ?? defaultDescription,
+
+		generator: "Next.js",
 
 		keywords: overrides?.keywords ?? defaultKeywords,
 
 		openGraph: {
 			description: overrides?.description ?? defaultDescription,
 			images: bannerImage,
-			siteName: "Zayne UI",
+			siteName: defaultSiteName,
 			title: overrides?.title ?? undefined,
 			type: "website",
 			url: baseURL,
 
 			...overrides?.openGraph,
 		},
+
+		robots: {
+			follow: true,
+			index: true,
+		},
+
 		twitter: {
 			card: "summary_large_image",
 			creator: "@zayne_el_kaiser",
