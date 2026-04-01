@@ -56,7 +56,7 @@ export function CarouselRoot<TImages extends ImagesType, TElement extends React.
 				data-slot="carousel-root"
 				data-scope="carousel"
 				data-part="root"
-				className={cnMerge("relative isolate", classNames?.base)}
+				className={cnMerge("isolate", classNames?.base)}
 				onMouseEnter={pauseAutoSlide}
 				onMouseLeave={resumeAutoSlide}
 			>
@@ -65,7 +65,7 @@ export function CarouselRoot<TImages extends ImagesType, TElement extends React.
 					data-part="content"
 					data-slot="carousel-content"
 					className={cnMerge(
-						"scrollbar-hidden flex size-full overflow-x-scroll",
+						"relative scrollbar-hidden size-full overflow-x-scroll",
 						classNames?.content
 					)}
 				>
@@ -158,7 +158,7 @@ export function CarouselItemList<TArray extends unknown[]>(props: CarouselWrappe
 			data-scope="carousel"
 			data-part="item-list"
 			className={cnMerge(
-				`flex w-full shrink-0 transform-[translate3d(var(--translate-distance),0,0)] snap-center
+				`flex size-full transform-[translate3d(var(--translate-distance),0,0)] snap-center
 				transition-transform duration-800`,
 				className
 			)}
@@ -188,7 +188,7 @@ export function CarouselItem(props: CarouselItemProps) {
 			data-scope="carousel"
 			data-part="item"
 			data-active={dataAttr(isActive)}
-			className={cnMerge("flex w-full shrink-0 snap-center justify-center", className)}
+			className={cnMerge("relative size-full shrink-0 snap-center overflow-hidden", className)}
 			{...restOfProps}
 		>
 			{children}

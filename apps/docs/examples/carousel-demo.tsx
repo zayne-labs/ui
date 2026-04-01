@@ -38,13 +38,13 @@ function CarouselDemo() {
 			autoSlideInterval={6000}
 			shouldPauseOnHover={true}
 			classNames={{
-				base: "group h-85 max-w-3xl shadow-2xl",
-				content: "rounded-3xl border border-fd-border bg-fd-card lg:rounded-4xl",
+				base: "group w-full max-w-3xl",
+				content: "rounded-3xl border border-fd-border bg-fd-card shadow-2xl lg:rounded-4xl",
 			}}
 		>
-			<Carousel.ItemList<typeof slides>>
+			<Carousel.ItemList<typeof slides> className="h-85">
 				{({ image, index }) => (
-					<Carousel.Item key={image.title} currentIndex={index} className="relative size-full">
+					<Carousel.Item key={image.title} currentIndex={index}>
 						<img
 							src={image.image}
 							alt={image.title}
