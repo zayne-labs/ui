@@ -1,7 +1,6 @@
 "use client";
 
 import { callApi } from "@zayne-labs/callapi";
-import { isBrowser } from "@zayne-labs/toolkit-core";
 import { Popover, PopoverContent, PopoverTrigger } from "fumadocs-ui/components/ui/popover";
 import { useCopyButton } from "fumadocs-ui/utils/use-copy-button";
 import { Check, ChevronDown, Copy, ExternalLinkIcon, MessageCircleIcon, TextIcon } from "lucide-react";
@@ -107,9 +106,9 @@ export function ViewOptions(props: ViewOptionsProps) {
 }
 
 const getLinkViewItems = (markdownUrl: string, githubUrl: string) => {
-	const pageUrl = isBrowser() ? globalThis.location.href : "loading";
+	// const pageUrl = isBrowser() ? globalThis.location.href : "loading";
 
-	const q = `Read ${pageUrl}, I want to ask questions about it.`;
+	const q = `Read ${markdownUrl}, I want to ask questions about it.`;
 
 	return [
 		{
