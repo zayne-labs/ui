@@ -1,14 +1,11 @@
 "use client";
 
 import { Await } from "@zayne-labs/ui-react/common/await";
+import { AlertCircle, Hash, Mail, RefreshCw, User as UserIcon } from "lucide-react";
 import { useState } from "react";
-import { cnJoin } from "@/lib/utils/cn";
+import { Button } from "@/components/ui/button";
 
-const waitFor = (ms: number) => {
-	const promise = new Promise((resolve) => setTimeout(resolve, ms));
-
-	return promise;
-};
+const waitFor = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 type UserType = {
 	email: string;
@@ -18,19 +15,17 @@ type UserType = {
 
 const fetchUser = async (id: number) => {
 	const { promise, reject, resolve } = Promise.withResolvers<UserType>();
-
 	await waitFor(1500);
 
 	if (id === 666) {
-		reject(new Error("User not found"));
-
+		reject(new Error("Database connection timeout or user not found."));
 		return promise;
 	}
 
 	resolve({
-		email: `user${id}@example.com`,
+		email: `user${id}@zayne-labs.com`,
 		id,
-		name: `User ${id}`,
+		name: `Premium User ${id}`,
 	});
 
 	return promise;
@@ -46,14 +41,8 @@ function AwaitDemo() {
 		setUserPromise(fetchUser(id));
 	};
 
-	const handleLoadRandomUser = () => {
-		loadUser(Math.floor(Math.random() * 100));
-	};
-
-	const handleTriggerError = () => {
-		loadUser(666);
-	};
-
+	const handleLoadRandomUser = () => loadUser(Math.floor(Math.random() * 100));
+	const handleTriggerError = () => loadUser(666);
 	const handleReset = () => {
 		setUserId(1);
 		setUserPromise(fetchUser(1));
@@ -63,146 +52,137 @@ function AwaitDemo() {
 	const hasError = userId === 666;
 
 	return (
-		<section className="flex w-full max-w-md flex-col gap-4">
-			<div className="flex gap-2">
-				<button
-					className={cnJoin(
-						"rounded-lg px-4 py-2 text-sm font-medium shadow-sm transition-all active:scale-95",
-						userId !== 666 ?
-							"bg-fd-primary text-fd-primary-foreground hover:bg-fd-primary/90"
-						:	"cursor-not-allowed bg-fd-primary/50 text-fd-primary-foreground/70"
-					)}
-					onClick={handleLoadRandomUser}
-					type="button"
-					disabled={hasError}
-				>
+		<section className="flex w-full max-w-md flex-col gap-6 py-4">
+			<nav className="flex flex-wrap gap-2" aria-label="Demo controls">
+				<Button onClick={handleLoadRandomUser} disabled={hasError} className="min-w-32">
+					<RefreshCw className="mr-2 size-4" aria-hidden="true" />
 					Load User
-				</button>
-				<button
-					className={cnJoin(
-						"rounded-lg px-4 py-2 text-sm font-medium transition-all active:scale-95",
-						hasError ?
-							"bg-red-500 text-white shadow-lg shadow-red-500/30 hover:bg-red-600"
-						:	"border border-fd-border bg-fd-card hover:bg-fd-muted"
-					)}
-					onClick={handleTriggerError}
-					type="button"
-				>
+				</Button>
+				<Button theme={hasError ? "destructive" : "outline"} onClick={handleTriggerError}>
+					<AlertCircle className="mr-2 size-4" aria-hidden="true" />
 					Trigger Error
-				</button>
+				</Button>
 
 				{hasError && (
-					<button
-						className="rounded-lg border border-fd-border bg-fd-card px-4 py-2 text-sm font-medium
-							transition-all hover:bg-fd-muted active:scale-95"
-						onClick={handleReset}
-						type="button"
-					>
-						Reset
-					</button>
+					<Button theme="ghost" onClick={handleReset}>
+						Reset Demo
+					</Button>
 				)}
+			</nav>
+
+			<div className="relative min-h-[160px]">
+				<Await.Root promise={userPromise} errorResetKeys={[resetKey]} onErrorReset={handleReset}>
+					<Await.Pending>
+						<UserSkeleton />
+					</Await.Pending>
+
+					<Await.Error>
+						{({ error, resetErrorBoundary }) => (
+							<ErrorCard error={error} onReset={resetErrorBoundary} />
+						)}
+					</Await.Error>
+
+					<Await.Success<UserType>>{(user) => <UserCard user={user} />}</Await.Success>
+				</Await.Root>
 			</div>
-
-			<Await.Root promise={userPromise} errorResetKeys={[resetKey]} onErrorReset={handleReset}>
-				<Await.Pending>
-					<div
-						className="rounded-xl border border-fd-border bg-fd-card/40 p-6 shadow-sm
-							backdrop-blur-sm"
-					>
-						<div className="mb-3 flex items-center gap-3">
-							<div className="size-10 animate-pulse rounded-full bg-fd-muted" />
-							<div className="flex-1 space-y-2">
-								<div className="h-4 w-28 animate-pulse rounded-sm bg-fd-muted" />
-								<div className="h-3 w-40 animate-pulse rounded-sm bg-fd-muted" />
-							</div>
-						</div>
-						<div className="space-y-2">
-							<div className="h-3 w-full animate-pulse rounded-sm bg-fd-muted" />
-							<div className="h-3 w-3/4 animate-pulse rounded-sm bg-fd-muted" />
-						</div>
-					</div>
-				</Await.Pending>
-
-				<Await.Error>
-					{({ error, resetErrorBoundary }) => (
-						<div
-							className="rounded-xl border border-red-200 bg-red-50/50 p-6 shadow-sm
-								backdrop-blur-sm dark:border-red-900/50 dark:bg-red-950/50"
-						>
-							<div className="mb-3 flex items-center gap-2">
-								<div className="flex size-8 items-center justify-center rounded-lg bg-red-500/10">
-									<svg
-										className="size-4 text-red-600 dark:text-red-400"
-										fill="none"
-										viewBox="0 0 24 24"
-										stroke="currentColor"
-									>
-										<path
-											strokeLinecap="round"
-											strokeLinejoin="round"
-											strokeWidth={2}
-											d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-										/>
-									</svg>
-								</div>
-								<p className="font-semibold text-red-900 dark:text-red-100">Failed to Load</p>
-							</div>
-
-							<p className="mb-4 text-sm text-red-800 dark:text-red-200">{error.message}</p>
-
-							<button
-								type="button"
-								onClick={resetErrorBoundary}
-								className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white shadow-sm
-									transition-all hover:bg-red-700 active:scale-95 dark:bg-red-700
-									dark:hover:bg-red-600"
-							>
-								Try Again
-							</button>
-						</div>
-					)}
-				</Await.Error>
-
-				<Await.Success<UserType>>
-					{(user) => (
-						<div
-							className="rounded-xl border border-fd-border bg-fd-card/40 p-6 shadow-sm
-								backdrop-blur-sm"
-						>
-							<div className="mb-3 flex items-center gap-3">
-								<div
-									className="flex size-10 items-center justify-center rounded-full
-										bg-fd-primary/10"
-								>
-									<svg
-										className="size-5 text-fd-primary"
-										fill="none"
-										viewBox="0 0 24 24"
-										stroke="currentColor"
-									>
-										<path
-											strokeLinecap="round"
-											strokeLinejoin="round"
-											strokeWidth={2}
-											d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-										/>
-									</svg>
-								</div>
-								<div>
-									<h3 className="font-semibold text-fd-foreground">{user.name}</h3>
-									<p className="text-sm text-fd-muted-foreground">{user.email}</p>
-								</div>
-							</div>
-							<div className="flex items-center gap-2 rounded-lg bg-fd-muted/50 px-3 py-2">
-								<span className="text-xs font-medium text-fd-muted-foreground">User ID:</span>
-								<span className="text-xs font-bold text-fd-foreground">{user.id}</span>
-							</div>
-						</div>
-					)}
-				</Await.Success>
-			</Await.Root>
 		</section>
 	);
 }
 
 export default AwaitDemo;
+
+function UserSkeleton() {
+	return (
+		<article
+			className="w-full animate-in rounded-2xl border border-fd-border bg-fd-card/50 p-6 shadow-sm
+				backdrop-blur-sm zoom-in-95 fade-in"
+		>
+			<div className="flex items-center gap-4">
+				<span className="size-12 animate-pulse rounded-full bg-fd-muted" />
+				<div className="flex grow flex-col gap-2">
+					<span className="block h-5 w-32 animate-pulse rounded-md bg-fd-muted" />
+					<span className="block h-3 w-48 animate-pulse rounded-md bg-fd-muted" />
+				</div>
+			</div>
+			<span className="mt-4 block h-10 w-full animate-pulse rounded-xl bg-fd-muted" />
+		</article>
+	);
+}
+
+function ErrorCard({ error, onReset }: { error: Error; onReset: () => void }) {
+	return (
+		<article
+			className="w-full animate-in rounded-2xl border border-red-500/20 bg-red-500/5 p-6 shadow-xl
+				shadow-red-500/5 backdrop-blur-sm fade-in slide-in-from-top-2"
+		>
+			<header className="flex items-start gap-3">
+				<span className="rounded-full bg-red-500/10 p-2" aria-hidden="true">
+					<AlertCircle className="size-5 text-red-600 dark:text-red-400" />
+				</span>
+				<div className="grow">
+					<h4 className="font-bold text-red-900 dark:text-red-100">Something went wrong</h4>
+					<p className="mt-1 text-sm text-red-800/80 dark:text-red-200/80">{error.message}</p>
+				</div>
+			</header>
+			<Button
+				theme="destructive"
+				className="mt-4 w-full bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-600"
+				onClick={onReset}
+			>
+				Try Again
+			</Button>
+		</article>
+	);
+}
+
+function UserCard({ user }: { user: UserType }) {
+	return (
+		<article
+			className="flex w-full animate-in flex-col gap-4 rounded-2xl border border-fd-border bg-fd-card/50
+				p-6 shadow-xl backdrop-blur-sm fade-in slide-in-from-bottom-2"
+		>
+			<header className="flex items-center justify-between">
+				<div className="flex items-center gap-4">
+					<span
+						className="flex size-12 items-center justify-center rounded-full bg-fd-primary/10 ring-4
+							ring-fd-primary/5"
+						aria-hidden="true"
+					>
+						<UserIcon className="size-6 text-fd-primary" />
+					</span>
+					<div>
+						<h3 className="text-lg font-bold tracking-tight text-fd-foreground">{user.name}</h3>
+						<address
+							className="flex items-center gap-1.5 text-sm text-fd-muted-foreground not-italic"
+						>
+							<Mail className="size-3.5" aria-hidden="true" />
+							<a href={`mailto:${user.email}`} className="hover:text-fd-primary">
+								{user.email}
+							</a>
+						</address>
+					</div>
+				</div>
+				<span
+					className="hidden rounded-full bg-emerald-500/10 px-3 py-1 text-[10px] font-bold
+						tracking-wider text-emerald-500 uppercase sm:block"
+				>
+					Verified Profile
+				</span>
+			</header>
+
+			<dl className="flex items-center gap-3 rounded-xl bg-fd-muted/30 p-3">
+				<span className="rounded-lg bg-fd-background p-2" aria-hidden="true">
+					<Hash className="size-4 text-fd-muted-foreground" />
+				</span>
+				<div className="flex flex-col">
+					<dt className="text-[10px] font-bold tracking-widest text-fd-muted-foreground uppercase">
+						User Identifier
+					</dt>
+					<dd className="font-mono text-sm font-medium text-fd-foreground">
+						USR-{user.id.toString().padStart(4, "0")}
+					</dd>
+				</div>
+			</dl>
+		</article>
+	);
+}

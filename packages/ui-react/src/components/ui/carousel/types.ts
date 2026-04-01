@@ -1,4 +1,5 @@
 import type { StoreApi } from "@zayne-labs/toolkit-core";
+import type { InferProps } from "@zayne-labs/toolkit-react/utils";
 import type { UnionDiscriminator } from "@zayne-labs/toolkit-type-helpers";
 
 // Carousel store types
@@ -54,10 +55,9 @@ export type CarouselControlProps = Pick<CarouselButtonsProps, "classNames"> & {
 	>;
 };
 
-export type CarouselIndicatorProps = {
+export type CarouselIndicatorProps = InferProps<"button"> & {
 	classNames?: {
 		base?: string;
-		button?: string;
 		isActive?: string;
 	};
 	currentIndex: number;
@@ -82,4 +82,8 @@ export type OtherCarouselProps = {
 	children?: React.ReactNode;
 	className?: string;
 	style?: React.CSSProperties;
+};
+
+export type CarouselItemProps = OtherCarouselProps & {
+	currentIndex: number;
 };

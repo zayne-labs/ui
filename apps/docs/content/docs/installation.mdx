@@ -1,15 +1,13 @@
 ---
 title: Installation
-description: Install and configure Zayne UI in your React project.
+description: Install and configure Zayne UI in your project.
 icon: Download
 ---
-
-import { Step, Steps } from "fumadocs-ui/components/steps";
 
 <Steps>
 <Step>
 
-### Install the Package
+### Install the package
 
 ```package-install
 @zayne-labs/ui-react
@@ -18,32 +16,48 @@ import { Step, Steps } from "fumadocs-ui/components/steps";
 </Step>
 <Step>
 
-### Peer Dependencies
+### Peer dependencies
 
-| Dependency   | Version                |
-| :----------- | :--------------------- |
-| `react`      | `^19.0.0`              |
-| `react-dom`  | `^19.0.0`              |
-| `typescript` | `^5.0.0` (recommended) |
+The React package (@zayne-labs/ui-react) requires React 19 and is designed for TypeScript projects (Vue and Svelte support is coming soon):
+
+```package-install
+react react-dom @types/react @types/react-dom
+```
+
+Some components have additional peer dependencies. Install them only if you use those components:
 
 <Accordions>
   <Accordion title="Form component — react-hook-form">
+    The `Form` component is a composable wrapper around React Hook Form. Install it alongside Zod (or your preferred schema library) for validation:
+
     ```package-install
     react-hook-form
     ```
+
+    For schema-based validation:
+
+    ```package-install
+    zod @hookform/resolvers
+    ```
+
   </Accordion>
 
-  <Accordion title="Tailwind CSS v4">
+  <Accordion title="Tailwind CSS v4 (optional)">
+    The Tailwind preset provides theme tokens, animations, and utilities tailored for Zayne UI components. It is **not required** — all components work without it.
+
     ```package-install
     -D tailwindcss@latest
     ```
+
   </Accordion>
 </Accordions>
 
 </Step>
 <Step>
 
-### TypeScript
+### TypeScript configuration
+
+Ensure your `tsconfig.json` uses `bundler` module resolution — this is required for the per-component entry points to resolve correctly:
 
 ```json title="tsconfig.json"
 {
@@ -55,30 +69,47 @@ import { Step, Steps } from "fumadocs-ui/components/steps";
 }
 ```
 
+<Callout type="info">
+	`"moduleResolution": "bundler"` is the standard for modern React 19 projects using Vite, Next.js, or
+	other bundlers. If you're on an older setup using `"node"`, the subpath imports won't resolve.
+</Callout>
+
 </Step>
 <Step>
 
-### CSS Setup
+### CSS setup
+
+Choose the setup that matches your project:
 
 <Tabs items={["Tailwind CSS v4", "Standalone CSS"]}>
 	<Tab value="Tailwind CSS v4">
-		```css title="app/globals.css"
-		@import "tailwindcss";
-		@import "@zayne-labs/ui-react/css/preset.css";
-		```
-	</Tab>
+		Import the Zayne UI preset **after** the Tailwind import in your global CSS file. This registers
+		theme tokens (`--color-zu-*`), animations (`animate-shake`, `animate-fade-up`, etc.), and utilities
+		(`scrollbar-hidden`):
+
+    	```css title="app/globals.css"
+    	@import "tailwindcss";
+    	@import "@zayne-labs/ui-react/css/preset.css";
+    	```
+
+    </Tab>
 
     <Tab value="Standalone CSS">
-     ```tsx title="app/globals.css"
-     import "@zayne-labs/ui-react/style.css";
+     If you're **not** using Tailwind, import the pre-compiled stylesheet instead. This includes the minimal
+     structural styles that some components rely on:
+
+     ```css title="app/globals.css"
+     @import "@zayne-labs/ui-react/style.css";
      ```
-     </Tab>
+
+    </Tab>
 
 </Tabs>
 
 <Callout type="info">
-	The Tailwind preset is recommended — enables theme tokens, animations, and utilities. See the [Styling
-	Guide](/docs/styling).
+	Both options are thin layers of structural CSS. Zayne UI is headless — most visual styling is left to
+	you. See the [Styling Guide](/docs/styling) for details on theme tokens, data-attribute selectors, and
+	the `unstyled` prop.
 </Callout>
 
 </Step>

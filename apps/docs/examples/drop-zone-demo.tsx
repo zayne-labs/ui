@@ -1,11 +1,14 @@
 "use client";
 
 import { DropZone } from "@zayne-labs/ui-react/ui/drop-zone";
+import { AlertCircle, CheckCircle2, Upload, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 function DropZoneDemo() {
 	return (
 		<DropZone.Root
-			className="w-full max-w-[400px]"
+			className="w-full max-w-lg rounded-4xl border border-fd-border bg-fd-card/40 p-8 shadow-2xl
+				backdrop-blur-md"
 			multiple={true}
 			maxFileCount={5}
 			maxFileSize={{ mb: 5 }}
@@ -14,14 +17,11 @@ function DropZoneDemo() {
 			onUpload={async (ctx) => {
 				const simulateUpload = (id: string) => {
 					const { promise, resolve } = Promise.withResolvers<string>();
-
 					let progress = 0;
 
 					const interval = setInterval(() => {
 						progress += 10;
-
 						ctx.onProgress({ fileStateOrID: id, progress });
-
 						if (progress >= 100) {
 							clearInterval(interval);
 							resolve("Resolved");
@@ -41,88 +41,119 @@ function DropZoneDemo() {
 			}}
 		>
 			<DropZone.Area
-				className="rounded-lg border-2 border-dashed border-fd-border bg-fd-muted/20 p-12 text-center
-					transition-colors data-drag-over:border-fd-primary data-drag-over:bg-fd-primary/5"
+				className="group flex flex-col items-center gap-6 rounded-3xl border-2 border-dashed
+					border-fd-border/50 bg-fd-background/50 p-12 text-center transition-all duration-500
+					hover:border-fd-primary/40 hover:bg-fd-primary/5 data-drag-over:border-fd-primary
+					data-drag-over:bg-fd-primary/10"
 			>
-				<div className="flex flex-col items-center gap-3">
-					<div className="rounded-full bg-fd-primary/10 p-3">
-						<svg
-							className="size-8 text-fd-primary"
-							fill="none"
-							viewBox="0 0 24 24"
-							stroke="currentColor"
-						>
-							<path
-								strokeLinecap="round"
-								strokeLinejoin="round"
-								strokeWidth={2}
-								d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-							/>
-						</svg>
-					</div>
-
-					<div>
-						<p className="text-sm font-medium text-fd-foreground">
-							Drop images here or click to browse
-						</p>
-						<p className="mt-1 text-xs text-fd-muted-foreground">
-							PNG, JPG, GIF up to 5MB (max 5 files)
-						</p>
-					</div>
-
-					<DropZone.Trigger
-						className="mt-2 rounded-md bg-fd-primary px-4 py-2 text-sm font-medium
-							text-fd-primary-foreground transition-colors hover:bg-fd-primary/90"
+				<div className="relative">
+					<span
+						className="flex size-14 items-center justify-center rounded-2xl bg-fd-primary/10
+							transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6"
+						aria-hidden="true"
 					>
-						Select Files
-					</DropZone.Trigger>
+						<Upload className="size-7 text-fd-primary" />
+					</span>
+					<div
+						className="absolute -top-1 -right-1 size-3 animate-pulse rounded-full bg-fd-primary
+							shadow-sm"
+					/>
 				</div>
+
+				<div className="flex flex-col gap-1">
+					<p className="text-sm font-black tracking-tight text-fd-foreground">Drop images here</p>
+					<p className="text-[11px] font-bold tracking-wider text-fd-muted-foreground/60 uppercase">
+						PNG, JPG, WEBP • MAX 5MB
+					</p>
+				</div>
+
+				<DropZone.Trigger asChild={true}>
+					<Button theme="glow" size="sm" className="border-fd-border/60 font-bold tracking-tight">
+						Select Files
+					</Button>
+				</DropZone.Trigger>
 			</DropZone.Area>
 
-			<DropZone.FileList className="mt-6 gap-3">
+			<DropZone.FileList className="mt-6 flex max-h-72 flex-col gap-4 overflow-y-auto pr-1 transition-all">
 				{({ fileState }) => (
 					<DropZone.FileItem
 						key={fileState.id}
 						fileState={fileState}
-						className="flex items-center gap-4 rounded-lg border border-fd-border bg-fd-card p-4
-							shadow-sm"
+						className="group relative flex animate-in items-center gap-4 rounded-2xl border
+							border-fd-border bg-fd-background/80 p-2.5 shadow-2xl transition-all duration-500
+							fade-in slide-in-from-bottom-2 hover:-translate-y-0.5 hover:border-fd-primary/20
+							hover:bg-fd-background"
 					>
-						<DropZone.FileItemPreview
-							className="size-16 shrink-0 rounded-md border border-fd-border object-cover"
-						/>
-						<div className="min-w-0 grow">
-							<DropZone.FileItemMetadata className="text-sm font-medium text-fd-foreground" />
-							<DropZone.FileItemProgress
-								variant="linear"
-								className="mt-2 h-1.5 overflow-hidden rounded-full bg-fd-muted"
-								classNames={{
-									track: "h-full bg-fd-primary transition-all",
-								}}
+						<div className="relative shrink-0">
+							<DropZone.FileItemPreview
+								className="size-16 rounded-lg border border-fd-border/50 object-cover shadow-sm
+									transition-transform group-hover:scale-105"
 							/>
+							{fileState.status === "success" && (
+								<span
+									className="absolute -top-1.5 -right-1.5 flex size-5 items-center justify-center
+										rounded-full bg-emerald-500 text-white shadow-sm ring-2 ring-fd-background"
+								>
+									<CheckCircle2 className="size-3" />
+								</span>
+							)}
+							{fileState.status === "error" && (
+								<span
+									className="absolute -top-1.5 -right-1.5 flex size-5 items-center justify-center
+										rounded-full bg-rose-500 text-white shadow-sm ring-2 ring-fd-background"
+								>
+									<AlertCircle className="size-3" />
+								</span>
+							)}
 						</div>
-						<DropZone.FileItemDelete
-							className="shrink-0 rounded-md p-2 text-fd-muted-foreground transition-colors
-								hover:bg-fd-destructive/10 hover:text-fd-destructive"
-						>
-							<svg className="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-								<path
-									strokeLinecap="round"
-									strokeLinejoin="round"
-									strokeWidth={2}
-									d="M6 18L18 6M6 6l12 12"
+
+						<div className="flex grow flex-col gap-2.5">
+							<DropZone.FileItemMetadata
+								className="truncate text-sm font-black tracking-tight text-fd-foreground"
+							/>
+
+							<div className="flex flex-col gap-2">
+								<DropZone.FileItemProgress
+									variant="linear"
+									className="h-1.5 w-full overflow-hidden rounded-full bg-fd-muted/30"
+									classNames={{
+										track: "h-full bg-fd-primary transition-all duration-300 ease-out",
+									}}
 								/>
-							</svg>
+
+								<div
+									className="flex items-center justify-between text-[10px] font-black
+										tracking-widest text-fd-muted-foreground uppercase opacity-60"
+								>
+									<span className="flex items-center gap-1.5">
+										<p>{Math.round(fileState.progress)}%</p>
+										<span className="size-0.5 rounded-full bg-current opacity-30" />
+										<p>{fileState.status === "uploading" ? "Uploading" : "Complete"}</p>
+									</span>
+								</div>
+							</div>
+						</div>
+
+						<DropZone.FileItemDelete asChild={true}>
+							<Button
+								theme="ghost"
+								size="icon"
+								className="size-8 shrink-0 p-0 text-fd-muted-foreground transition-all duration-300
+									hover:bg-rose-500/10 hover:text-rose-500"
+								aria-label="Remove file"
+							>
+								<X className="size-4" />
+							</Button>
 						</DropZone.FileItemDelete>
 					</DropZone.FileItem>
 				)}
 			</DropZone.FileList>
 
-			<DropZone.FileClear
-				className="mt-4 rounded-md border border-fd-border bg-fd-background px-4 py-2 text-sm
-					font-medium text-fd-foreground transition-colors hover:bg-fd-muted
-					data-[state=inactive]:hidden"
-			>
-				Clear All
+			<DropZone.FileClear asChild={true}>
+				<Button theme="ghost" className="mt-4 gap-2 border-fd-border/60 font-black tracking-tight">
+					<X className="size-4 opacity-60" />
+					Clear all
+				</Button>
 			</DropZone.FileClear>
 		</DropZone.Root>
 	);

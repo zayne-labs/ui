@@ -67,6 +67,11 @@ export const ExamplesIndex = {
 		filePath: "examples/show-demo.tsx",
 		name: "show-demo",
 	},
+	"suspense-with-boundary-demo": {
+		component: lazy(() => import("./suspense-with-boundary-demo")),
+		filePath: "examples/suspense-with-boundary-demo.tsx",
+		name: "suspense-with-boundary-demo",
+	},
 	"switch-demo": {
 		component: lazy(() => import("./switch-demo")),
 		filePath: "examples/switch-demo.tsx",

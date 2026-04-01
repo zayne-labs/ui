@@ -1,5 +1,6 @@
 "use client";
 
+import { dataAttr } from "@zayne-labs/toolkit-core";
 import type { CssWithCustomProperties, PolymorphicPropsStrict } from "@zayne-labs/toolkit-react/utils";
 import { isFunction } from "@zayne-labs/toolkit-type-helpers";
 import { For } from "@/components/common/for";
@@ -15,6 +16,7 @@ import type {
 	CarouselButtonsProps,
 	CarouselControlProps,
 	CarouselIndicatorProps,
+	CarouselItemProps,
 	CarouselRootProps,
 	CarouselWrapperProps,
 	ImagesType,
@@ -173,14 +175,19 @@ export function CarouselItemList<TArray extends unknown[]>(props: CarouselWrappe
 	);
 }
 
-export function CarouselItem(props: OtherCarouselProps) {
-	const { children, className, ...restOfProps } = props;
+export function CarouselItem(props: CarouselItemProps) {
+	const { children, className, currentIndex, ...restOfProps } = props;
+
+	const currentSlide = useCarouselStoreContext((state) => state.currentSlide);
+
+	const isActive = currentSlide === currentIndex;
 
 	return (
 		<li
 			data-slot="carousel-item"
 			data-scope="carousel"
 			data-part="item"
+			data-active={dataAttr(isActive)}
 			className={cnMerge("flex w-full shrink-0 snap-center justify-center", className)}
 			{...restOfProps}
 		>
@@ -214,46 +221,47 @@ export function CarouselIndicatorList<TArray extends unknown[]>(
 	const images = useCarouselStoreContext((state) => each ?? (state.images as TArray));
 
 	return (
-		<ul
+		<div
 			data-slot="carousel-indicator-list"
 			data-scope="carousel"
 			data-part="indicator-list"
 			className={cnMerge(
-				"absolute bottom-[25px] z-2 flex w-full items-center justify-center gap-[15px]",
+				"absolute bottom-6 z-2 flex w-full items-center justify-center gap-4",
 				className
 			)}
 		>
 			{isFunction(children) ?
 				<For each={images} renderItem={(image, index, array) => children({ array, image, index })} />
 			:	children}
-		</ul>
+		</div>
 	);
 }
 
 export function CarouselIndicator(props: CarouselIndicatorProps) {
-	const { classNames, currentIndex } = props;
+	const { className, classNames, currentIndex, ...restOfProps } = props;
 
 	const {
 		actions: { goToSlide },
 		currentSlide,
 	} = useCarouselStoreContext((state) => state);
 
+	const isActive = currentSlide === currentIndex;
+
 	return (
-		<li
+		<button
 			data-slot="carousel-indicator"
 			data-scope="carousel"
 			data-part="indicator"
-			className={cnMerge("inline-flex", classNames?.base)}
-		>
-			<button
-				type="button"
-				onClick={() => goToSlide(currentIndex)}
-				className={cnMerge(
-					"size-1.5 rounded-[50%]",
-					classNames?.base,
-					currentIndex === currentSlide && ["w-[35px] rounded-[5px]", classNames?.isActive]
-				)}
-			/>
-		</li>
+			data-active={dataAttr(isActive)}
+			type="button"
+			onClick={() => goToSlide(currentIndex)}
+			className={cnMerge(
+				"size-1.5 rounded-[50%]",
+				className,
+				classNames?.base,
+				isActive && ["w-9 rounded-[6px]", classNames?.isActive]
+			)}
+			{...restOfProps}
+		/>
 	);
 }

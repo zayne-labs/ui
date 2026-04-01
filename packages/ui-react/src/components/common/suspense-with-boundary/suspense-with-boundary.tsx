@@ -9,7 +9,6 @@ export function SuspenseWithBoundary(props: SuspenseWithBoundaryProps) {
 	return (
 		<ErrorBoundary {...restOfErrorBoundaryProps}>
 			<Suspense fallback={fallback} name={name}>
-				{" "}
 				{children}
 			</Suspense>
 		</ErrorBoundary>

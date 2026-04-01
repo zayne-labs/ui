@@ -63,6 +63,59 @@ The `Teleport` component (also known as a Portal) renders its children into a DO
   </Tab>
 </Tabs>
 
+## Control Insert Position
+
+By default, `Teleport` renders its children as the last child of the target container. You can use the `insertPosition` prop to control exactly where the content is inserted relative to the target.
+
+<Callout type="info">
+	The `insertPosition` prop accepts the same values as the first argument of the native
+	[Element.insertAdjacentElement()](https://developer.mozilla.org/en-US/docs/Web/API/Element/insertAdjacentElement)
+	DOM API.
+</Callout>
+
+<Tabs items={['Internal (Append)', 'Internal (Prepend)', 'External (Before)', 'External (After)']}>
+  <Tab value="Internal (Append)">
+    **`beforeend`**: Inserts as the last child of the target. (Same as default but via a wrapper)
+
+    ```tsx
+    <Teleport to="#container" insertPosition="beforeend">
+      <span>Appended inside</span>
+    </Teleport>
+    ```
+
+  </Tab>
+  <Tab value="Internal (Prepend)">
+    **`afterbegin`**: Inserts as the first child of the target.
+
+    ```tsx
+    <Teleport to="#container" insertPosition="afterbegin">
+      <span>Prepended inside</span>
+    </Teleport>
+    ```
+
+  </Tab>
+  <Tab value="External (Before)">
+    **`beforebegin`**: Inserts immediately before the target element itself.
+
+    ```tsx
+    <Teleport to="#container" insertPosition="beforebegin">
+      <span>Sibling before target</span>
+    </Teleport>
+    ```
+
+  </Tab>
+  <Tab value="External (After)">
+    **`afterend`**: Inserts immediately after the target element itself.
+
+    ```tsx
+    <Teleport to="#container" insertPosition="afterend">
+      <span>Sibling after target</span>
+    </Teleport>
+    ```
+
+  </Tab>
+</Tabs>
+
 ## Component Source
 
 <ComponentSource

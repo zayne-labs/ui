@@ -1,74 +1,236 @@
 ---
 title: Quick start
-description: Get started with Zayne UI in minutes.
+description: Get up and running with Zayne UI in minutes.
 icon: Zap
 ---
 
 For setup instructions see the [Installation](/docs/installation) guide.
 
-## Importing Components
+## Import conventions
+
+Components are organized by category with dedicated entry points — keeping your bundle lean:
 
 ```tsx
+// UI components live under /ui/<component-name>
+
+// Utility components live under /common/<component-name>
 import { For } from "@zayne-labs/ui-react/common/for";
+import { Show } from "@zayne-labs/ui-react/common/show";
+import { Card } from "@zayne-labs/ui-react/ui/card";
 import { DragScroll } from "@zayne-labs/ui-react/ui/drag-scroll";
 ```
 
-Utility components live under `/common/`, UI components under `/ui/`.
+Compound components (like `Card`, `DragScroll`, `Show`, `Switch`, `Await`) use a **namespace import** so you access sub-components via dot notation:
+
+```tsx
+<Card.Root>
+	<Card.Header>...</Card.Header>
+</Card.Root>
+```
+
+You can also import sub-components individually if you prefer:
+
+```tsx
+import { CardHeader, CardRoot } from "@zayne-labs/ui-react/ui/card";
+```
+
+See [Component Structure](/docs/component-structure) for the full pattern reference.
 
 ## Examples
 
-### Conditional Rendering
+### Conditional rendering with Show
+
+`Show` replaces ternary operators and `&&` short-circuits with a readable, type-safe component. Pass a value to `when` — if it's truthy, the render function receives the narrowed type:
 
 ```tsx
-import { Switch } from "@zayne-labs/ui-react/common/switch";
+import { Show } from "@zayne-labs/ui-react/common/show";
 
-function StatusView({ status }: { status: string }) {
+function UserGreeting({ user }: { user: User | null }) {
 	return (
-		<Switch.Root value={status}>
-			<Switch.Match when="loading">Loading...</Switch.Match>
-			<Switch.Match when="error">Something went wrong</Switch.Match>
-			<Switch.Default>Content loaded!</Switch.Default>
-		</Switch.Root>
+		<Show.Root when={user} fallback={<p>Please sign in to continue.</p>}>
+			{(activeUser) => (
+				<div>
+					<h2>Welcome back, {activeUser.name}</h2>
+					<p>{activeUser.email}</p>
+				</div>
+			)}
+		</Show.Root>
 	);
 }
 ```
 
-### List Rendering
+For multiple mutually-exclusive conditions, use `control="content"` mode:
+
+```tsx
+<Show.Root control="content">
+	<Show.Content when={isLoading}>
+		<Skeleton />
+	</Show.Content>
+
+	<Show.Content when={error}>{(err) => <ErrorView message={err.message} />}</Show.Content>
+
+	<Show.Content when={data}>{(result) => <DataView items={result} />}</Show.Content>
+
+	<Show.Fallback>
+		<EmptyState />
+	</Show.Fallback>
+</Show.Root>
+```
+
+### List rendering with For
+
+`For` iterates over arrays with automatic empty-state handling. Pass a number to `each` instead of an array to repeat content — perfect for skeletons:
 
 ```tsx
 import { For } from "@zayne-labs/ui-react/common/for";
 
-function UserList({ users }: { users: { id: number; name: string }[] }) {
+function ProductList({ products }: { products: Product[] }) {
 	return (
-		<For each={users} fallback={<p>No users found</p>}>
-			{(user) => <div key={user.id}>{user.name}</div>}
+		<For each={products} fallback={<p>No products found.</p>}>
+			{(product, index) => (
+				<div key={product.id} className="flex items-center gap-4 border-b py-3">
+					<span className="text-sm text-gray-500">#{index + 1}</span>
+					<span className="font-medium">{product.name}</span>
+					<span className="ml-auto">${product.price}</span>
+				</div>
+			)}
 		</For>
 	);
 }
 ```
 
-### Drag to Scroll
+Need a wrapper element (like `<ul>` or `<tbody>`)? Use `ForWithWrapper`:
+
+```tsx
+import { ForWithWrapper } from "@zayne-labs/ui-react/common/for";
+
+<ForWithWrapper as="ul" className="space-y-2" each={items} fallback={<p>Empty list</p>}>
+	{(item) => <li key={item.id}>{item.label}</li>}
+</ForWithWrapper>;
+```
+
+### Pattern matching with Switch
+
+`Switch` is the declarative equivalent of `switch/case`. Only the first matching `Switch.Match` renders:
+
+```tsx
+import { Switch } from "@zayne-labs/ui-react/common/switch";
+
+function OrderStatus({ status }: { status: "cancelled" | "delivered" | "pending" | "shipped" }) {
+	return (
+		<Switch.Root value={status}>
+			<Switch.Match when="pending">⏳ Awaiting processing</Switch.Match>
+			<Switch.Match when="shipped">📦 On its way</Switch.Match>
+			<Switch.Match when="delivered">✅ Delivered</Switch.Match>
+			<Switch.Match when="cancelled">❌ Cancelled</Switch.Match>
+			<Switch.Default>Unknown status</Switch.Default>
+		</Switch.Root>
+	);
+}
+```
+
+Omit `value` for boolean matching — it works like `switch(true)`:
+
+```tsx
+<Switch.Root>
+	<Switch.Match when={isLoading}>Loading...</Switch.Match>
+	<Switch.Match when={error}>{(err) => <p>Error: {err.message}</p>}</Switch.Match>
+	<Switch.Match when={data}>{(result) => <DataView data={result} />}</Switch.Match>
+	<Switch.Default>No data yet</Switch.Default>
+</Switch.Root>
+```
+
+### Drag-to-scroll containers
+
+`DragScroll` adds mouse drag scrolling, navigation buttons, and scroll-state awareness to any container:
 
 ```tsx
 import { DragScroll } from "@zayne-labs/ui-react/ui/drag-scroll";
 
-function HorizontalList() {
+function HorizontalGallery() {
 	return (
 		<DragScroll.Root>
-			<DragScroll.List className="flex gap-4 p-4">
-				{[...Array(5).keys()].map((number) => (
+			<DragScroll.Prev className="rounded-full border p-2 disabled:opacity-30">←</DragScroll.Prev>
+
+			<DragScroll.List className="scrollbar-hidden flex gap-4 overflow-x-auto">
+				{[...Array(8).keys()].map((i) => (
 					<DragScroll.Item
-						key={number}
-						className="flex h-40 w-64 shrink-0 items-center justify-center rounded-xl border"
+						key={i}
+						className="flex h-48 w-72 shrink-0 items-center justify-center rounded-xl border bg-gray-50"
 					>
-						Item {number + 1}
+						Item {i + 1}
 					</DragScroll.Item>
 				))}
 			</DragScroll.List>
 
-			<DragScroll.Prev>←</DragScroll.Prev>
-			<DragScroll.Next>→</DragScroll.Next>
+			<DragScroll.Next className="rounded-full border p-2 disabled:opacity-30">→</DragScroll.Next>
 		</DragScroll.Root>
 	);
 }
 ```
+
+### Animated mount/unmount with Presence
+
+`Presence` keeps a component in the DOM until its exit animation completes, then removes it:
+
+```tsx
+import { Presence } from "@zayne-labs/ui-react/common/presence";
+
+function FadePanel({ isVisible }: { isVisible: boolean }) {
+	return (
+		<Presence present={isVisible}>
+			<div
+				className="animate-in rounded-lg bg-blue-600 p-6 text-white
+				shadow-xl duration-300 fade-in
+				data-[animation-phase=exit]:animate-out data-[animation-phase=exit]:fade-out"
+			>
+				I animate in and out smoothly!
+			</div>
+		</Presence>
+	);
+}
+```
+
+### Async data with Await
+
+`Await` wraps a promise with built-in Suspense and ErrorBoundary handling:
+
+```tsx
+import { Await } from "@zayne-labs/ui-react/common/await";
+
+function UserProfile({ userId }: { userId: string }) {
+	const userPromise = fetchUser(userId);
+
+	return (
+		<Await.Root promise={userPromise}>
+			<Await.Pending>
+				<ProfileSkeleton />
+			</Await.Pending>
+
+			<Await.Error>
+				{({ error, resetErrorBoundary }) => (
+					<div>
+						<p>Failed to load: {error.message}</p>
+						<button onClick={resetErrorBoundary}>Retry</button>
+					</div>
+				)}
+			</Await.Error>
+
+			<Await.Success>
+				{(user) => (
+					<div>
+						<h1>{user.name}</h1>
+						<p>{user.email}</p>
+					</div>
+				)}
+			</Await.Success>
+		</Await.Root>
+	);
+}
+```
+
+## Next steps
+
+- **[Component Structure](/docs/component-structure)** — Learn the compound component pattern, `asChild`, and data attributes
+- **[Styling](/docs/styling)** — Tailwind CSS preset, vanilla CSS targeting, and the `unstyled` prop
+- **[TypeScript](/docs/typescript)** — Type inference, polymorphic props, and discriminated unions

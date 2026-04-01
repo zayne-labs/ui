@@ -1,15 +1,15 @@
 "use client";
 
 import { ErrorBoundary } from "@zayne-labs/ui-react/common/error-boundary";
+import { AlertTriangle, Bug, CheckCircle2, RefreshCw, XCircle } from "lucide-react";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
 
 function ErrorBoundaryDemo() {
 	const [shouldError, setShouldError] = useState(false);
 	const [resetKey, setResetKey] = useState(0);
 
-	const handleTriggerError = () => {
-		setShouldError(true);
-	};
+	const handleTriggerError = () => setShouldError(true);
 
 	const handleReset = () => {
 		setShouldError(false);
@@ -17,98 +17,98 @@ function ErrorBoundaryDemo() {
 	};
 
 	return (
-		<div className="flex w-full max-w-md flex-col gap-4">
-			<div className="flex gap-2">
-				<button
-					type="button"
+		<section className="flex w-full max-w-md flex-col gap-6 py-4">
+			<nav className="flex flex-wrap gap-2" aria-label="ErrorBoundary controls">
+				<Button
+					theme="destructive"
 					onClick={handleTriggerError}
 					disabled={shouldError}
-					className="rounded-lg bg-red-500 px-4 py-2 text-sm font-medium text-white shadow-sm
-						transition-all hover:bg-red-600 active:scale-95 disabled:cursor-not-allowed
-						disabled:opacity-50"
+					className="min-w-32"
 				>
-					Trigger Error
-				</button>
-				<button
-					type="button"
-					onClick={handleReset}
-					className="rounded-lg border border-fd-border bg-fd-card px-4 py-2 text-sm font-medium
-						transition-all hover:bg-fd-muted active:scale-95"
-				>
-					Reset
-				</button>
-			</div>
+					<Bug className="mr-2 size-4" />
+					Trigger Crash
+				</Button>
+				<Button theme="outline" onClick={handleReset}>
+					<RefreshCw className="mr-2 size-4" />
+					Reset Demo
+				</Button>
+			</nav>
 
-			<ErrorBoundary
-				onErrorReset={handleReset}
-				errorResetKeys={[resetKey]}
-				errorFallback={({ error, resetErrorBoundary }) => (
-					<div
-						className="rounded-xl border border-red-200 bg-red-50/50 p-6 shadow-sm backdrop-blur-sm
-							dark:border-red-900/50 dark:bg-red-950/50"
-					>
-						<div className="mb-3 flex items-center gap-2">
-							<div className="flex size-8 items-center justify-center rounded-lg bg-red-500/10">
-								<svg
-									className="size-4 text-red-600 dark:text-red-400"
-									fill="none"
-									viewBox="0 0 24 24"
-									stroke="currentColor"
-								>
-									<path
-										strokeLinecap="round"
-										strokeLinejoin="round"
-										strokeWidth={2}
-										d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-									/>
-								</svg>
-							</div>
-							<p className="font-semibold text-red-900 dark:text-red-100">Error Caught</p>
-						</div>
-						<p className="mb-4 text-sm text-red-800 dark:text-red-200">{error.message}</p>
-						<button
-							type="button"
-							onClick={resetErrorBoundary}
-							className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white shadow-sm
-								transition-all hover:bg-red-700 active:scale-95 dark:bg-red-700
-								dark:hover:bg-red-600"
+			<div className="relative min-h-40">
+				<ErrorBoundary
+					onErrorReset={handleReset}
+					errorResetKeys={[resetKey]}
+					errorFallback={({ error, resetErrorBoundary }) => (
+						<article
+							className="group w-full animate-in rounded-2xl border border-red-500/20 bg-red-500/5
+								p-6 shadow-xl shadow-red-500/5 backdrop-blur-sm fade-in slide-in-from-top-2"
 						>
-							Try Again
-						</button>
-					</div>
-				)}
-			>
-				<BuggyComponent shouldError={shouldError} />
-			</ErrorBoundary>
-		</div>
+							<header className="flex items-start gap-4">
+								<span className="rounded-full bg-red-500/10 p-2.5" aria-hidden="true">
+									<XCircle className="size-6 text-red-600 dark:text-red-400" />
+								</span>
+								<div className="flex-1">
+									<h4 className="text-lg font-bold tracking-tight text-red-900 dark:text-red-100">
+										Boundary Caught Error
+									</h4>
+									<p className="mt-1 text-sm/relaxed text-red-800/80 dark:text-red-200/80">
+										{error.message}
+									</p>
+								</div>
+							</header>
+
+							<div className="mt-6 flex flex-col gap-3">
+								<div
+									className="rounded-lg bg-red-500/10 p-3 font-mono text-[11px] text-red-700
+										dark:text-red-300"
+								>
+									Stack trace suppressed for demo safety.
+								</div>
+								<Button theme="destructive" onClick={resetErrorBoundary}>
+									<RefreshCw className="mr-2 size-4" />
+									Attempt Recovery
+								</Button>
+							</div>
+						</article>
+					)}
+				>
+					<BuggyComponent shouldError={shouldError} />
+				</ErrorBoundary>
+			</div>
+		</section>
 	);
 }
-
 export default ErrorBoundaryDemo;
 
-function BuggyComponent(props: { shouldError: boolean }) {
-	const { shouldError } = props;
-
+function BuggyComponent({ shouldError }: { shouldError: boolean }) {
 	if (shouldError) {
-		throw new Error("Component crashed unexpectedly!");
+		throw new Error("Critical system failure: BuggyComponent met an unhandled exception.");
 	}
 
 	return (
-		<div className="rounded-xl border border-fd-border bg-fd-card/40 p-6 shadow-sm backdrop-blur-sm">
-			<div className="mb-2 flex items-center gap-2">
-				<div className="flex size-8 items-center justify-center rounded-lg bg-green-500/10">
-					<svg
-						className="size-4 text-green-600"
-						fill="none"
-						viewBox="0 0 24 24"
-						stroke="currentColor"
-					>
-						<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-					</svg>
+		<article
+			className="flex w-full animate-in flex-col gap-4 rounded-2xl border border-fd-border bg-fd-card/50
+				p-6 shadow-xl backdrop-blur-sm zoom-in-95 fade-in"
+		>
+			<header className="flex items-center gap-3">
+				<span
+					className="flex size-10 items-center justify-center rounded-full bg-emerald-500/10"
+					aria-hidden="true"
+				>
+					<CheckCircle2 className="size-5 text-emerald-500" />
+				</span>
+				<div>
+					<h4 className="font-bold tracking-tight text-fd-foreground">System Operational</h4>
+					<p className="text-xs font-medium text-fd-muted-foreground/80">
+						Component lifecycle is stable
+					</p>
 				</div>
-				<p className="font-semibold text-fd-foreground">Component Active</p>
+			</header>
+
+			<div className="flex items-center gap-3 rounded-xl bg-fd-muted/30 p-4">
+				<AlertTriangle className="size-4 animate-pulse text-amber-500" />
+				<p className="text-sm font-medium text-fd-foreground">Waiting for an error trigger...</p>
 			</div>
-			<p className="text-sm text-fd-muted-foreground">Everything is running smoothly!</p>
-		</div>
+		</article>
 	);
 }

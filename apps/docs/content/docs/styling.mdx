@@ -1,22 +1,29 @@
 ---
 title: Styling
-description: Learn how to style Zayne UI components with Tailwind CSS or vanilla CSS
+description: Learn how to style Zayne UI components with Tailwind CSS, vanilla CSS, or any approach you prefer
 icon: Palette
 ---
 
-Zayne UI ships with minimal structural styles for layout only. Override with `className` or wipe entirely with the `unstyled` prop.
+Zayne UI is headless — components ship with **zero visual styling** by default. A few components include minimal structural CSS (e.g., flexbox layout on `DragScroll.List`), but everything visual is yours to define.
 
-## Design Philosophy
+You have three tools for styling:
 
-Components ship with minimal structural styles — override with `className` or use the `unstyled` prop for full control. Data attributes are available for CSS targeting.
+1. **`className`** — Add classes to any component, just like a native element
+2. **`unstyled`** — Opt out of even the minimal structural styles on a per-component basis
+3. **Data attributes** — Target components from external CSS via `data-scope`, `data-part`, and `data-slot`
 
-## Using with Tailwind CSS
+## Using with Tailwind CSS v4
 
-Zayne UI is built for Tailwind CSS v4. Import the preset in your global CSS as shown in the [Installation Guide](/docs/installation#tailwind-css-integration-v4).
+Zayne UI includes an optional Tailwind CSS v4 preset. Import it in your global CSS as shown in the [Installation Guide](/docs/installation):
 
-### Theme Tokens
+```css title="app/globals.css"
+@import "tailwindcss";
+@import "@zayne-labs/ui-react/css/preset.css";
+```
 
-The preset defines these CSS custom properties:
+### Theme tokens
+
+The preset registers CSS custom properties scoped under `zu-*` that you can use throughout your project:
 
 ```css title="@zayne-labs/ui-react/css/theme.css"
 @theme {
@@ -37,77 +44,144 @@ The preset defines these CSS custom properties:
 }
 ```
 
+Use these tokens in your Tailwind classes:
+
+```tsx
+<button className="bg-zu-primary text-zu-primary-foreground hover:bg-zu-primary/90">Submit</button>
+```
+
 <Callout>
-	Dark mode activates automatically with the `.dark` class or `data-theme="dark"` attribute.
+	Dark mode activates automatically with the `.dark` class or `data-theme="dark"` attribute on any
+	ancestor element.
 </Callout>
 
 ### Animations
 
-The preset also includes named animations you can use directly:
+The preset includes named animations used by components internally, but you can also use them directly:
 
-| Token                  | Description                               |
-| :--------------------- | :---------------------------------------- |
-| `animate-shake`        | Error shake (used by `Form.ErrorMessage`) |
-| `animate-fade-up`      | Fade in from below                        |
-| `animate-fade-down`    | Fade in from above                        |
-| `animate-files-in`     | File item entry (used by `DropZone`)      |
-| `animate-progress-out` | Progress bar exit (used by `DropZone`)    |
+| Token                  | Description                 | Used by             |
+| :--------------------- | :-------------------------- | :------------------ |
+| `animate-shake`        | Error shake / jiggle effect | `Form.ErrorMessage` |
+| `animate-fade-up`      | Fade in from below          | General use         |
+| `animate-fade-down`    | Fade in from above          | General use         |
+| `animate-files-in`     | File item entry animation   | `DropZone.FileItem` |
+| `animate-progress-out` | Progress bar exit animation | `DropZone` progress |
 
 ### Utilities
 
-The preset adds a `scrollbar-hidden` utility that hides scrollbars cross-browser:
+The preset adds a `scrollbar-hidden` utility that hides scrollbars across all browsers while keeping the content scrollable:
 
 ```tsx
 <DragScroll.List className="scrollbar-hidden flex gap-4 overflow-x-auto" />
 ```
 
-### Example
+### Styling example
+
+Here's a fully styled `DropZone` using Tailwind and the preset tokens:
 
 ```tsx
 import { DropZone } from "@zayne-labs/ui-react/ui/drop-zone";
 
 <DropZone.Root className="w-full max-w-xl">
 	<DropZone.Area
-		className="flex flex-col items-center rounded-lg border-2 border-dashed
-    border-gray-300 p-12 transition-colors hover:bg-gray-50
-    data-drag-over:border-zu-primary data-drag-over:bg-zu-primary/5"
+		className="flex flex-col items-center gap-3 rounded-lg border-2 border-dashed
+			border-gray-300 p-12 transition-colors hover:bg-gray-50
+			data-drag-over:border-zu-primary data-drag-over:bg-zu-primary/5"
 	>
 		<p className="font-medium text-gray-700">Drop files here</p>
-		<DropZone.Trigger className="mt-4 rounded-md bg-zu-primary px-6 py-2 text-white hover:opacity-90">
+		<DropZone.Trigger className="rounded-md bg-zu-primary px-6 py-2 text-white hover:opacity-90">
 			Select Files
 		</DropZone.Trigger>
 	</DropZone.Area>
 </DropZone.Root>;
 ```
 
-## Using Without Tailwind
+Notice how `data-drag-over:` targets the `data-drag-over` attribute that `DropZone.Area` sets automatically when files are hovering.
 
-### Pre-compiled Styles
+## The `unstyled` prop
 
-Import the compiled CSS in your root file:
+Some UI components apply minimal structural CSS by default (like flex layout, cursor styles, or scrollbar hiding). If you want full control, pass `unstyled` to remove those base styles:
 
 ```tsx
-import "@zayne-labs/ui-react/style.css";
+/* Default — includes structural CSS (e.g., display:flex, cursor:grab) */
+<DragScroll.List className="gap-4 overflow-x-auto" />;
+
+/* Unstyled — no structural CSS at all, you define everything */
+<DragScroll.List unstyled={true} className="flex cursor-grab gap-4 overflow-x-auto" />;
 ```
 
-### Vanilla CSS via Data Attributes
+The `unstyled` prop is available on UI component parts that have base styles (like `DragScroll.Root`, `DragScroll.List`, `DragScroll.Prev`, `DragScroll.Next`). Utility components have no base styles, so they don't need it.
 
-Every component renders `data-scope`, `data-part`, and `data-slot` attributes you can target:
+## Using without Tailwind
+
+### Pre-compiled styles
+
+If you're not using Tailwind, import the compiled CSS bundle in your entry file:
+
+```css title="app/globals.css"
+@import "@zayne-labs/ui-react/style.css";
+```
+
+### Vanilla CSS via data attributes
+
+Every component renders three data attributes for CSS targeting. This means you never need to rely on internal class names or DOM structure:
+
+| Attribute    | Description                     | Example values                          |
+| :----------- | :------------------------------ | :-------------------------------------- |
+| `data-scope` | Identifies the component family | `"card"`, `"dropzone"`, `"drag-scroll"` |
+| `data-part`  | Identifies the specific part    | `"root"`, `"area"`, `"title"`, `"list"` |
+| `data-slot`  | Combined scope + part           | `"card-header"`, `"drag-scroll-list"`   |
+
+Use them to style components from a standalone CSS file:
 
 ```css title="styles.css"
-[data-scope="drag-scroll"][data-part="root"] {
-  display: flex;
-  overflow-x: auto;
-  gap: 1rem;
-  cursor: grab;
+/* Target a specific component part */
+[data-scope="drag-scroll"][data-part="list"] {
+	display: flex;
+	gap: 1rem;
+	overflow-x: auto;
+	cursor: grab;
+	scrollbar-width: none; /* Firefox */
 }
 
-[data-scope="drag-scroll"][data-part="root"]:active {
-  cursor: grabbing;
+[data-scope="drag-scroll"][data-part="list"]:active {
+	cursor: grabbing;
 }
 
-/* Or use the combined slot */
-[data-slot="drag-scroll-root"] {
-  scrollbar-width: none;
+/* Or use the combined slot for shorter selectors */
+[data-slot="drag-scroll-list"] {
+	scrollbar-width: none;
+}
+
+/* Target stateful attributes */
+[data-scope="drag-scroll"][data-part="list"][data-dragging="true"] {
+	cursor: grabbing;
+	user-select: none;
+}
+
+[data-scope="drop-zone"][data-part="area"][data-drag-over] {
+	border-color: var(--color-zu-primary);
+	background: oklch(0.97 0.01 265);
 }
 ```
+
+<Callout type="tip">
+	Using `data-slot` is a convenient shorthand when you don't need the specificity of `data-scope` +
+	`data-part`. Both approaches target the same elements.
+</Callout>
+
+### Stateful data attributes
+
+Many components set additional data attributes to reflect their current state. These are documented on each component's page, but here's a summary of the most useful ones:
+
+| Attribute               | Component(s)              | Description                                          |
+| :---------------------- | :------------------------ | :--------------------------------------------------- |
+| `data-dragging`         | `DragScroll.List`         | `"true"` when the user is actively dragging          |
+| `data-disabled`         | `DragScroll.Prev/Next`    | `"true"` when there's nothing more to scroll         |
+| `data-drag-over`        | `DropZone.Area`           | Present when files are hovering over the zone        |
+| `data-invalid`          | `DropZone.Area`, `Form.*` | Present when validation fails                        |
+| `data-status`           | `DropZone.FileItem`       | `"idle"`, `"uploading"`, `"success"`, or `"error"`   |
+| `data-state`            | `DropZone.FileList`       | `"active"` when files exist, `"inactive"` when empty |
+| `data-animation-phase`  | `Presence` child          | `"enter"` or `"exit"` (animation variant)            |
+| `data-transition-phase` | `Presence` child          | `"enter"` or `"exit"` (transition variant)           |
+| `data-mounted`          | `Presence` child          | Whether the element is currently mounted             |

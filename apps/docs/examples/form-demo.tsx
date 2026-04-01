@@ -1,18 +1,35 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Switch } from "@zayne-labs/ui-react/common/switch";
 import { DropZone } from "@zayne-labs/ui-react/ui/drop-zone";
 import { Form } from "@zayne-labs/ui-react/ui/form";
+import {
+	Bell,
+	CheckCircle2,
+	FileText,
+	Mail,
+	MessageSquare,
+	RefreshCw,
+	Send,
+	Upload,
+	User,
+	X,
+} from "lucide-react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { Button } from "@/components/ui/button";
 
 const formSchema = z.object({
 	attachment: z.instanceof(File, { message: "Please upload a file" }).nullable(),
 	email: z.email("Please enter a valid email"),
 	message: z.string().min(10, "Message must be at least 10 characters"),
 	name: z.string().min(1, "Name is required"),
-	subscribe: z.boolean().default(false),
+	subscribe: z.boolean(),
 });
+
+const waitFor = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 function FormDemo() {
 	const form = useForm({
@@ -26,8 +43,15 @@ function FormDemo() {
 		resolver: zodResolver(formSchema),
 	});
 
-	const onSubmit = form.handleSubmit((data) => {
+	const [isSuccess, setIsSuccess] = useState(false);
+
+	const onSubmit = form.handleSubmit(async (data) => {
 		console.info("Form submitted:", data);
+
+		await waitFor(2000);
+
+		setIsSuccess(true);
+		setTimeout(() => setIsSuccess(false), 5000);
 		form.reset();
 	});
 
@@ -35,166 +59,170 @@ function FormDemo() {
 		<Form.Root
 			form={form}
 			onSubmit={(event) => void onSubmit(event)}
-			className="gap-5 rounded-2xl border border-fd-border bg-fd-card/40 p-6 shadow-sm backdrop-blur-sm"
+			className="w-full max-w-lg gap-6 rounded-3xl border border-fd-border bg-fd-card/40 p-8 shadow-2xl
+				backdrop-blur-md"
 		>
-			<header>
-				<h3 className="text-lg font-semibold text-fd-foreground">Contact Us</h3>
-				<p className="text-sm text-fd-muted-foreground">
-					Send us a message and we'll get back to you.
+			<header className="flex flex-col gap-1">
+				<div className="flex items-center gap-2">
+					<span className="flex size-8 items-center justify-center rounded-lg bg-fd-primary/10">
+						<Mail className="size-4 text-fd-primary" />
+					</span>
+					<h3 className="text-xl font-bold tracking-tight text-fd-foreground">Get in Touch</h3>
+				</div>
+				<p className="text-sm font-medium text-fd-muted-foreground/80">
+					Have a project in mind? We'd love to hear from you.
 				</p>
 			</header>
 
-			<Form.Field control={form.control} name="name" className="mt-4">
-				<Form.Label className="text-sm font-medium text-fd-foreground">Name</Form.Label>
-				<Form.Input
-					placeholder="John Doe"
-					className="w-full rounded-lg border border-fd-border bg-fd-background px-3.5 py-2.5 text-sm
-						text-fd-foreground shadow-sm transition-all placeholder:text-fd-muted-foreground
-						focus:border-fd-primary focus:ring-2 focus:ring-fd-primary/20 focus:outline-none
-						data-invalid:border-red-500 data-invalid:focus:ring-red-500/20"
-				/>
-				<Form.ErrorMessage className="text-xs text-red-600 dark:text-red-400" />
-			</Form.Field>
+			<div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+				<Form.Field control={form.control} name="name">
+					<Form.Label
+						className="flex items-center gap-2 text-[13px] font-bold tracking-wider
+							text-fd-foreground uppercase"
+					>
+						<User className="size-3.5 text-fd-muted-foreground" />
+						Full Name
+					</Form.Label>
+					<Form.Input
+						placeholder="Jane Cooper"
+						className="rounded-xl border border-fd-border bg-fd-background/50 px-4 py-3 text-sm
+							transition-all focus:border-fd-primary/50 focus:ring-4 focus:ring-fd-primary/10"
+					/>
+					<Form.ErrorMessage className="text-xs font-medium text-red-500" />
+				</Form.Field>
 
-			<Form.Field control={form.control} name="email">
-				<Form.Label className="text-sm font-medium text-fd-foreground">Email</Form.Label>
-				<Form.Input
-					type="email"
-					placeholder="john@example.com"
-					className="w-full rounded-lg border border-fd-border bg-fd-background px-3.5 py-2.5 text-sm
-						text-fd-foreground shadow-sm transition-all placeholder:text-fd-muted-foreground
-						focus:border-fd-primary focus:ring-2 focus:ring-fd-primary/20 focus:outline-none
-						data-invalid:border-red-500 data-invalid:focus:ring-red-500/20"
-				/>
-				<Form.ErrorMessage className="text-xs text-red-600 dark:text-red-400" />
-			</Form.Field>
+				<Form.Field control={form.control} name="email">
+					<Form.Label
+						className="flex items-center gap-2 text-[13px] font-bold tracking-wider
+							text-fd-foreground uppercase"
+					>
+						<Mail className="size-3.5 text-fd-muted-foreground" />
+						Email Address
+					</Form.Label>
+					<Form.Input
+						type="email"
+						placeholder="jane@example.com"
+						className="rounded-xl border border-fd-border bg-fd-background/50 px-4 py-3 text-sm
+							transition-all focus:border-fd-primary/50 focus:ring-4 focus:ring-fd-primary/10"
+					/>
+					<Form.ErrorMessage className="text-xs font-medium text-red-500" />
+				</Form.Field>
+			</div>
 
 			<Form.Field control={form.control} name="message">
-				<Form.Label className="text-sm font-medium text-fd-foreground">Message</Form.Label>
+				<Form.Label
+					className="flex items-center gap-2 text-[13px] font-bold tracking-wider text-fd-foreground
+						uppercase"
+				>
+					<MessageSquare className="size-3.5 text-fd-muted-foreground" />
+					Your Message
+				</Form.Label>
 				<Form.TextArea
-					placeholder="Tell us what you think..."
+					placeholder="Tell us about your project or inquiry..."
 					rows={4}
-					className="w-full resize-none rounded-lg border border-fd-border bg-fd-background px-3.5
-						py-2.5 text-sm text-fd-foreground shadow-sm transition-all
-						placeholder:text-fd-muted-foreground focus:border-fd-primary focus:ring-2
-						focus:ring-fd-primary/20 focus:outline-none data-invalid:border-red-500
-						data-invalid:focus:ring-red-500/20"
+					className="rounded-xl border border-fd-border bg-fd-background/50 px-4 py-3 text-sm
+						transition-all focus:border-fd-primary/50 focus:ring-4 focus:ring-fd-primary/10"
 				/>
-				<Form.ErrorMessage className="text-xs text-red-600 dark:text-red-400" />
+				<Form.ErrorMessage className="text-xs font-medium text-red-500" />
 			</Form.Field>
 
 			<Form.Field control={form.control} name="attachment">
-				<Form.Label className="text-sm font-medium text-fd-foreground">Attachment</Form.Label>
+				<Form.Label
+					className="flex items-center gap-2 text-[13px] font-bold tracking-wider text-fd-foreground
+						uppercase"
+				>
+					<Upload className="size-3.5 text-fd-muted-foreground" />
+					Attachment
+				</Form.Label>
 				<Form.FieldBoundController
 					render={({ field }) => (
 						<DropZone.Root
 							onUpload={async (ctx) => {
-								const simulateUpload = (id: string) => {
-									const { promise, resolve } = Promise.withResolvers<string>();
-
-									let progress = 0;
-
-									const interval = setInterval(() => {
-										progress += 10;
-
-										ctx.onProgress({ fileStateOrID: id, progress });
-
-										if (progress >= 100) {
-											clearInterval(interval);
-											resolve("Resolved");
-										}
-									}, 200);
-
-									return promise;
-								};
-
 								await Promise.all(
 									ctx.fileStateArray.map(async ({ id }) => {
-										await simulateUpload(id)
-											.then(() => ctx.onSuccess({ fileStateOrID: id }))
-											.catch((error: unknown) => ctx.onError({ error, fileStateOrID: id }));
+										let progress = 0;
+										await new Promise<void>((resolve) => {
+											const interval = setInterval(() => {
+												progress += 20;
+												ctx.onProgress({ fileStateOrID: id, progress });
+												if (progress >= 100) {
+													clearInterval(interval);
+													resolve();
+												}
+											}, 150);
+										});
+										ctx.onSuccess({ fileStateOrID: id });
 									})
 								);
-							}}
-							onValidationError={(ctx) => {
-								form.setError("attachment", { message: ctx.message });
 							}}
 							onFilesChange={(ctx) => {
 								field.onChange(ctx.fileStateArray[0]?.file ?? null);
 							}}
 							multiple={false}
-							allowedFileTypes={["image/jpeg", "image/png", "image/jpg", "application/pdf"]}
 							maxFileSize={{ mb: 5 }}
 						>
 							<DropZone.Area
-								className="flex w-full flex-col items-center justify-center rounded-lg border-2
-									border-dashed border-fd-border bg-fd-muted/30 p-6 transition-all
-									hover:border-fd-primary hover:bg-fd-primary/5 data-drag-over:border-fd-primary
-									data-drag-over:bg-fd-primary/10"
+								className="group flex flex-col items-center justify-center gap-3 rounded-xl
+									border-2 border-dashed border-fd-border bg-fd-muted/10 p-6 transition-all
+									hover:border-fd-primary/50 hover:bg-fd-primary/5"
 							>
-								<div
+								<span
 									className="flex size-10 items-center justify-center rounded-full
-										bg-fd-primary/10"
+										bg-fd-primary/10 transition-transform group-hover:scale-110"
 								>
-									<svg
-										className="size-5 text-fd-primary"
-										fill="none"
-										viewBox="0 0 24 24"
-										stroke="currentColor"
+									<Upload className="size-5 text-fd-primary" />
+								</span>
+								<div className="text-center">
+									<p className="text-sm font-bold text-fd-foreground">Click to upload files</p>
+									<p
+										className="text-[11px] font-medium tracking-tighter
+											text-fd-muted-foreground/70 uppercase"
 									>
-										<path
-											strokeLinecap="round"
-											strokeLinejoin="round"
-											strokeWidth={2}
-											d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-										/>
-									</svg>
+										PDF or Images (Max 5MB)
+									</p>
 								</div>
-								<p className="mt-2 text-sm font-medium text-fd-foreground">Click to upload</p>
-								<p className="mt-1 text-xs text-fd-muted-foreground">PNG, JPG, PDF up to 5MB</p>
 							</DropZone.Area>
 
-							<DropZone.FileList>
-								{(ctx) => (
+							<DropZone.FileList className="mt-3 flex flex-col gap-2">
+								{({ fileState }) => (
 									<DropZone.FileItem
-										key={ctx.fileState.id}
-										fileState={ctx.fileState}
-										className="mt-2 flex-row items-center gap-3 rounded-lg border
-											border-fd-border bg-fd-card p-3"
+										key={fileState.id}
+										fileState={fileState}
+										as="article"
+										className="flex items-center gap-3 rounded-xl border border-fd-border
+											bg-fd-card/50 p-3 shadow-sm"
 									>
 										<DropZone.FileItemPreview
 											className="size-10 shrink-0 overflow-hidden rounded-lg"
 										>
-											<DropZone.FileItemProgress variant="fill" />
+											<span
+												className="flex size-full items-center justify-center bg-fd-muted/30"
+											>
+												<FileText
+													className="size-5 text-fd-muted-foreground"
+													aria-hidden="true"
+												/>
+											</span>
 										</DropZone.FileItemPreview>
 
-										<div className="flex min-w-0 grow flex-col gap-1">
-											<DropZone.FileItemMetadata
-												className="truncate text-sm font-medium text-fd-foreground"
-											/>
+										<div className="min-w-0 grow">
+											<DropZone.FileItemMetadata className="truncate text-[13px] font-bold" />
 											<DropZone.FileItemProgress
 												variant="linear"
-												className="h-1.5 w-full rounded-full"
+												className="mt-1.5 h-1 w-full rounded-full bg-fd-muted"
+												classNames={{ track: "h-full bg-fd-primary" }}
 											/>
 										</div>
 
-										<DropZone.FileItemDelete
-											className="flex size-8 shrink-0 items-center justify-center rounded-lg
-												transition-colors hover:bg-fd-muted"
-										>
-											<svg
-												className="size-4 text-fd-muted-foreground"
-												fill="none"
-												viewBox="0 0 24 24"
-												stroke="currentColor"
+										<DropZone.FileItemDelete asChild={true}>
+											<button
+												type="button"
+												className="flex size-8 shrink-0 items-center justify-center rounded-lg
+													text-fd-muted-foreground hover:bg-red-500/10 hover:text-red-500"
+												aria-label="Remove"
 											>
-												<path
-													strokeLinecap="round"
-													strokeLinejoin="round"
-													strokeWidth={2}
-													d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-												/>
-											</svg>
+												<X className="size-4" />
+											</button>
 										</DropZone.FileItemDelete>
 									</DropZone.FileItem>
 								)}
@@ -202,55 +230,75 @@ function FormDemo() {
 						</DropZone.Root>
 					)}
 				/>
-				<Form.ErrorMessage className="text-xs text-red-600 dark:text-red-400" />
+				<Form.ErrorMessage className="text-xs font-medium text-red-500" />
 			</Form.Field>
 
 			<Form.Field
 				control={form.control}
 				name="subscribe"
-				className="flex-row items-center gap-2.5 rounded-lg bg-fd-muted/30 px-3 py-2.5"
+				className="flex-row items-center gap-3 rounded-xl bg-fd-muted/20 px-4 py-3"
 			>
 				<Form.Input
 					type="checkbox"
-					className="size-4 rounded-sm border-fd-border text-fd-primary transition-all focus:ring-2
-						focus:ring-fd-primary/20 focus:ring-offset-0"
+					className="size-4.5 rounded-md border-fd-border text-fd-primary transition-all focus:ring-4
+						focus:ring-fd-primary/10"
 				/>
-				<Form.Label className="text-sm font-medium text-fd-foreground">
-					Subscribe to newsletter
-				</Form.Label>
+				<div className="flex flex-col gap-0.5">
+					<Form.Label className="cursor-pointer text-sm font-bold text-fd-foreground">
+						Subscribe to newsletter
+					</Form.Label>
+					<p className="text-[11px] font-medium text-fd-muted-foreground/70">
+						Stay updated with our latest features and news.
+					</p>
+				</div>
 			</Form.Field>
 
-			<Form.StateSubscribe>
-				{({ isSubmitting, isValid }) => (
-					<Form.Submit
-						disabled={isSubmitting || !isValid}
-						className="w-full rounded-lg bg-fd-primary px-4 py-2.5 text-sm font-medium
-							text-fd-primary-foreground shadow-sm transition-all hover:bg-fd-primary/90
-							active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
-					>
-						{isSubmitting ?
-							<LoadingSpinner />
-						:	"Send Message"}
-					</Form.Submit>
-				)}
-			</Form.StateSubscribe>
-		</Form.Root>
-	);
-}
+			<footer className="mt-2">
+				<Form.StateSubscribe>
+					{({ isSubmitting }) => (
+						<Button
+							type="submit"
+							disabled={isSubmitting}
+							className="h-12 w-full rounded-xl font-bold tracking-tight shadow-lg
+								shadow-fd-primary/20"
+						>
+							<Switch.Root>
+								<Switch.Match when={isSubmitting}>
+									<span className="flex items-center gap-2">
+										<RefreshCw className="size-4 animate-spin" />
+										Processing...
+									</span>
+								</Switch.Match>
 
-function LoadingSpinner() {
-	return (
-		<span className="flex items-center justify-center gap-2">
-			<svg className="size-4 animate-spin" fill="none" viewBox="0 0 24 24">
-				<circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-				<path
-					className="opacity-75"
-					fill="currentColor"
-					d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-				/>
-			</svg>
-			Sending...
-		</span>
+								<Switch.Match when={isSuccess}>
+									<span className="flex items-center gap-2">
+										<CheckCircle2 className="size-4" />
+										Message Sent!
+									</span>
+								</Switch.Match>
+
+								<Switch.Default>
+									<span className="flex items-center gap-2">
+										<Send className="size-4 transition-transform group-hover:translate-x-1" />
+										Send Message
+									</span>
+								</Switch.Default>
+							</Switch.Root>
+						</Button>
+					)}
+				</Form.StateSubscribe>
+
+				{isSuccess && (
+					<p
+						className="mt-4 flex animate-in items-center justify-center gap-2 text-center text-xs
+							font-bold text-emerald-500 fade-in slide-in-from-top-2"
+					>
+						<Bell className="size-3.5" />
+						We've received your inquiry! Check your inbox soon.
+					</p>
+				)}
+			</footer>
+		</Form.Root>
 	);
 }
 

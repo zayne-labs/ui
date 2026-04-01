@@ -1,27 +1,32 @@
 "use client";
 
 import { Carousel } from "@zayne-labs/ui-react/ui/carousel";
+import { ChevronLeft, ChevronRight, MapPin } from "lucide-react";
 
 const slides = [
 	{
-		description: "Breathtaking mountain views",
-		image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&h=400&fit=crop",
-		title: "Mountain Landscape",
+		description: "Experience the serene majesty of alpine peaks and crystal-clear lakes.",
+		image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1200&h=600&fit=crop",
+		location: "Swiss Alps",
+		title: "Mountain Majesty",
 	},
 	{
-		description: "Golden hour by the sea",
-		image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=400&fit=crop",
-		title: "Ocean Sunset",
+		description: "Follow the golden shoreline as the sun dips below the turquoise horizon.",
+		image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&h=600&fit=crop",
+		location: "Maldives",
+		title: "Oceanic Tranquility",
 	},
 	{
-		description: "Peaceful woodland trail",
-		image: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=400&fit=crop",
-		title: "Forest Path",
+		description: "Wander through ancient groves where light dances between emerald leaves.",
+		image: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200&h=600&fit=crop",
+		location: "Oregon, USA",
+		title: "Emerald Whispers",
 	},
 	{
-		description: "Vast sandy landscapes",
-		image: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&h=400&fit=crop",
-		title: "Desert Dunes",
+		description: "Discover the silent beauty of shifting sands under a desert sun.",
+		image: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=1200&h=600&fit=crop",
+		location: "Sahara Desert",
+		title: "Golden Solitude",
 	},
 ];
 
@@ -29,47 +34,73 @@ function CarouselDemo() {
 	return (
 		<Carousel.Root
 			images={slides}
-			hasAutoSlide={false}
-			autoSlideInterval={5000}
+			hasAutoSlide={true}
+			autoSlideInterval={6000}
 			shouldPauseOnHover={true}
 			classNames={{
-				base: "rounded-lg border border-fd-border shadow-sm",
-				content: "rounded-lg",
+				base: "group h-85 max-w-3xl shadow-2xl",
+				content: "rounded-3xl border border-fd-border bg-fd-card lg:rounded-4xl",
 			}}
 		>
 			<Carousel.ItemList<typeof slides>>
-				{({ image }) => (
-					<Carousel.Item key={image.title} className="relative h-80 w-full">
-						<img src={image.image} alt={image.title} className="size-full object-cover" />
-
-						<span
-							className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent
-								to-transparent"
+				{({ image, index }) => (
+					<Carousel.Item key={image.title} currentIndex={index} className="relative size-full">
+						<img
+							src={image.image}
+							alt={image.title}
+							className="size-full object-cover transition-transform duration-700
+								in-data-active:group-hover:scale-105"
 						/>
 
-						<div className="absolute bottom-5 left-0 p-6 text-white">
-							<h3 className="text-xl font-semibold">{image.title}</h3>
-							<p className="mt-1 text-sm text-white/80">{image.description}</p>
-						</div>
+						<span
+							className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent"
+						/>
+
+						<Carousel.Caption
+							as="article"
+							className="bottom-0 left-0 flex w-full flex-col gap-3 p-8 text-white md:py-13 md:pr-12
+								md:pl-16"
+						>
+							<div className="flex items-center gap-2">
+								<span
+									className="flex items-center gap-1.5 rounded-full bg-white/20 px-3 py-1
+										text-[10px] font-bold tracking-widest text-white uppercase backdrop-blur-md"
+								>
+									<MapPin className="size-3" />
+									{image.location}
+								</span>
+							</div>
+
+							<div className="flex flex-col gap-2">
+								<h3 className="text-3xl font-black tracking-tight md:text-4xl">{image.title}</h3>
+								<p className="max-w-xl text-sm/relaxed font-medium text-white/80 md:text-base">
+									{image.description}
+								</p>
+							</div>
+						</Carousel.Caption>
 					</Carousel.Item>
 				)}
 			</Carousel.ItemList>
 
 			<Carousel.Controls
+				icon={{
+					next: <ChevronRight className="size-6" />,
+					prev: <ChevronLeft className="size-6" />,
+				}}
 				classNames={{
-					base: "px-3",
-					iconContainer: `rounded-md bg-fd-background/90 p-2 text-[20px] text-fd-foreground shadow-sm
-					hover:bg-fd-background`,
+					base: "px-3 opacity-0 transition-all duration-300 group-hover:opacity-100",
+					iconContainer: `flex size-9 items-center justify-center rounded-full bg-white/10 text-white
+					ring-1 ring-white/20 backdrop-blur-xl hover:bg-white/20 active:scale-90 lg:size-12`,
 				}}
 			/>
 
-			<Carousel.IndicatorList className="bottom-4">
+			<Carousel.IndicatorList className="bottom-8">
 				{({ index }) => (
 					<Carousel.Indicator
 						key={index}
 						currentIndex={index}
 						classNames={{
-							base: "cursor-pointer rounded-sm bg-white/60 transition-all hover:bg-white/90",
+							base: "size-2 cursor-pointer rounded-[8px] bg-white transition-all duration-300",
 							isActive: "bg-white",
 						}}
 					/>

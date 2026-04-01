@@ -77,7 +77,7 @@ function PageSeven() {
 								<DragScroll.Item
 									key={item.title}
 									asChild={true}
-									className="group relative flex aspect-4/5 w-[280px] shrink-0 cursor-grab
+									className="group relative flex aspect-4/5 w-70 shrink-0 cursor-grab
 										flex-col justify-end overflow-hidden rounded-3xl border border-slate-100 p-8
 										transition-all duration-500 select-none hover:-translate-y-1 hover:shadow-2xl
 										active:cursor-grabbing"

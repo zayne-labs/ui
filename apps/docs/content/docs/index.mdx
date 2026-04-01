@@ -6,60 +6,73 @@ icon: BookOpenText
 
 ## Welcome to Zayne UI
 
-A headless component library that gives you the functionality without the styling opinions. Build what you want, style it how you want.
+Zayne UI is a headless component library for React that gives you composable building blocks without styling opinions. Every component handles functionality, accessibility, and state management — you bring the design.
+
+Instead of fighting against opinionated styles or overriding themes, you start with a clean slate. Use Tailwind CSS, vanilla CSS, or any styling approach you prefer.
 
 ## Key features
 
-import { Code2Icon, CpuIcon, LeafIcon, PuzzleIcon } from "lucide-react";
+import { Code2Icon, CpuIcon, LeafIcon, PuzzleIcon, PaintbrushIcon, LayersIcon } from "lucide-react";
 
 <Cards>
-	<Card title="Headless components" icon={<CpuIcon />}>
-		No styling decisions made for you. Components handle functionality and accessibility, you handle the
-		design.
+	<Card title="Headless by default" icon={<CpuIcon />}>
+		Zero styling opinions. Components handle functionality and accessibility — you own the design. Override
+		with `className` or opt out of base styles entirely with the `unstyled` prop.
 	</Card>
 	<Card title="TypeScript-first" icon={<Code2Icon />}>
-		Written in TypeScript. Full type safety and autocomplete without extra setup.
+		Written in TypeScript with full inference. Generic render props narrow types automatically — no manual
+		annotations needed.
 	</Card>
 	<Card title="Tree-shakeable" icon={<LeafIcon />}>
-		Import what you need. ESM modules keep your bundle small.
+		Each component lives at its own entry point. Import only what you use — dead code is eliminated
+		automatically.
 	</Card>
-	<Card title="Composable API" icon={<PuzzleIcon />}>
-		Components work together. Build complex UIs from simple pieces.
+	<Card title="Compound components" icon={<PuzzleIcon />}>
+		UI components use a compound pattern (`Component.Root`, `Component.Part`) for maximum composition
+		flexibility without prop drilling.
+	</Card>
+	<Card title="Polymorphic & slottable" icon={<LayersIcon />}>
+		Change the rendered element with the `as` prop, or delegate rendering entirely to a child element with
+		`asChild`. Full type safety is preserved either way.
+	</Card>
+	<Card title="Styling freedom" icon={<PaintbrushIcon />}>
+		Ships with an optional Tailwind CSS v4 preset for theme tokens and animations. Prefer vanilla CSS? Target
+		components via `data-scope`, `data-part`, and `data-slot` attributes.
 	</Card>
 </Cards>
 
 ## What's included
 
-The library provides two types of components:
+The library provides two categories of components:
 
-### UI components
+### UI Components
 
-Headless components for common patterns:
+Interactive, stateful components that use the [compound component pattern](/docs/component-structure) for maximum flexibility:
 
-- **Card** - Composable card layouts with header, content, and footer sections
-- **Carousel** - Customizable slideshow component with navigation controls
-- **DragScroll** - Add drag-to-scroll behavior to any container
-- **DropZone** - File upload with drag-and-drop support and progress tracking
-- **Form** - Form handling with validation (wrapper around react-hook-form)
+- **[Card](/docs/ui/card)** — Composable card layouts with header, content, footer, and action sections. Every part is polymorphic and supports `asChild`.
+- **[Carousel](/docs/ui/carousel)** — Slideshow with auto-slide, pause-on-hover, navigation controls, and customizable indicators.
+- **[DragScroll](/docs/ui/drag-scroll)** — Adds mouse drag-to-scroll to any container. Supports horizontal, vertical, or both directions with configurable scroll amount and device constraints.
+- **[DropZone](/docs/ui/drop-zone)** — Full-featured file upload with drag-and-drop, file validation, progress tracking, image previews, and upload lifecycle callbacks.
+- **[Form](/docs/ui/form)** — Form system built on React Hook Form with composable field components, reactive watchers, state subscriptions, and automatic error accessibility.
 
-### Utility components
+### Utility Components
 
-Declarative components for common utility patterns:
+Lightweight rendering primitives that solve common React patterns declaratively:
 
-- **Await** - Handle async states declaratively
-- **ClientGate** - Client-side only rendering guard
-- **ErrorBoundary** - Graceful error handling
-- **For** - List rendering with empty states
-- **Presence** - Animation presence detection
-- **Show** - Conditional rendering
-- **Slot** - Component composition with slots
-- **SuspenseWithBoundary** - Combined Suspense and ErrorBoundary
-- **Switch** - Pattern matching for conditional rendering
-- **Teleport** - Portal-based content teleportation
+- **[Show](/docs/utility/show)** — Conditional rendering with fallback support and type narrowing. Supports a multi-branch `control="content"` mode for complex conditions.
+- **[For](/docs/utility/for)** — List rendering with empty-state fallbacks. Accepts arrays or numbers (for skeleton patterns). `ForWithWrapper` wraps output in a container element.
+- **[Switch](/docs/utility/switch)** — Pattern matching for multi-way conditional rendering. Supports both value matching and boolean matching modes.
+- **[Await](/docs/utility/await)** — Declarative async handling with built-in Suspense and ErrorBoundary. Manages pending, success, and error states via sub-components.
+- **[Presence](/docs/utility/presence)** — Animate mount/unmount with CSS animations or transitions. Defers DOM removal until exit animations complete.
+- **[ErrorBoundary](/docs/utility/error-boundary)** — Declarative error catching with reset via `errorResetKeys` or the `useErrorBoundary` hook.
+- **[Teleport](/docs/utility/teleport)** — Portal that renders children into any DOM node — by selector, ref, or element. Supports `insertPosition` for precise placement.
+- **[ClientGate](/docs/utility/client-gate)** — Guards content behind client-side hydration. Safely access `window`, `localStorage`, etc. without SSR mismatches.
+- **[Slot](/docs/utility/slot)** — The engine behind `asChild`. Merges parent props, event handlers, refs, and class names into a child element.
+- **[SuspenseWithBoundary](/docs/utility/suspense-with-boundary)** — Combines `Suspense` and `ErrorBoundary` into a single wrapper for cleaner async component handling.
 
 ## Framework support
 
-<Callout>React is currently available. Support for Vue, Svelte, and Solid is coming soon.</Callout>
+<Callout>React is currently available. Support for additional frameworks is planned.</Callout>
 
 **Currently available:**
 
@@ -73,4 +86,4 @@ Declarative components for common utility patterns:
 
 ## Built on solid foundations
 
-Built on top of [@zayne-labs/toolkit](https://github.com/zayne-labs/toolkit), a collection of utilities and React hooks.
+Built on top of [@zayne-labs/toolkit](https://github.com/zayne-labs/toolkit), a collection of utilities and React hooks that power the component internals.

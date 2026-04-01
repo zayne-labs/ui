@@ -1,18 +1,16 @@
 ---
 title: TypeScript
-description: Built with TypeScript for type safety and better DX
+description: Full type safety and inference — zero manual annotations needed
 icon: FileCode
 ---
 
-Everything's written in TypeScript, so you get proper types without extra setup.
+Zayne UI is written in TypeScript and designed so that types flow through your code automatically. You rarely need to annotate anything manually.
 
-## Type Inference
+## Automatic type inference
 
-The library infers types from your data automatically. You don't need to manually annotate most things.
+### The `For` component
 
-### Lists with For
-
-`For` figures out item types from the `each` prop:
+`For` infers item types from whatever you pass to `each`. The render function receives the correct type — including the `index` and full `array` parameters:
 
 ```tsx
 const products = [
@@ -21,73 +19,222 @@ const products = [
 ];
 
 <For each={products}>
-	{(product) => (
-		<div>
+	{(product, index, array) => (
+		<div key={product.id}>
+			{/* ✅ product is typed as { id: number; name: string; price: number } */}
 			{product.name} - ${product.price}
-			{/* TS error: Property 'details' doesn't exist */}
+			{/* ❌ TS error: Property 'details' does not exist */}
+			{product.details}
 		</div>
 	)}
 </For>;
 ```
 
-Works with numbers too:
+When you pass a number, the render function receives `number` for both the item and index:
 
 ```tsx
-<For each={5}>{(index) => <div>Item {index}</div>}</For>
+<For each={5}>
+	{(index) => <div key={index} className="h-8 w-full animate-pulse rounded-sm bg-gray-100" />}
+</For>
 ```
 
-### Conditional Rendering with Show
+### The `Show` component — type narrowing
 
-`Show` narrows types when you use the render function pattern:
+`Show` narrows nullable types when you use the render function pattern. Inside the callback, TypeScript knows the value is non-null:
 
 ```tsx
-const user = getUser(); // User | null
+const user: User | null = getUser();
 
-<Show.Root when={user}>{(user) => <div>Hello, {user.name}</div>}</Show.Root>;
+// Without Show — you'd need to assert or check manually
+<Show.Root when={user}>
+	{(activeUser) => (
+		// ✅ activeUser is typed as User (not User | null)
+		<div>
+			<h2>{activeUser.name}</h2>
+			<p>{activeUser.email}</p>
+		</div>
+	)}
+</Show.Root>;
 ```
 
-Inside the render function, TypeScript knows `user` isn't null.
+This also works inside `Show.Content` when using `control="content"` mode:
 
-## Polymorphic Components
+```tsx
+<Show.Root control="content">
+	<Show.Content when={error}>
+		{(err) => (
+			// ✅ err is typed as Error (not Error | null | undefined)
+			<p>{err.message}</p>
+		)}
+	</Show.Content>
+</Show.Root>
+```
 
-Most components accept an `as` prop to change the rendered element. TypeScript enforces valid props for whatever element you choose:
+### The `Switch` component — render prop narrowing
+
+`Switch.Match` supports render functions that receive the narrowed `when` value:
+
+```tsx
+type ApiResponse = { data: User[] } | null;
+const response: ApiResponse = fetchData();
+
+<Switch.Root>
+	<Switch.Match when={isLoading}>Loading...</Switch.Match>
+
+	<Switch.Match when={response}>
+		{(result) => (
+			// ✅ result is typed as { data: User[] } (not null)
+			<UserList users={result.data} />
+		)}
+	</Switch.Match>
+
+	<Switch.Default>No data</Switch.Default>
+</Switch.Root>;
+```
+
+### The `Await` component — promise result inference
+
+`Await.Success` automatically infers the resolved type of the promise:
+
+```tsx
+const userPromise: Promise<{ email: string; name: string }> = fetchUser(id);
+
+<Await.Root promise={userPromise}>
+	<Await.Success>
+		{(user) => (
+			// ✅ user is typed as { name: string; email: string }
+			<p>
+				{user.name} ({user.email})
+			</p>
+		)}
+	</Await.Success>
+
+	<Await.Error>
+		{({ error, resetErrorBoundary }) => (
+			// ✅ error is typed as Error, resetErrorBoundary is a function
+			<button onClick={resetErrorBoundary}>{error.message}</button>
+		)}
+	</Await.Error>
+</Await.Root>;
+```
+
+## Discriminated unions
+
+Several components use TypeScript discriminated unions to provide different prop shapes depending on the mode. The compiler prevents you from mixing incompatible props.
+
+### `Show` — `control` prop
+
+When `control` is `"root"` (the default), you must provide `when`. When `control` is `"content"`, `when` is forbidden on the root — it belongs on `Show.Content` instead:
+
+```tsx
+<>
+	{/* ✅ control="root" (default) — `when` is required */}
+	<Show.Root when={user} fallback={<Fallback />}>
+		{(u) => <Profile user={u} />}
+	</Show.Root>
+
+	{/* ✅ control="content" — `when` goes on each Content branch */}
+	<Show.Root control="content">
+		<Show.Content when={conditionA}>Branch A</Show.Content>
+		<Show.Content when={conditionB}>Branch B</Show.Content>
+	</Show.Root>
+
+	{/* ❌ TS error: `when` is not allowed when control="content" */}
+	<Show.Root control="content" when={something}>
+		...
+	</Show.Root>
+</>
+```
+
+### `ErrorBoundary` — `onErrorReset` context
+
+The `onErrorReset` callback receives a discriminated union that tells you _why_ the boundary reset:
+
+```tsx
+<ErrorBoundary
+	errorResetKeys={[userId]}
+	onErrorReset={(context) => {
+		if (context.reason === "keys") {
+			// ✅ context.prev and context.next are available
+			console.log("Reset because keys changed:", context.prev, "→", context.next);
+		}
+
+		if (context.reason === "imperative-api") {
+			// ✅ context.args is available (from resetErrorBoundary(...args))
+			console.log("Reset manually with args:", context.args);
+		}
+	}}
+>
+	<App />
+</ErrorBoundary>
+```
+
+## Polymorphic components
+
+Most UI components accept an `as` prop to change the rendered HTML element. TypeScript enforces that only valid props for the chosen element are allowed:
 
 ```tsx
 import { Card } from "@zayne-labs/ui-react/ui/card";
 
 <>
-	{/* Renders <article> by default */}
+	{/* Default — renders <article> */}
 	<Card.Root>Content</Card.Root>
 
-	{/* Renders <section> */}
+	{/* Renders <section> — no additional props needed */}
 	<Card.Root as="section">Content</Card.Root>
 
-	{/* Renders <a> with href */}
+	{/* Renders <a> — TypeScript requires href */}
 	<Card.Root as="a" href="/dashboard">
-		Link
+		Clickable Card
 	</Card.Root>
 
-	{/* TS error: 'href' doesn't exist on 'div' */}
-	<Card.Root as="div" href="/link">
+	{/* ❌ TS error: 'href' does not exist on type 'div' */}
+	<Card.Root as="div" href="/invalid">
 		Invalid
 	</Card.Root>
 </>;
 ```
 
-Your editor will autocomplete valid props based on the element type.
-
-## Exported Types
-
-All component prop types are exported if you need them for wrappers or custom implementations:
+`ForWithWrapper` is also polymorphic — you can change the container element:
 
 ```tsx
-import type { ForProps, ShowRootProps } from "@zayne-labs/ui-react/common";
-import type { CardRootProps } from "@zayne-labs/ui-react/ui/card";
+import { ForWithWrapper } from "@zayne-labs/ui-react/common/for";
+
+/* Renders <ol> instead of the default <ul> */
+<ForWithWrapper as="ol" className="list-decimal" each={items}>
+	{(item) => <li key={item.id}>{item.label}</li>}
+</ForWithWrapper>;
+
+/* Renders <tbody> for table rows */
+<ForWithWrapper as="tbody" each={rows}>
+	{(row) => (
+		<tr key={row.id}>
+			<td>{row.label}</td>
+			<td>{row.value}</td>
+		</tr>
+	)}
+</ForWithWrapper>;
 ```
 
-## Recommended TypeScript Config
+## Exported types
 
-Use `bundler` module resolution for React 19:
+All component prop types are exported for when you need to type wrapper components or accept props as parameters:
+
+```tsx
+// Utility component types
+import type { ForProps, ShowContentProps, ShowRootProps } from "@zayne-labs/ui-react/common";
+import type { ErrorBoundaryProps } from "@zayne-labs/ui-react/common/error-boundary";
+import type { PresenceProps } from "@zayne-labs/ui-react/common/presence";
+import type { SwitchMatchProps, SwitchRootProps } from "@zayne-labs/ui-react/common/switch";
+// UI component types
+import type { CardRootProps } from "@zayne-labs/ui-react/ui/card";
+import type { DragScrollRootProps } from "@zayne-labs/ui-react/ui/drag-scroll";
+import type { FormRootProps } from "@zayne-labs/ui-react/ui/form";
+```
+
+## Recommended TypeScript config
+
+For React 19 projects, use this baseline configuration:
 
 ```json title="tsconfig.json"
 {
@@ -98,3 +245,9 @@ Use `bundler` module resolution for React 19:
 	}
 }
 ```
+
+<Callout type="info">
+	`"moduleResolution": "bundler"` is required for Zayne UI's per-component entry points (e.g.,
+	`@zayne-labs/ui-react/common/show`) to resolve correctly. The older `"node"` resolution does not support
+	subpath exports.
+</Callout>

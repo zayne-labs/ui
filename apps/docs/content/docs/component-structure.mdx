@@ -1,12 +1,14 @@
 ---
 title: Component Structure
-description: Understanding the compound component pattern and architecture of Zayne UI
+description: Understanding the compound component pattern, asChild, polymorphism, and data attributes in Zayne UI
 icon: Layers
 ---
 
-Zayne UI uses a compound component pattern — sub-components that work together under a shared namespace.
+Zayne UI uses a **compound component pattern** — a single import gives you a namespace of sub-components that work together, sharing state through React context without prop drilling.
 
-## Compound Components
+## Compound components
+
+Instead of one monolithic component with dozens of props, Zayne UI splits each component into composable parts. You pick the parts you need and arrange them however you want:
 
 ```tsx
 import { DropZone } from "@zayne-labs/ui-react/ui/drop-zone";
@@ -29,62 +31,232 @@ import { DropZone } from "@zayne-labs/ui-react/ui/drop-zone";
 </DropZone.Root>;
 ```
 
-Each sub-component can be used independently for full control over composition.
+Each sub-component is independently renderable. You can omit `DropZone.FileList` if you don't need file previews, or omit `DropZone.Trigger` if you only want drag-and-drop with no click-to-browse.
 
-## Data Attributes
+## Import patterns
 
-Every component renders three data attributes:
+Every component supports **two** import styles:
 
-| Attribute    | Description         | Example                            |
-| :----------- | :------------------ | :--------------------------------- |
-| `data-scope` | Component family    | `"dropzone"`, `"card"`             |
-| `data-part`  | Specific part       | `"root"`, `"area"`, `"title"`      |
-| `data-slot`  | Combined identifier | `"dropzone-area"`, `"card-header"` |
+<Tabs items={["Namespace import (recommended)", "Individual imports"]}>
+	<Tab value="Namespace import (recommended)">
+		The namespace import gives you dot-notation access to all sub-components:
 
-Use them for CSS targeting without relying on class names:
+    	```tsx
+    	import { DropZone } from "@zayne-labs/ui-react/ui/drop-zone";
+    	import { Show } from "@zayne-labs/ui-react/common/show";
+
+    	<DropZone.Root>...</DropZone.Root>
+    	<Show.Root when={condition}>...</Show.Root>
+    	```
+
+    	This is the recommended approach — it keeps component families visually grouped and makes it clear which parts belong together.
+
+    </Tab>
+    <Tab value="Individual imports">
+    	If you prefer, you can import each sub-component by its full name:
+
+    	```tsx
+    	import { DropZoneRoot, DropZoneTrigger, DropZoneArea } from "@zayne-labs/ui-react/ui/drop-zone";
+    	import { ShowRoot, ShowContent, ShowFallback } from "@zayne-labs/ui-react/common/show";
+
+    	<DropZoneRoot>
+    		<DropZoneArea>
+    			<DropZoneTrigger>Browse</DropZoneTrigger>
+    		</DropZoneArea>
+    	</DropZoneRoot>
+    	```
+
+    </Tab>
+
+</Tabs>
+
+## The `as` prop — polymorphism
+
+Most components accept an `as` prop that changes the underlying HTML element. TypeScript enforces that only valid attributes for the chosen element are allowed:
+
+```tsx
+import { Card } from "@zayne-labs/ui-react/ui/card";
+
+// Default — renders <article>
+<Card.Root>Content</Card.Root>;
+
+// Renders <a> with full anchor props
+<Card.Root as="a" href="/dashboard">
+	Clickable Card
+</Card.Root>;
+
+// Renders <section>
+<Card.Root as="section" aria-label="stats">
+	Stats
+</Card.Root>;
+```
+
+Each Card sub-component has its own default element:
+
+| Sub-component      | Default element | Accepts `as` |
+| :----------------- | :-------------- | :----------- |
+| `Card.Root`        | `<article>`     | ✅           |
+| `Card.Header`      | `<header>`      | ✅           |
+| `Card.Title`       | `<h3>`          | ✅           |
+| `Card.Description` | `<p>`           | ✅           |
+| `Card.Content`     | `<div>`         | ✅           |
+| `Card.Action`      | `<button>`      | ✅           |
+| `Card.Footer`      | `<footer>`      | ✅           |
+
+`ForWithWrapper` is also polymorphic — the wrapper element defaults to `<ul>` but can be changed:
+
+```tsx
+<ForWithWrapper as="ol" each={steps}>
+	{(step) => <li key={step.id}>{step.label}</li>}
+</ForWithWrapper>
+```
+
+## The `asChild` prop — slot composition
+
+Some components support `asChild`, which delegates rendering to the child element instead of creating a new DOM node. The parent's props (including `className`, event handlers, and refs) are merged into the child:
+
+```tsx
+import { Card } from "@zayne-labs/ui-react/ui/card";
+import { Link } from "next/link";
+
+/* Without asChild — wraps Link in an <article> */
+<Card.Root>
+	<Link href="/post/1">Read more</Link>
+</Card.Root>;
+
+/* With asChild — the <Link> becomes the root, no extra wrapper */
+<Card.Root asChild={true}>
+	<Link href="/post/1" className="block rounded-lg border p-4">
+		Read more
+	</Link>
+</Card.Root>;
+```
+
+This pattern is powered by the [`Slot`](/docs/utility/slot) component internally. When `asChild` is true, the component renders a `Slot.Root` instead of its default element, merging all props down.
+
+<Callout type="warn">
+	`asChild` requires exactly **one** valid React element child. Text nodes, fragments, or multiple
+	elements will result in an error.
+</Callout>
+
+**Components supporting `asChild`:** `Card.Root`, `Card.Header`, `Card.Footer`, `Await.Root`, `Await.Error`
+
+## The `unstyled` prop
+
+Some UI components (primarily `DragScroll`) apply minimal structural CSS by default — things like `display: flex`, `cursor: grab`, or scrollbar hiding. If you want to control everything yourself, pass `unstyled`:
+
+```tsx
+/* Default — includes structural styles */
+<DragScroll.List className="gap-4" />;
+
+/* Unstyled — you provide all styles */
+<DragScroll.List unstyled={true} className="flex cursor-grab gap-4 overflow-x-auto" />;
+```
+
+Utility components have no built-in styles, so they don't need this prop.
+
+## Data attributes
+
+Every component renders three data attributes that you can use for CSS targeting without depending on internal class names or DOM structure:
+
+| Attribute    | Purpose                    | Example values                           |
+| :----------- | :------------------------- | :--------------------------------------- |
+| `data-scope` | Component family           | `"card"`, `"drop-zone"`, `"drag-scroll"` |
+| `data-part`  | Specific part within scope | `"root"`, `"header"`, `"area"`, `"list"` |
+| `data-slot`  | Combined `scope-part`      | `"card-header"`, `"drag-scroll-list"`    |
+
+### CSS targeting
 
 ```css
-[data-scope="dropzone"][data-part="area"] {
-	border: 2px dashed;
+/* Target all card headers */
+[data-scope="card"][data-part="header"] {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
 }
 
-[data-scope="dropzone"][data-part="area"][data-drag-over] {
+/* Shorthand using the combined slot */
+[data-slot="card-header"] {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+/* Combine with state attributes */
+[data-scope="drop-zone"][data-part="area"][data-drag-over] {
+	border-color: var(--color-zu-primary);
 	background: oklch(0.97 0.01 265);
 }
 ```
 
-## Import Pattern
+### Tailwind CSS targeting
 
-Components support both namespaced and individual imports:
-
-```tsx
-// Namespaced (recommended)
-// Individual
-import { DropZone, DropZoneRoot } from "@zayne-labs/ui-react/ui/drop-zone";
-
-<DropZone.Root>...</DropZone.Root>;
-
-<DropZoneRoot>...</DropZoneRoot>;
-```
-
-## UI vs Utility Components
-
-**UI Components** (`ui/*`) are interactive components with built-in state management and richer composition:
+In Tailwind, use the `data-*` modifier syntax:
 
 ```tsx
-import { Card } from "@zayne-labs/ui-react/ui/card";
-import { DropZone } from "@zayne-labs/ui-react/ui/drop-zone";
+<>
+	<DropZone.Area className="border-2 border-dashed border-gray-300 data-drag-over:border-blue-500 data-drag-over:bg-blue-50" />
+
+	<DragScroll.List className="flex gap-4 data-[dragging=true]:cursor-grabbing" />
+</>
 ```
 
-Available: `Card`, `Carousel`, `DragScroll`, `DropZone`, `Form`
+### Stateful data attributes
 
----
+Beyond the three core attributes, many components set dynamic state attributes. These are documented on each component's page. Here are the most commonly used ones:
 
-**Utility Components** (`common/*`) are lightweight rendering primitives with no styling:
+| Attribute               | Component(s)                  | Values                                          |
+| :---------------------- | :---------------------------- | :---------------------------------------------- |
+| `data-dragging`         | `DragScroll.List`             | `"true"` / `"false"`                            |
+| `data-disabled`         | `DragScroll.Prev/Next`        | `"true"` / `"false"`                            |
+| `data-drag-over`        | `DropZone.Area`               | Present when files hover                        |
+| `data-invalid`          | `DropZone.Area`, `Form` parts | Present on validation errors                    |
+| `data-status`           | `DropZone.FileItem`           | `"idle"`, `"uploading"`, `"success"`, `"error"` |
+| `data-state`            | `DropZone.FileList`           | `"active"` / `"inactive"`                       |
+| `data-animation-phase`  | `Presence` child              | `"enter"` / `"exit"`                            |
+| `data-transition-phase` | `Presence` child              | `"enter"` / `"exit"`                            |
+| `data-mounted`          | `Presence` child              | `true` / `false`                                |
+| `data-present`          | `Presence` child              | `true` / `false`                                |
 
-```tsx
-import { For } from "@zayne-labs/ui-react/common/for";
-import { Show } from "@zayne-labs/ui-react/common/show";
-```
+## UI vs Utility components
 
-Available: `For`, `Show`, `Switch`, `Await`, `Presence`, `ErrorBoundary`, `Teleport`, `ClientGate`
+<Tabs items={["UI Components", "Utility Components"]}>
+	<Tab value="UI Components">
+		**Path:** `@zayne-labs/ui-react/ui/<name>`
+
+    	Interactive components with internal state management, compound sub-components, and data attributes. They handle complex behaviors like drag-to-scroll, file upload, or carousel sliding.
+
+    	```tsx
+    	import { Card } from "@zayne-labs/ui-react/ui/card";
+    	import { Carousel } from "@zayne-labs/ui-react/ui/carousel";
+    	import { DragScroll } from "@zayne-labs/ui-react/ui/drag-scroll";
+    	import { DropZone } from "@zayne-labs/ui-react/ui/drop-zone";
+    	import { Form } from "@zayne-labs/ui-react/ui/form";
+    	```
+
+    	**Characteristics:** compound pattern, `data-scope`/`data-part`/`data-slot`, `as` prop, `asChild` support, optional `unstyled` prop
+
+    </Tab>
+    <Tab value="Utility Components">
+    	**Path:** `@zayne-labs/ui-react/common/<name>`
+
+    	Lightweight rendering primitives with zero styling. They solve common React patterns (conditional rendering, list iteration, portals, error handling) declaratively.
+
+    	```tsx
+    	import { Show } from "@zayne-labs/ui-react/common/show";
+    	import { For } from "@zayne-labs/ui-react/common/for";
+    	import { Switch } from "@zayne-labs/ui-react/common/switch";
+    	import { Await } from "@zayne-labs/ui-react/common/await";
+    	import { Presence } from "@zayne-labs/ui-react/common/presence";
+    	import { ErrorBoundary } from "@zayne-labs/ui-react/common/error-boundary";
+    	import { Teleport } from "@zayne-labs/ui-react/common/teleport";
+    	import { ClientGate } from "@zayne-labs/ui-react/common/client-gate";
+    	import { Slot } from "@zayne-labs/ui-react/common/slot";
+    	import { SuspenseWithBoundary } from "@zayne-labs/ui-react/common/suspense-with-boundary";
+    	```
+
+    	**Characteristics:** no styling, render-only logic, some use compound pattern (`Show`, `Switch`, `Await`, `Slot`), others are standalone (`For`, `Presence`, `ErrorBoundary`, `Teleport`, `ClientGate`)
+
+    </Tab>
+
+</Tabs>

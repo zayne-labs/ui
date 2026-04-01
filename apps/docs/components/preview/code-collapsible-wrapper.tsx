@@ -20,7 +20,7 @@ export function CodeCollapsibleWrapper(props: { children: React.ReactNode; class
 					className="absolute inset-x-0 bottom-0 flex h-16 items-center justify-center bg-linear-to-t
 						from-fd-background to-transparent"
 				>
-					<Button theme="outline" onClick={() => setIsOpen(true)}>
+					<Button theme="secondary" onClick={() => setIsOpen(true)}>
 						Expand
 					</Button>
 				</div>

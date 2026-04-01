@@ -26,13 +26,13 @@ export function ComponentPreview(props: ComponentPreviewProps) {
 			<div
 				className={cnMerge(
 					// eslint-disable-next-line tailwindcss-better/no-unknown-classes
-					`not-prose fd-scroll-container flex h-[450px] w-full flex-col items-center-safe
-					overflow-auto p-10`,
+					`not-prose fd-scroll-container flex h-120 w-full flex-col items-center-safe overflow-auto
+					p-8`,
 					fullPreview && "h-full p-0",
 					align === "center" && "justify-center-safe",
 					align === "end" && "justify-end",
 					align === "start" && "justify-start",
-					scalePreview && "sm:p-10",
+					scalePreview && "sm:p-8",
 					className
 				)}
 			>
