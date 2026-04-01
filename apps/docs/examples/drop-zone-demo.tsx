@@ -74,7 +74,9 @@ function DropZoneDemo() {
 				</DropZone.Trigger>
 			</DropZone.Area>
 
-			<DropZone.FileList className="mt-6 flex max-h-72 flex-col gap-4 overflow-y-auto pr-1 transition-all">
+			<DropZone.FileList
+				className="mt-6 flex max-h-72 flex-col gap-4 overflow-y-auto pr-1 transition-all"
+			>
 				{({ fileState }) => (
 					<DropZone.FileItem
 						key={fileState.id}

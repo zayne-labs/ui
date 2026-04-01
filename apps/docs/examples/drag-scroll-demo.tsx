@@ -60,7 +60,8 @@ function DragScrollDemo() {
 								>
 									<span
 										className={cnJoin(
-											"absolute inset-0 bg-linear-to-br to-fd-background opacity-90 transition-transform duration-700 group-hover:scale-110",
+											`absolute inset-0 bg-linear-to-br to-fd-background opacity-90
+											transition-transform duration-700 group-hover:scale-110`,
 											item.color
 										)}
 										aria-hidden="true"
@@ -116,7 +117,8 @@ function Indicator({ active, icon, label }: { active: boolean; icon?: React.Reac
 	return (
 		<span
 			className={cnJoin(
-				"flex items-center gap-2 rounded-lg border px-2.5 py-1 text-[9px] font-bold tracking-widest uppercase transition-all duration-300",
+				`flex items-center gap-2 rounded-lg border px-2.5 py-1 text-[9px] font-bold tracking-widest
+				uppercase transition-all duration-300`,
 				active ?
 					"border-fd-primary/20 bg-fd-primary/10 text-fd-primary shadow-sm"
 				:	"border-fd-border bg-fd-card text-fd-muted-foreground"

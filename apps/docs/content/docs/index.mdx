@@ -12,16 +12,16 @@ Instead of fighting against opinionated styles or overriding themes, you start w
 
 ## Key features
 
-import { Code2Icon, CpuIcon, LeafIcon, PuzzleIcon, PaintbrushIcon, LayersIcon } from "lucide-react";
+import { Code2Icon, CpuIcon, LayersIcon, LeafIcon, PaintbrushIcon, PuzzleIcon } from "lucide-react";
 
 <Cards>
 	<Card title="Headless by default" icon={<CpuIcon />}>
-		Zero styling opinions. Components handle functionality and accessibility — you own the design. Override
-		with `className` or opt out of base styles entirely with the `unstyled` prop.
+		Zero styling opinions. Components handle functionality and accessibility — you own the design.
+		Override with `className` or opt out of base styles entirely with the `unstyled` prop.
 	</Card>
 	<Card title="TypeScript-first" icon={<Code2Icon />}>
-		Written in TypeScript with full inference. Generic render props narrow types automatically — no manual
-		annotations needed.
+		Written in TypeScript with full inference. Generic render props narrow types automatically — no
+		manual annotations needed.
 	</Card>
 	<Card title="Tree-shakeable" icon={<LeafIcon />}>
 		Each component lives at its own entry point. Import only what you use — dead code is eliminated
@@ -32,12 +32,12 @@ import { Code2Icon, CpuIcon, LeafIcon, PuzzleIcon, PaintbrushIcon, LayersIcon } 
 		flexibility without prop drilling.
 	</Card>
 	<Card title="Polymorphic & slottable" icon={<LayersIcon />}>
-		Change the rendered element with the `as` prop, or delegate rendering entirely to a child element with
-		`asChild`. Full type safety is preserved either way.
+		Change the rendered element with the `as` prop, or delegate rendering entirely to a child element
+		with `asChild`. Full type safety is preserved either way.
 	</Card>
 	<Card title="Styling freedom" icon={<PaintbrushIcon />}>
-		Ships with an optional Tailwind CSS v4 preset for theme tokens and animations. Prefer vanilla CSS? Target
-		components via `data-scope`, `data-part`, and `data-slot` attributes.
+		Ships with an optional Tailwind CSS v4 preset for theme tokens and animations. Prefer vanilla CSS?
+		Target components via `data-scope`, `data-part`, and `data-slot` attributes.
 	</Card>
 </Cards>
 

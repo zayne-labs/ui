@@ -73,7 +73,10 @@ function PresenceDemo() {
 					each={["alert", "info", "success"] as const}
 					renderItem={(type) => (
 						<Presence key={type} present={activeType === type}>
-							<NotificationCard config={{ ...NOTIFICATIONS[type], type }} onClose={() => setActiveType(null)} />
+							<NotificationCard
+								config={{ ...NOTIFICATIONS[type], type }}
+								onClose={() => setActiveType(null)}
+							/>
 						</Presence>
 					)}
 				/>
@@ -140,7 +143,10 @@ function NotificationCard(props: NotificationCardProps) {
 
 			<footer className="mt-1 flex items-center gap-1.5">
 				<div className={cnJoin("size-1.5 animate-pulse rounded-full", statusColor)} />
-				<span className="text-[10px] font-black tracking-wider text-fd-muted-foreground uppercase opacity-60">
+				<span
+					className="text-[10px] font-black tracking-wider text-fd-muted-foreground uppercase
+						opacity-60"
+				>
 					Handled via Presence
 				</span>
 			</footer>

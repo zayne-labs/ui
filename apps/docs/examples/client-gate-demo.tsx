@@ -2,8 +2,8 @@
 
 import { ClientGate } from "@zayne-labs/ui-react/common/client-gate";
 import { Clock, Cpu, Globe, Layers, Monitor, RefreshCcw, ShieldCheck, Wifi } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
 
 function ClientGateDemo() {
 	const [key, setKey] = useState(0);
@@ -19,7 +19,8 @@ function ClientGateDemo() {
 					theme="outline"
 					size="sm"
 					onClick={() => setKey((prev) => prev + 1)}
-					className="group h-10 rounded-full px-6 font-bold shadow-sm ring-1 ring-fd-border hover:ring-fd-primary/50"
+					className="group h-10 rounded-full px-6 font-bold shadow-sm ring-1 ring-fd-border
+						hover:ring-fd-primary/50"
 				>
 					<RefreshCcw className="mr-2 size-4 transition-transform group-hover:rotate-180" />
 					Refresh Runtime Context
@@ -126,7 +127,10 @@ function SystemDiagnostics() {
 						>
 							User Agent
 						</span>
-						<p className="mt-0.5 truncate text-[11px] leading-relaxed text-fd-muted-foreground italic">
+						<p
+							className="mt-0.5 truncate text-[11px] leading-relaxed text-fd-muted-foreground
+								italic"
+						>
 							{navigator.userAgent}
 						</p>
 					</div>
