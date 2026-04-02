@@ -31,15 +31,15 @@ function TeleportDemo() {
 						<span className="text-pink-400">{"<Teleport "}</span>
 						<div className="pl-4">
 							<span className="text-sky-400">to</span>
-							<span className="text-white">='</span>
+							<span className="text-white">="</span>
 							<span className="text-emerald-400">#target</span>
-							<span className="text-white">{"'"}</span>
+							<span className="text-white">"</span>
 						</div>
 						<div className="pl-4">
 							<span className="text-sky-400">insertPosition</span>
-							<span className="text-white">='</span>
+							<span className="text-white">="</span>
 							<span className="text-emerald-400">{position}</span>
-							<span className="text-white">{"'"}</span>
+							<span className="text-white">"</span>
 						</div>
 						<span className="text-pink-400">{">"}</span>
 						<div className="pl-4 text-fd-foreground/60">{"// Content..."}</div>
@@ -55,7 +55,7 @@ function TeleportDemo() {
 								Target Position
 							</p>
 							<div className="flex flex-wrap gap-1.5">
-								{(["afterbegin", "beforeend"] as const).map((pos) => (
+								{(["afterbegin", "beforeend"] satisfies InsertPosition[]).map((pos) => (
 									<Button
 										key={pos}
 										theme={position === pos ? "glow" : "outline"}
