@@ -45,18 +45,14 @@ See [Component Structure](/docs/component-structure) for the full pattern refere
 ```tsx
 import { Show } from "@zayne-labs/ui-react/common/show";
 
-function UserGreeting({ user }: { user: User | null }) {
-	return (
-		<Show.Root when={user} fallback={<p>Please sign in to continue.</p>}>
-			{(activeUser) => (
-				<div>
-					<h2>Welcome back, {activeUser.name}</h2>
-					<p>{activeUser.email}</p>
-				</div>
-			)}
-		</Show.Root>
-	);
-}
+<Show.Root when={user} fallback={<p>Please sign in to continue.</p>}>
+	{(activeUser) => (
+		<div>
+			<h2>Welcome back, {activeUser.name}</h2>
+			<p>{activeUser.email}</p>
+		</div>
+	)}
+</Show.Root>;
 ```
 
 For multiple mutually-exclusive conditions, use `control="content"` mode:
@@ -84,19 +80,15 @@ For multiple mutually-exclusive conditions, use `control="content"` mode:
 ```tsx
 import { For } from "@zayne-labs/ui-react/common/for";
 
-function ProductList({ products }: { products: Product[] }) {
-	return (
-		<For each={products} fallback={<p>No products found.</p>}>
-			{(product, index) => (
-				<div key={product.id} className="flex items-center gap-4 border-b py-3">
-					<span className="text-sm text-gray-500">#{index + 1}</span>
-					<span className="font-medium">{product.name}</span>
-					<span className="ml-auto">${product.price}</span>
-				</div>
-			)}
-		</For>
-	);
-}
+<For each={products} fallback={<p>No products found.</p>}>
+	{(product, index) => (
+		<div key={product.id} className="flex items-center gap-4 border-b py-3">
+			<span className="text-sm text-gray-500">#{index + 1}</span>
+			<span className="font-medium">{product.name}</span>
+			<span className="ml-auto">${product.price}</span>
+		</div>
+	)}
+</For>;
 ```
 
 Need a wrapper element (like `<ul>` or `<tbody>`)? Use `ForWithWrapper`:
@@ -147,26 +139,22 @@ Omit `value` for boolean matching — it works like `switch(true)`:
 ```tsx
 import { DragScroll } from "@zayne-labs/ui-react/ui/drag-scroll";
 
-function HorizontalGallery() {
-	return (
-		<DragScroll.Root>
-			<DragScroll.Prev className="rounded-full border p-2 disabled:opacity-30">←</DragScroll.Prev>
+<DragScroll.Root>
+	<DragScroll.Prev className="rounded-full border p-2 disabled:opacity-30">←</DragScroll.Prev>
 
-			<DragScroll.List className="scrollbar-hidden flex gap-4 overflow-x-auto">
-				{[...Array(8).keys()].map((i) => (
-					<DragScroll.Item
-						key={i}
-						className="flex h-48 w-72 shrink-0 items-center justify-center rounded-xl border bg-gray-50"
-					>
-						Item {i + 1}
-					</DragScroll.Item>
-				))}
-			</DragScroll.List>
+	<DragScroll.List className="scrollbar-hidden flex gap-4 overflow-x-auto">
+		{[...Array(8).keys()].map((i) => (
+			<DragScroll.Item
+				key={i}
+				className="flex h-48 w-72 shrink-0 items-center justify-center rounded-xl border bg-gray-50"
+			>
+				Item {i + 1}
+			</DragScroll.Item>
+		))}
+	</DragScroll.List>
 
-			<DragScroll.Next className="rounded-full border p-2 disabled:opacity-30">→</DragScroll.Next>
-		</DragScroll.Root>
-	);
-}
+	<DragScroll.Next className="rounded-full border p-2 disabled:opacity-30">→</DragScroll.Next>
+</DragScroll.Root>;
 ```
 
 ### Animated mount/unmount with Presence
@@ -176,19 +164,15 @@ function HorizontalGallery() {
 ```tsx
 import { Presence } from "@zayne-labs/ui-react/common/presence";
 
-function FadePanel({ isVisible }: { isVisible: boolean }) {
-	return (
-		<Presence present={isVisible}>
-			<div
-				className="animate-in rounded-lg bg-blue-600 p-6 text-white
+<Presence present={isVisible}>
+	<div
+		className="animate-in rounded-lg bg-blue-600 p-6 text-white
 				shadow-xl duration-300 fade-in
 				data-[animation-phase=exit]:animate-out data-[animation-phase=exit]:fade-out"
-			>
-				I animate in and out smoothly!
-			</div>
-		</Presence>
-	);
-}
+	>
+		I animate in and out smoothly!
+	</div>
+</Presence>;
 ```
 
 ### Async data with Await
@@ -199,10 +183,10 @@ function FadePanel({ isVisible }: { isVisible: boolean }) {
 import { Await } from "@zayne-labs/ui-react/common/await";
 
 function UserProfile({ userId }: { userId: string }) {
-	const userPromise = fetchUser(userId);
+	const [userPromise, setUserPromise] = useState(() => fetchUser(userId));
 
 	return (
-		<Await.Root promise={userPromise}>
+		<Await.Root promise={userPromise} onErrorReset={() => setUserPromise(fetchUser(userId))}>
 			<Await.Pending>
 				<ProfileSkeleton />
 			</Await.Pending>

@@ -3,6 +3,8 @@ title: Form
 description: Form component system built on React Hook Form with validation and accessible controls.
 ---
 
+A declarative form system built on top of React Hook Form. It coordinates state between your input fields and validation schemas, automatically applying the correct accessible attributes and error states.
+
 ## Installation
 
 ```package-install
@@ -34,6 +36,10 @@ const schema = z.object({
 
 function LoginForm() {
 	const form = useForm({
+		defaultValues: {
+			email: "",
+			password: "",
+		},
 		resolver: zodResolver(schema),
 	});
 
@@ -57,6 +63,31 @@ function LoginForm() {
 }
 ```
 
+## Reactive State
+
+To avoid unnecessary full-form re-renders, use the `Form.Watch` and `Form.StateSubscribe` components. They isolate re-renders by subscribing only to the specific field values or form states you need.
+
+```tsx
+<Form.Root form={form} onSubmit={onSubmit}>
+	<Form.Watch name="accountType">
+		{(type) =>
+			type === "business" && (
+				<Form.Field name="taxId">
+					<Form.Label>Tax ID</Form.Label>
+					<Form.Input />
+				</Form.Field>
+			)
+		}
+	</Form.Watch>
+
+	<Form.StateSubscribe>
+		{({ isSubmitting }) => (
+			<Form.Submit disabled={isSubmitting}>{isSubmitting ? "Processing..." : "Continue"}</Form.Submit>
+		)}
+	</Form.StateSubscribe>
+</Form.Root>
+```
+
 ## Component Source
 
 <ComponentSource name="form" src="../../packages/ui-react/src/components/ui/form/form.tsx" />
@@ -70,39 +101,34 @@ function LoginForm() {
 	<Accordion title="Form.Field">
 		<auto-type-table path="../../../lib/ui-options.ts" name="FormFieldProps" />
 	</Accordion>
+	<Accordion title="Form.Label">
+		<auto-type-table path="../../../lib/ui-options.ts" name="FormLabelProps" />
+	</Accordion>
 	<Accordion title="Form.Input">
 		<auto-type-table path="../../../lib/ui-options.ts" name="FormInputProps" />
 	</Accordion>
+	<Accordion title="Form.Select">
+		<auto-type-table path="../../../lib/ui-options.ts" name="FormSelectProps" />
+	</Accordion>
+	<Accordion title="Form.TextArea">
+		<auto-type-table path="../../../lib/ui-options.ts" name="FormTextAreaProps" />
+	</Accordion>
+	<Accordion title="Form.Description">
+		<auto-type-table path="../../../lib/ui-options.ts" name="FormDescriptionProps" />
+	</Accordion>
+	<Accordion title="Form.ErrorMessage">
+		<auto-type-table path="../../../lib/ui-options.ts" name="FormErrorMessageProps" />
+	</Accordion>
+	<Accordion title="Form.Submit">
+		<auto-type-table path="../../../lib/ui-options.ts" name="FormSubmitProps" />
+	</Accordion>
+	<Accordion title="Form.Watch">
+		<auto-type-table path="../../../lib/ui-options.ts" name="FormWatchProps" />
+	</Accordion>
+	<Accordion title="Form.StateSubscribe">
+		<auto-type-table path="../../../lib/ui-options.ts" name="FormStateSubscribeProps" />
+	</Accordion>
 </Accordions>
-
-## Reactive State
-
-```tsx
-function MyForm() {
-	return (
-		<Form.Root form={form} onSubmit={onSubmit}>
-			<Form.Watch name="accountType">
-				{(type) =>
-					type === "business" && (
-						<Form.Field name="taxId">
-							<Form.Label>Tax ID</Form.Label>
-							<Form.Input />
-						</Form.Field>
-					)
-				}
-			</Form.Watch>
-
-			<Form.StateSubscribe>
-				{({ isSubmitting }) => (
-					<Form.Submit disabled={isSubmitting}>
-						{isSubmitting ? "Processing..." : "Continue"}
-					</Form.Submit>
-				)}
-			</Form.StateSubscribe>
-		</Form.Root>
-	);
-}
-```
 
 ## Data Attributes
 

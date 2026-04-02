@@ -59,7 +59,7 @@ function ErrorBoundaryDemo() {
 
 							<div className="mt-6 flex flex-col gap-3">
 								<div
-									className="rounded-lg bg-red-500/10 p-3 font-mono text-[11px] text-red-700
+									className="rounded-lg bg-red-500/10 p-3 font-geist-mono text-[11px] text-red-700
 										dark:text-red-300"
 								>
 									Stack trace suppressed for demo safety.

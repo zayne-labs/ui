@@ -6,9 +6,7 @@ icon: BookOpenText
 
 ## Welcome to Zayne UI
 
-Zayne UI is a headless component library for React that gives you composable building blocks without styling opinions. Every component handles functionality, accessibility, and state management — you bring the design.
-
-Instead of fighting against opinionated styles or overriding themes, you start with a clean slate. Use Tailwind CSS, vanilla CSS, or any styling approach you prefer.
+Zayne UI is a headless React component library that provides unstyled composable building blocks. It manages all the complex logic, accessibility and state under the hood while leaving the visual design entirely up to you.
 
 ## Key features
 
@@ -16,16 +14,16 @@ import { Code2Icon, CpuIcon, LayersIcon, LeafIcon, PaintbrushIcon, PuzzleIcon } 
 
 <Cards>
 	<Card title="Headless by default" icon={<CpuIcon />}>
-		Zero styling opinions. Components handle functionality and accessibility — you own the design.
+		Zero styling opinions. Components handle functionality and accessibility while you own the design.
 		Override with `className` or opt out of base styles entirely with the `unstyled` prop.
 	</Card>
 	<Card title="TypeScript-first" icon={<Code2Icon />}>
-		Written in TypeScript with full inference. Generic render props narrow types automatically — no
-		manual annotations needed.
+		Written in TypeScript with full inference. Generic render props narrow types automatically so no
+		manual annotations are needed.
 	</Card>
 	<Card title="Tree-shakeable" icon={<LeafIcon />}>
-		Each component lives at its own entry point. Import only what you use — dead code is eliminated
-		automatically.
+		Each component lives at its own entry point. You can import only what you use to eliminate
+		dead code automatically.
 	</Card>
 	<Card title="Compound components" icon={<PuzzleIcon />}>
 		UI components use a compound pattern (`Component.Root`, `Component.Part`) for maximum composition
@@ -49,26 +47,26 @@ The library provides two categories of components:
 
 Interactive, stateful components that use the [compound component pattern](/docs/component-structure) for maximum flexibility:
 
-- **[Card](/docs/ui/card)** — Composable card layouts with header, content, footer, and action sections. Every part is polymorphic and supports `asChild`.
-- **[Carousel](/docs/ui/carousel)** — Slideshow with auto-slide, pause-on-hover, navigation controls, and customizable indicators.
-- **[DragScroll](/docs/ui/drag-scroll)** — Adds mouse drag-to-scroll to any container. Supports horizontal, vertical, or both directions with configurable scroll amount and device constraints.
-- **[DropZone](/docs/ui/drop-zone)** — Full-featured file upload with drag-and-drop, file validation, progress tracking, image previews, and upload lifecycle callbacks.
-- **[Form](/docs/ui/form)** — Form system built on React Hook Form with composable field components, reactive watchers, state subscriptions, and automatic error accessibility.
+- **[Card](/docs/ui/card)**: Composable card layouts with header, content, footer, and action sections. Every part is polymorphic and supports `asChild`.
+- **[Carousel](/docs/ui/carousel)**: Slideshow with auto-slide, pause-on-hover, navigation controls, and customizable indicators.
+- **[DragScroll](/docs/ui/drag-scroll)**: Adds mouse drag-to-scroll to any container. Supports horizontal, vertical, or both directions with configurable scroll amount and device constraints.
+- **[DropZone](/docs/ui/drop-zone)**: Full-featured file upload with drag-and-drop, file validation, progress tracking, image previews, and upload lifecycle callbacks.
+- **[Form](/docs/ui/form)**: Form system built on React Hook Form with composable field components, reactive watchers, state subscriptions, and automatic error accessibility.
 
 ### Utility Components
 
 Lightweight rendering primitives that solve common React patterns declaratively:
 
-- **[Show](/docs/utility/show)** — Conditional rendering with fallback support and type narrowing. Supports a multi-branch `control="content"` mode for complex conditions.
-- **[For](/docs/utility/for)** — List rendering with empty-state fallbacks. Accepts arrays or numbers (for skeleton patterns). `ForWithWrapper` wraps output in a container element.
-- **[Switch](/docs/utility/switch)** — Pattern matching for multi-way conditional rendering. Supports both value matching and boolean matching modes.
-- **[Await](/docs/utility/await)** — Declarative async handling with built-in Suspense and ErrorBoundary. Manages pending, success, and error states via sub-components.
-- **[Presence](/docs/utility/presence)** — Animate mount/unmount with CSS animations or transitions. Defers DOM removal until exit animations complete.
-- **[ErrorBoundary](/docs/utility/error-boundary)** — Declarative error catching with reset via `errorResetKeys` or the `useErrorBoundary` hook.
-- **[Teleport](/docs/utility/teleport)** — Portal that renders children into any DOM node — by selector, ref, or element. Supports `insertPosition` for precise placement.
-- **[ClientGate](/docs/utility/client-gate)** — Guards content behind client-side hydration. Safely access `window`, `localStorage`, etc. without SSR mismatches.
-- **[Slot](/docs/utility/slot)** — The engine behind `asChild`. Merges parent props, event handlers, refs, and class names into a child element.
-- **[SuspenseWithBoundary](/docs/utility/suspense-with-boundary)** — Combines `Suspense` and `ErrorBoundary` into a single wrapper for cleaner async component handling.
+- **[Show](/docs/utility/show)**: Conditional rendering with fallback support and type narrowing. Supports a multi-branch `control="content"` mode for complex conditions.
+- **[For](/docs/utility/for)**: List rendering with empty-state fallbacks. Accepts arrays or numbers (for skeleton patterns). `ForWithWrapper` wraps output in a container element.
+- **[Switch](/docs/utility/switch)**: Pattern matching for multi-way conditional rendering. Supports both value matching and boolean matching modes.
+- **[Await](/docs/utility/await)**: Declarative async handling with built-in Suspense and ErrorBoundary. Manages pending, success, and error states via sub-components.
+- **[Presence](/docs/utility/presence)**: Animate mount/unmount with CSS animations or transitions. Defers DOM removal until exit animations complete.
+- **[ErrorBoundary](/docs/utility/error-boundary)**: Declarative error catching with reset via `errorResetKeys` or the `useErrorBoundary` hook.
+- **[Teleport](/docs/utility/teleport)**: Portal that renders children into any DOM node by selector, ref, or element. Supports `insertPosition` for precise placement.
+- **[ClientGate](/docs/utility/client-gate)**: Guards content behind client-side hydration. Safely access `window`, `localStorage`, etc. without SSR mismatches.
+- **[Slot](/docs/utility/slot)**: The engine behind `asChild`. Merges parent props, event handlers, refs, and class names into a child element.
+- **[SuspenseWithBoundary](/docs/utility/suspense-with-boundary)**: Combines `Suspense` and `ErrorBoundary` into a single wrapper for cleaner async component handling.
 
 ## Framework support
 

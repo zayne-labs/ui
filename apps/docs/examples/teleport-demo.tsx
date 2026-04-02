@@ -25,7 +25,7 @@ function TeleportDemo() {
 						shadow-xl backdrop-blur-sm"
 				>
 					<div
-						className="rounded-2xl bg-black/40 p-4 font-mono text-[11px] leading-relaxed
+						className="rounded-2xl bg-black/40 p-4 font-geist-mono text-[11px]/relaxed
 							text-fd-muted-foreground/80"
 					>
 						<span className="text-pink-400">{"<Teleport "}</span>
@@ -144,7 +144,7 @@ function TeleportDemo() {
 						<h4 className="text-xs font-bold tracking-widest text-fd-foreground uppercase opacity-70">
 							Result
 						</h4>
-						<p className="mt-1 text-[11px] leading-relaxed font-medium text-fd-muted-foreground/90">
+						<p className="mt-1 text-[11px]/relaxed font-medium text-fd-muted-foreground/90">
 							Beam moves relative to children in the target.
 						</p>
 					</div>

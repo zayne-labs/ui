@@ -24,14 +24,13 @@ export const useDragScroll = <TContainerElement extends HTMLElement = HTMLElemen
 		disableInternalStateSubscription = false,
 		orientation = "horizontal",
 		scrollAmount = "item",
-		usage = "allScreens",
 	} = props ?? {};
 
 	const listRef = useRef<TContainerElement>(null);
 
 	const storeApi = useMemo(() => {
-		return createDragScrollStore({ orientation, scrollAmount, usage });
-	}, [orientation, scrollAmount, usage]);
+		return createDragScrollStore({ orientation, scrollAmount });
+	}, [orientation, scrollAmount]);
 
 	const actions = storeApi.getState().actions;
 
@@ -98,8 +97,6 @@ export const useDragScroll = <TContainerElement extends HTMLElement = HTMLElemen
 					`scrollbar-hidden flex w-full cursor-grab snap-x snap-mandatory overflow-x-scroll overflow-y-hidden`,
 					orientation === "horizontal" && "flex-row",
 					orientation === "vertical" && "flex-col",
-					usage === "mobileAndTabletOnly" && "md:cursor-default md:flex-col",
-					usage === "desktopOnly" && "max-md:cursor-default max-md:flex-col",
 					innerProps?.className
 				),
 				ref: composeRefs(
@@ -108,7 +105,7 @@ export const useDragScroll = <TContainerElement extends HTMLElement = HTMLElemen
 				),
 			} as never;
 		},
-		[disableInternalStateSubscription, isDragging, orientation, refCallback, usage]
+		[disableInternalStateSubscription, isDragging, orientation, refCallback]
 	);
 
 	const getItemProps: DragScrollPropGetters<TContainerElement>["getItemProps"] = useCallbackRef(
@@ -128,8 +125,6 @@ export const useDragScroll = <TContainerElement extends HTMLElement = HTMLElemen
 			return {
 				...innerProps,
 				...getDragScrollScopeAttrs("prev-button"),
-				"aria-disabled": dataAttr(isDisabled),
-				"aria-label": innerProps?.["aria-label"] ?? "Scroll back",
 				"data-disabled": dataAttr(isDisabled),
 				disabled: isDisabled,
 				onClick: composeTwoEventHandlers(actions.goToPrev, innerProps?.onClick),
@@ -146,7 +141,6 @@ export const useDragScroll = <TContainerElement extends HTMLElement = HTMLElemen
 			return {
 				...innerProps,
 				...getDragScrollScopeAttrs("next-button"),
-				"aria-label": innerProps?.["aria-label"] ?? "Scroll forward",
 				"data-disabled": dataAttr(isDisabled),
 				disabled: isDisabled,
 				onClick: composeTwoEventHandlers(actions.goToNext, innerProps?.onClick),

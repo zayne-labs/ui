@@ -33,7 +33,7 @@ export const docs = defineDocs({
 			return applyMdxPreset({
 				rehypeCodeOptions: {
 					inline: "tailing-curly-colon",
-					langs: ["ts", "js", "html", "tsx", "mdx", "bash"],
+					langs: ["ts", "js", "html", "tsx", "mdx", "bash", "css"],
 					themes: shikiOptions.themes,
 
 					transformers: [...(rehypeCodeDefaultOptions.transformers ?? []), transformerEscape()],

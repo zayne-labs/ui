@@ -170,19 +170,19 @@ function UserCard({ user }: { user: UserType }) {
 				</span>
 			</header>
 
-			<dl className="flex items-center gap-3 rounded-xl bg-fd-muted/30 p-3">
+			<div className="flex items-center gap-3 rounded-xl bg-fd-muted/30 p-3">
 				<span className="rounded-lg bg-fd-background p-2" aria-hidden="true">
 					<Hash className="size-4 text-fd-muted-foreground" />
 				</span>
 				<div className="flex flex-col">
-					<dt className="text-[10px] font-bold tracking-widest text-fd-muted-foreground uppercase">
+					<p className="text-[10px] font-bold tracking-widest text-fd-muted-foreground uppercase">
 						User Identifier
-					</dt>
-					<dd className="font-mono text-sm font-medium text-fd-foreground">
+					</p>
+					<p className="font-geist-mono text-sm font-medium text-fd-foreground">
 						USR-{user.id.toString().padStart(4, "0")}
-					</dd>
+					</p>
 				</div>
-			</dl>
+			</div>
 		</article>
 	);
 }

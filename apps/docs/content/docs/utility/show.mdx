@@ -48,14 +48,6 @@ The `Show` component provides a clean, declarative alternative to ternary operat
     function DataManager({ state }) {
       return (
         <Show.Root control="content">
-          <Show.Content when={state.loading}>
-            <Skeleton />
-          </Show.Content>
-
-          <Show.Content when={state.error}>
-            {(err) => <ErrorView message={err.message} />}
-          </Show.Content>
-
           <Show.Content when={state.data}>
             {(data) => <DataView items={data} />}
           </Show.Content>

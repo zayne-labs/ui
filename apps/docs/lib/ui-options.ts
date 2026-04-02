@@ -27,6 +27,12 @@ export type {
 	FormInputProps,
 	FormTextAreaProps,
 	FormSelectProps,
+	FormLabelProps,
+	FormDescriptionProps,
+	FormErrorMessageProps,
+	FormSubmitProps,
+	FormWatchProps,
+	FormStateSubscribeProps,
 } from "@zayne-labs/ui-react/ui/form";
 
 export type { AwaitRootProps } from "@zayne-labs/ui-react/common/await";

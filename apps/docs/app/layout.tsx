@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, JetBrains_Mono } from "next/font/google";
 import { baseURL, createMetadata, defaultSiteName } from "@/lib/metadata";
 import { cnJoin } from "@/lib/utils/cn";
 import { Providers } from "./Providers";
@@ -15,12 +15,17 @@ const geistMono = Geist_Mono({
 	variable: "--font-geist-mono",
 });
 
+const jetBrainsMono = JetBrains_Mono({
+	subsets: ["latin"],
+	variable: "--font-jetbrains-mono",
+});
+
 function RootLayout({ children }: { children: React.ReactNode }) {
 	return (
 		<html
 			lang="en"
 			data-scroll-behavior="smooth"
-			className={cnJoin(geistSans.variable, geistMono.variable)}
+			className={cnJoin(geistSans.variable, geistMono.variable, jetBrainsMono.variable)}
 			suppressHydrationWarning={true}
 		>
 			<body>

@@ -7,10 +7,10 @@ type RequiredUseDragScrollProps = {
 	[Key in keyof Required<UseDragScrollProps>]: UseDragScrollProps[Key] | undefined;
 };
 
-type InitStoreValues = Pick<RequiredUseDragScrollProps, "orientation" | "scrollAmount" | "usage">;
+type InitStoreValues = Pick<RequiredUseDragScrollProps, "orientation" | "scrollAmount">;
 
 export const createDragScrollStore = (initStoreValues: InitStoreValues) => {
-	const { orientation = "horizontal", scrollAmount = "item", usage = "allScreens" } = initStoreValues;
+	const { orientation = "horizontal", scrollAmount = "item" } = initStoreValues;
 
 	const listRef: React.RefObject<HTMLElement | null> = {
 		current: null,
@@ -94,9 +94,6 @@ export const createDragScrollStore = (initStoreValues: InitStoreValues) => {
 			},
 
 			handleMouseDown: (event) => {
-				if (usage === "mobileAndTabletOnly" && window.innerWidth >= 768) return;
-				if (usage === "desktopOnly" && window.innerWidth < 768) return;
-
 				if (!listRef.current) return;
 
 				// == Create fresh AbortControllers for each drag session (they cannot be reused after abort)

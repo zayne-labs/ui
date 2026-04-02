@@ -94,14 +94,6 @@ export type UseDragScrollProps = {
 	 * @default "item"
 	 */
 	scrollAmount?: "item" | number;
-	/**
-	 * Device usage constraints for drag behavior.
-	 * - `allScreens`: Drag works on all devices
-	 * - `desktopOnly`: Drag works only on desktop (width >= 768px)
-	 * - `mobileAndTabletOnly`: Drag works only on mobile/tablet (width < 768px)
-	 * @default "allScreens"
-	 */
-	usage?: "allScreens" | "desktopOnly" | "mobileAndTabletOnly";
 };
 
 export type UseDragScrollResult<TContainerElement extends HTMLElement> = Pick<
