@@ -7,8 +7,7 @@ import { Button } from "@/components/ui/button";
 function DropZoneDemo() {
 	return (
 		<DropZone.Root
-			className="w-full max-w-lg rounded-4xl border border-fd-border bg-fd-card/40 p-8 shadow-2xl
-				backdrop-blur-md"
+			className="w-full max-w-lg"
 			multiple={true}
 			maxFileCount={5}
 			maxFileSize={{ mb: 5 }}
@@ -54,7 +53,7 @@ function DropZoneDemo() {
 					>
 						<Upload className="size-7 text-fd-primary" />
 					</span>
-					<div
+					<span
 						className="absolute -top-1 -right-1 size-3 animate-pulse rounded-full bg-fd-primary
 							shadow-sm"
 					/>
@@ -68,29 +67,31 @@ function DropZoneDemo() {
 				</div>
 
 				<DropZone.Trigger asChild={true}>
-					<Button theme="glow" size="sm" className="border-fd-border/60 font-bold tracking-tight">
+					<Button theme="glow" className="border-fd-border/60 font-bold tracking-tight">
 						Select Files
 					</Button>
 				</DropZone.Trigger>
 			</DropZone.Area>
 
 			<DropZone.FileList
-				className="mt-6 flex max-h-72 flex-col gap-4 overflow-y-auto pr-1 transition-all"
+				className="mt-6 flex max-h-72 flex-col gap-3 overflow-y-auto pr-1 transition-all"
 			>
 				{({ fileState }) => (
 					<DropZone.FileItem
 						key={fileState.id}
 						fileState={fileState}
 						className="group relative flex animate-in items-center gap-4 rounded-2xl border
-							border-fd-border bg-fd-background/80 p-2.5 shadow-2xl transition-all duration-500
-							fade-in slide-in-from-bottom-2 hover:-translate-y-0.5 hover:border-fd-primary/20
-							hover:bg-fd-background"
+							border-fd-border/40 bg-fd-background/40 p-3 shadow-sm backdrop-blur-md transition-all
+							duration-400 fade-in slide-in-from-bottom-2 hover:-translate-y-0.5
+							hover:border-fd-primary/30 hover:bg-fd-background/80 hover:shadow-md
+							dark:bg-fd-background/20"
 					>
 						<div className="relative shrink-0">
 							<DropZone.FileItemPreview
-								className="size-16 rounded-lg border border-fd-border/50 object-cover shadow-sm
+								className="size-14 rounded-xl border border-fd-border/50 shadow-sm
 									transition-transform group-hover:scale-105"
 							/>
+
 							{fileState.status === "success" && (
 								<span
 									className="absolute -top-1.5 -right-1.5 flex size-5 items-center justify-center
@@ -109,30 +110,29 @@ function DropZoneDemo() {
 							)}
 						</div>
 
-						<div className="flex grow flex-col gap-2.5">
+						<div className="flex min-w-0 grow flex-col gap-1.5">
 							<DropZone.FileItemMetadata
-								className="truncate text-sm font-black tracking-tight text-fd-foreground"
+								className="truncate text-sm font-semibold tracking-tight text-fd-foreground"
 							/>
 
-							<div className="flex flex-col gap-2">
+							<div className="flex flex-col gap-1.5">
+								<div
+									className="flex items-center justify-between text-[10px] font-bold
+										tracking-widest text-fd-muted-foreground uppercase opacity-80"
+								>
+									<span className="flex items-center gap-1.5">
+										<p>{fileState.status === "uploading" ? "Uploading" : "Complete"}</p>
+									</span>
+									<p>{Math.round(fileState.progress)}%</p>
+								</div>
+
 								<DropZone.FileItemProgress
 									variant="linear"
-									className="h-1.5 w-full overflow-hidden rounded-full bg-fd-muted/30"
+									className="h-1.5 w-full overflow-hidden rounded-full bg-fd-secondary"
 									classNames={{
 										track: "h-full bg-fd-primary transition-all duration-300 ease-out",
 									}}
 								/>
-
-								<div
-									className="flex items-center justify-between text-[10px] font-black
-										tracking-widest text-fd-muted-foreground uppercase opacity-60"
-								>
-									<span className="flex items-center gap-1.5">
-										<p>{Math.round(fileState.progress)}%</p>
-										<span className="size-0.5 rounded-full bg-current opacity-30" />
-										<p>{fileState.status === "uploading" ? "Uploading" : "Complete"}</p>
-									</span>
-								</div>
 							</div>
 						</div>
 
@@ -140,8 +140,8 @@ function DropZoneDemo() {
 							<Button
 								theme="ghost"
 								size="icon"
-								className="size-8 shrink-0 p-0 text-fd-muted-foreground transition-all duration-300
-									hover:bg-rose-500/10 hover:text-rose-500"
+								className="size-8 shrink-0 rounded-full p-0 text-fd-muted-foreground transition-all
+									duration-300 hover:bg-rose-500/10 hover:text-rose-500"
 								aria-label="Remove file"
 							>
 								<X className="size-4" />
@@ -152,8 +152,11 @@ function DropZoneDemo() {
 			</DropZone.FileList>
 
 			<DropZone.FileClear asChild={true}>
-				<Button theme="ghost" className="mt-4 gap-2 border-fd-border/60 font-black tracking-tight">
-					<X className="size-4 opacity-60" />
+				<Button
+					theme="secondary"
+					size="lg"
+					className="mt-4 border-fd-border/50 font-bold tracking-tight"
+				>
 					Clear all
 				</Button>
 			</DropZone.FileClear>

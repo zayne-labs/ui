@@ -38,31 +38,20 @@ function StatusIndicator({ status }) {
 
 ## Component API
 
-### Switch.Root
+<Accordions>
+	<Accordion title="Switch.Root">
+		The coordinator for pattern matching. Only the first truthful match is rendered.
 
-The coordinator for pattern matching. Only the first truthful match is rendered.
+    	<auto-type-table path="../../../lib/ui-options.ts" name="SwitchRootProps" />
+    </Accordion>
 
-**Props:**
+    <Accordion title="Switch.Match">
+    	Defines a conditional case. Supports render props for type-safe access to the matched value.
 
-- `value?: TValue` - The value to match against. If omitted, uses boolean matching mode.
-- `children: React.ReactNode` - The Switch.Match and Switch.Default components.
+    	<auto-type-table path="../../../lib/ui-options.ts" name="SwitchMatchProps" />
+    </Accordion>
 
-### Switch.Match
-
-Defines a conditional case. Supports render props for type-safe access to the matched value.
-
-**Props:**
-
-- `when: TValue | boolean` - The condition to match against.
-- `children: React.ReactNode | ((value: TValue) => React.ReactNode)` - Content to render when matched. Can be a render function for type-safe access to the value.
-
-### Switch.Default
-
-The fallback component rendered when no matches are found.
-
-**Props:**
-
-- `children: React.ReactNode` - Content to render as fallback.
+</Accordions>
 
 ## Examples
 
