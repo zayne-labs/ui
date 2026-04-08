@@ -51,14 +51,16 @@ async function Page({ params }: PageProps<"/docs/[[...slug]]">) {
 			<DocsBody>
 				<MDX
 					components={getMDXComponents({
-						a: ({ children, href, ...restOfProps }) => {
+						a: (innerProps) => {
+							const { children, href, ...restOfInnerProps } = innerProps;
+
 							const foundPage = source.getPageByHref(href ?? "", {
 								dir: PathUtils.dirname(page.path),
 							});
 
 							if (!foundPage) {
 								return (
-									<Link href={href} {...restOfProps}>
+									<Link href={href} {...restOfInnerProps}>
 										{children}
 									</Link>
 								);
@@ -72,7 +74,7 @@ async function Page({ params }: PageProps<"/docs/[[...slug]]">) {
 												`${foundPage.page.url}#${foundPage.hash}`
 											:	foundPage.page.url
 										}
-										{...restOfProps}
+										{...restOfInnerProps}
 									>
 										{children}
 									</HoverCard.Trigger>

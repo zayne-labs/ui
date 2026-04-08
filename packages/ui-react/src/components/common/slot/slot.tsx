@@ -11,6 +11,7 @@ type SlotProps = InferProps<HTMLElement> & { ref?: React.Ref<HTMLElement> };
 export function SlotRoot(props: SlotProps) {
 	const { children, ...restOfSlotProps } = props;
 
+	// eslint-disable-next-line ts-eslint/no-unnecessary-type-arguments -- False positive
 	const childrenArray = isArray<React.ReactNode>(children) ? children : [children];
 
 	const slottable = childrenArray.find((element) => isSlottable(element));
@@ -33,7 +34,6 @@ export function SlotRoot(props: SlotProps) {
 	const resolvedChildToRender = isArray(childToRender) ? childToRender[0] : childToRender;
 
 	if (!isValidElement(resolvedChildToRender)) {
-		// eslint-disable-next-line react-x/purity -- Ignore
 		console.error("Invalid element passed to Slottable:", resolvedChildToRender);
 		return null;
 	}
@@ -81,7 +81,6 @@ function SlotClone(props: SlotCloneProps) {
 	const resolvedChild = isArray(children) ? children[0] : children;
 
 	if (!isValidElement<UnknownObject>(resolvedChild)) {
-		// eslint-disable-next-line react-x/purity -- Ignore
 		console.error("Invalid element passed to Slot:", resolvedChild);
 		return null;
 	}

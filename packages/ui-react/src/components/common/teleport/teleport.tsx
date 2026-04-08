@@ -34,7 +34,7 @@ function Teleport(props: TeleportProps) {
 	const [portalContainer, setPortalContainer] = useState<HTMLElement | null>(null);
 
 	const stableUpdatePortalContainer = useCallbackRef((destination: HTMLElement | null) => {
-		// eslint-disable-next-line react-x/set-state-in-effect -- Ignore
+		// eslint-disable-next-line react/set-state-in-effect -- Ignore
 		setPortalContainer(destination);
 	});
 

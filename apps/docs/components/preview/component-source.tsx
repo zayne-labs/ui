@@ -40,11 +40,20 @@ export async function ComponentSource(props: ComponentSourceProps) {
 const getSourceCode = async (src: string | undefined, name: string | undefined, maxLines?: number) => {
 	let code: string | undefined;
 
-	if (src) {
-		code = await readFileFromRoot(src);
-	} else if (name) {
-		const item = await getExampleItem(name);
-		code = item?.files[0]?.content;
+	switch (true) {
+		case src != null: {
+			code = await readFileFromRoot(src);
+			break;
+		}
+		case name != null: {
+			const exampleItem = await getExampleItem(name);
+
+			code = exampleItem?.files[0]?.content;
+			break;
+		}
+		default: {
+			break;
+		}
 	}
 
 	if (!code) return;

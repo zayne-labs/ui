@@ -268,13 +268,9 @@ function RepoCard(props: RepoCardProps) {
 							{repo.forks_count}
 						</span>
 					</div>
-					<span
-						// eslint-disable-next-line react-x/purity
-						title={`Updated on ${new Date(repo.updated_at).toLocaleDateString()}`}
-						className="transition-colors group-hover:text-gray-700"
-					>
+					<p className="transition-colors group-hover:text-gray-700">
 						Updated {formatDate(repo.updated_at)}
-					</span>
+					</p>
 				</div>
 			</Card.Footer>
 		</Card.Root>

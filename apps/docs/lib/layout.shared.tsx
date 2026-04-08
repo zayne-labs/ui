@@ -1,11 +1,11 @@
 import { callApi } from "@zayne-labs/callapi";
+import { Image, Link } from "fumadocs-core/framework";
 import { GithubInfo } from "fumadocs-ui/components/github-info";
 import type { DocsLayoutProps } from "fumadocs-ui/layouts/docs";
 import type { BaseLayoutProps } from "fumadocs-ui/layouts/shared";
 import { TagIcon } from "lucide-react";
-import Link from "next/link";
 import { z } from "zod";
-import { IconBox, ZayneLogoFull } from "@/components/common";
+import { IconBox } from "@/components/common";
 import { Button } from "@/components/ui/button";
 import { source } from "@/lib/source";
 import { packageName, packageScope, repoName, repoOwner } from "./github";
@@ -14,7 +14,15 @@ export const baseOptions = () => {
 	return {
 		githubUrl: `https://github.com/${repoOwner}/${repoName}`,
 		nav: {
-			title: <ZayneLogoFull className="scale-90" />,
+			title: (
+				<div className="flex items-center gap-3">
+					<Image src="/logo.png" alt="Zayne UI Logo" width={20} height={20} className="size-5" />
+
+					<p className="text-[20px] font-medium tracking-tight text-fd-foreground in-[header]:text-[15px]">
+						Zayne <span className="text-fd-primary">UI</span>
+					</p>
+				</div>
+			),
 			transparentMode: "top",
 			url: "/docs",
 		},
@@ -23,7 +31,7 @@ export const baseOptions = () => {
 
 export const docsOptions = () => {
 	const npmDataPromise = callApi(`https://registry.npmjs.org/${packageScope}/${packageName}/latest`, {
-		dedupeStrategy: "defer",
+		extraFetchOptions: { next: { revalidate: 60 } },
 		schema: { data: z.object({ version: z.string() }) },
 	});
 
@@ -52,9 +60,7 @@ export const docsOptions = () => {
 		],
 
 		nav: {
-			title: <ZayneLogoFull className="scale-90" />,
-
-			transparentMode: "top",
+			...baseOptions().nav,
 		},
 
 		sidebar: {
@@ -62,9 +68,9 @@ export const docsOptions = () => {
 				{
 					description: descriptionPromise,
 					icon: (
-						<div className="grid size-full place-items-center rounded-lg max-md:border max-md:bg-fd-primary/10 max-md:p-1.5">
+						<span className="flex size-full items-center justify-center rounded-lg max-md:border max-md:bg-fd-primary/10 max-md:p-1.5">
 							<TagIcon className="size-full text-fd-primary" />
-						</div>
+						</span>
 					),
 					title: "Latest",
 					url: "/docs",

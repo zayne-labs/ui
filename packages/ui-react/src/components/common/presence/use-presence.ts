@@ -58,10 +58,7 @@ const usePresence = (options: UsePresenceOptions): UsePresenceResult => {
 
 	const stylesRef = useRef<CSSStyleDeclaration | null>(null);
 
-	const prevNodeStateRef = useRef<{
-		prevAnimationName: string;
-		prevPresent: boolean;
-	}>({
+	const prevNodeStateRef = useRef({
 		prevAnimationName: "none",
 		prevPresent: presentProp,
 	});

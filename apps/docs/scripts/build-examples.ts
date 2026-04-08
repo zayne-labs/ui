@@ -7,7 +7,7 @@ import * as prettier from "prettier";
  * Scans the examples directory for .tsx files and creates lazy-loaded exports
  */
 
-const formatGeneratedSource = async (content: string, filePath: string) => {
+const formatCode = async (content: string, filePath: string) => {
 	const prettierConfig = await prettier.resolveConfig(filePath);
 
 	return prettier.format(content, { ...prettierConfig, filepath: filePath });
@@ -57,8 +57,8 @@ const buildExamplesIndex = async () => {
 `;
 
 	const outputPath = path.join(examplesDir, "__index.tsx");
-	const formattedContent = await formatGeneratedSource(content, outputPath);
-	await fs.writeFile(outputPath, formattedContent);
+
+	await fs.writeFile(outputPath, await formatCode(content, outputPath));
 
 	console.info(`✅ Generated ${outputPath}`);
 };
