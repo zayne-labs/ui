@@ -11,7 +11,6 @@ type SlotProps = InferProps<HTMLElement> & { ref?: React.Ref<HTMLElement> };
 export function SlotRoot(props: SlotProps) {
 	const { children, ...restOfSlotProps } = props;
 
-	// eslint-disable-next-line ts-eslint/no-unnecessary-type-arguments -- False positive
 	const childrenArray = isArray<React.ReactNode>(children) ? children : [children];
 
 	const slottable = childrenArray.find((element) => isSlottable(element));

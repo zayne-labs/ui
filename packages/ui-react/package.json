@@ -46,11 +46,11 @@
 		"release:test": "pnpx pkg-pr-new publish"
 	},
 	"peerDependencies": {
-		"react": "19.x.x",
-		"react-dom": "19.x.x",
-		"react-hook-form": "7.x.x",
-		"tailwind-merge": "^2.5.0 || ^3.0.0",
-		"tailwindcss": "4.x.x"
+		"react": "catalog:react:peer",
+		"react-dom": "catalog:react:peer",
+		"react-hook-form": "catalog:react:peer",
+		"tailwind-merge": "catalog:react:peer",
+		"tailwindcss": "catalog:react:peer"
 	},
 	"peerDependenciesMeta": {
 		"react-hook-form": {
@@ -73,21 +73,21 @@
 		"@total-typescript/ts-reset": "0.6.1",
 		"@types/react": "19.2.14",
 		"@types/react-dom": "19.2.3",
-		"@zayne-labs/prettier-config": "0.12.10",
-		"@zayne-labs/tsconfig": "0.12.10",
+		"@zayne-labs/prettier-config": "0.13.1",
+		"@zayne-labs/tsconfig": "0.13.1",
 		"concurrently": "9.2.1",
 		"cross-env": "10.1.0",
-		"prettier": "3.8.1",
+		"prettier": "3.8.2",
 		"prettier-plugin-classnames": "0.10.1",
 		"prettier-plugin-merge": "0.10.1",
 		"prettier-plugin-tailwindcss": "0.7.2",
 		"publint": "0.3.18",
-		"react": "19.2.4",
-		"react-dom": "19.2.4",
-		"react-hook-form": "7.72.1",
+		"react": "catalog:react:peer",
+		"react-dom": "catalog:react:peer",
+		"react-hook-form": "catalog:react:peer",
 		"size-limit": "12.0.1",
-		"tailwind-merge": "3.5.0",
-		"tailwindcss": "4.2.2",
+		"tailwind-merge": "catalog:react:peer",
+		"tailwindcss": "catalog:react:peer",
 		"tsdown": "0.21.7",
 		"typescript": "6.0.2"
 	},
