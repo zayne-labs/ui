@@ -31,17 +31,14 @@ const scopedCss = css`
 				0 4px 6px -4px rgb(0 0 0 / 0.01);
 			transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
 		}
-
 		.feature-card:hover {
 			transform: scale(1.02) translateY(-10px);
 			border-color: #e2e8f0;
 			box-shadow: 0 30px 70px -12px rgb(0 0 0 / 0.1);
 		}
-
 		.widget-card {
 			background: radial-gradient(circle at top right, white, #fcfcfc);
 		}
-
 		.btn-primary {
 			background: #4f46e5;
 			color: white;
@@ -54,7 +51,6 @@ const scopedCss = css`
 			transition: all 0.3s;
 			box-shadow: 0 15px 30px -5px rgba(79, 70, 229, 0.4);
 		}
-
 		.btn-primary:hover {
 			background: #4338ca;
 			transform: scale(1.05);
