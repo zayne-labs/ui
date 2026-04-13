@@ -7,19 +7,19 @@ settings:
 catalogs:
   react:peer:
     react:
-      specifier: 19.2.5
+      specifier: ^19.2.5
       version: 19.2.5
     react-dom:
-      specifier: 19.2.5
+      specifier: ^19.2.5
       version: 19.2.5
     react-hook-form:
-      specifier: 7.72.1
+      specifier: ^7.72.1
       version: 7.72.1
     tailwind-merge:
-      specifier: 3.5.0
+      specifier: ^3.5.0
       version: 3.5.0
     tailwindcss:
-      specifier: 4.2.2
+      specifier: ^4.2.2
       version: 4.2.2
 
 importers:
