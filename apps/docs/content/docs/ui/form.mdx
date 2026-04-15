@@ -45,13 +45,13 @@ function LoginForm() {
 
 	return (
 		<Form.Root form={form} onSubmit={form.handleSubmit((data) => console.log(data))}>
-			<Form.Field name="email">
+			<Form.Field control={form.control} name="email">
 				<Form.Label>Email</Form.Label>
 				<Form.Input type="email" />
 				<Form.ErrorMessage />
 			</Form.Field>
 
-			<Form.Field name="password">
+			<Form.Field control={form.control} name="password">
 				<Form.Label>Password</Form.Label>
 				<Form.Input type="password" />
 				<Form.ErrorMessage />
@@ -63,16 +63,70 @@ function LoginForm() {
 }
 ```
 
+## Control Usage & Type Safety
+
+While `Form.Root` shares the internal context required to make the `control` and field-inherited props optional, **it is highly recommended to pass them explicitly.**
+
+Providing these props directly allows TypeScript to link your components to your specific form schema, enabling full type safety and robust auto-completion for every field path. Note that while sub-components can inherit the name from their parent `Form.Field`, the field itself always requires a `name` prop to function.
+
+```tsx
+// ✅ Recommended: schema-aware name prop
+<Form.Field control={form.control} name="email">
+	<Form.Label>Email</Form.Label>
+	<Form.Input />
+</Form.Field>
+```
+
+```tsx
+// ⚠️ Optional: "name" falls back to generic string
+<Form.Field name="email">
+	<Form.Label>Email</Form.Label>
+	<Form.Input />
+</Form.Field>
+```
+
+## Controlled Components
+
+To integrate third-party components that don't expose a native `ref` (such as a Combobox or Switch), use the controlled component variants. These wrap React Hook Form's `Controller` while remaining fully integrated with the form's accessibility and error handling system.
+
+### Form.FieldBoundController
+
+This is the recommended approach for most controlled components. It must be nested within a `Form.Field`, which allows it to automatically bind to the parent's `name` and `control`.
+
+```tsx
+<Form.Field control={form.control} name="country">
+	<Form.Label>Country</Form.Label>
+	<Form.FieldBoundController
+		render={({ field }) => (
+			<Combobox options={countries} value={field.value} onChange={field.onChange} />
+		)}
+	/>
+	<Form.ErrorMessage />
+</Form.Field>
+```
+
+### Form.FieldWithController
+
+Use this variant if you need a standalone controller that doesn't require a parent `Form.Field`. It provides its own field context, making it useful for specialized layouts or direct usage under `Form.Root`.
+
+```tsx
+<Form.FieldWithController
+	control={form.control}
+	name="notifications"
+	render={({ field }) => <Switch checked={field.value} onCheckedChange={field.onChange} />}
+/>
+```
+
 ## Reactive State
 
 To avoid unnecessary full-form re-renders, use the `Form.Watch` and `Form.StateSubscribe` components. They isolate re-renders by subscribing only to the specific field values or form states you need.
 
 ```tsx
 <Form.Root form={form} onSubmit={onSubmit}>
-	<Form.Watch name="accountType">
+	<Form.Watch control={form.control} name="accountType">
 		{(type) =>
 			type === "business" && (
-				<Form.Field name="taxId">
+				<Form.Field control={form.control} name="taxId">
 					<Form.Label>Tax ID</Form.Label>
 					<Form.Input />
 				</Form.Field>
@@ -100,6 +154,12 @@ To avoid unnecessary full-form re-renders, use the `Form.Watch` and `Form.StateS
 	</Accordion>
 	<Accordion title="Form.Field">
 		<auto-type-table path="../../../lib/ui-options.ts" name="FormFieldProps" />
+	</Accordion>
+	<Accordion title="Form.FieldBoundController">
+		<auto-type-table path="../../../lib/ui-options.ts" name="FormFieldBoundControllerProps" />
+	</Accordion>
+	<Accordion title="Form.FieldWithController">
+		<auto-type-table path="../../../lib/ui-options.ts" name="FormFieldWithControllerProps" />
 	</Accordion>
 	<Accordion title="Form.Label">
 		<auto-type-table path="../../../lib/ui-options.ts" name="FormLabelProps" />
@@ -132,9 +192,12 @@ To avoid unnecessary full-form re-renders, use the `Form.Watch` and `Form.StateS
 
 ## Data Attributes
 
-| Component           | Attribute      | Description                                    |
-| :------------------ | :------------- | :--------------------------------------------- |
-| `Form.Field`        | `data-invalid` | Present when the field has a validation error. |
-| `Form.Label`        | `data-invalid` | Matches the field error state.                 |
-| `Form.Input`        | `data-invalid` | Matches the field error state for styling.     |
-| `Form.ErrorMessage` | `data-shake`   | Triggers a visual feedback animation on error. |
+| Component           | Attribute       | Description                                    |
+| :------------------ | :-------------- | :--------------------------------------------- |
+| `Form.Field`        | `data-invalid`  | Present when the field has a validation error. |
+|                     | `data-disabled` | Present when the field is disabled.            |
+| `Form.Label`        | `data-invalid`  | Matches the field error state.                 |
+|                     | `data-disabled` | Matches the field disabled state.              |
+| `Form.Input`        | `data-invalid`  | Matches the field error state for styling.     |
+|                     | `data-disabled` | Matches the field disabled state.              |
+| `Form.ErrorMessage` | `data-index`    | The zero-based index of the error message.     |

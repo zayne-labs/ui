@@ -141,7 +141,7 @@ export function FormField<
 	);
 }
 
-type FormFieldControlledFieldProps<
+export type FormFieldWithControllerProps<
 	TFieldValues extends FieldValues,
 	TName extends FieldPath<TFieldValues>,
 	TTransformedValues = TFieldValues,
@@ -151,7 +151,7 @@ export function FormFieldWithController<
 	TFieldValues extends FieldValues,
 	TName extends FieldPath<TFieldValues>,
 	TTransformedValues = TFieldValues,
->(props: FormFieldControlledFieldProps<TFieldValues, TName, TTransformedValues>) {
+>(props: FormFieldWithControllerProps<TFieldValues, TName, TTransformedValues>) {
 	const formMethods = useFormMethodsContext({ strict: false });
 
 	const { control, name, render, ...restOfProps } = props;
@@ -183,7 +183,7 @@ export function FormFieldWithController<
 	);
 }
 
-type FormFieldBoundControllerProps<TFieldValues extends FieldValues, TTransformedValues> = Omit<
+export type FormFieldBoundControllerProps<TFieldValues extends FieldValues, TTransformedValues> = Omit<
 	ControllerProps<TFieldValues, never, TTransformedValues>,
 	"control" | "name"
 >;
@@ -828,9 +828,9 @@ export function FormErrorMessage<
 
 	return (
 		<FormErrorMessagePrimitive
+			type={type as "root"}
 			control={control}
 			fieldName={errorField ?? (fieldContextValues?.name as NonNullable<typeof errorField>)}
-			type={type as "root"}
 			renderItem={({ props: renderProps, state }) => (
 				<li
 					key={state.errorMessage}

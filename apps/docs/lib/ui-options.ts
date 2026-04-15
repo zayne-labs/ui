@@ -33,6 +33,8 @@ export type {
 	FormSubmitProps,
 	FormWatchProps,
 	FormStateSubscribeProps,
+	FormFieldBoundControllerProps,
+	FormFieldWithControllerProps,
 } from "@zayne-labs/ui-react/ui/form";
 
 export type { AwaitRootProps } from "@zayne-labs/ui-react/common/await";

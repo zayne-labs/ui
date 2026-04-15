@@ -20,3 +20,27 @@ export {
 	FormTextAreaPrimitive as TextAreaPrimitive,
 	FormWatch as Watch,
 } from "./form";
+
+export type {
+	FormDescriptionProps,
+	FormErrorMessagePrimitiveProps,
+	FormErrorMessageProps,
+	FormFieldBoundControllerProps,
+	FormFieldContextProps,
+	FormFieldProps,
+	FormFieldWithControllerProps,
+	FormInputCombinedProps,
+	FormInputGroupProps,
+	FormInputPrimitiveProps,
+	FormInputProps,
+	FormLabelProps,
+	FormRootProps,
+	FormSelectPrimitiveProps,
+	FormSelectProps,
+	FormSideItemProps,
+	FormStateSubscribeProps,
+	FormSubmitProps,
+	FormTextAreaPrimitiveProps,
+	FormTextAreaProps,
+	FormWatchProps,
+} from "./form";
