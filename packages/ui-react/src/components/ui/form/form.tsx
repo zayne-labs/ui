@@ -1,7 +1,7 @@
 "use client";
 
 import { dataAttr, on, toArray } from "@zayne-labs/toolkit-core";
-import { useCallbackRef, useCompareValue, useToggle } from "@zayne-labs/toolkit-react";
+import { ContextError, useCallbackRef, useCompareValue, useToggle } from "@zayne-labs/toolkit-react";
 import {
 	composeRefs,
 	composeTwoEventHandlers,
@@ -152,7 +152,7 @@ export function FormFieldWithController<
 	TName extends FieldPath<TFieldValues>,
 	TTransformedValues = TFieldValues,
 >(props: FormFieldWithControllerProps<TFieldValues, TName, TTransformedValues>) {
-	const formMethods = useFormMethodsContext({ strict: false });
+	const methodsContextValue = useFormMethodsContext({ strict: false });
 
 	const { control, name, render, ...restOfProps } = props;
 
@@ -169,11 +169,19 @@ export function FormFieldWithController<
 		[name, uniqueId]
 	);
 
+	const resolvedControl = control ?? methodsContextValue?.control;
+
+	if (!resolvedControl) {
+		throw new ContextError(
+			"<Form.FormFieldWithController> must be provided with an explicit 'control' prop or used within <Form.Root>"
+		);
+	}
+
 	return (
 		<StrictFormFieldProvider value={fieldContextValue}>
 			<LaxFormFieldProvider value={fieldContextValue}>
 				<Controller
-					control={control ?? (formMethods?.control as never)}
+					control={resolvedControl as never}
 					name={name}
 					render={render as never}
 					{...(restOfProps as object)}
@@ -575,13 +583,15 @@ export function FormSelect(props: FormSelectProps) {
 
 export type FormDescriptionProps = InferProps<"p">;
 
-export function FormDescription(props: FormDescriptionProps) {
-	const { className, ...restOfProps } = props;
+export function FormDescription<TElement extends React.ElementType = "p">(
+	props: PolymorphicPropsStrict<TElement, FormDescriptionProps>
+) {
+	const { as: Element = "p", className, ...restOfProps } = props;
 
 	const { formDescriptionId } = useLaxFormFieldContext() ?? {};
 
 	return (
-		<p
+		<Element
 			data-slot="form-description"
 			data-scope="form"
 			data-part="description"
@@ -645,7 +655,7 @@ type FormErrorMessagePrimitiveOverloadType = {
 };
 
 export const FormErrorMessagePrimitive: FormErrorMessagePrimitiveOverloadType = (props) => {
-	const rootContextValues = useFormMethodsContext({ strict: false });
+	const methodsContextValues = useFormMethodsContext({ strict: false });
 
 	const {
 		children,
@@ -659,8 +669,16 @@ export const FormErrorMessagePrimitive: FormErrorMessagePrimitiveOverloadType = 
 		type = "regular",
 	} = props;
 
+	const resolvedControl = control ?? methodsContextValues?.control;
+
+	if (!resolvedControl) {
+		throw new ContextError(
+			"<Form.ErrorMessagePrimitive> must be provided with an explicit 'control' prop or used within <Form.Root>"
+		);
+	}
+
 	const { errors } = useLaxFormFieldState({
-		control: control ?? (rootContextValues?.control as never),
+		control: resolvedControl as never,
 		name: fieldName,
 	});
 
@@ -883,12 +901,12 @@ export type FormWatchProps<
 > = DiscriminatedRenderProps<TComputedProps["render"]> & Omit<TComputedProps, "render">;
 
 export function FormWatch<
-	TFieldValues extends FieldValues = FieldValues,
+	TFieldValues extends FieldValues = Record<string, unknown>,
 	const TFieldName extends
 		| Array<FieldPath<TFieldValues>>
 		| FieldPath<TFieldValues>
 		| ReadonlyArray<FieldPath<TFieldValues>>
-		| undefined = undefined,
+		| undefined = FieldPath<TFieldValues>,
 	TTransformedValues = TFieldValues,
 	TComputeValue = undefined,
 >(props: FormWatchProps<TFieldValues, TFieldName, TTransformedValues, TComputeValue>) {
@@ -898,9 +916,17 @@ export function FormWatch<
 
 	const methodsContextValue = useFormMethodsContext({ strict: false });
 
+	const resolvedControl = control ?? methodsContextValue?.control;
+
+	if (!resolvedControl) {
+		throw new ContextError(
+			"<Form.Watch> must be provided with an explicit 'control' prop or used within <Form.Root>"
+		);
+	}
+
 	const formValue = useWatch({
 		compute: compute as never,
-		control: methodsContextValue?.control ?? (control as never),
+		control: resolvedControl as never,
 		defaultValue,
 		disabled,
 		exact,
@@ -923,15 +949,26 @@ export type FormStateSubscribeProps<
 	>,
 > = DiscriminatedRenderProps<TComputedProps["render"]> & Omit<TComputedProps, "render">;
 
-export function FormStateSubscribe<TFieldValues extends FieldValues, TTransformedValues = TFieldValues>(
-	props: FormStateSubscribeProps<TFieldValues, TTransformedValues>
-) {
+export function FormStateSubscribe<
+	TFieldValues extends FieldValues = Record<string, unknown>,
+	TTransformedValues = TFieldValues,
+>(props: FormStateSubscribeProps<TFieldValues, TTransformedValues>) {
 	const fieldContextValues = useLaxFormFieldContext();
 
 	const { children, control, disabled, exact, name, render } = props;
 
+	const methodsContextValue = useFormMethodsContext({ strict: false });
+
+	const resolvedControl = control ?? methodsContextValue?.control;
+
+	if (!resolvedControl) {
+		throw new ContextError(
+			"<Form.StateSubscribe> must be provided with an explicit 'control' prop or used within <Form.Root>"
+		);
+	}
+
 	const formState = useFormState({
-		control,
+		control: resolvedControl as never,
 		disabled,
 		exact,
 		name: name ?? (fieldContextValues?.name as never),
@@ -943,3 +980,5 @@ export function FormStateSubscribe<TFieldValues extends FieldValues, TTransforme
 
 	return resolvedChildren;
 }
+
+<FormStateSubscribe>{(formState) => <p>{formState.isValid ? "Valid" : "Invalid"}</p>}</FormStateSubscribe>;

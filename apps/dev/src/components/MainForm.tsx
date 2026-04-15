@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Icon } from "@iconify/react";
+import { waitFor } from "@zayne-labs/toolkit-core";
 import { ForWithWrapper } from "@zayne-labs/ui-react/common/for";
 import { DropZone } from "@zayne-labs/ui-react/ui/drop-zone";
 import { Form } from "@zayne-labs/ui-react/ui/form";
@@ -21,7 +22,11 @@ function MainForm() {
 		resolver: zodResolver(MainFormSchema),
 	});
 
-	const onSubmit = form.handleSubmit((data) => console.info({ formData: data }));
+	const onSubmit = form.handleSubmit(async (data) => {
+		await waitFor(2000);
+
+		console.info({ data });
+	});
 
 	return (
 		<Form.Root
@@ -218,7 +223,6 @@ function MainForm() {
 				</div>
 
 				<Form.StateSubscribe
-					control={form.control}
 					render={(formState) => {
 						return (
 							<Form.Submit

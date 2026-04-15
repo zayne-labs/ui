@@ -61,23 +61,23 @@
 		}
 	},
 	"dependencies": {
-		"@zayne-labs/toolkit-core": "0.12.47",
-		"@zayne-labs/toolkit-react": "0.12.47",
-		"@zayne-labs/toolkit-type-helpers": "0.12.47"
+		"@zayne-labs/toolkit-core": "0.12.49",
+		"@zayne-labs/toolkit-react": "0.12.49",
+		"@zayne-labs/toolkit-type-helpers": "0.12.49"
 	},
 	"devDependencies": {
 		"@arethetypeswrong/cli": "0.18.2",
-		"@size-limit/esbuild-why": "12.0.1",
-		"@size-limit/preset-small-lib": "12.0.1",
+		"@size-limit/esbuild-why": "12.1.0",
+		"@size-limit/preset-small-lib": "12.1.0",
 		"@tailwindcss/cli": "4.2.2",
 		"@total-typescript/ts-reset": "0.6.1",
 		"@types/react": "19.2.14",
 		"@types/react-dom": "19.2.3",
-		"@zayne-labs/prettier-config": "0.13.1",
-		"@zayne-labs/tsconfig": "0.13.1",
+		"@zayne-labs/prettier-config": "0.13.2",
+		"@zayne-labs/tsconfig": "0.13.2",
 		"concurrently": "9.2.1",
 		"cross-env": "10.1.0",
-		"prettier": "3.8.2",
+		"prettier": "3.8.3",
 		"prettier-plugin-classnames": "0.10.1",
 		"prettier-plugin-merge": "0.10.1",
 		"prettier-plugin-tailwindcss": "0.7.2",
@@ -85,10 +85,10 @@
 		"react": "catalog:react:peer",
 		"react-dom": "catalog:react:peer",
 		"react-hook-form": "catalog:react:peer",
-		"size-limit": "12.0.1",
+		"size-limit": "12.1.0",
 		"tailwind-merge": "catalog:react:peer",
 		"tailwindcss": "catalog:react:peer",
-		"tsdown": "0.21.7",
+		"tsdown": "0.21.8",
 		"typescript": "6.0.2"
 	},
 	"publishConfig": {

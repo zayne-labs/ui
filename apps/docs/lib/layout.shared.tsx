@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { source } from "@/lib/source";
 import { packageName, packageScope, repoName, repoOwner } from "./github";
 
-export const baseOptions = () => {
+export const getBaseOptions = () => {
 	return {
 		githubUrl: `https://github.com/${repoOwner}/${repoName}`,
 		nav: {
@@ -23,19 +23,20 @@ export const baseOptions = () => {
 					</p>
 				</div>
 			),
-			transparentMode: "top",
 			url: "/docs",
 		},
 	} satisfies BaseLayoutProps;
 };
 
-export const docsOptions = () => {
+export const getDocsOptions = () => {
 	const npmDataPromise = callApi(`https://registry.npmjs.org/${packageScope}/${packageName}/latest`, {
 		extraFetchOptions: { next: { revalidate: 60 } },
 		schema: { data: z.object({ version: z.string() }) },
 	});
 
-	const descriptionPromise = npmDataPromise.then((result) => `v${result.data?.version ?? "*.*.*"}`);
+	const descriptionPromise = npmDataPromise.then((result) => `v${result.data?.version ?? "x.x.x"}`);
+
+	const baseOptions = getBaseOptions();
 
 	return {
 		links: [
@@ -60,7 +61,8 @@ export const docsOptions = () => {
 		],
 
 		nav: {
-			...baseOptions().nav,
+			...baseOptions.nav,
+			url: "/",
 		},
 
 		sidebar: {
