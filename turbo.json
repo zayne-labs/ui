@@ -7,11 +7,15 @@
 		},
 		"build": {
 			"dependsOn": ["^build"],
-			"outputs": ["dist/**", "apps/docs/.vitepress/dist/**"]
+			"outputs": ["dist/**", "./next/**", "!.next/cache/**", ".vercel"]
+		},
+		"build:docs": {
+			"dependsOn": ["^build"],
+			"outputs": ["dist/**", "./next/**", "!.next/cache/**", ".vercel"]
 		},
 		"build:dev": {
 			"dependsOn": ["^build"],
-			"outputs": ["dist/**", "apps/docs/.vitepress/**"]
+			"outputs": ["dist/**"]
 		},
 		"lint:format": {},
 		"lint:size": {},

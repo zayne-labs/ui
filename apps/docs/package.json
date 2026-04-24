@@ -4,7 +4,7 @@
 	"version": "0.0.0",
 	"private": true,
 	"scripts": {
-		"build": "turbo run --filter=@zayne-labs/ui-react build:dev && next build",
+		"build": "next build",
 		"build:analyze": "next experimental-analyze",
 		"build:examples": "tsx scripts/build-examples.ts",
 		"dev": "next dev",
