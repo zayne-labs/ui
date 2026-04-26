@@ -24,7 +24,6 @@ import type {
 } from "./types";
 import { useCarouselOptions } from "./useCarouselOptions";
 
-// TODO -  Add dragging and swiping support
 export function CarouselRoot<TImages extends ImagesType, TElement extends React.ElementType = "div">(
 	props: PolymorphicPropsStrict<TElement, CarouselRootProps<TImages>>
 ) {

@@ -22,7 +22,7 @@ const registryCache = new LRUCache<string, RegistryItemResult>({
  * @description Checks if an example component exists in the examples directory
  */
 const resolveExamplePath = (name: string): string | null => {
-	const examplesDir = path.join(process.cwd(), "examples");
+	const examplesDir = "apps/docs/examples";
 	const filePath = path.join(examplesDir, `${name}.tsx`);
 
 	return fs.existsSync(filePath) ? filePath : null;
@@ -58,7 +58,7 @@ export const getExampleItem = async (name: string) => {
 	try {
 		const content = await fsPromises.readFile(filePath, "utf8");
 
-		const relativePath = path.relative(process.cwd(), filePath);
+		const relativePath = path.relative("apps/docs", filePath);
 
 		const result = {
 			files: [{ content, path: relativePath }],
@@ -78,7 +78,7 @@ export const getExampleItem = async (name: string) => {
  * @description Reads a file from the workspace root directory
  */
 export const readFileFromRoot = async (relativePath: string): Promise<string> => {
-	const filePath = path.join(process.cwd(), relativePath);
+	const filePath = path.resolve(relativePath);
 
 	return fsPromises.readFile(filePath, "utf8");
 };

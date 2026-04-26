@@ -1,10 +1,8 @@
 "use client";
 
-import { useCallbackRef } from "@zayne-labs/toolkit-react";
 import { isString, type AnyString } from "@zayne-labs/toolkit-type-helpers";
-import { useLayoutEffect, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { ClientGate } from "../client-gate";
 
 type ValidHtmlTags = keyof HTMLElementTagNameMap;
 
@@ -33,43 +31,42 @@ function Teleport(props: TeleportProps) {
 
 	const [portalContainer, setPortalContainer] = useState<HTMLElement | null>(null);
 
-	const stableUpdatePortalContainer = useCallbackRef((destination: HTMLElement | null) => {
-		// eslint-disable-next-line react/set-state-in-effect -- Ignore
-		setPortalContainer(destination);
-	});
+	const destinationRef = useRef<HTMLElement | null>(null);
+
+	const tempWrapperRef = useRef<HTMLDivElement | null>(null);
 
 	useLayoutEffect(() => {
 		if (!to) return;
 
-		const destination = getDestination(to);
+		// eslint-disable-next-line react-hooks/todo -- Ignore for now
+		destinationRef.current ??= getDestination(to);
+
+		if (!destinationRef.current) return;
 
 		if (!insertPosition) {
-			destination && stableUpdatePortalContainer(destination);
+			setPortalContainer(destinationRef.current);
 			return;
 		}
 
-		const tempWrapper = document.createElement("div");
-		tempWrapper.dataset.id = TELEPORT_KEY;
-		tempWrapper.style.display = "contents";
+		// eslint-disable-next-line react-hooks/todo -- Ignore for now
+		tempWrapperRef.current ??= document.createElement("div");
+		tempWrapperRef.current.dataset.id = TELEPORT_KEY;
+		tempWrapperRef.current.style.display = "contents";
 
-		destination?.insertAdjacentElement(insertPosition, tempWrapper);
+		destinationRef.current.insertAdjacentElement(insertPosition, tempWrapperRef.current);
 
 		// const timeoutId = setTimeout(() => {
-		// 	tempWrapper.replaceWith(...tempWrapper.children);
+		// 	tempWrapperRef.current.replaceWith(...tempWrapper.children);
 		// }, 0);
 
-		stableUpdatePortalContainer(tempWrapper);
+		setPortalContainer(tempWrapperRef.current);
 
 		return () => {
-			tempWrapper.remove();
+			tempWrapperRef.current?.remove();
 		};
-	}, [to, insertPosition, stableUpdatePortalContainer]);
+	}, [to, insertPosition]);
 
-	return (
-		<ClientGate>
-			{() => portalContainer && createPortal(children, portalContainer, TELEPORT_KEY)}
-		</ClientGate>
-	);
+	return portalContainer && createPortal(children, portalContainer, TELEPORT_KEY);
 }
 
 export { Teleport };

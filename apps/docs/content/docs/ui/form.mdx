@@ -70,7 +70,7 @@ While `Form.Root` shares the internal context required to make the `control` and
 Providing these props directly allows TypeScript to link your components to your specific form schema, enabling full type safety and robust auto-completion for every field path. Note that while sub-components can inherit the name from their parent `Form.Field`, the field itself always requires a `name` prop to function.
 
 ```tsx
-// ✅ Recommended: schema-aware name prop
+// Recommended: schema-aware name prop
 <Form.Field control={form.control} name="email">
 	<Form.Label>Email</Form.Label>
 	<Form.Input />
@@ -78,7 +78,7 @@ Providing these props directly allows TypeScript to link your components to your
 ```
 
 ```tsx
-// ⚠️ Optional: "name" falls back to generic string
+// Optional: "name" falls back to generic string
 <Form.Field name="email">
 	<Form.Label>Email</Form.Label>
 	<Form.Input />

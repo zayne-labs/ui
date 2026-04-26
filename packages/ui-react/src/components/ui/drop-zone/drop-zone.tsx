@@ -373,9 +373,7 @@ export function DropZoneFileItemProgress<TElement extends React.ElementType = "s
 		...restOfProps
 	} = props;
 
-	const classNames = classNamesProp as
-		| UnionToIntersection<NonNullable<typeof classNamesProp>>
-		| undefined;
+	const classNames: UnionToIntersection<NonNullable<typeof classNamesProp>> | undefined = classNamesProp;
 
 	const fileItemContextValue = useFileItemContext();
 

@@ -11,7 +11,7 @@ import {
 	type InferProps,
 	type PolymorphicPropsStrict,
 } from "@zayne-labs/toolkit-react/utils";
-import { defineEnum, type AnyString } from "@zayne-labs/toolkit-type-helpers";
+import { defineEnum, isFunction, type AnyString } from "@zayne-labs/toolkit-type-helpers";
 import { Fragment as ReactFragment, useEffect, useId, useMemo, useRef } from "react";
 import {
 	Controller,
@@ -562,7 +562,7 @@ export function FormInput(props: FormInputCombinedProps) {
 
 	return (
 		<SelectedInput
-			type={type as never}
+			type={type}
 			name={name}
 			{...registerProps}
 			{...(restOfProps as NonNullable<unknown>)}
@@ -867,20 +867,36 @@ export function FormErrorMessage<
 	);
 }
 
-export type FormSubmitProps = InferProps<"button"> & {
+export type FormSubmitProps<TFieldValues extends FieldValues, TTransformedValues> = Omit<
+	InferProps<"button">,
+	"children"
+> & {
 	asChild?: boolean;
-};
+} & (
+		| {
+				children: React.ReactNode;
+				control?: never;
+		  }
+		| {
+				children: StateSubscribeProps<TFieldValues, TTransformedValues>["render"];
+				control?: Control<TFieldValues, unknown, TTransformedValues>;
+		  }
+	);
 
-export function FormSubmit<TElement extends React.ElementType = "button">(
-	props: PolymorphicPropsStrict<TElement, FormSubmitProps>
-) {
-	const { as: Element = "button", asChild, children, type = "submit", ...restOfProps } = props;
+export function FormSubmit<
+	TElement extends React.ElementType = "button",
+	TFieldValues extends FieldValues = Record<string, unknown>,
+	TTransformedValues = TFieldValues,
+>(props: PolymorphicPropsStrict<TElement, FormSubmitProps<TFieldValues, TTransformedValues>>) {
+	const { as: Element = "button", asChild, children, control, type = "submit", ...restOfProps } = props;
 
 	const Component = asChild ? Slot.Root : Element;
 
 	return (
 		<Component data-slot="form-submit" data-part="submit" data-scope="form" type={type} {...restOfProps}>
-			{children}
+			{isFunction(children) ?
+				<FormStateSubscribe control={control} render={children} />
+			:	children}
 		</Component>
 	);
 }
@@ -976,7 +992,7 @@ export function FormStateSubscribe<
 
 	const selectedChildren = typeof children === "function" ? children : render;
 
-	const resolvedChildren = selectedChildren(formState as never);
+	const resolvedChildren = selectedChildren(formState);
 
 	return resolvedChildren;
 }

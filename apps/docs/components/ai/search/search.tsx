@@ -422,7 +422,7 @@ export function AISearchTrigger(
 			data-state={open ? "open" : "closed"}
 			className={cnMerge(
 				position === "float" && [
-					`fixed inset-e-[calc(--spacing(4)+var(--removed-body-scroll-bar-size,0px))] bottom-4 z-20
+					`fixed inset-e-[calc(--spacing(4)+var(--removed-body-scroll-bar-size,0))] bottom-4 z-20
 					w-24 gap-3 shadow-lg transition-[translate,opacity]`,
 					open && "translate-y-10 opacity-0",
 				],

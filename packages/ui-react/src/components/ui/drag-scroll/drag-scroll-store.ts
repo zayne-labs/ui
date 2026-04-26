@@ -187,7 +187,7 @@ export const createDragScrollStore = (initStoreValues: InitStoreValues) => {
 			},
 
 			setListRef: (element) => {
-				listRef.current = element as HTMLElement;
+				listRef.current = element;
 
 				if (!element) return;
 
