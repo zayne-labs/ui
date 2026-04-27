@@ -1,75 +1,35 @@
 <h1 align="center">Zayne UI</h1>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/zayne-labs/ui/refs/heads/main/apps/docs/public/logo.png" alt="zayne ui logo" width="30%" />
+  <img src="https://raw.githubusercontent.com/zayne-labs/ui/refs/heads/main/apps/docs/public/logo.png" alt="Zayne UI Logo" width="30%">
 </p>
 
 <p align="center">
-   <!-- <a href="https://deno.bundlejs.com/badge?q=@zayne-labs/callapi,@zayne-labs/callapi&treeshake=%5B*%5D,%5B%7B+createFetchClient+%7D%5D&config=%7B%22compression%22:%7B%22type%22:%22brotli%22,%22quality%22:11%7D%7D"><img src="https://deno.bundlejs.com/badge?q=@zayne-labs/callapi,@zayne-labs/callapi&treeshake=%5B*%5D,%5B%7B+createFetchClient+%7D%5D&config=%7B%22compression%22:%7B%22type%22:%22brotli%22,%22quality%22:11%7D%7D" alt="bundle size"></a> -->
-   <a href="https://www.npmjs.com/package/@zayne-labs/ui-react"><img src="https://img.shields.io/npm/v/@zayne-labs/ui-react?style=flat&color=EFBA5F" alt="npm version"></a>
-   <a href="https://github.com/zayne-labs/ui-react/blob/master/LICENSE"><img src="https://img.shields.io/npm/l/@zayne-labs/ui-react?style=flat&color=EFBA5F" alt="license"></a>
-   <a href="https://www.npmjs.com/package/@zayne-labs/ui-react"><img src="https://img.shields.io/npm/dm/@zayne-labs/ui-react?style=flat&color=EFBA5F" alt="downloads per month"></a>
-   <a href="https://github.com/zayne-labs/ui/graphs/commit-activity"><img src="https://img.shields.io/github/commit-activity/m/zayne-labs/ui?style=flat&color=EFBA5F" alt="commit activity"></a>
-   <a href="https://deepwiki.com/zayne-labs/ui"><img src="https://deepwiki.com/badge.svg" alt="Ask DeepWiki"></a>
- </p>
+  <!-- <a href="https://deno.bundlejs.com/badge?q=@zayne-labs/ui-react&treeshake=%5B*%5D&config=%7B%22compression%22:%7B%22type%22:%22brotli%22,%22quality%22:11%7D%7D"><img src="https://deno.bundlejs.com/badge?q=@zayne-labs/ui-react&treeshake=%5B*%5D&config=%7B%22compression%22:%7B%22type%22:%22brotli%22,%22quality%22:11%7D%7D" alt="bundle size"></a> -->
+  <a href="https://www.npmjs.com/package/@zayne-labs/ui-react"><img src="https://img.shields.io/npm/v/@zayne-labs/ui-react?style=flat&color=EFBA5F" alt="npm version"></a>
+  <a href="https://github.com/zayne-labs/ui/blob/master/LICENSE"><img src="https://img.shields.io/npm/l/@zayne-labs/ui-react?style=flat&color=EFBA5F" alt="license"></a>
+  <a href="https://www.npmjs.com/package/@zayne-labs/ui-react"><img src="https://img.shields.io/npm/dm/@zayne-labs/ui-react?style=flat&color=EFBA5F" alt="downloads per month"></a>
+  <a href="https://github.com/zayne-labs/ui/graphs/commit-activity"><img src="https://img.shields.io/github/commit-activity/m/zayne-labs/ui?style=flat&color=EFBA5F" alt="commit activity"></a>
+  <a href="https://deepwiki.com/zayne-labs/ui"><img src="https://deepwiki.com/badge.svg" alt="Ask DeepWiki"></a>
+</p>
 
-Composable, headless UI components and utilities built for flexibility and great developer experience. Currently supports React, with more frameworks coming soon.
+<p align="center">
+  <b>Composable, headless UI components and utilities built for flexibility and great developer experience.</b>
+</p>
 
-## Features
+<p align="center">
+  <a href="https://zayne-labs-ui.vercel.app"><b>Documentation</b></a> ·
+  <a href="https://zayne-labs-ui.vercel.app/docs/getting-started"><b>Getting Started</b></a> ·
+  <a href="https://github.com/zayne-labs/ui/tree/main/packages"><b>Packages</b></a>
+</p>
 
-- Headless components - bring your own styles
-- Composable API design
-- Tree-shakeable ESM modules
-- TypeScript-first with full type safety
-- Built on top of [@zayne-labs/toolkit](https://github.com/zayne-labs/toolkit)
+---
 
-## Packages
+## Why Zayne UI?
 
-### @zayne-labs/ui-react
+Building UI components from scratch is tedious. Pre-styled component libraries lock you into their design system. Zayne UI gives you the best of both worlds: **fully functional, accessible components that you style however you want.**
 
-React implementation of the UI library. More framework adapters coming in the future.
-
-## Components
-
-### UI Components
-
-Headless UI components for common interface patterns:
-
-- **Card** - Composable card layouts
-- **Carousel** - Customizable slideshow component
-- **DragScroll** - Add drag-to-scroll behavior to containers
-- **DropZone** - File upload with drag-and-drop support
-- **Form** - Form handling with validation (wrapper around react-hook-form)
-
-### Common Components
-
-Utility components for declarative UI patterns:
-
-- **Await** - Handle async states declaratively
-- **ClientGate** - Client-side only rendering guard
-- **ErrorBoundary** - Graceful error handling
-- **For** - List rendering with empty states
-- **Presence** - Animation presence detection
-- **Show** - Conditional rendering
-- **Slot** - Component composition with slots
-- **SuspenseWithBoundary** - Combined Suspense and ErrorBoundary
-- **Switch** - Pattern matching for conditional rendering
-- **Teleport** - Portal-based content teleportation
-
-## Installation
-
-```bash
-# Using pnpm (recommended)
-pnpm add @zayne-labs/ui-react
-
-# Using npm
-npm install @zayne-labs/ui-react
-
-# Using yarn
-yarn add @zayne-labs/ui-react
-```
-
-## Usage
+**Headless. Composable. TypeScript-first. Zero style opinions.**
 
 ```tsx
 import { Switch } from "@zayne-labs/ui-react/common/switch";
@@ -95,21 +55,191 @@ export default function App() {
 }
 ```
 
-```tsx
-import { For } from "@zayne-labs/ui-react/common/for";
+## Features
 
-export function UserList({ users }) {
-	return (
-		<For each={users} fallback={<p>No users found</p>}>
-			{(user) => <div key={user.id}>{user.name}</div>}
-		</For>
-	);
-}
+### Headless Components
+
+Bring your own styles. No CSS to override, no design tokens to fight with.
+
+```tsx
+import { Card } from "@zayne-labs/ui-react/ui/card";
+
+<Card.Root className="flex flex-col gap-4">
+	<Card.Header>
+		<Card.Title>Your Title</Card.Title>
+	</Card.Header>
+	<Card.Content>Your content here</Card.Content>
+</Card.Root>;
 ```
 
-## Documentation
+### Composable API
 
-Visit our [documentation site](https://zayne-labs-ui.vercel.app) for detailed usage instructions, examples, and API references.
+Build complex UIs from simple, reusable pieces.
+
+```tsx
+import { For } from "@zayne-labs/ui-react/common/for";
+import { Show } from "@zayne-labs/ui-react/common/show";
+
+<For each={users} fallback={<p>No users found</p>}>
+	{(user) => (
+		<div key={user.id}>
+			<Show when={user.isActive} fallback={<span>Inactive</span>}>
+				<span>Active</span>
+			</Show>
+			{user.name}
+		</div>
+	)}
+</For>;
+```
+
+### TypeScript-First
+
+Full type safety and inference everywhere.
+
+```tsx
+import { Await } from "@zayne-labs/ui-react/common/await";
+
+// Fully typed data and error
+<Await promise={fetchUser()}>
+	{({ data, error }) => (
+		<Show when={error} fallback={<div>{data.name}</div>}>
+			<div>Error: {error.message}</div>
+		</Show>
+	)}
+</Await>;
+```
+
+### Declarative Patterns
+
+Write UI logic the way you think about it.
+
+```tsx
+import { Switch } from "@zayne-labs/ui-react/common/switch";
+
+<Switch.Root value={userRole}>
+	<Switch.Match when="admin">
+		<AdminDashboard />
+	</Switch.Match>
+
+	<Switch.Match when="user">
+		<UserDashboard />
+	</Switch.Match>
+
+	<Switch.Default>
+		<GuestView />
+	</Switch.Default>
+</Switch.Root>;
+```
+
+### Error Boundaries
+
+Graceful error handling built-in.
+
+```tsx
+import { ErrorBoundary } from "@zayne-labs/ui-react/common/error-boundary";
+
+<ErrorBoundary fallback={(error) => <div>Something went wrong: {error.message}</div>}>
+	<YourComponent />
+</ErrorBoundary>;
+```
+
+### Portal Support
+
+Render content anywhere in the DOM tree.
+
+```tsx
+import { Teleport } from "@zayne-labs/ui-react/common/teleport";
+
+<Teleport to="body">
+	<Modal />
+</Teleport>;
+```
+
+And so much more
+
+See the [full documentation](https://zayne-labs-ui.vercel.app/docs) for the complete list of components and features.
+
+## Components
+
+### UI Components
+
+Headless UI components for common interface patterns:
+
+- **Card** - Composable card layouts with header, content, and footer sections
+- **Carousel** - Customizable slideshow component with navigation controls
+- **DragScroll** - Add drag-to-scroll behavior to any container
+- **DropZone** - File upload with drag-and-drop support and validation
+- **Form** - Powerful form handling with validation (wrapper around react-hook-form)
+
+### Common Components
+
+Utility components for declarative UI patterns:
+
+- **Await** - Handle async states declaratively with loading, error, and success states
+- **ClientGate** - Client-side only rendering guard for SSR apps
+- **ErrorBoundary** - Graceful error handling with fallback UI
+- **For** - List rendering with empty states and keyed items
+- **Presence** - Animation presence detection for enter/exit transitions
+- **Show** - Conditional rendering with fallback support
+- **Slot** - Component composition with slots for flexible layouts
+- **SuspenseWithBoundary** - Combined Suspense and ErrorBoundary for async components
+- **Switch** - Pattern matching for conditional rendering with multiple cases
+- **Teleport** - Portal-based content teleportation to any DOM node
+
+## Installation
+
+```bash
+npm install @zayne-labs/ui-react
+```
+
+```tsx
+import { For } from "@zayne-labs/ui-react/common/for";
+import { Switch } from "@zayne-labs/ui-react/common/switch";
+import { Card } from "@zayne-labs/ui-react/ui/card";
+
+// Declarative conditional rendering
+<Switch.Root value={status}>
+	<Switch.Match when="loading">Loading...</Switch.Match>
+	<Switch.Match when="error">Error occurred</Switch.Match>
+	<Switch.Default>Content loaded!</Switch.Default>
+</Switch.Root>;
+
+// List rendering with fallback
+<For each={users} fallback={<p>No users found</p>}>
+	{(user) => <div key={user.id}>{user.name}</div>}
+</For>;
+
+// Composable card component
+<Card.Root>
+	<Card.Header>
+		<Card.Title>Card Title</Card.Title>
+	</Card.Header>
+	<Card.Content>Your content here</Card.Content>
+</Card.Root>;
+```
+
+### CDN
+
+```html
+<script type="module">
+	import { Switch } from "https://esm.run/@zayne-labs/ui-react@latest/common/switch";
+</script>
+```
+
+## What makes it worth considering?
+
+- **Headless** - Complete styling freedom, no CSS to override
+- **TypeScript-first** - Full type inference and safety everywhere
+- **Composable** - Build complex UIs from simple, reusable pieces
+- **Tree-shakeable** - Only bundle what you use
+- **Framework-ready** - React now, more frameworks coming soon
+- **Zero dependencies** - Built on top of [@zayne-labs/toolkit](https://github.com/zayne-labs/toolkit)
+
+## Packages
+
+### @zayne-labs/ui-react
+
+React implementation of the UI library. More framework adapters coming in the future.
 
 ## Development
 
@@ -147,4 +277,4 @@ Contributions are welcome! Check out the [contributing guidelines](https://githu
 
 ## License
 
-MIT © Ryan Zayne
+MIT © [Ryan Zayne](https://github.com/ryan-zayne)
