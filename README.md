@@ -1,8 +1,17 @@
-# @zayne-labs/ui
+<h1 align="center">Zayne UI</h1>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/zayne-labs/ui/refs/heads/main/apps/docs/public/logo.png" alt="zayne ui logo" width="80" />
+  <img src="https://raw.githubusercontent.com/zayne-labs/ui/refs/heads/main/apps/docs/public/logo.png" alt="zayne ui logo" width="30%" />
 </p>
+
+<p align="center">
+   <!-- <a href="https://deno.bundlejs.com/badge?q=@zayne-labs/callapi,@zayne-labs/callapi&treeshake=%5B*%5D,%5B%7B+createFetchClient+%7D%5D&config=%7B%22compression%22:%7B%22type%22:%22brotli%22,%22quality%22:11%7D%7D"><img src="https://deno.bundlejs.com/badge?q=@zayne-labs/callapi,@zayne-labs/callapi&treeshake=%5B*%5D,%5B%7B+createFetchClient+%7D%5D&config=%7B%22compression%22:%7B%22type%22:%22brotli%22,%22quality%22:11%7D%7D" alt="bundle size"></a> -->
+   <a href="https://www.npmjs.com/package/@zayne-labs/ui-react"><img src="https://img.shields.io/npm/v/@zayne-labs/ui-react?style=flat&color=EFBA5F" alt="npm version"></a>
+   <a href="https://github.com/zayne-labs/ui-react/blob/master/LICENSE"><img src="https://img.shields.io/npm/l/@zayne-labs/ui-react?style=flat&color=EFBA5F" alt="license"></a>
+   <a href="https://www.npmjs.com/package/@zayne-labs/ui-react"><img src="https://img.shields.io/npm/dm/@zayne-labs/ui-react?style=flat&color=EFBA5F" alt="downloads per month"></a>
+   <a href="https://github.com/zayne-labs/ui/graphs/commit-activity"><img src="https://img.shields.io/github/commit-activity/m/zayne-labs/ui?style=flat&color=EFBA5F" alt="commit activity"></a>
+   <a href="https://deepwiki.com/zayne-labs/ui"><img src="https://deepwiki.com/badge.svg" alt="Ask DeepWiki"></a>
+ </p>
 
 Composable, headless UI components and utilities built for flexibility and great developer experience. Currently supports React, with more frameworks coming soon.
 
