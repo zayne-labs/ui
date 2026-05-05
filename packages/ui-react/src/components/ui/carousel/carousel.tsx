@@ -196,16 +196,33 @@ export function CarouselItem(props: CarouselItemProps) {
 }
 
 export function CarouselCaption<TElement extends React.ElementType = "div">(
-	props: PolymorphicPropsStrict<TElement, OtherCarouselProps>
+	props: PolymorphicPropsStrict<
+		TElement,
+		OtherCarouselProps & {
+			placement?:
+				| "center"
+				| Exclude<`${"bottom" | "center" | "top"}-${"center" | "left" | "right"}`, "center-center">;
+		}
+	>
 ) {
-	const { as: Element = "div", children, className } = props;
+	const { as: Element = "div", children, className, placement = "bottom-left" } = props;
 
 	return (
 		<Element
 			data-slot="carousel-caption"
 			data-scope="carousel"
 			data-part="caption"
-			className={cnMerge("absolute z-10", className)}
+			className={cnMerge(
+				"absolute z-10",
+				placement === "bottom-center" && "bottom-0 left-1/2 -translate-x-1/2",
+				placement === "bottom-left" && "bottom-0 left-0",
+				placement === "bottom-right" && "right-0 bottom-0",
+				placement === "center" && "top-1/2 left-1/2 -translate-1/2",
+				placement === "top-center" && "top-0 left-1/2 -translate-x-1/2",
+				placement === "top-left" && "top-0 left-0",
+				placement === "top-right" && "top-0 right-0",
+				className
+			)}
 		>
 			{children}
 		</Element>

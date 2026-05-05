@@ -58,8 +58,8 @@ function CarouselDemo() {
 
 						<Carousel.Caption
 							as="article"
-							className="bottom-0 left-0 flex w-full flex-col gap-3 p-8 text-white md:py-13 md:pr-12
-								md:pl-16"
+							placement="bottom-left"
+							className="flex w-full flex-col gap-3 p-8 text-white md:py-13 md:pr-12 md:pl-16"
 						>
 							<div className="flex items-center gap-2">
 								<span

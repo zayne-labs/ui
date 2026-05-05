@@ -86,11 +86,10 @@ function SlotClone(props: SlotCloneProps) {
 
 	const childRef = resolvedChild.props.ref as React.Ref<HTMLElement>;
 
-	const ref = composeRefs(forwardedRef, childRef);
-
 	const clonedProps = {
 		...mergeProps(restOfSlotProps, resolvedChild.props),
-		...(resolvedChild.type !== ReactFragment && { ref }),
+		// eslint-disable-next-line react/refs -- Ignore
+		...(resolvedChild.type !== ReactFragment && { ref: composeRefs(forwardedRef, childRef) }),
 	};
 
 	return cloneElement(resolvedChild, clonedProps);

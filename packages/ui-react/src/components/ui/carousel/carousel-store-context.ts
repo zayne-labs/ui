@@ -71,7 +71,6 @@ const useCarousel = <TImages extends ImagesType>(props: Omit<CarouselRootProps<T
 		[images, savedOnSlideBtnClick]
 	);
 
-	// eslint-disable-next-line react/component-hook-factories -- Ignore
 	const useCarouselStore: typeof useCarouselStoreContext = (selector) => {
 		// eslint-disable-next-line react-hooks/hooks -- Ignore
 		return useStore(carouselStore, selector);

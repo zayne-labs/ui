@@ -566,6 +566,7 @@ export function FormInput(props: FormInputCombinedProps) {
 			name={name}
 			{...registerProps}
 			{...(restOfProps as NonNullable<unknown>)}
+			// eslint-disable-next-line react/refs -- Ignore
 			ref={composeRefs(registerProps?.ref, ref)}
 			onChange={composeTwoEventHandlers(registerProps?.onChange, onChange)}
 			onBlur={composeTwoEventHandlers(registerProps?.onBlur, onBlur)}

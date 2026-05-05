@@ -13,6 +13,7 @@ export type ComponentPreviewProps = React.ComponentPropsWithoutRef<"div"> & {
 export function ComponentPreview(props: ComponentPreviewProps) {
 	const { align = "center", className, fullPreview, name, preventPreviewFocus, scalePreview } = props;
 
+	// eslint-disable-next-line react/static-components
 	const Component = getExampleComponent(name);
 
 	return (
@@ -37,7 +38,7 @@ export function ComponentPreview(props: ComponentPreviewProps) {
 				)}
 			>
 				<Suspense fallback={<p className="text-fd-muted-foreground">Loading...</p>}>
-					{/* eslint-disable-next-line react-hooks/static-components */}
+					{/* eslint-disable-next-line react/static-components */}
 					<Component />
 				</Suspense>
 			</div>

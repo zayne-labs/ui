@@ -35,7 +35,6 @@ export const useDragScroll = <TContainerElement extends HTMLElement = HTMLElemen
 	const actions = storeApi.getState().actions;
 
 	/* eslint-disable react-hooks/hooks -- ignore */
-	// eslint-disable-next-line react/component-hook-factories -- Ignore
 	const useDragScrollStore: UseDragScrollResult<TContainerElement>["useDragScrollStore"] = (selector) => {
 		return useStore(storeApi as never, selector);
 	};
