@@ -893,11 +893,30 @@ export function FormSubmit<
 
 	const Component = asChild ? Slot.Root : Element;
 
+	const methodsContextValue = useFormMethodsContext({ strict: false });
+
+	const resolvedControl = control ?? methodsContextValue?.control;
+
+	if (isFunction(children) && !resolvedControl) {
+		throw new ContextError(
+			"<Form.Submit> must be provided with an explicit 'control' prop or used within <Form.Root> if a render prop is passed as children"
+		);
+	}
+
+	// eslint-disable-next-line react-hooks/hooks -- Ignore for now
+	const getFormState = isFunction(children) && resolvedControl ? useFormState : () => ({}) as never;
+
+	// eslint-disable-next-line react-hooks/hooks -- Ignore for now
+	const formState = getFormState<TFieldValues>({
+		control: resolvedControl as never,
+		disabled: restOfProps.disabled,
+	});
+
+	const resolvedChildren = isFunction(children) ? children(formState) : children;
+
 	return (
 		<Component data-slot="form-submit" data-part="submit" data-scope="form" type={type} {...restOfProps}>
-			{isFunction(children) ?
-				<FormStateSubscribe control={control} render={children} />
-			:	children}
+			{resolvedChildren}
 		</Component>
 	);
 }
@@ -997,5 +1016,3 @@ export function FormStateSubscribe<
 
 	return resolvedChildren;
 }
-
-<FormStateSubscribe>{(formState) => <p>{formState.isValid ? "Valid" : "Invalid"}</p>}</FormStateSubscribe>;
