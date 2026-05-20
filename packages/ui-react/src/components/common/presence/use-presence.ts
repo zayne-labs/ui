@@ -1,3 +1,5 @@
+/* eslint-disable react-you-might-not-need-an-effect/no-event-handler -- False Positive */
+
 import { on } from "@zayne-labs/toolkit-core";
 import { useCallbackRef, useToggle } from "@zayne-labs/toolkit-react";
 import type { InferProps } from "@zayne-labs/toolkit-react/utils";
