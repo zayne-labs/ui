@@ -184,22 +184,20 @@ function MainForm() {
 						each={[
 							{
 								desc: "Weekly summaries and activity",
-								id: 0,
 								label: "Email Notifications",
 								value: "email",
 							},
 							{
 								desc: "Instant alerts on your device",
-								id: 1,
 								label: "Push Updates",
 								value: "push",
 							},
 						]}
-						renderItem={(opt) => (
+						renderItem={(opt, index) => (
 							<Form.Field
-								key={opt.id}
+								key={index}
 								control={form.control}
-								name={`notifications.${opt.id}`}
+								name={`notifications.${index}`}
 								className="group flex flex-row items-start gap-3 rounded-xl p-2 transition-colors
 									hover:bg-white"
 							>
@@ -209,13 +207,14 @@ function MainForm() {
 									className="mt-1 size-4 rounded-sm border-slate-300 text-indigo-600
 										focus:ring-indigo-500"
 								/>
+
 								<div className="pointer-events-none flex grow flex-col gap-0.5">
 									<Form.Label
 										className="text-sm/tight font-semibold tracking-tight text-slate-900"
 									>
 										{opt.label}
 									</Form.Label>
-									<span className="text-xs text-slate-500">{opt.desc}</span>
+									<p className="text-xs text-slate-500">{opt.desc}</p>
 								</div>
 							</Form.Field>
 						)}

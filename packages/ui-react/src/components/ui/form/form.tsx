@@ -43,6 +43,7 @@ import {
 	type FieldState,
 	type FormRootContextType,
 } from "./form-context";
+import { FieldContext } from "./form-parts";
 import { getEyeIcon, getFieldErrorMessage } from "./utils";
 
 export type FormRootProps<TFieldValues extends FieldValues, TTransformedValues> = InferProps<"form">
@@ -81,6 +82,7 @@ export function FormRoot<TFieldValues extends FieldValues, TTransformedValues = 
 }
 
 export type FormFieldProps<
+	TElement extends React.ElementType,
 	TControl,
 	TFieldValues extends FieldValues,
 	TTransformedValues,
@@ -94,16 +96,28 @@ export type FormFieldProps<
 		name: FieldPath<TFieldValues>;
 	})
 	& (
-		| (InferProps<"div"> & { withWrapper?: true })
-		| { children: React.ReactNode; className?: never; withWrapper: false }
+		| PolymorphicPropsStrict<
+				TElement,
+				{ children: React.ReactNode; className?: string; withWrapper?: true }
+		  >
+		| { as?: never; children: React.ReactNode; className?: never; withWrapper: false }
 	);
 
 export function FormField<
 	TControl,
+	TElement extends React.ElementType = "div",
 	TFieldValues extends FieldValues = FieldValues,
 	TTransformedValues = TFieldValues,
->(props: FormFieldProps<TControl, TFieldValues, TTransformedValues>) {
-	const { children, className, control, name, withWrapper = true } = props;
+>(props: FormFieldProps<TElement, TControl, TFieldValues, TTransformedValues>) {
+	const {
+		as: Element = "div",
+		children,
+		className,
+		control,
+		name,
+		withWrapper = true,
+		...restOfProps
+	} = props;
 
 	const { isDisabled, isInvalid } = useLaxFormFieldState({ control, name });
 
@@ -120,7 +134,7 @@ export function FormField<
 		[name, uniqueId]
 	);
 
-	const WrapperElement = withWrapper ? "div" : ReactFragment;
+	const WrapperElement = withWrapper ? Element : ReactFragment;
 
 	const wrapperElementProps = withWrapper && {
 		className: cnMerge("flex flex-col gap-2", className),
@@ -131,6 +145,7 @@ export function FormField<
 		"data-disabled": dataAttr(isDisabled),
 		"data-invalid": dataAttr(isInvalid),
 		/* eslint-enable perfectionist/sort-objects -- order of attributes does not matter */
+		...restOfProps,
 	};
 	return (
 		<StrictFormFieldProvider value={fieldContextValue}>
@@ -141,35 +156,39 @@ export function FormField<
 	);
 }
 
+type ModifiedControllerProps<
+	TFieldValues extends FieldValues,
+	TName extends FieldPath<TFieldValues>,
+	TTransformedValues = TFieldValues,
+	TControllerProps extends ControllerProps<TFieldValues, TName, TTransformedValues> = ControllerProps<
+		TFieldValues,
+		TName,
+		TTransformedValues
+	>,
+> = Omit<TControllerProps, "render"> & {
+	render: (
+		ctx: Parameters<TControllerProps["render"]>[0] & {
+			fieldContext: FieldContextType;
+		}
+	) => ReturnType<TControllerProps["render"]>;
+};
+
 export type FormFieldWithControllerProps<
 	TFieldValues extends FieldValues,
 	TName extends FieldPath<TFieldValues>,
 	TTransformedValues = TFieldValues,
-> = ControllerProps<TFieldValues, TName, TTransformedValues>;
+> = ModifiedControllerProps<TFieldValues, TName, TTransformedValues>;
 
 export function FormFieldWithController<
 	TFieldValues extends FieldValues,
 	TName extends FieldPath<TFieldValues>,
 	TTransformedValues = TFieldValues,
 >(props: FormFieldWithControllerProps<TFieldValues, TName, TTransformedValues>) {
-	const methodsContextValue = useFormMethodsContext({ strict: false });
-
 	const { control, name, render, ...restOfProps } = props;
 
-	const uniqueId = useId();
+	const methodsContextValue = useFormMethodsContext({ strict: false });
 
-	const fieldContextValue = useMemo(
-		() =>
-			({
-				formDescriptionId: `${name}-(${uniqueId})-form-item-description`,
-				formItemId: `${name}-(${uniqueId})-form-item`,
-				formMessageId: `${name}-(${uniqueId})-form-item-message`,
-				name,
-			}) satisfies FieldContextType,
-		[name, uniqueId]
-	);
-
-	const resolvedControl = control ?? methodsContextValue?.control;
+	const resolvedControl = (control ?? methodsContextValue?.control) as typeof control;
 
 	if (!resolvedControl) {
 		throw new ContextError(
@@ -178,21 +197,23 @@ export function FormFieldWithController<
 	}
 
 	return (
-		<StrictFormFieldProvider value={fieldContextValue}>
-			<LaxFormFieldProvider value={fieldContextValue}>
-				<Controller
-					control={resolvedControl as never}
-					name={name}
-					render={render as never}
-					{...(restOfProps as object)}
-				/>
-			</LaxFormFieldProvider>
-		</StrictFormFieldProvider>
+		<FormField name={name} withWrapper={false}>
+			<FieldContext>
+				{(fieldContextValue) => (
+					<Controller
+						control={resolvedControl}
+						name={name}
+						render={(ctx) => render({ ...ctx, fieldContext: fieldContextValue })}
+						{...(restOfProps as object)}
+					/>
+				)}
+			</FieldContext>
+		</FormField>
 	);
 }
 
 export type FormFieldBoundControllerProps<TFieldValues extends FieldValues, TTransformedValues> = Omit<
-	ControllerProps<TFieldValues, never, TTransformedValues>,
+	ModifiedControllerProps<TFieldValues, FieldPath<TFieldValues>, TTransformedValues>,
 	"control" | "name"
 >;
 
@@ -201,11 +222,16 @@ export function FormFieldBoundController<
 	TTransformedValues = TFieldValues,
 >(props: FormFieldBoundControllerProps<TFieldValues, TTransformedValues>) {
 	const { control } = useFormMethodsContext();
-	const { name } = useStrictFormFieldContext();
+	const fieldContextValue = useStrictFormFieldContext();
 	const { render, ...restOfProps } = props;
 
 	return (
-		<Controller name={name} control={control} render={render as never} {...(restOfProps as object)} />
+		<Controller
+			name={fieldContextValue.name as FieldPath<TFieldValues>}
+			control={control as Control<TFieldValues, unknown, TTransformedValues>}
+			render={(ctx) => render({ ...ctx, fieldContext: fieldContextValue })}
+			{...(restOfProps as object)}
+		/>
 	);
 }
 
@@ -582,12 +608,15 @@ export function FormSelect(props: FormSelectProps) {
 	return <FormInput {...props} type="select" />;
 }
 
-export type FormDescriptionProps = InferProps<"p">;
+export type FormDescriptionProps<TElement extends React.ElementType = "p"> = PolymorphicPropsStrict<
+	TElement,
+	InferProps<TElement>
+>;
 
 export function FormDescription<TElement extends React.ElementType = "p">(
-	props: PolymorphicPropsStrict<TElement, FormDescriptionProps>
+	props: FormDescriptionProps<TElement>
 ) {
-	const { as: Element = "p", className, ...restOfProps } = props;
+	const { as: Element = "p", ...restOfProps } = props;
 
 	const { formDescriptionId } = useLaxFormFieldContext() ?? {};
 
@@ -597,8 +626,8 @@ export function FormDescription<TElement extends React.ElementType = "p">(
 			data-scope="form"
 			data-part="description"
 			id={formDescriptionId}
-			className={cnMerge("text-[12px]", className)}
 			{...restOfProps}
+			className={cnMerge("text-[12px]", restOfProps.className)}
 		/>
 	);
 }
@@ -814,25 +843,27 @@ export const FormErrorMessagePrimitive: FormErrorMessagePrimitiveOverloadType = 
 	);
 };
 
-export type FormErrorMessageProps<TControl, TFieldValues extends FieldValues, TTransformedValues> =
-	| (TControl extends Control<infer TValues> ?
-			{
-				className?: string;
-				control?: never;
-				errorField?: FieldPath<TValues>;
-				type?: "regular";
-			}
-	  :	{
-				className?: string;
-				control?: Control<TFieldValues, unknown, TTransformedValues>; // == Here for type inference of errorField prop
-				errorField?: FieldPath<TFieldValues>;
-				type?: "regular";
-			})
-	| {
-			className?: string;
-			errorField: string;
-			type: "root";
-	  };
+export type FormErrorMessageProps<TControl, TFieldValues extends FieldValues, TTransformedValues> = Pick<
+	FormErrorMessagePrimitiveProps<TFieldValues>,
+	"className" | "classNames"
+>
+	& (
+		| (TControl extends Control<infer TValues> ?
+				{
+					control?: never;
+					errorField?: FieldPath<TValues>;
+					type?: "regular";
+				}
+		  :	{
+					control?: Control<TFieldValues, unknown, TTransformedValues>; // == Here for type inference of errorField prop
+					errorField?: FieldPath<TFieldValues>;
+					type?: "regular";
+				})
+		| {
+				errorField: string;
+				type: "root";
+		  }
+	);
 
 export function FormErrorMessage<
 	TControl,
@@ -841,13 +872,15 @@ export function FormErrorMessage<
 >(props: FormErrorMessageProps<TControl, TFieldValues, TTransformedValues>) {
 	const fieldContextValues = useLaxFormFieldContext();
 
-	const { className, errorField, type = "regular" } = props;
+	const { className, classNames, errorField, type = "regular" } = props;
 
 	const { control } = useFormMethodsContext();
 
 	return (
 		<FormErrorMessagePrimitive
 			type={type as "root"}
+			className={className}
+			classNames={classNames}
 			control={control}
 			fieldName={errorField ?? (fieldContextValues?.name as NonNullable<typeof errorField>)}
 			renderItem={({ props: renderProps, state }) => (
@@ -857,8 +890,7 @@ export function FormErrorMessage<
 					className={cnMerge(
 						"text-[13px] text-zu-destructive",
 						"data-[index=0]:mt-1",
-						renderProps.className,
-						className
+						renderProps.className
 					)}
 				>
 					{state.errorMessage}
@@ -885,7 +917,8 @@ export type FormSubmitProps<TFieldValues extends FieldValues, TTransformedValues
 	);
 
 export function FormSubmit<
-	TElement extends React.ElementType = "button",
+	// eslint-disable-next-line ts-eslint/no-explicit-any -- Allow
+	TElement extends React.ElementType<any, "button"> = "button",
 	TFieldValues extends FieldValues = Record<string, unknown>,
 	TTransformedValues = TFieldValues,
 >(props: PolymorphicPropsStrict<TElement, FormSubmitProps<TFieldValues, TTransformedValues>>) {
