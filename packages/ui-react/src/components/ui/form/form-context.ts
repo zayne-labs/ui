@@ -57,6 +57,8 @@ export type FieldContextType = {
 	formDescriptionId: `${string}-(${string})-form-item-description`;
 	formItemId: `${string}-(${string})-form-item`;
 	formMessageId: `${string}-(${string})-form-item-message`;
+	isDisabled: boolean | undefined;
+	isInvalid: boolean | undefined;
 	name: string;
 };
 

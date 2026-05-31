@@ -80,3 +80,13 @@ export const getEyeIcon = (options: {
 
 	return null;
 };
+
+export const getFormScopeAttrs = (part: string) => {
+	return {
+		/* eslint-disable perfectionist/sort-objects -- I need this order to be maintained */
+		"data-slot": `form-field-${part}`,
+		"data-scope": "form-field",
+		"data-part": part,
+		/* eslint-enable perfectionist/sort-objects -- I need this order to be maintained */
+	} as const;
+};

@@ -9,7 +9,7 @@ import {
 } from "fumadocs-ui/layouts/notebook/page";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { LLMCopyButton, ViewOptions } from "@/components/ai/page-actions";
+import { MarkdownCopyButton, ViewOptionsPopover } from "@/components/ai/page-actions";
 import { EditOnGithub } from "@/components/common/EditOnGithub";
 import { getMDXComponents } from "@/components/common/MdxComponents";
 import { HoverCard } from "@/components/ui";
@@ -31,6 +31,7 @@ async function Page({ params }: PageProps<"/docs/[[...slug]]">) {
 	const { body: MDX, lastModified, toc } = await page.data.load();
 
 	const githubURL = `https://github.com/${repoOwner}/${repoName}/blob/main/apps/docs/content/docs/${page.path}`;
+	const markdownURL = `${page.url}.mdx`;
 
 	return (
 		<DocsPage
@@ -44,15 +45,15 @@ async function Page({ params }: PageProps<"/docs/[[...slug]]">) {
 			<DocsDescription className="mb-0">{page.data.description}</DocsDescription>
 
 			<div className="flex flex-row items-center gap-2 border-b pt-2 pb-6">
-				<LLMCopyButton markdownURL={`${page.url}.mdx`} />
-				<ViewOptions markdownURL={`${page.url}.mdx`} githubURL={githubURL} />
+				<MarkdownCopyButton markdownURL={markdownURL} />
+				<ViewOptionsPopover markdownURL={markdownURL} githubURL={githubURL} />
 			</div>
 
 			<DocsBody>
 				<MDX
 					components={getMDXComponents({
 						a: (innerProps) => {
-							const { children, href, ...restOfInnerProps } = innerProps;
+							const { children, href, ...restOfProps } = innerProps;
 
 							const foundPage = source.getPageByHref(href ?? "", {
 								dir: PathUtils.dirname(page.path),
@@ -60,7 +61,7 @@ async function Page({ params }: PageProps<"/docs/[[...slug]]">) {
 
 							if (!foundPage) {
 								return (
-									<Link href={href} {...restOfInnerProps}>
+									<Link href={href} {...restOfProps}>
 										{children}
 									</Link>
 								);
@@ -74,7 +75,7 @@ async function Page({ params }: PageProps<"/docs/[[...slug]]">) {
 												`${foundPage.page.url}#${foundPage.hash}`
 											:	foundPage.page.url
 										}
-										{...restOfInnerProps}
+										{...restOfProps}
 									>
 										{children}
 									</HoverCard.Trigger>

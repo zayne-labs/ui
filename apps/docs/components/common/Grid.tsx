@@ -42,12 +42,11 @@ export function Grid(props: GridProps) {
 	}
 
 	// Adjust the generateSquares function to return objects with an id, x, and y
-	const generateSquares = (count: number) => {
-		return Array.from({ length: count }, (_, i) => ({
+	const generateSquares = (count: number) =>
+		Array.from({ length: count }, (_, i) => ({
 			id: i,
 			pos: getPos(),
 		}));
-	};
 
 	const [squares, setSquares] = useState(() => generateSquares(numSquares));
 
@@ -69,7 +68,7 @@ export function Grid(props: GridProps) {
 	useEffect(() => {
 		// eslint-disable-next-line react-you-might-not-need-an-effect/no-event-handler
 		if (dimensions.width && dimensions.height) {
-			// eslint-disable-next-line react-you-might-not-need-an-effect/no-derived-state, react/set-state-in-effect
+			// eslint-disable-next-line react-you-might-not-need-an-effect/no-chain-state-updates, react-you-might-not-need-an-effect/no-adjust-state-on-prop-change, react/set-state-in-effect
 			setSquares(generateSquares(numSquares));
 		}
 		// eslint-disable-next-line react/exhaustive-deps

@@ -44,7 +44,7 @@ import {
 	type FormRootContextType,
 } from "./form-context";
 import { FieldContext } from "./form-parts";
-import { getEyeIcon, getFieldErrorMessage } from "./utils";
+import { getEyeIcon, getFieldErrorMessage, getFormScopeAttrs } from "./utils";
 
 export type FormRootProps<TFieldValues extends FieldValues, TTransformedValues> = InferProps<"form">
 	& Partial<FormRootContextType> & {
@@ -82,10 +82,10 @@ export function FormRoot<TFieldValues extends FieldValues, TTransformedValues = 
 }
 
 export type FormFieldProps<
-	TElement extends React.ElementType,
 	TControl,
 	TFieldValues extends FieldValues,
 	TTransformedValues,
+	TElement extends React.ElementType,
 > = (TControl extends Control<infer TValues> ?
 	{
 		control?: never;
@@ -103,12 +103,18 @@ export type FormFieldProps<
 		| { as?: never; children: React.ReactNode; className?: never; withWrapper: false }
 	);
 
+const getFieldProps = (ctx: { isDisabled: boolean | undefined; isInvalid: boolean | undefined }) => ({
+	...getFormScopeAttrs("field"),
+	"data-disabled": dataAttr(ctx.isDisabled),
+	"data-invalid": dataAttr(ctx.isInvalid),
+});
+
 export function FormField<
 	TControl,
-	TElement extends React.ElementType = "div",
 	TFieldValues extends FieldValues = FieldValues,
 	TTransformedValues = TFieldValues,
->(props: FormFieldProps<TElement, TControl, TFieldValues, TTransformedValues>) {
+	TElement extends React.ElementType = "div",
+>(props: FormFieldProps<TControl, TFieldValues, TTransformedValues, TElement>) {
 	const {
 		as: Element = "div",
 		children,
@@ -129,22 +135,18 @@ export function FormField<
 				formDescriptionId: `${name}-(${uniqueId})-form-item-description`,
 				formItemId: `${name}-(${uniqueId})-form-item`,
 				formMessageId: `${name}-(${uniqueId})-form-item-message`,
+				isDisabled,
+				isInvalid,
 				name,
 			}) satisfies FieldContextType,
-		[name, uniqueId]
+		[name, uniqueId, isDisabled, isInvalid]
 	);
 
 	const WrapperElement = withWrapper ? Element : ReactFragment;
 
 	const wrapperElementProps = withWrapper && {
 		className: cnMerge("flex flex-col gap-2", className),
-		"data-part": "field",
-		"data-scope": "form",
-		"data-slot": "form-field",
-		/* eslint-disable perfectionist/sort-objects -- order of attributes does not matter */
-		"data-disabled": dataAttr(isDisabled),
-		"data-invalid": dataAttr(isInvalid),
-		/* eslint-enable perfectionist/sort-objects -- order of attributes does not matter */
+		...getFieldProps({ isDisabled, isInvalid }),
 		...restOfProps,
 	};
 	return (
@@ -157,6 +159,7 @@ export function FormField<
 }
 
 type ModifiedControllerProps<
+	TExtraRenderProps extends Record<string, unknown>,
 	TFieldValues extends FieldValues,
 	TName extends FieldPath<TFieldValues>,
 	TTransformedValues = TFieldValues,
@@ -167,9 +170,7 @@ type ModifiedControllerProps<
 	>,
 > = Omit<TControllerProps, "render"> & {
 	render: (
-		ctx: Parameters<TControllerProps["render"]>[0] & {
-			fieldContext: FieldContextType;
-		}
+		ctx: Parameters<TControllerProps["render"]>[0] & TExtraRenderProps
 	) => ReturnType<TControllerProps["render"]>;
 };
 
@@ -177,7 +178,18 @@ export type FormFieldWithControllerProps<
 	TFieldValues extends FieldValues,
 	TName extends FieldPath<TFieldValues>,
 	TTransformedValues = TFieldValues,
-> = ModifiedControllerProps<TFieldValues, TName, TTransformedValues>;
+	TControllerProps extends ControllerProps<TFieldValues, TName, TTransformedValues> = ControllerProps<
+		TFieldValues,
+		TName,
+		TTransformedValues
+	>,
+> = ModifiedControllerProps<
+	{ fieldContext: FieldContextType; fieldProps: ReturnType<typeof getFieldProps> },
+	TFieldValues,
+	TName,
+	TTransformedValues,
+	TControllerProps
+>;
 
 export function FormFieldWithController<
 	TFieldValues extends FieldValues,
@@ -198,22 +210,36 @@ export function FormFieldWithController<
 
 	return (
 		<FormField name={name} withWrapper={false}>
-			<FieldContext>
-				{(fieldContextValue) => (
+			<FieldContext
+				render={(fieldContextValue) => (
 					<Controller
 						control={resolvedControl}
 						name={name}
-						render={(ctx) => render({ ...ctx, fieldContext: fieldContextValue })}
+						render={(ctx) =>
+							render({
+								...ctx,
+								fieldContext: fieldContextValue,
+								fieldProps: getFieldProps({
+									isDisabled: fieldContextValue.isDisabled,
+									isInvalid: fieldContextValue.isInvalid,
+								}),
+							})
+						}
 						{...(restOfProps as object)}
 					/>
 				)}
-			</FieldContext>
+			/>
 		</FormField>
 	);
 }
 
 export type FormFieldBoundControllerProps<TFieldValues extends FieldValues, TTransformedValues> = Omit<
-	ModifiedControllerProps<TFieldValues, FieldPath<TFieldValues>, TTransformedValues>,
+	ModifiedControllerProps<
+		{ fieldContext: FieldContextType },
+		TFieldValues,
+		FieldPath<TFieldValues>,
+		TTransformedValues
+	>,
 	"control" | "name"
 >;
 
@@ -221,14 +247,16 @@ export function FormFieldBoundController<
 	TFieldValues extends FieldValues = Record<string, never>,
 	TTransformedValues = TFieldValues,
 >(props: FormFieldBoundControllerProps<TFieldValues, TTransformedValues>) {
-	const { control } = useFormMethodsContext();
-	const fieldContextValue = useStrictFormFieldContext();
 	const { render, ...restOfProps } = props;
+
+	const methodsContextValue = useFormMethodsContext();
+
+	const fieldContextValue = useStrictFormFieldContext();
 
 	return (
 		<Controller
 			name={fieldContextValue.name as FieldPath<TFieldValues>}
-			control={control as Control<TFieldValues, unknown, TTransformedValues>}
+			control={methodsContextValue.control as Control<TFieldValues, unknown, TTransformedValues>}
 			render={(ctx) => render({ ...ctx, fieldContext: fieldContextValue })}
 			{...(restOfProps as object)}
 		/>

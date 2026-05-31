@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono, JetBrains_Mono } from "next/font/google";
+import { Geist, JetBrains_Mono } from "next/font/google";
 import { baseURL, createMetadata, defaultSiteName } from "@/lib/metadata";
 import { cnJoin } from "@/lib/utils/cn";
 import { Providers } from "./Providers";
@@ -8,11 +8,6 @@ import "../tailwind.css";
 const geistSans = Geist({
 	subsets: ["latin"],
 	variable: "--font-geist-sans",
-});
-
-const geistMono = Geist_Mono({
-	subsets: ["latin"],
-	variable: "--font-geist-mono",
 });
 
 const jetBrainsMono = JetBrains_Mono({
@@ -25,7 +20,7 @@ function RootLayout({ children }: { children: React.ReactNode }) {
 		<html
 			lang="en"
 			data-scroll-behavior="smooth"
-			className={cnJoin(geistSans.variable, geistMono.variable, jetBrainsMono.variable)}
+			className={cnJoin(geistSans.variable, jetBrainsMono.variable)}
 			suppressHydrationWarning={true}
 		>
 			<body>
@@ -48,7 +43,7 @@ export const metadata: Metadata = createMetadata({
 export const viewport: Viewport = {
 	colorScheme: "dark light",
 	themeColor: [
-		{ color: "#0A0A0A", media: "(prefers-color-scheme: dark)" },
-		{ color: "#ffffff", media: "(prefers-color-scheme: light)" },
+		{ color: "#120E17", media: "(prefers-color-scheme: dark)" },
+		{ color: "#FCF7FA", media: "(prefers-color-scheme: light)" },
 	],
 };
