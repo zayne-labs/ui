@@ -32,12 +32,12 @@ import { Slot } from "@/components/common/slot";
 import { cnMerge } from "@/lib/utils/cn";
 import {
 	LaxFormFieldProvider,
-	LaxFormRootProvider,
+	LaxFormRootConfigProvider,
 	StrictFormFieldProvider,
-	useFormMethodsContext,
+	useFormRootContext,
 	useLaxFormFieldContext,
 	useLaxFormFieldState,
-	useLaxFormRootContext,
+	useLaxFormRootConfigContext,
 	useStrictFormFieldContext,
 	type FieldContextType,
 	type FieldState,
@@ -59,14 +59,14 @@ export function FormRoot<TFieldValues extends FieldValues, TTransformedValues = 
 
 	const shallowedComparedWithEyeIcon = useCompareValue(withEyeIcon);
 
-	const formContextValue = useMemo(
+	const formRootContextValue = useMemo(
 		() => ({ withEyeIcon: shallowedComparedWithEyeIcon }),
 		[shallowedComparedWithEyeIcon]
 	);
 
 	return (
 		<HookFormProvider {...form}>
-			<LaxFormRootProvider value={formContextValue}>
+			<LaxFormRootConfigProvider value={formRootContextValue}>
 				<form
 					className={cnMerge("flex flex-col", className)}
 					{...restOfProps}
@@ -76,7 +76,7 @@ export function FormRoot<TFieldValues extends FieldValues, TTransformedValues = 
 				>
 					{children}
 				</form>
-			</LaxFormRootProvider>
+			</LaxFormRootConfigProvider>
 		</HookFormProvider>
 	);
 }
@@ -198,7 +198,7 @@ export function FormFieldWithController<
 >(props: FormFieldWithControllerProps<TFieldValues, TName, TTransformedValues>) {
 	const { control, name, render, ...restOfProps } = props;
 
-	const methodsContextValue = useFormMethodsContext({ strict: false });
+	const methodsContextValue = useFormRootContext({ strict: false });
 
 	const resolvedControl = (control ?? methodsContextValue?.control) as typeof control;
 
@@ -249,7 +249,7 @@ export function FormFieldBoundController<
 >(props: FormFieldBoundControllerProps<TFieldValues, TTransformedValues>) {
 	const { render, ...restOfProps } = props;
 
-	const methodsContextValue = useFormMethodsContext();
+	const methodsContextValue = useFormRootContext();
 
 	const fieldContextValue = useStrictFormFieldContext();
 
@@ -413,7 +413,7 @@ export function FormInputPrimitive<TFieldValues extends FieldValues>(
 ) {
 	const fieldContextValues = useLaxFormFieldContext();
 
-	const formRootContextValues = useLaxFormRootContext();
+	const formRootContextValues = useLaxFormRootConfigContext();
 
 	const {
 		className,
@@ -446,7 +446,7 @@ export function FormInputPrimitive<TFieldValues extends FieldValues>(
 			className: cnMerge("w-full", classNames?.inputGroup, isInvalid && classNames?.error),
 		} satisfies InferProps<typeof FormInputGroup>);
 
-	const { register } = useFormMethodsContext({ strict: false }) ?? {};
+	const { register } = useFormRootContext({ strict: false }) ?? {};
 
 	const eyeIcon = getEyeIcon({
 		classNames,
@@ -512,7 +512,7 @@ export function FormTextAreaPrimitive<TFieldValues extends FieldValues>(
 
 	const { isDisabled, isInvalid } = fieldState ?? fieldStateFromLaxFormField;
 
-	const { register } = useFormMethodsContext({ strict: false }) ?? {};
+	const { register } = useFormRootContext({ strict: false }) ?? {};
 
 	return (
 		<textarea
@@ -552,7 +552,7 @@ export function FormSelectPrimitive<TFieldValues extends FieldValues>(
 
 	const { isDisabled, isInvalid } = fieldState ?? fieldStateFromLaxFormField;
 
-	const { register } = useFormMethodsContext({ strict: false }) ?? {};
+	const { register } = useFormRootContext({ strict: false }) ?? {};
 
 	return (
 		<select
@@ -605,7 +605,7 @@ export function FormInput(props: FormInputCombinedProps) {
 	const { onBlur, onChange, ref, rules, type, ...restOfProps } = props;
 
 	const { name } = useStrictFormFieldContext();
-	const { register } = useFormMethodsContext();
+	const { register } = useFormRootContext();
 
 	const SelectedInput =
 		type === "textarea" || type === "select" ?
@@ -713,7 +713,7 @@ type FormErrorMessagePrimitiveOverloadType = {
 };
 
 export const FormErrorMessagePrimitive: FormErrorMessagePrimitiveOverloadType = (props) => {
-	const methodsContextValues = useFormMethodsContext({ strict: false });
+	const methodsContextValues = useFormRootContext({ strict: false });
 
 	const {
 		children,
@@ -856,7 +856,7 @@ export const FormErrorMessagePrimitive: FormErrorMessagePrimitiveOverloadType = 
 	return (
 		<ForWithWrapper
 			ref={containerRef}
-			className={cnMerge("flex flex-col", classNames?.container)}
+			className={cnMerge("flex flex-col gap-0.5 pt-1", classNames?.container)}
 			data-slot="form-error-message-container"
 			data-scope="form"
 			data-part="error-message-container"
@@ -902,7 +902,7 @@ export function FormErrorMessage<
 
 	const { className, classNames, errorField, type = "regular" } = props;
 
-	const { control } = useFormMethodsContext();
+	const { control } = useFormRootContext();
 
 	return (
 		<FormErrorMessagePrimitive
@@ -915,11 +915,7 @@ export function FormErrorMessage<
 				<li
 					key={state.errorMessage}
 					{...renderProps}
-					className={cnMerge(
-						"text-[13px] text-zu-destructive",
-						"data-[index=0]:mt-1",
-						renderProps.className
-					)}
+					className={cnMerge("text-[13px] text-zu-destructive", renderProps.className)}
 				>
 					{state.errorMessage}
 				</li>
@@ -954,7 +950,7 @@ export function FormSubmit<
 
 	const Component = asChild ? Slot.Root : Element;
 
-	const methodsContextValue = useFormMethodsContext({ strict: false });
+	const methodsContextValue = useFormRootContext({ strict: false });
 
 	const resolvedControl = control ?? methodsContextValue?.control;
 
@@ -1011,7 +1007,7 @@ export function FormWatch<
 
 	const { children, compute, control, defaultValue, disabled, exact, name, render } = props;
 
-	const methodsContextValue = useFormMethodsContext({ strict: false });
+	const methodsContextValue = useFormRootContext({ strict: false });
 
 	const resolvedControl = control ?? methodsContextValue?.control;
 
@@ -1054,7 +1050,7 @@ export function FormStateSubscribe<
 
 	const { children, control, disabled, exact, name, render } = props;
 
-	const methodsContextValue = useFormMethodsContext({ strict: false });
+	const methodsContextValue = useFormRootContext({ strict: false });
 
 	const resolvedControl = control ?? methodsContextValue?.control;
 

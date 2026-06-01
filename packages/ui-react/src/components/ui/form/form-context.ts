@@ -25,18 +25,16 @@ export type FormRootContextType = {
 	withEyeIcon: boolean | EyeIconObject | undefined;
 };
 
-export const [LaxFormRootProvider, useLaxFormRootContext] = createCustomContext({
+export const [LaxFormRootConfigProvider, useLaxFormRootConfigContext] = createCustomContext({
 	defaultValue: null as unknown as FormRootContextType,
-	hookName: "useLaxFormRootContext",
-	name: "LaxFormRootContext",
-	providerName: "FormRoot",
+	name: "LaxFormRootConfigContext",
 	strict: false,
 });
 
 export type UseFormRootContextResult<TStrict extends boolean = true> =
 	TStrict extends true ? UseFormReturn : UseFormReturn | null;
 
-export const useFormMethodsContext = <TStrict extends boolean = true>(
+export const useFormRootContext = <TStrict extends boolean = true>(
 	options: { strict?: TStrict } = {}
 ): UseFormRootContextResult<TStrict> => {
 	const { strict = true } = options;
@@ -46,7 +44,7 @@ export const useFormMethodsContext = <TStrict extends boolean = true>(
 	// eslint-disable-next-line ts-eslint/no-unnecessary-condition -- Allow
 	if (strict && !formContext) {
 		throw new ContextError(
-			`useFormMethodsContext returned "null". Did you forget to wrap the necessary components within FormRoot?`
+			`useFormRootContext returned "null". Did you forget to wrap the necessary components within FormRoot?`
 		);
 	}
 
@@ -95,7 +93,7 @@ type FieldStateOptions<TFieldValues extends FieldValues, TTransformedValues = TF
 export const useLaxFormFieldState = <TFieldValues extends FieldValues, TTransformedValues = TFieldValues>(
 	options?: FieldStateOptions<TFieldValues, TTransformedValues>
 ): FieldState => {
-	const { control } = useFormMethodsContext({ strict: false }) ?? {};
+	const { control } = useFormRootContext({ strict: false }) ?? {};
 	const { name } = useLaxFormFieldContext() ?? {};
 
 	const resolvedControl = control ?? options?.control;
