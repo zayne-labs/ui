@@ -31,15 +31,15 @@ export const [LaxFormRootConfigProvider, useLaxFormRootConfigContext] = createCu
 	strict: false,
 });
 
-export type UseFormRootContextResult<TStrict extends boolean = true> =
-	TStrict extends true ? UseFormReturn : UseFormReturn | null;
+export type UseFormRootContextResult<TFieldValues extends FieldValues, TStrict extends boolean = true> =
+	TStrict extends true ? UseFormReturn<TFieldValues> : UseFormReturn<TFieldValues> | null;
 
-export const useFormRootContext = <TStrict extends boolean = true>(
+export const useFormRootContext = <TFieldValues extends FieldValues, TStrict extends boolean = true>(
 	options: { strict?: TStrict } = {}
-): UseFormRootContextResult<TStrict> => {
+): UseFormRootContextResult<TFieldValues, TStrict> => {
 	const { strict = true } = options;
 
-	const formContext = useHookFormContext();
+	const formContext = useHookFormContext<TFieldValues>();
 
 	// eslint-disable-next-line ts-eslint/no-unnecessary-condition -- Allow
 	if (strict && !formContext) {
