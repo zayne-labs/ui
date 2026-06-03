@@ -16,7 +16,12 @@ import {
 	type InferProps,
 	type PolymorphicPropsStrict,
 } from "@zayne-labs/toolkit-react/utils";
-import { defineEnum, isFunction, type AnyString } from "@zayne-labs/toolkit-type-helpers";
+import {
+	defineEnum,
+	isFunction,
+	type AnyString,
+	type DistributivePick,
+} from "@zayne-labs/toolkit-type-helpers";
 import { Fragment as ReactFragment, useEffect, useId, useMemo, useRef } from "react";
 import {
 	Controller,
@@ -682,7 +687,7 @@ export type FormErrorMessagePrimitiveProps<TFieldValues extends FieldValues> =
 			errorMessage?: string;
 			errorMessageAnimation?: string;
 		};
-		control?: Control<TFieldValues>; // == Here for type inference of errorField prop
+		control?: Control<TFieldValues>; // == Here for type inference of name prop
 		disableErrorAnimation?: boolean;
 		disableScrollToError?: boolean;
 		scrollToErrorOffset?: number;
@@ -857,8 +862,8 @@ export const FormErrorMessagePrimitive: FormErrorMessagePrimitiveOverloadType = 
 		const { index } = options;
 
 		return {
-			className: cnMerge(className, classNames?.errorMessage),
 			...getFormScopeAttrs("error-message"),
+			className: cnMerge(className, classNames?.errorMessage),
 			"data-index": index,
 			id: fieldContextValues?.formMessageId,
 		};
@@ -878,11 +883,9 @@ export const FormErrorMessagePrimitive: FormErrorMessagePrimitiveOverloadType = 
 
 	return (
 		<ForWithWrapper
+			{...getFormScopeAttrs("error-message-container")}
 			ref={containerRef}
 			className={cnMerge("flex flex-col gap-0.5 pt-1", classNames?.container)}
-			data-slot="form-error-message-container"
-			data-scope="form"
-			data-part="error-message-container"
 			each={errorMessageArray}
 			renderItem={(errorMessage, index) => {
 				return selectedChildren({
@@ -894,24 +897,25 @@ export const FormErrorMessagePrimitive: FormErrorMessagePrimitiveOverloadType = 
 	);
 };
 
-export type FormErrorMessageProps<TControl, TFieldValues extends FieldValues, TTransformedValues> = Pick<
-	FormErrorMessagePrimitiveProps<TFieldValues>,
-	"className" | "classNames"
->
+export type FormErrorMessageProps<
+	TControl,
+	TFieldValues extends FieldValues,
+	TTransformedValues,
+> = DistributivePick<FormErrorMessagePrimitiveProps<TFieldValues>, "className" | "classNames">
 	& (
 		| (TControl extends Control<infer TValues> ?
 				{
 					control?: never;
-					errorField?: FieldPath<TValues>;
+					name?: FieldPath<TValues>;
 					type?: "regular";
 				}
 		  :	{
-					control?: Control<TFieldValues, unknown, TTransformedValues>; // == Here for type inference of errorField prop
-					errorField?: FieldPath<TFieldValues>;
+					control?: Control<TFieldValues, unknown, TTransformedValues>; // == Here for type inference of name prop
+					name?: FieldPath<TFieldValues>;
 					type?: "regular";
 				})
 		| {
-				errorField: string;
+				name: string;
 				type: "root";
 		  }
 	);
@@ -923,7 +927,7 @@ export function FormErrorMessage<
 >(props: FormErrorMessageProps<TControl, TFieldValues, TTransformedValues>) {
 	const fieldContextValues = useLaxFormFieldContext();
 
-	const { className, classNames, errorField, type = "regular" } = props;
+	const { className, classNames, name, type = "regular" } = props;
 
 	const { control } = useFormContext();
 
@@ -933,12 +937,12 @@ export function FormErrorMessage<
 			className={className}
 			classNames={classNames}
 			control={control}
-			name={errorField ?? (fieldContextValues?.name as NonNullable<typeof errorField>)}
-			renderItem={({ props: renderProps, state }) => (
+			name={name ?? (fieldContextValues?.name as NonNullable<typeof name>)}
+			renderItem={({ props: innerProps, state }) => (
 				<li
-					key={renderProps.id}
-					{...renderProps}
-					className={cnMerge("text-[13px] text-zu-destructive", renderProps.className)}
+					key={state.index}
+					{...innerProps}
+					className={cnMerge("text-[13px] text-zu-destructive", innerProps.className)}
 				>
 					{state.errorMessage}
 				</li>
