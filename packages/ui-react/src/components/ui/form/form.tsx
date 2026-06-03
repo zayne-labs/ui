@@ -901,7 +901,10 @@ export type FormErrorMessageProps<
 	TControl,
 	TFieldValues extends FieldValues,
 	TTransformedValues,
-> = DistributivePick<FormErrorMessagePrimitiveProps<TFieldValues>, "className" | "classNames">
+> = DistributivePick<
+	FormErrorMessagePrimitiveProps<TFieldValues>,
+	"className" | "classNames" | "scrollToErrorOffset"
+>
 	& (
 		| (TControl extends Control<infer TValues> ?
 				{
@@ -927,7 +930,7 @@ export function FormErrorMessage<
 >(props: FormErrorMessageProps<TControl, TFieldValues, TTransformedValues>) {
 	const fieldContextValues = useLaxFormFieldContext();
 
-	const { className, classNames, name, type = "regular" } = props;
+	const { className, classNames, name, scrollToErrorOffset, type = "regular" } = props;
 
 	const { control } = useFormContext();
 
@@ -938,6 +941,7 @@ export function FormErrorMessage<
 			classNames={classNames}
 			control={control}
 			name={name ?? (fieldContextValues?.name as NonNullable<typeof name>)}
+			scrollToErrorOffset={scrollToErrorOffset}
 			renderItem={({ props: innerProps, state }) => (
 				<li
 					key={state.index}
