@@ -1,4 +1,4 @@
-import { isObject } from "@zayne-labs/toolkit-type-helpers";
+import { defineEnum, isObject } from "@zayne-labs/toolkit-type-helpers";
 import { createElement } from "react";
 import type { FieldErrors, FieldValues } from "react-hook-form";
 import { cnMerge } from "@/lib/utils/cn";
@@ -8,23 +8,23 @@ import { EyeIconClosed, EyeIconOpen } from "./icons";
 
 export const getFieldErrorMessage = (options: {
 	errors: FieldErrors | undefined;
-	fieldName: string | undefined;
+	name: string | undefined;
 	type: FormErrorMessagePrimitiveProps<FieldValues>["type"];
 }): string | string[] | null | undefined => {
-	const { errors, fieldName, type } = options;
+	const { errors, name, type } = options;
 
-	if (fieldName === undefined || !errors || Object.keys(errors).length === 0) return;
+	if (name === undefined || !errors || Object.keys(errors).length === 0) return;
 
 	if (type === "root") {
-		return errors.root?.[fieldName]?.message;
+		return errors.root?.[name]?.message;
 	}
 
 	// == Handle nested paths like `notifications.0`
-	const pathParts = fieldName.includes(".") ? fieldName.split(".") : null;
+	const pathParts = name.includes(".") ? name.split(".") : null;
 
 	// == If there are no path parts, return the error message
 	if (!pathParts) {
-		const errorMessage = errors[fieldName]?.message;
+		const errorMessage = errors[name]?.message;
 
 		return errorMessage as string | string[];
 	}
@@ -81,12 +81,12 @@ export const getEyeIcon = (options: {
 	return null;
 };
 
-export const getFormScopeAttrs = (part: string) => {
-	return {
+export const getFormScopeAttrs = <TPart extends string>(part: TPart) => {
+	return defineEnum({
 		/* eslint-disable perfectionist/sort-objects -- I need this order to be maintained */
-		"data-slot": `form-field-${part}`,
-		"data-scope": "form-field",
+		"data-slot": `form-${part}`,
+		"data-scope": "form",
 		"data-part": part,
 		/* eslint-enable perfectionist/sort-objects -- I need this order to be maintained */
-	} as const;
+	});
 };

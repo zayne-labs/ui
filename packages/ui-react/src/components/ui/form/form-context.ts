@@ -22,10 +22,11 @@ type EyeIconObject = UnionDiscriminator<
 >;
 
 export type FormRootContextType = {
+	formRootRef: React.RefObject<HTMLFormElement | null>;
 	withEyeIcon: boolean | EyeIconObject | undefined;
 };
 
-export const [LaxFormRootConfigProvider, useLaxFormRootConfigContext] = createCustomContext({
+export const [LaxFormRootProvider, useLaxFormRootContext] = createCustomContext({
 	defaultValue: null as unknown as FormRootContextType,
 	name: "LaxFormRootConfigContext",
 	strict: false,
@@ -34,7 +35,7 @@ export const [LaxFormRootConfigProvider, useLaxFormRootConfigContext] = createCu
 export type UseFormRootContextResult<TFieldValues extends FieldValues, TStrict extends boolean = true> =
 	TStrict extends true ? UseFormReturn<TFieldValues> : UseFormReturn<TFieldValues> | null;
 
-export const useFormRootContext = <TFieldValues extends FieldValues, TStrict extends boolean = true>(
+export const useFormContext = <TFieldValues extends FieldValues, TStrict extends boolean = true>(
 	options: { strict?: TStrict } = {}
 ): UseFormRootContextResult<TFieldValues, TStrict> => {
 	const { strict = true } = options;
@@ -93,7 +94,7 @@ type FieldStateOptions<TFieldValues extends FieldValues, TTransformedValues = TF
 export const useLaxFormFieldState = <TFieldValues extends FieldValues, TTransformedValues = TFieldValues>(
 	options?: FieldStateOptions<TFieldValues, TTransformedValues>
 ): FieldState => {
-	const { control } = useFormRootContext({ strict: false }) ?? {};
+	const { control } = useFormContext({ strict: false }) ?? {};
 	const { name } = useLaxFormFieldContext() ?? {};
 
 	const resolvedControl = control ?? options?.control;
@@ -108,7 +109,7 @@ export const useLaxFormFieldState = <TFieldValues extends FieldValues, TTransfor
 		name: name ?? options?.name,
 	});
 
-	const errorMessage = getFieldErrorMessage({ errors, fieldName: name, type: "regular" });
+	const errorMessage = getFieldErrorMessage({ errors, name, type: "regular" });
 
 	return {
 		errors,
