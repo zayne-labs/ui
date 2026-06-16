@@ -6,18 +6,10 @@ export async function POST(request: Request) {
 	try {
 		const { messages } = (await request.json()) as { messages: never };
 
-		// eslint-disable-next-line unicorn/no-single-promise-in-promise-methods
-		const [userMessages] = await Promise.all([
-			convertToModelMessages(messages, { ignoreIncompleteToolCalls: true }),
-			// getSourceCodeContext()
-		]);
+		const userMessages = await convertToModelMessages(messages, { ignoreIncompleteToolCalls: true });
 
 		const result = streamText({
-			messages: [
-				{ content: SYSTEM_PROMPT, role: "system" },
-				// { content: sourceCodeContext, role: "system" },
-				...userMessages,
-			],
+			messages: [{ content: SYSTEM_PROMPT, role: "system" }, ...userMessages],
 			model: google("gemini-2.5-flash"),
 			stopWhen: stepCountIs(5),
 			toolChoice: "auto",
