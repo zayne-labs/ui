@@ -10,7 +10,6 @@ import {
 } from "@zayne-labs/toolkit-react";
 import {
 	composeTwoEventHandlers,
-	getMultipleSlots,
 	type DiscriminatedRenderItemProps,
 	type DiscriminatedRenderProps,
 	type InferProps,
@@ -324,11 +323,6 @@ export function FormInputGroup(props: FormInputGroupProps) {
 
 	const { isDisabled, isInvalid } = useLaxFormFieldState();
 
-	const {
-		regularChildren,
-		slots: [leftItemSlot, rightItemSlot],
-	} = getMultipleSlots(children, [FormInputLeftItem, FormInputRightItem]);
-
 	return (
 		<div
 			{...getFormScopeAttrs("input-group")}
@@ -337,26 +331,24 @@ export function FormInputGroup(props: FormInputGroupProps) {
 			className={cnMerge("flex items-center justify-between gap-2", className)}
 			{...restOfProps}
 		>
-			{leftItemSlot}
-			{regularChildren}
-			{rightItemSlot}
+			{children}
 		</div>
 	);
 }
 
-export type FormSideItemProps = {
+export type FormInputGroupAddonProps = {
 	children?: React.ReactNode;
 	className?: string;
 };
 
-export function FormInputLeftItem<TElement extends React.ElementType = "span">(
-	props: PolymorphicPropsStrict<TElement, FormSideItemProps>
+export function FormInputGroupAddon<TElement extends React.ElementType = "span">(
+	props: PolymorphicPropsStrict<TElement, FormInputGroupAddonProps>
 ) {
 	const { as: Element = "span", children, className, ...restOfProps } = props;
 
 	return (
 		<Element
-			{...getFormScopeAttrs("left-item")}
+			{...getFormScopeAttrs("input-group-addon")}
 			className={cnMerge("inline-flex items-center justify-center", className)}
 			{...restOfProps}
 		>
@@ -364,24 +356,6 @@ export function FormInputLeftItem<TElement extends React.ElementType = "span">(
 		</Element>
 	);
 }
-FormInputLeftItem.slotSymbol = Symbol("input-left-item");
-
-export function FormInputRightItem<TElement extends React.ElementType = "span">(
-	props: PolymorphicPropsStrict<TElement, FormSideItemProps>
-) {
-	const { as: Element = "span", children, className, ...restOfProps } = props;
-
-	return (
-		<Element
-			{...getFormScopeAttrs("right-item")}
-			className={cnMerge("inline-flex items-center justify-center", className)}
-			{...restOfProps}
-		>
-			{children}
-		</Element>
-	);
-}
-FormInputRightItem.slotSymbol = Symbol("input-right-item");
 
 type RulesProp = {
 	rules?: RegisterOptions;
@@ -495,14 +469,14 @@ export function FormInputPrimitive<TFieldValues extends FieldValues>(
 			/>
 
 			{shouldHaveEyeIcon && (
-				<FormInputRightItem
+				<FormInputGroupAddon
 					as="button"
 					type="button"
 					onClick={toggleIsPasswordVisible}
 					className="size-5 shrink-0 lg:size-6"
 				>
 					{eyeIcon}
-				</FormInputRightItem>
+				</FormInputGroupAddon>
 			)}
 		</WrapperElement>
 	);
