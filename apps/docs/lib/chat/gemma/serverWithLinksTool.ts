@@ -18,6 +18,7 @@ export async function POST(request: Request) {
 				{ content: documentationContext, role: "system" },
 				...userMessages,
 			],
+
 			model: google("gemini-2.5-flash"),
 			toolChoice: "auto",
 			tools: {
