@@ -234,8 +234,8 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 			const { unstyled = globalUnstyled, ...restOfInnerProps } = innerProps;
 
 			return {
-				...restOfInnerProps,
 				...getDropZoneScopeAttrs("file-item"),
+				...restOfInnerProps,
 				...(!unstyled && {
 					className: cnMerge(
 						"relative flex animate-files-in items-center gap-2.5 rounded-md border p-2",
@@ -252,8 +252,8 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 			const { unstyled = globalUnstyled, variant = "linear", ...restOfInnerProps } = innerProps;
 
 			return {
-				...restOfInnerProps,
 				...getDropZoneScopeAttrs("file-item-progress"),
+				...restOfInnerProps,
 				role: "progressbar",
 				...(!unstyled && {
 					className: cnMerge(
@@ -279,8 +279,8 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 			const onRemoveFile = () => fileStateOrID && actions.removeFile({ fileStateOrID });
 
 			return {
-				...restOfInnerProps,
 				...getDropZoneScopeAttrs("file-item-delete"),
+				...restOfInnerProps,
 				"data-disabled": dataAttr(isDisabled),
 				disabled: isDisabled,
 				onClick: composeTwoEventHandlers(onRemoveFile, restOfInnerProps.onClick),
@@ -295,8 +295,8 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 			const { unstyled = globalUnstyled, ...restOfInnerProps } = innerProps;
 
 			return {
-				...restOfInnerProps,
 				...getDropZoneScopeAttrs("file-item-preview"),
+				...restOfInnerProps,
 				...(!unstyled && {
 					className: cnMerge(
 						`relative flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-md bg-zu-accent/50 [&>svg]:size-10`,
@@ -313,8 +313,8 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 			const { unstyled = globalUnstyled, ...restOfInnerProps } = innerProps;
 
 			return {
-				...restOfInnerProps,
 				...getDropZoneScopeAttrs("file-item-metadata"),
+				...restOfInnerProps,
 				...(!unstyled && {
 					className: cnMerge("flex min-w-0 grow flex-col", innerProps.className),
 				}),
@@ -328,8 +328,8 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 			const isDisabled = innerProps.disabled ?? disabled;
 
 			return {
-				...innerProps,
 				...getDropZoneScopeAttrs("file-item-clear"),
+				...innerProps,
 				"data-disabled": dataAttr(isDisabled),
 				disabled: isDisabled,
 				onClick: composeTwoEventHandlers(actions.clearFiles, innerProps.onClick),
