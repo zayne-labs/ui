@@ -92,8 +92,8 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 	const getRootProps: DropZonePropGetters["getRootProps"] = useCallback(
 		(innerProps) => {
 			return {
-				...innerProps,
 				...getDropZoneScopeAttrs("root"),
+				...innerProps,
 				"data-disabled": dataAttr(disabled),
 			};
 		},
@@ -114,8 +114,8 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 				!isDisabled && !disableFilePickerOpenOnAreaClick ? actions.handleKeyDown : undefined;
 
 			return {
-				...restOfInnerProps,
 				...getDropZoneScopeAttrs("container"),
+				...restOfInnerProps,
 				...(!disableInternalStateSubscription && {
 					"data-drag-over": dataAttr(isDraggingOver),
 					"data-invalid": dataAttr(isInvalid),
@@ -126,6 +126,7 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 					className: cnMerge(
 						`relative flex flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed p-6 transition-colors duration-250 ease-out outline-none select-none focus-visible:border-zu-ring/50`,
 						`data-disabled:pointer-events-none data-drag-over:opacity-60 data-invalid:border-zu-destructive data-invalid:ring-zu-destructive/20`,
+						!disableFilePickerOpenOnAreaClick && "cursor-pointer",
 						innerProps.className
 					),
 				}),
@@ -168,8 +169,8 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 			const onFileChange = !isDisabled ? actions.handleChange : undefined;
 
 			return {
-				...innerProps,
 				...getDropZoneScopeAttrs("input"),
+				...innerProps,
 				...(!disableInternalStateSubscription && { "data-drag-over": dataAttr(isDraggingOver) }),
 				accept: allowedFileTypes ? allowedFileTypes.join(", ") : innerProps.accept,
 				className: cnMerge("hidden", innerProps.className),
@@ -197,8 +198,8 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 			const isDisabled = innerProps.disabled ?? disabled;
 
 			return {
-				...innerProps,
 				...getDropZoneScopeAttrs("trigger"),
+				...innerProps,
 				"data-disabled": dataAttr(isDisabled),
 				disabled: isDisabled,
 				onClick: composeTwoEventHandlers(actions.openFilePicker, innerProps.onClick),
@@ -213,8 +214,8 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 			const { orientation = "vertical", unstyled = globalUnstyled, ...restOfInnerProps } = innerProps;
 
 			return {
-				...restOfInnerProps,
 				...getDropZoneScopeAttrs("file-list"),
+				...restOfInnerProps,
 				"data-orientation": orientation,
 				...(!unstyled && {
 					className: cnMerge(
