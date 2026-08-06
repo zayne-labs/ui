@@ -63,7 +63,7 @@
 		"@types/react-dom": "^19.2.3",
 		"@zayne-labs/prettier-config": "0.13.14",
 		"@zayne-labs/tsconfig": "0.13.14",
-		"postcss": "^8.5.15",
+		"postcss": "^8.5.23",
 		"prettier": "3.8.4",
 		"prettier-plugin-classnames": "0.10.2",
 		"prettier-plugin-merge": "0.10.1",
