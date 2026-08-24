@@ -470,7 +470,7 @@ export function DropZoneFileItemProgress<TElement extends React.ElementType = "s
 }
 
 type NodeCtx<TElement extends React.ElementType> = {
-	getProps: (innerProps: Partial<InferProps<TElement>>) => InferProps<TElement>;
+	getProps: (innerProps?: Partial<InferProps<TElement>>) => InferProps<TElement>;
 };
 
 type RenderPreviewDetails<TElement extends React.ElementType = "svg"> = UnionDiscriminator<
@@ -578,9 +578,9 @@ const getFilePreviewOrIcon = (
 		case fileType.startsWith("image/"): {
 			const resolvedNode = resolvePreviewNode(resolvedRenderPreviewObject.image, (innerProps) => ({
 				...innerProps,
-				alt: innerProps.alt ?? fileState.file.name ?? "",
-				className: cnMerge("size-full object-cover", innerProps.className),
-				src: innerProps.src ?? fileState.preview,
+				alt: innerProps?.alt ?? fileState.file.name ?? "",
+				className: cnMerge("size-full object-cover", innerProps?.className),
+				src: innerProps?.src ?? fileState.preview,
 			}));
 
 			return (
@@ -601,7 +601,7 @@ const getFilePreviewOrIcon = (
 		case fileType.startsWith("video/"): {
 			const resolvedNode = resolvePreviewNode(resolvedRenderPreviewObject.video, (innerProps) => ({
 				...innerProps,
-				className: cnMerge("size-full object-cover", innerProps.className),
+				className: cnMerge("size-full object-cover", innerProps?.className),
 			}));
 
 			return (
@@ -620,7 +620,7 @@ const getFilePreviewOrIcon = (
 		case fileType.startsWith("audio/"): {
 			const resolvedNode = resolvePreviewNode(resolvedRenderPreviewObject.audio, (innerProps) => ({
 				...innerProps,
-				className: cnMerge("size-full object-cover", innerProps.className),
+				className: cnMerge("size-full object-cover", innerProps?.className),
 			}));
 
 			return (

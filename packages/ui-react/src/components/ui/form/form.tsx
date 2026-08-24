@@ -454,7 +454,7 @@ export function FormInputPrimitive<TFieldValues extends FieldValues>(
 				name={Object.hasOwn(props, "name") ? name : fieldContextValues?.name}
 				type={type === "password" && isPasswordVisible ? "text" : type}
 				className={cnMerge(
-					!inputTypesWithoutFullWidth.has(type) && "w-full min-w-0",
+					!inputTypesWithoutFullWidth.has(type) && "w-full min-w-0 grow",
 					`bg-transparent text-sm outline-hidden transition-[color,box-shadow] selection:bg-zu-primary
 					selection:text-zu-primary-foreground file:inline-flex file:h-7 file:border-0
 					file:bg-transparent file:font-medium file:text-zu-foreground
@@ -1004,7 +1004,7 @@ export function FormWatch<
 		| Array<FieldPath<TFieldValues>>
 		| FieldPath<TFieldValues>
 		| ReadonlyArray<FieldPath<TFieldValues>>
-		| undefined = FieldPath<TFieldValues>,
+		| undefined = undefined,
 	TTransformedValues = TFieldValues,
 	TComputeValue = undefined,
 >(props: FormWatchProps<TFieldValues, TFieldName, TTransformedValues, TComputeValue>) {
