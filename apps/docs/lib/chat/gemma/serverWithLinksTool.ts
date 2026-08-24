@@ -1,5 +1,5 @@
 import { google } from "@ai-sdk/google";
-import { convertToModelMessages, streamText } from "ai";
+import { convertToModelMessages, streamText, toUIMessageStream } from "ai";
 import { getDocumentationContext } from "../context/context-builder";
 import { provideLinksTool } from "../tools/provideLinks";
 
@@ -18,7 +18,6 @@ export async function POST(request: Request) {
 				{ content: documentationContext, role: "system" },
 				...userMessages,
 			],
-
 			model: google("gemini-2.5-flash"),
 			toolChoice: "auto",
 			tools: {
@@ -26,7 +25,7 @@ export async function POST(request: Request) {
 			},
 		});
 
-		return result.toUIMessageStreamResponse();
+		return toUIMessageStream(result);
 	} catch (error) {
 		console.error("Chat API Error:", error);
 

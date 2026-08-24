@@ -19,6 +19,7 @@
 		"@ai-sdk/react": "^4.0.80",
 		"@base-ui/react": "^1.7.0",
 		"@bprogress/next": "^3.2.12",
+		"@fumadocs/satteri": "^0.4.2",
 		"@hookform/resolvers": "5.9.1",
 		"@iconify/react": "6.0.2",
 		"@takumi-rs/image-response": "^2.12.0",

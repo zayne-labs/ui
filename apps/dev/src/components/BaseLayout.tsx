@@ -1,3 +1,4 @@
+/* eslint-disable react/immutability */
 import { Icon } from "@iconify/react";
 import { useLocationState } from "@zayne-labs/toolkit-react";
 import { ForWithWrapper } from "@zayne-labs/ui-react/common/for";

@@ -6,7 +6,7 @@ import { createCustomContext } from "@zayne-labs/toolkit-react";
 import type { InferProps } from "@zayne-labs/toolkit-react/utils";
 import { Presence } from "@zayne-labs/ui-react/common/presence";
 import { DefaultChatTransport, type Tool, type UIToolInvocation } from "ai";
-import Link from "fumadocs-core/link";
+import { Link } from "fumadocs-core/link";
 import { Loader2, MessageCircleIcon, RefreshCw, SearchIcon, Send, X } from "lucide-react";
 import { useEffect, useEffectEvent, useMemo, useRef, useState, type ComponentProps } from "react";
 import { toast } from "sonner";
@@ -526,25 +526,21 @@ export function AISearchPanel() {
 
 			<Presence present={open}>
 				<div
-					className={cnMerge(
-						`z-30 overflow-hidden bg-fd-card text-fd-card-foreground [--ai-chat-width:400px]
-						2xl:[--ai-chat-width:460px]`,
-						`max-lg:fixed max-lg:inset-x-2 max-lg:top-4 max-lg:rounded-2xl max-lg:border
-						max-lg:shadow-xl`,
-						`lg:sticky lg:top-0 lg:ms-auto lg:h-dvh lg:border-s
-						lg:in-[#nd-docs-layout]:[grid-area:toc] lg:in-[#nd-notebook-layout]:col-start-5
-						lg:in-[#nd-notebook-layout]:row-span-full`,
-						open ?
-							"animate-fd-dialog-in lg:animate-[ask-ai-open_200ms]"
-						:	"animate-fd-dialog-out lg:animate-[ask-ai-close_200ms]"
-					)}
+					className="z-30 overflow-hidden bg-fd-card text-fd-card-foreground [--ai-chat-width:400px]
+						data-[animation-phase=enter]:animate-fd-dialog-in
+						data-[animation-phase=exit]:animate-fd-dialog-out max-lg:fixed max-lg:inset-x-2
+						max-lg:top-4 max-lg:rounded-2xl max-lg:border max-lg:shadow-xl lg:sticky lg:top-0
+						lg:ms-auto lg:h-dvh lg:border-s lg:in-[#nd-docs-layout]:[grid-area:toc]
+						lg:in-[#nd-notebook-layout]:col-start-5 lg:in-[#nd-notebook-layout]:row-span-full
+						lg:data-[animation-phase=enter]:animate-[ask-ai-open_200ms]
+						lg:data-[animation-phase=exit]:animate-[ask-ai-close_200ms] 2xl:[--ai-chat-width:460px]"
 				>
 					<div
 						className="flex size-full flex-col p-2 max-lg:max-h-[80dvh] lg:w-(--ai-chat-width)
 							lg:p-3"
 					>
 						<AISearchPanelHeader />
-						<AISearchPanelList className="flex-1" />
+						<AISearchPanelList className="grow" />
 						<div
 							className="rounded-xl border bg-fd-secondary text-fd-secondary-foreground shadow-sm
 								has-focus-visible:shadow-md"

@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "fumadocs-core/link";
+import { Link } from "fumadocs-core/link";
 import { Grid } from "@/components/common/Grid";
 import { DocsIcon, GitHubIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";

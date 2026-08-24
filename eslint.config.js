@@ -1,4 +1,3 @@
-import path from "node:path";
 import { GLOB_MARKDOWN_CODE, zayne } from "@zayne-labs/eslint-config";
 
 export default zayne(
@@ -13,8 +12,8 @@ export default zayne(
 			},
 		},
 		typescript: {
-			tsconfigPath: ["tsconfig.json", "packages/*/tsconfig.json", "apps/*/tsconfig.json"],
-			// tsconfigPath: ["**/tsconfig.json"],
+			// tsconfigPath: ["tsconfig.json", "packages/*/tsconfig.json", "apps/*/tsconfig.json"],
+			tsconfigPath: ["**/tsconfig.json"],
 		},
 		tailwindcssBetter: {
 			settings: { entryPoint: "apps/docs/tailwind.css" },

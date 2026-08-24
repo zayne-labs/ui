@@ -1,11 +1,21 @@
+strictDepBuilds: false
+minimumReleaseAgeExclude:
+  - "@zayne-labs/*"
+  - '@types/react-dom@19.2.5'
+  - lucide-react@1.34.0
 packages:
-   - "packages/*"
-   - "apps/*"
+  - apps/*
+  - packages/*
+allowBuilds:
+  "@parcel/watcher": set this to true or false
+  esbuild: set this to true or false
+  sharp: set this to true or false
+  unrs-resolver: set this to true or false
 
 catalogs:
-   react:peer:
-      react: ^19.2.8
-      react-dom: ^19.2.8
-      react-hook-form: ^7.86.0
-      tailwind-merge: ^3.6.0
-      tailwindcss: ^4.3.3
+  react:peer:
+    react: ^19.2.8
+    react-dom: ^19.2.8
+    react-hook-form: ^7.86.0
+    tailwind-merge: ^3.6.0
+    tailwindcss: ^4.3.3

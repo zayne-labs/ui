@@ -31,8 +31,8 @@ import {
 	type ControllerProps,
 	type FieldPath,
 	type FieldValues,
+	type FormStateProps,
 	type RegisterOptions,
-	type FormStateSubscribeProps as StateSubscribeProps,
 	type UseFormReturn,
 	type WatchProps,
 } from "react-hook-form";
@@ -936,12 +936,12 @@ export type FormSubmitProps<TFieldValues extends FieldValues, TTransformedValues
 	asChild?: boolean;
 } & (
 		| {
-				children: React.ReactNode;
-				control?: never;
+				children: FormStateProps<TFieldValues, TTransformedValues>["render"];
+				control?: Control<TFieldValues, unknown, TTransformedValues>;
 		  }
 		| {
-				children: StateSubscribeProps<TFieldValues, TTransformedValues>["render"];
-				control?: Control<TFieldValues, unknown, TTransformedValues>;
+				children: React.ReactNode;
+				control?: never;
 		  }
 	);
 
@@ -1041,7 +1041,7 @@ export function FormWatch<
 export type FormStateSubscribeProps<
 	TFieldValues extends FieldValues,
 	TTransformedValues,
-	TComputedProps extends StateSubscribeProps<TFieldValues, TTransformedValues> = StateSubscribeProps<
+	TComputedProps extends FormStateProps<TFieldValues, TTransformedValues> = FormStateProps<
 		TFieldValues,
 		TTransformedValues
 	>,

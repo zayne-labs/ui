@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { Page } from "./source";
 
 const VERCEL_PROJECT_PRODUCTION_URL = process.env.VERCEL_PROJECT_PRODUCTION_URL;
 
@@ -37,7 +38,7 @@ export const defaultSiteName = "Zayne UI";
 export const defaultDescription =
 	"Composable, headless UI components and utilities built for flexibility and great developer experience.";
 
-export function createMetadata(overrides?: Metadata): Metadata {
+export const createMetadata = (overrides?: Metadata): Metadata => {
 	return {
 		...overrides,
 
@@ -79,4 +80,13 @@ export function createMetadata(overrides?: Metadata): Metadata {
 			...overrides?.twitter,
 		},
 	};
-}
+};
+
+export const getPageImage = (page: Page) => {
+	const segments = [...page.slugs, "image.webp"];
+
+	return {
+		segments,
+		url: `/og/docs/${segments.join("/")}`,
+	};
+};
