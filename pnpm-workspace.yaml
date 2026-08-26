@@ -1,8 +1,6 @@
 strictDepBuilds: false
 minimumReleaseAgeExclude:
    - "@zayne-labs/*"
-   - "@types/react-dom@19.2.5"
-   - lucide-react@1.34.0
 packages:
    - apps/*
    - packages/*

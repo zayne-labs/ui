@@ -6,6 +6,10 @@ on:
          - "v*"
 
 jobs:
+   publish:
+      permissions:
+         id-token: write
+
    release-note:
       permissions:
          contents: write
