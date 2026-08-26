@@ -25,7 +25,7 @@ const config: NextConfig = {
 	// 	];
 	// },
 
-	serverExternalPackages: ["typescript", "shiki", "@takumi-rs/image-response"],
+	serverExternalPackages: ["typescript", "shiki", "@takumi-rs/core"],
 
 	typescript: {
 		ignoreBuildErrors: true,
