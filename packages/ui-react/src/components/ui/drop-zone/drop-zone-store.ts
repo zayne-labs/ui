@@ -13,6 +13,7 @@ type StoreContext = Pick<
 	| "initialFiles"
 	| "maxFileCount"
 	| "maxFileSize"
+	| "minFileSize"
 	| "multiple"
 	| "onFilesChange"
 	| "onUpload"
@@ -20,15 +21,23 @@ type StoreContext = Pick<
 	| "onValidationSuccess"
 	| "rejectDuplicateFiles"
 	| "validator"
->;
+> & {
+	/**
+	 * Getter for the latest `messages` prop, so inline message overrides (which can contain functions)
+	 * don't force the store to be recreated on every render
+	 */
+	getMessages: () => UseDropZoneProps["messages"];
+};
 
 export const createDropZoneStore = (storeContext: StoreContext) => {
 	const {
 		allowedFileTypes,
 		disablePreviewGenForNonImageFiles,
+		getMessages,
 		initialFiles,
 		maxFileCount,
 		maxFileSize,
+		minFileSize,
 		multiple,
 		onFilesChange,
 		onUpload,
@@ -87,6 +96,8 @@ export const createDropZoneStore = (storeContext: StoreContext) => {
 						allowedFileTypes,
 						maxFileCount,
 						maxFileSize,
+						messages: getMessages(),
+						minFileSize,
 						rejectDuplicateFiles,
 						validator,
 					},

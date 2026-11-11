@@ -1,9 +1,13 @@
-strictDepBuilds: false
+minimumReleaseAgeExcludePrune: true
 minimumReleaseAgeExclude:
    - "@zayne-labs/*"
+
+strictDepBuilds: false
+
 packages:
    - apps/*
    - packages/*
+
 allowBuilds:
    "@parcel/watcher": set this to true or false
    esbuild: set this to true or false
@@ -12,8 +16,8 @@ allowBuilds:
 
 catalogs:
    react:peer:
-      react: ^19.2.8
-      react-dom: ^19.2.8
-      react-hook-form: ^7.86.0
-      tailwind-merge: ^3.6.0
-      tailwindcss: ^4.3.3
+      react: ^19.3.1
+      react-dom: ^19.3.1
+      react-hook-form: ^7.91.0
+      tailwind-merge: ^3.7.0
+      tailwindcss: ^4.3.5

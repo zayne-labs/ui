@@ -1,8 +1,6 @@
-import { DocsLayout } from "fumadocs-ui/layouts/notebook";
-import { MessageCircleIcon } from "lucide-react";
-import { AISearchPanel, AISearchRoot, AISearchTrigger } from "@/components/ai/search";
+import { DocsLayout } from "@/components/ai/layout";
 import { BgPatternIcon } from "@/components/icons/BgPatternIcon";
-import { Button } from "@/components/ui/button";
+import { BreadcrumbStructuredData } from "@/components/seo/breadcrumb-structured-data";
 import { getDocsOptions } from "@/lib/layout.shared";
 
 function Layout(props: LayoutProps<"/docs">) {
@@ -10,6 +8,12 @@ function Layout(props: LayoutProps<"/docs">) {
 
 	return (
 		<DocsLayout {...getDocsOptions()}>
+			<BreadcrumbStructuredData
+				items={[
+					{ name: "Home", url: "/" },
+					{ name: "Documentation", url: "/docs" },
+				]}
+			/>
 			<span
 				className="absolute inset-0 z-[-1] h-256 max-h-screen overflow-hidden
 					bg-[radial-gradient(38%_44%_at_65%_-8%,--alpha(var(--color-fd-primary)/0.2)_0%,transparent_73%),radial-gradient(34%_42%_at_17%_11%,--alpha(var(--color-fd-accent-foreground)/0.14)_0%,transparent_72%)]"
@@ -18,16 +22,6 @@ function Layout(props: LayoutProps<"/docs">) {
 			</span>
 
 			{children}
-
-			<AISearchRoot>
-				<AISearchPanel />
-				<AISearchTrigger position="float" asChild={true}>
-					<Button className="rounded-2xl text-fd-muted-foreground" theme="secondary">
-						<MessageCircleIcon className="size-4.5" />
-						Ask AI
-					</Button>
-				</AISearchTrigger>
-			</AISearchRoot>
 		</DocsLayout>
 	);
 }

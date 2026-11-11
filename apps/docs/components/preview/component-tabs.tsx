@@ -12,24 +12,26 @@ export function ComponentTabs(props: ComponentTabsProps) {
 			<TabsList className="flex items-center border-b bg-fd-secondary/50 px-3 py-1.5">
 				<TabsTrigger
 					value="preview"
-					className="rounded-lg px-2 data-[state=active]:bg-fd-background
-						data-[state=active]:text-fd-foreground data-[state=active]:shadow-sm"
+					className="rounded-lg px-2 data-active:bg-fd-background
+						data-active:text-fd-foreground data-active:shadow-sm"
 				>
 					Preview
 				</TabsTrigger>
 
 				<TabsTrigger
 					value="code"
-					className="rounded-lg px-2 data-[state=active]:bg-fd-background
-						data-[state=active]:text-fd-foreground data-[state=active]:shadow-sm"
+					className="rounded-lg px-2 data-active:bg-fd-background
+						data-active:text-fd-foreground data-active:shadow-sm"
 				>
 					Code
 				</TabsTrigger>
 			</TabsList>
 
-			<TabsContent className="p-0" value="preview" asChild={true}>
-				<ComponentPreview name={name} {...restOfProps} />
-			</TabsContent>
+			<TabsContent
+				className="p-0"
+				value="preview"
+				render={<ComponentPreview name={name} {...restOfProps} />}
+			/>
 
 			<TabsContent className="contents" value="code">
 				<ComponentSource isCollapsible={false} name={name} />

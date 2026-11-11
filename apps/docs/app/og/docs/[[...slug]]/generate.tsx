@@ -1,0 +1,127 @@
+import fsPromises from "node:fs/promises";
+import type { ReactNode } from "react";
+import type { ImageResponseOptions } from "takumi-js/response";
+
+export type GenerateProps = {
+	description?: ReactNode;
+	logoSrc: string;
+	title: ReactNode;
+};
+
+// == Read from disk instead of fetching `${baseURL}/logo.png`, so builds don't depend on a running server
+const logoSrc = fsPromises
+	.readFile(new URL("../../../../public/logo.png", import.meta.url))
+	.then((data) => `data:image/png;base64,${data.toString("base64")}`);
+
+export const getLogoSrc = () => logoSrc;
+
+const font = fsPromises
+	.readFile(new URL("../../../../lib/og/JetBrainsMono-Regular.ttf", import.meta.url))
+	.then(
+		(data) =>
+			({
+				data,
+				name: "Mono",
+				weight: 400,
+			}) as const
+	);
+
+const fontBold = fsPromises
+	.readFile(new URL("../../../../lib/og/JetBrainsMono-Bold.ttf", import.meta.url))
+	.then(
+		(data) =>
+			({
+				data,
+				name: "Mono",
+				weight: 600,
+			}) as const
+	);
+
+export const getImageResponseOptions = async (): Promise<ImageResponseOptions> => {
+	return {
+		fonts: await Promise.all([font, fontBold]),
+		format: "webp",
+		height: 630,
+		width: 1200,
+	};
+};
+
+export const generate = (props: GenerateProps) => {
+	const { description, logoSrc: resolvedLogoSrc, title } = props;
+
+	const siteName = "Zayne UI";
+	const primaryTextColor = "rgb(240,240,240)";
+
+	const logo = (
+		// eslint-disable-next-line nextjs/no-img-element
+		<img
+			alt="Zayne UI"
+			src={resolvedLogoSrc}
+			width={60}
+			height={60}
+			style={{
+				borderRadius: "5px",
+			}}
+		/>
+	);
+
+	return (
+		<div
+			style={{
+				backgroundColor: "rgb(10,10,10)",
+				color: "white",
+				display: "flex",
+				flexDirection: "column",
+				height: "100%",
+				width: "100%",
+			}}
+		>
+			<div
+				style={{
+					display: "flex",
+					flexDirection: "column",
+					height: "100%",
+					padding: "4rem",
+					width: "100%",
+				}}
+			>
+				<span
+					style={{
+						fontSize: "76px",
+						fontWeight: 600,
+					}}
+				>
+					{title}
+				</span>
+				<p
+					style={{
+						color: "rgba(240,240,240,0.7)",
+						fontSize: "48px",
+					}}
+				>
+					{description}
+				</p>
+				<div
+					style={{
+						alignItems: "center",
+						color: primaryTextColor,
+						display: "flex",
+						flexDirection: "row",
+						gap: "24px",
+						marginTop: "auto",
+					}}
+				>
+					{logo}
+					<span
+						style={{
+							fontSize: "46px",
+							fontWeight: 600,
+						}}
+					>
+						{siteName}
+					</span>
+				</div>
+			</div>
+		</div>
+	);
+};

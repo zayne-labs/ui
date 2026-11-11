@@ -202,6 +202,7 @@ const usePresence = (options: UsePresenceOptions): UsePresenceResult => {
 					// still causes a flash.
 					timeoutId = ownerWindow.setTimeout(() => {
 						if (node.style.animationFillMode === "forwards") {
+							// eslint-disable-next-line react/immutability -- Ignore
 							node.style.animationFillMode = currentFillMode;
 						}
 					}) as never;

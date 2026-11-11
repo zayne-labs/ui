@@ -151,9 +151,10 @@ function DiagnosticFallback() {
 				<span className="h-5 w-32 rounded-sm bg-fd-muted" />
 			</div>
 			<div className="grid grid-cols-2 gap-3">
-				{[...Array(6).keys()].map((i) => (
-					<span key={i} className="h-16 rounded-xl bg-fd-muted" />
-				))}
+				{Array(6)
+					.keys()
+					.map((i) => <span key={i} className="h-16 rounded-xl bg-fd-muted" />)
+					.toArray()}
 			</div>
 			<span className="h-12 rounded-lg bg-fd-muted" />
 		</article>

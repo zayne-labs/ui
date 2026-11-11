@@ -50,6 +50,8 @@ export type { ForProps, ForWithWrapperProps } from "@zayne-labs/ui-react/common/
 
 export type { PresenceProps } from "@zayne-labs/ui-react/common/presence";
 
+export type { ScrollLockProps } from "@zayne-labs/ui-react/common/scroll-lock";
+
 export type { ShowRootProps, ShowContentProps } from "@zayne-labs/ui-react/common/show";
 
 export type { SuspenseWithBoundaryProps } from "@zayne-labs/ui-react/common/suspense-with-boundary";

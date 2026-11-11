@@ -21,7 +21,7 @@ jobs:
          - name: Setup pnpm
            uses: pnpm/action-setup@v5
            with:
-              version: 11.24.0
+              version: 12.18.0
 
          - name: Setup Node.js
            uses: actions/setup-node@v6
@@ -37,4 +37,6 @@ jobs:
          - name: Run linters
            run: |
               pnpm lint:type-check
+              pnpm lint:knip
+              pnpm lint:knip:production
               pnpm lint:eslint:root

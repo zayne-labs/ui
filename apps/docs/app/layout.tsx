@@ -1,6 +1,10 @@
+import { NextProvider } from "fumadocs-core/framework/next";
+import { TreeContextProvider } from "fumadocs-ui/contexts/tree";
 import type { Metadata, Viewport } from "next";
 import { Geist, JetBrains_Mono } from "next/font/google";
+import { StructuredData } from "@/components/seo/structured-data";
 import { baseURL, createMetadata, defaultSiteName } from "@/lib/metadata";
+import { source } from "@/lib/source";
 import { cnJoin } from "@/lib/utils/cn";
 import { Providers } from "./Providers";
 import "../tailwind.css";
@@ -15,7 +19,7 @@ const jetBrainsMono = JetBrains_Mono({
 	variable: "--font-jetbrains-mono",
 });
 
-function RootLayout({ children }: { children: React.ReactNode }) {
+function RootLayout({ children }: LayoutProps<"/">) {
 	return (
 		<html
 			lang="en"
@@ -23,8 +27,16 @@ function RootLayout({ children }: { children: React.ReactNode }) {
 			className={cnJoin(geistSans.variable, jetBrainsMono.variable)}
 			suppressHydrationWarning={true}
 		>
+			<head>
+				<StructuredData variant="website" />
+				<StructuredData variant="organization" />
+			</head>
 			<body>
-				<Providers>{children}</Providers>
+				<NextProvider>
+					<TreeContextProvider tree={source.getPageTree()}>
+						<Providers>{children}</Providers>
+					</TreeContextProvider>
+				</NextProvider>
 			</body>
 		</html>
 	);

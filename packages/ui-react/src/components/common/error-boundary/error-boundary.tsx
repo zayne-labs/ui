@@ -66,6 +66,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 				reason: "keys",
 			});
 
+			// eslint-disable-next-line react/no-set-state-in-component-did-update -- Ignore
 			this.setState(initialState);
 		}
 	}

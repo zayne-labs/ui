@@ -62,6 +62,11 @@ export const ExamplesIndex = {
 		filePath: "examples/presence-demo.tsx",
 		name: "presence-demo",
 	},
+	"scroll-lock-demo": {
+		component: lazy(() => import("./scroll-lock-demo")),
+		filePath: "examples/scroll-lock-demo.tsx",
+		name: "scroll-lock-demo",
+	},
 	"show-demo": {
 		component: lazy(() => import("./show-demo")),
 		filePath: "examples/show-demo.tsx",

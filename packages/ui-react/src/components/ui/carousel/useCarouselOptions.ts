@@ -17,7 +17,8 @@ const useCarouselOptions = (options: CarouselOptions) => {
 	const shouldAutoSlide = hasAutoSlide && !isPaused;
 
 	useAnimationInterval({
-		intervalDuration: shouldAutoSlide ? autoSlideInterval : null,
+		enabled: shouldAutoSlide,
+		intervalDuration: autoSlideInterval,
 		onAnimation: actions.goToNextSlide,
 	});
 

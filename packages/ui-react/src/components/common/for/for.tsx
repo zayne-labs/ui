@@ -42,6 +42,7 @@ export function For<const TArray extends ArrayOrNumber>(props: ForProps<TArray>)
 		return fallback;
 	}
 
+	// eslint-disable-next-line unicorn/prefer-iterator-to-array -- Not supported in all runtimes
 	const resolvedArray = isNumber(each) ? [...Array(each).keys()] : (each as unknown[]);
 
 	const selectedChildren = typeof children === "function" ? children : renderItem;

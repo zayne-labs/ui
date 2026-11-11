@@ -1,0 +1,118 @@
+---
+title: Scroll Lock
+description: Lock page scroll while keeping scroll inside a specific element (modals, drawers, overlays).
+---
+
+The `ScrollLock` component locks page scrolling while it is mounted, but still lets the user scroll inside the element it renders (and any `shards` you pass). It removes the page scrollbar without layout shift by compensating for the scrollbar's width.
+
+It is a component wrapper around the `useScrollLock` hook from `@zayne-labs/toolkit-react`, and follows the same API as `RemoveScroll` from [react-remove-scroll](https://github.com/theKashey/react-remove-scroll).
+
+## Installation
+
+```package-install
+@zayne-labs/ui-react
+```
+
+## Preview
+
+<ComponentTabs name="scroll-lock-demo" />
+
+## Basic Usage
+
+`ScrollLock` renders a `div` by default. Scrolling is allowed inside that element and blocked everywhere else.
+
+```tsx
+import { ScrollLock } from "@zayne-labs/ui-react/common/scroll-lock";
+
+function Modal({ children }) {
+	return (
+		<div className="fixed inset-0 bg-black/50">
+			<ScrollLock className="max-h-[80dvh] overflow-y-auto">{children}</ScrollLock>
+		</div>
+	);
+}
+```
+
+## Toggle with `enabled`
+
+Instead of unmounting, you can turn the lock on and off with `enabled`.
+
+```tsx
+<ScrollLock enabled={isOpen} className="overflow-y-auto">
+	<DrawerContent />
+</ScrollLock>
+```
+
+## Without a wrapper element
+
+<Tabs items={['asChild', 'as']}>
+  <Tab value="asChild">
+    Use `asChild` to merge the lock (props and ref) onto your own element instead of rendering a wrapper. This is the equivalent of `forwardProps` in `react-remove-scroll`.
+
+    ```tsx
+    <ScrollLock asChild={true}>
+    	<aside className="overflow-y-auto">...</aside>
+    </ScrollLock>
+    ```
+
+  </Tab>
+  <Tab value="as">
+    Use `as` to change the rendered element.
+
+    ```tsx
+    <ScrollLock as="section" className="overflow-y-auto">
+    	...
+    </ScrollLock>
+    ```
+
+  </Tab>
+</Tabs>
+
+## Shards
+
+Shards are extra elements that stay scrollable and interactive while the lock is active. Use them for things rendered outside the lock, like a toast region or a teleported popover.
+
+```tsx
+function App() {
+	const toastRegionRef = useRef<HTMLDivElement>(null);
+
+	return (
+		<ScrollLock shards={[toastRegionRef]}>
+			<DialogContent />
+		</ScrollLock>
+	);
+}
+```
+
+## Options
+
+| Prop              | Default    | Description                                                                            |
+| ----------------- | ---------- | -------------------------------------------------------------------------------------- |
+| `enabled`         | `true`     | Whether the lock is active.                                                            |
+| `removeScrollBar` | `true`     | Hide the page scrollbar (and compensate for its width).                                |
+| `gapMode`         | `"margin"` | Compensate for the removed scrollbar with `margin-right` or `padding-right` on `body`. |
+| `inert`           | `false`    | Block pointer interactions outside the lock and shards, not just scrolling.            |
+| `noIsolation`     | `false`    | Only lock the page scroll; don't block scroll events outside the lock.                 |
+| `allowPinchZoom`  | `false`    | Allow pinch-zoom (and `ctrl` + wheel zoom) while locked.                               |
+| `noRelative`      | `false`    | Don't set `position: relative` on `body` while locked.                                 |
+| `shards`          | —          | Extra elements (refs, elements or getters) that stay scrollable while locked.          |
+
+## Component Source
+
+<ComponentSource
+	name="scroll-lock"
+	src="../../packages/ui-react/src/components/common/scroll-lock/scroll-lock.tsx"
+/>
+
+## Component API
+
+<Accordions>
+	<Accordion title="ScrollLock Props">
+		<auto-type-table path="../../../lib/ui-options.ts" name="ScrollLockProps" />
+	</Accordion>
+</Accordions>
+
+<Callout type="info">
+	Multiple locks can be active at once (for example, nested dialogs). The most recently activated lock
+	controls scroll isolation, and the page stays locked until every lock is released.
+</Callout>

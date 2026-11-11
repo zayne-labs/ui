@@ -17,7 +17,7 @@
 		"lint:eslint": {
 			"cache": false
 		},
-		"knip": {
+		"lint:knip": {
 			"cache": true
 		},
 		"lint:type-check": {}

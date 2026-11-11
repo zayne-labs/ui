@@ -74,7 +74,7 @@ export const getEyeIcon = (options: {
 		return withEyeIcon.renderIcon(renderIconProps);
 	}
 
-	if (withEyeIcon[iconType]) {
+	if (Object.hasOwn(withEyeIcon, iconType)) {
 		return withEyeIcon[iconType];
 	}
 

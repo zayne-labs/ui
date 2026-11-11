@@ -8,6 +8,10 @@ const config: NextConfig = {
 		position: "bottom-right",
 	},
 
+	experimental: {
+		typedEnv: true,
+	},
+
 	logging: {
 		fetches: {
 			fullUrl: true,
@@ -16,20 +20,9 @@ const config: NextConfig = {
 
 	reactStrictMode: true,
 
-	// rewrites: () => {
-	// 	return [
-	// 		{
-	// 			destination: "/llms.mdx/docs/:path*",
-	// 			source: "/docs/:path*.mdx",
-	// 		},
-	// 	];
-	// },
-
 	serverExternalPackages: ["typescript", "shiki", "@takumi-rs/core"],
 
-	typescript: {
-		ignoreBuildErrors: true,
-	},
+	typedRoutes: true,
 };
 
 export default withMDX(config);

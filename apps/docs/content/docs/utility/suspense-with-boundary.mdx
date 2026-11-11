@@ -23,7 +23,7 @@ function Dashboard() {
 			errorFallback={({ error, resetErrorBoundary }) => (
 				<div className="rounded-lg border border-red-200 p-4 text-center">
 					<p className="text-red-700">Failed to load analytics</p>
-					<button onClick={resetErrorBoundary} className="mt-2 text-sm underline">
+					<button type="button" onClick={resetErrorBoundary} className="mt-2 text-sm underline">
 						Retry
 					</button>
 				</div>

@@ -22,7 +22,7 @@ const products = [
 	{(product, index, array) => (
 		<div key={product.id}>
 			{/* ✅ product is typed as { id: number; name: string; price: number } */}
-			{product.name} - ${product.price}
+			{product.name} - ₦{product.price}
 			{/* ❌ TS error: Property 'details' does not exist */}
 			{product.details}
 		</div>
@@ -112,7 +112,9 @@ const userPromise: Promise<{ email: string; name: string }> = fetchUser(id);
 	<Await.Error>
 		{({ error, resetErrorBoundary }) => (
 			// ✅ error is typed as Error, resetErrorBoundary is a function
-			<button onClick={resetErrorBoundary}>{error.message}</button>
+			<button type="button" onClick={resetErrorBoundary}>
+				{error.message}
+			</button>
 		)}
 	</Await.Error>
 </Await.Root>;

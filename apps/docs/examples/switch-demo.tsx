@@ -6,9 +6,9 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { cnJoin } from "@/lib/utils/cn";
 
-type Status = "error" | "idle" | "loading" | "success";
-
 function SwitchDemo() {
+	type Status = "error" | "idle" | "loading" | "success";
+
 	const [status, setStatus] = useState<Status>("idle");
 
 	return (

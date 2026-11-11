@@ -60,6 +60,8 @@ const dropzonePropKeys = [
 	"initialFiles",
 	"maxFileCount",
 	"maxFileSize",
+	"messages",
+	"minFileSize",
 	"multiple",
 	"onFilesChange",
 	"onUpload",

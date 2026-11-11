@@ -143,14 +143,17 @@ import { DragScroll } from "@zayne-labs/ui-react/ui/drag-scroll";
 	<DragScroll.Prev className="rounded-full border p-2 disabled:opacity-30">←</DragScroll.Prev>
 
 	<DragScroll.List className="scrollbar-hidden flex gap-4 overflow-x-auto">
-		{[...Array(8).keys()].map((i) => (
-			<DragScroll.Item
-				key={i}
-				className="flex h-48 w-72 shrink-0 items-center justify-center rounded-xl border bg-gray-50"
-			>
-				Item {i + 1}
-			</DragScroll.Item>
-		))}
+		{Array(8)
+			.keys()
+			.map((i) => (
+				<DragScroll.Item
+					key={i}
+					className="flex h-48 w-72 shrink-0 items-center justify-center rounded-xl border bg-gray-50"
+				>
+					Item {i + 1}
+				</DragScroll.Item>
+			))
+			.toArray()}
 	</DragScroll.List>
 
 	<DragScroll.Next className="rounded-full border p-2 disabled:opacity-30">→</DragScroll.Next>
@@ -195,7 +198,9 @@ function UserProfile({ userId }: { userId: string }) {
 				{({ error, resetErrorBoundary }) => (
 					<div>
 						<p>Failed to load: {error.message}</p>
-						<button onClick={resetErrorBoundary}>Retry</button>
+						<button type="button" onClick={resetErrorBoundary}>
+							Retry
+						</button>
 					</div>
 				)}
 			</Await.Error>

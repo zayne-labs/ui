@@ -1,5 +1,6 @@
 "use client";
 
+import { useOnChange } from "@zayne-labs/toolkit-react";
 import { motion } from "motion/react";
 import { useEffect, useId, useRef, useState } from "react";
 import { cnMerge } from "@/lib/utils/cn";
@@ -42,13 +43,13 @@ export function Grid(props: GridProps) {
 	}
 
 	// Adjust the generateSquares function to return objects with an id, x, and y
-	const generateSquares = (count: number) =>
-		Array.from({ length: count }, (_, i) => ({
+	const generateSquares = () =>
+		Array.from({ length: numSquares }, (_, i) => ({
 			id: i,
 			pos: getPos(),
 		}));
 
-	const [squares, setSquares] = useState(() => generateSquares(numSquares));
+	const [squares, setSquares] = useState(() => generateSquares());
 
 	// Function to update a single square's position
 	const updateSquarePosition = (id: number) => {
@@ -64,15 +65,15 @@ export function Grid(props: GridProps) {
 		);
 	};
 
-	// Update squares to animate in
-	useEffect(() => {
-		// eslint-disable-next-line react-you-might-not-need-an-effect/no-event-handler
-		if (dimensions.width && dimensions.height) {
-			// eslint-disable-next-line react-you-might-not-need-an-effect/no-chain-state-updates, react-you-might-not-need-an-effect/no-adjust-state-on-prop-change, react/set-state-in-effect
-			setSquares(generateSquares(numSquares));
-		}
-		// eslint-disable-next-line react/exhaustive-deps
-	}, [dimensions, numSquares]);
+	// Regenerate squares (during render, no extra effect pass) whenever the container size or square count changes
+	useOnChange({
+		onValueChange: () => {
+			if (!dimensions.width || !dimensions.height) return;
+
+			setSquares(generateSquares());
+		},
+		value: { dimensions, numSquares },
+	});
 
 	// Resize observer to update container dimensions
 	useEffect(() => {

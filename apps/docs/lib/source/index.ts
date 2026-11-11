@@ -1,4 +1,4 @@
-import { loader, type InferMetaType, type InferPageType } from "fumadocs-core/source";
+import { loader, type InferPageType } from "fumadocs-core/source";
 import { lucideIconsPlugin } from "fumadocs-core/source/lucide-icons";
 import { metaSchema, pageSchema } from "fumadocs-core/source/schema";
 import { defineDocs } from "fumadocs-mdx/macro";
@@ -23,10 +23,14 @@ export const docs = defineDocs({
 			const [
 				{ rehypeCodeDefaultOptions },
 				{ createFileSystemGeneratorCache, createGenerator },
+				{ createShikiHighlighter },
+				{ defaultShikiFactory },
 				{ remarkAutoTypeTable },
 			] = await Promise.all([
 				import("fumadocs-core/mdx-plugins/rehype-code"),
 				import("fumadocs-typescript"),
+				import("fumadocs-core/highlight/shiki"),
+				import("fumadocs-core/highlight/shiki/full"),
 				import("@fumadocs/satteri/remark-auto-type-table"),
 			]);
 
@@ -36,9 +40,9 @@ export const docs = defineDocs({
 
 			const typeTableOptions: RemarkAutoTypeTableOptions = {
 				generator: typeTableGenerator,
-				shiki: {
+				highlighter: createShikiHighlighter(() => defaultShikiFactory.getOrInit(), {
 					themes: shikiOptions.themes,
-				},
+				}),
 			};
 
 			return {
@@ -79,4 +83,3 @@ export const source = loader({
 });
 
 export type Page = InferPageType<typeof source>;
-export type Meta = InferMetaType<typeof source>;

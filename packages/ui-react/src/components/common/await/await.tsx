@@ -39,6 +39,8 @@ export function AwaitRoot<TValue>(props: AwaitRootProps<TValue>) {
 		withSuspense = true,
 	} = props;
 
+	type SlotComponentProps = AwaitErrorProps | AwaitPendingProps | AwaitSuccessProps;
+
 	const WithErrorBoundary = withErrorBoundary ? ErrorBoundary : ReactFragment;
 	const WithSuspense = withSuspense ? Suspense : ReactFragment;
 
@@ -87,8 +89,6 @@ function AwaitRootImpl<TValue>(props: AwaitRootImplProps<TValue>) {
 		</AwaitContextProvider>
 	);
 }
-
-type SlotComponentProps = AwaitErrorProps | AwaitPendingProps | AwaitSuccessProps;
 
 type AwaitSuccessProps<TValue = unknown> = GetSlotComponentProps<"default", ChildrenType<TValue>>;
 

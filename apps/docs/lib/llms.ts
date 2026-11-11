@@ -1,0 +1,16 @@
+import { llms } from "fumadocs-core/source";
+import { repoName, repoOwner } from "@/lib/github";
+import { source } from "@/lib/source";
+
+export const docsLlms = llms(source, {
+	renderPage: async (page) => {
+		const processed = await page.data.getText("processed");
+
+		return `# Title: ${page.data.title}
+Description: ${page.data.description ?? ""}
+URL: ${page.url}
+Source: https://raw.githubusercontent.com/${repoOwner}/${repoName}/refs/heads/main/apps/docs/content/docs/${page.path}
+
+${processed}`;
+	},
+});

@@ -80,6 +80,8 @@ The `Slot` component enables advanced component composition by merging props fro
 ```tsx
 // Both handlers will run!
 <Button asChild={true} onClick={() => console.log("Parent Logger")}>
-	<button onClick={() => console.log("Child Action")}>Click Me</button>
+	<button type="button" onClick={() => console.log("Child Action")}>
+		Click Me
+	</button>
 </Button>
 ```

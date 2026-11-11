@@ -39,7 +39,7 @@ export const createDragScrollStore = (initStoreValues: InitStoreValues) => {
 			return scrollAmount;
 		}
 
-		const firstChild = container.children[0] as HTMLElement | undefined;
+		const firstChild = container.firstElementChild as HTMLElement | null;
 
 		if (!firstChild) {
 			return 0;

@@ -61,34 +61,33 @@
 		}
 	},
 	"dependencies": {
-		"@zayne-labs/toolkit-core": "0.12.58",
-		"@zayne-labs/toolkit-react": "0.12.58",
-		"@zayne-labs/toolkit-type-helpers": "0.12.58"
+		"@zayne-labs/toolkit-core": "0.13.2",
+		"@zayne-labs/toolkit-react": "0.13.2",
+		"@zayne-labs/toolkit-type-helpers": "0.13.2"
 	},
 	"devDependencies": {
 		"@arethetypeswrong/cli": "0.18.5",
-		"@size-limit/esbuild-why": "13.0.3",
-		"@size-limit/preset-small-lib": "13.0.3",
-		"@tailwindcss/cli": "4.3.3",
+		"@size-limit/preset-small-lib": "14.3.0",
+		"@tailwindcss/cli": "4.3.5",
 		"@total-typescript/ts-reset": "0.6.1",
-		"@types/react": "19.2.18",
-		"@types/react-dom": "19.2.5",
-		"@zayne-labs/prettier-config": "0.13.14",
-		"@zayne-labs/tsconfig": "0.13.14",
-		"concurrently": "10.0.5",
+		"@types/react": "19.3.0",
+		"@types/react-dom": "19.3.0",
+		"@zayne-labs/prettier-config": "0.14.0",
+		"@zayne-labs/tsconfig": "0.14.0",
+		"concurrently": "10.0.7",
 		"cross-env": "10.1.0",
-		"prettier": "3.9.6",
-		"prettier-plugin-classnames": "0.10.4",
-		"prettier-plugin-merge": "0.10.1",
+		"prettier": "3.9.10",
+		"prettier-plugin-classnames": "0.10.5",
+		"prettier-plugin-merge": "0.10.2",
 		"prettier-plugin-tailwindcss": "0.8.1",
-		"publint": "0.3.24",
+		"publint": "0.3.25",
 		"react": "catalog:react:peer",
 		"react-dom": "catalog:react:peer",
 		"react-hook-form": "catalog:react:peer",
-		"size-limit": "13.0.3",
+		"size-limit": "14.3.0",
 		"tailwind-merge": "catalog:react:peer",
 		"tailwindcss": "catalog:react:peer",
-		"tsdown": "0.22.14",
+		"tsdown": "0.23.7",
 		"typescript": "6.0.3"
 	},
 	"publishConfig": {
@@ -98,12 +97,84 @@
 	},
 	"size-limit": [
 		{
-			"path": "src/components/ui/**/index.ts",
-			"limit": "8 kB"
+			"name": "ui/card",
+			"path": "src/components/ui/card/index.ts",
+			"limit": "1.5 kB"
 		},
 		{
-			"path": "src/components/common/**/index.ts",
-			"limit": "4 kb"
+			"name": "ui/carousel",
+			"path": "src/components/ui/carousel/index.ts",
+			"limit": "5 kB"
+		},
+		{
+			"name": "ui/drag-scroll",
+			"path": "src/components/ui/drag-scroll/index.ts",
+			"limit": "5.5 kB"
+		},
+		{
+			"name": "ui/drop-zone",
+			"path": "src/components/ui/drop-zone/index.ts",
+			"limit": "12 kB"
+		},
+		{
+			"name": "ui/form",
+			"path": "src/components/ui/form/index.ts",
+			"limit": "7.5 kB"
+		},
+		{
+			"name": "common/await",
+			"path": "src/components/common/await/index.ts",
+			"limit": "3 kB"
+		},
+		{
+			"name": "common/client-gate",
+			"path": "src/components/common/client-gate/index.ts",
+			"limit": "0.5 kB"
+		},
+		{
+			"name": "common/error-boundary",
+			"path": "src/components/common/error-boundary/index.ts",
+			"limit": "1 kB"
+		},
+		{
+			"name": "common/for",
+			"path": "src/components/common/for/index.ts",
+			"limit": "0.5 kB"
+		},
+		{
+			"name": "common/presence",
+			"path": "src/components/common/presence/index.ts",
+			"limit": "3.5 kB"
+		},
+		{
+			"name": "common/scroll-lock",
+			"path": "src/components/common/scroll-lock/index.ts",
+			"limit": "4.5 kB"
+		},
+		{
+			"name": "common/show",
+			"path": "src/components/common/show/index.ts",
+			"limit": "2 kB"
+		},
+		{
+			"name": "common/slot",
+			"path": "src/components/common/slot/index.ts",
+			"limit": "1.5 kB"
+		},
+		{
+			"name": "common/suspense-with-boundary",
+			"path": "src/components/common/suspense-with-boundary/index.ts",
+			"limit": "1 kB"
+		},
+		{
+			"name": "common/switch",
+			"path": "src/components/common/switch/index.ts",
+			"limit": "1.5 kB"
+		},
+		{
+			"name": "common/teleport",
+			"path": "src/components/common/teleport/index.ts",
+			"limit": "0.5 kB"
 		}
 	]
 }

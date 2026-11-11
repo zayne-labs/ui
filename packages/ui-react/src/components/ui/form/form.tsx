@@ -20,6 +20,7 @@ import {
 	isFunction,
 	type AnyString,
 	type DistributivePick,
+	type EmptyObject,
 } from "@zayne-labs/toolkit-type-helpers";
 import { Fragment as ReactFragment, useEffect, useId, useMemo, useRef } from "react";
 import {
@@ -598,7 +599,7 @@ export function FormInput(props: FormInputCombinedProps) {
 			type={type}
 			name={name}
 			{...registerProps}
-			{...(restOfProps as NonNullable<unknown>)}
+			{...(restOfProps as EmptyObject)}
 			ref={combinedRef}
 			onChange={composeTwoEventHandlers(registerProps?.onChange, onChange)}
 			onBlur={composeTwoEventHandlers(registerProps?.onBlur, onBlur)}
@@ -730,11 +731,13 @@ export const FormErrorMessagePrimitive: FormErrorMessagePrimitiveOverloadType = 
 	const prevSubmitCountRef = useRef(submitCount);
 
 	useEffect(() => {
-		if (disableScrollToError) return;
-
-		if (!errors || Object.keys(errors).length === 0) return;
-
-		if (submitCount === prevSubmitCountRef.current) return;
+		if (
+			disableScrollToError
+			|| !errors
+			|| Object.keys(errors).length === 0
+			|| submitCount === prevSubmitCountRef.current
+		)
+			return;
 
 		prevSubmitCountRef.current = submitCount;
 
@@ -797,9 +800,7 @@ export const FormErrorMessagePrimitive: FormErrorMessagePrimitiveOverloadType = 
 	]);
 
 	useEffect(() => {
-		if (disableErrorAnimation) return;
-
-		if (!errors || Object.keys(errors).length === 0) return;
+		if (disableErrorAnimation || !errors || Object.keys(errors).length === 0) return;
 
 		const errorMessageElements = getErrorElements();
 

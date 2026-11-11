@@ -17,6 +17,8 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 		initialFiles,
 		maxFileCount,
 		maxFileSize,
+		messages,
+		minFileSize,
 		multiple,
 		onFilesChange,
 		onUpload,
@@ -34,18 +36,22 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 	const stableOnUploadError = useCallbackRef(onValidationError);
 	const stableOnUploadSuccess = useCallbackRef(onValidationSuccess);
 	const stableValidator = useCallbackRef(validator);
+	const stableGetMessages = useCallbackRef(() => messages);
 
 	const shallowComparedInitialFiles = useCompareValue(initialFiles);
 	const shallowComparedMaxFileSize = useCompareValue(maxFileSize);
+	const shallowComparedMinFileSize = useCompareValue(minFileSize);
 	const shallowComparedAllowedFileTypes = useCompareValue(allowedFileTypes);
 
 	const storeApi = useMemo(() => {
 		return createDropZoneStore({
 			allowedFileTypes: shallowComparedAllowedFileTypes,
 			disablePreviewGenForNonImageFiles,
+			getMessages: stableGetMessages,
 			initialFiles: shallowComparedInitialFiles,
 			maxFileCount,
 			maxFileSize: shallowComparedMaxFileSize,
+			minFileSize: shallowComparedMinFileSize,
 			multiple,
 			onFilesChange: stableOnFilesChange,
 			onUpload: stableOnUpload,
@@ -60,6 +66,7 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 		shallowComparedInitialFiles,
 		maxFileCount,
 		shallowComparedMaxFileSize,
+		shallowComparedMinFileSize,
 		multiple,
 		stableOnFilesChange,
 		stableOnUpload,
@@ -67,6 +74,7 @@ export const useDropZone = (props?: UseDropZoneProps): UseDropZoneResult => {
 		stableOnUploadSuccess,
 		rejectDuplicateFiles,
 		stableValidator,
+		stableGetMessages,
 	]);
 
 	const actions = storeApi.getState().actions;

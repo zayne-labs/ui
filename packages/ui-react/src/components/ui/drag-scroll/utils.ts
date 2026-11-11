@@ -6,10 +6,7 @@ export const updateCursor = <TElement extends HTMLElement>(element: TElement) =>
 	element.style.userSelect = "none";
 };
 
-export const onScrollSnap = <TElement extends HTMLElement>(
-	action: "remove" | "reset",
-	element: TElement
-) => {
+const onScrollSnap = <TElement extends HTMLElement>(action: "remove" | "reset", element: TElement) => {
 	if (action === "remove") {
 		element.style.scrollSnapType = "none";
 		return;

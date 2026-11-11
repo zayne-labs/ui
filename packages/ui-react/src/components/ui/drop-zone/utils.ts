@@ -22,11 +22,12 @@ export const clearObjectURL = (
 	fileState: FileState | undefined,
 	disallowPreviewForNonImageFiles: boolean | undefined
 ) => {
-	if (!isFile(fileState?.file)) return;
-
-	if (disallowPreviewForNonImageFiles && !fileState.file.type.startsWith("image/")) return;
-
-	if (!fileState.preview) return;
+	if (
+		!isFile(fileState?.file)
+		|| (disallowPreviewForNonImageFiles && !fileState.file.type.startsWith("image/"))
+		|| !fileState.preview
+	)
+		return;
 
 	URL.revokeObjectURL(fileState.preview);
 };
@@ -94,7 +95,7 @@ export class DropZoneError extends Error {
 			return false;
 		}
 
-		if (error instanceof DropZoneError) {
+		if (error instanceof this) {
 			return true;
 		}
 
