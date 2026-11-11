@@ -12,16 +12,16 @@ export function ComponentTabs(props: ComponentTabsProps) {
 			<TabsList className="flex items-center border-b bg-fd-secondary/50 px-3 py-1.5">
 				<TabsTrigger
 					value="preview"
-					className="rounded-lg px-2 data-active:bg-fd-background
-						data-active:text-fd-foreground data-active:shadow-sm"
+					className="rounded-lg px-2 data-active:bg-fd-background data-active:text-fd-foreground
+						data-active:shadow-sm"
 				>
 					Preview
 				</TabsTrigger>
 
 				<TabsTrigger
 					value="code"
-					className="rounded-lg px-2 data-active:bg-fd-background
-						data-active:text-fd-foreground data-active:shadow-sm"
+					className="rounded-lg px-2 data-active:bg-fd-background data-active:text-fd-foreground
+						data-active:shadow-sm"
 				>
 					Code
 				</TabsTrigger>

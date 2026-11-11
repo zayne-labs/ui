@@ -94,7 +94,7 @@ const SYSTEM_PROMPT = [
 	"- Provide accurate, production-ready solutions with a focus on accessible, beautiful interfaces and type safety",
 	"",
 	"KNOWLEDGE BASE",
-	"- A user message may begin with [Client Context], the page they are reading; for questions about \"this page\", search its title",
+	'- A user message may begin with [Client Context], the page they are reading; for questions about "this page", search its title',
 	"- Always use the `search` tool before answering questions about Zayne UI; use its results as the documentation evidence",
 	"- Use `searchSource` for implementation details, component props, TypeScript definitions, or when documentation is insufficient",
 	"- Cross-reference documentation with source when implementation details are relevant; prioritize source code if they conflict",

@@ -15,9 +15,6 @@ function ChatLayout(props: DocsLayoutProps) {
 	const { open, setOpen } = useAIChat();
 
 	return (
-		<Layout
-			{...props}
-			aiChat={{ onOpenChange: setOpen, open, panel: <AIChatPanel />, trigger: true }}
-		/>
+		<Layout {...props} aiChat={{ onOpenChange: setOpen, open, panel: <AIChatPanel />, trigger: true }} />
 	);
 }

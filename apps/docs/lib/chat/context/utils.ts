@@ -38,7 +38,9 @@ export const getLocalSourceFiles = async (): Promise<SourceFile[]> => {
 		fs.readdir(srcPath, { recursive: true }),
 	]);
 
-	const targetFiles = allPaths.map((filePath) => filePath.replaceAll("\\", "/")).filter((filePath) => isSourceFile(filePath));
+	const targetFiles = allPaths
+		.map((filePath) => filePath.replaceAll("\\", "/"))
+		.filter((filePath) => isSourceFile(filePath));
 
 	const sourceFiles = await Promise.all(
 		targetFiles.map(async (filePath) => ({
